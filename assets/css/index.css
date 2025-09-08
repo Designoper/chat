@@ -1,0 +1,74 @@
+article {
+	display: grid;
+	padding: 2em;
+	border-radius: 0.5em;
+	gap: 1em 10%;
+	align-content: flex-start;
+}
+
+dialog {
+	width: 500px;
+	padding: 2em;
+	margin: auto;
+	border-radius: 0.25rem;
+
+	&::backdrop {
+		background-color: rgba(0, 0, 0, 0.9);
+	}
+}
+
+form {
+	display: grid;
+	gap: 2em;
+
+	output:empty {
+		display: none;
+	}
+
+	&:has(:invalid) {
+		button:not([type="reset"], [type="button"]) {
+			interactivity: inert;
+			opacity: 50%;
+		}
+	}
+
+	/* button:not([type="reset"], [type="button"]) {
+			opacity: if(style(interactivity: inert): 50%, 100%);
+		} */
+}
+
+:is(input, select, textarea) {
+	border-radius: 0.25rem;
+	padding: 0.25em 0.75em;
+}
+
+menu {
+	display: grid;
+	gap: 1em;
+
+	&:has(button) {
+		display: flex;
+		justify-content: center;
+		gap: 1.5em;
+	}
+}
+
+li {
+	display: grid;
+	gap: 0.5em;
+
+	&:has([type="checkbox"]) {
+		display: block;
+	}
+}
+
+button {
+	padding: 0.75em;
+	border-radius: 0.25rem;
+	transition: transform 0.5s;
+	justify-self: center;
+
+	&:hover {
+		transform: scale(107%);
+	}
+}

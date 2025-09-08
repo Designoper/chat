@@ -1,0 +1,27 @@
+html {
+	--primary-bg: hsl(180, 42%, 93%);
+	--secondary-bg: hsl(34, 57%, 70%);
+	--terciary-bg: hsl(0, 0%, 100%);
+	--text: hsl(0, 0%, 0%);
+	--text-light: hsl(0, 0%, 20%);
+
+	color: var(--text-light);
+	background-color: var(--primary-bg);
+	scrollbar-color: var(--secondary-bg) var(--primary-bg);
+}
+
+:focus-visible {
+	outline: var(--text) solid 4px;
+}
+
+:is(article, form, dialog) {
+	background-color: var(--secondary-bg);
+}
+
+:is(input, select, button, textarea) {
+	background-color: var(--terciary-bg);
+}
+
+footer {
+	background-color: var(--text);
+}
