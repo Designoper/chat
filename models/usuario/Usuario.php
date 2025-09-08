@@ -14,6 +14,8 @@ final class Usuario extends UsuarioIntegrityErrors
 		parent::__construct();
 	}
 
+	// MARK: GETTERS
+
 	private function getUsuario(): string
 	{
 		return $this->usuario;
@@ -24,36 +26,38 @@ final class Usuario extends UsuarioIntegrityErrors
 		return $this->password;
 	}
 
+	// MARK: SETTERS
+
 	private function setUsuario(): void
 	{
 		$value = $_POST['usuario'] ?? null;
-		$sanitizedInput = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-		if (empty($sanitizedInput)) {
+		if (empty($value)) {
 			$this->setValidationError("El campo 'usuario' no puede estar vacío.");
 			return;
 		}
 
-		$this->usuario = $sanitizedInput;
+		$this->usuario = $value;
 	}
 
 	private function setPassword(): void
 	{
 		$value = $_POST['password'] ?? null;
-		$sanitizedInput = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-		if (empty($sanitizedInput)) {
+		if (empty($value)) {
 			$this->setValidationError("El campo 'password' no puede estar vacío.");
 			return;
 		}
 
-		if (!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $sanitizedInput)) {
+		if (!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $value)) {
 			$this->setValidationError("El campo 'password' debe tener como mínimo 8 carácteres, de los cuales 1 debe ser minúscula, 1 mayúscula y 1 número.");
 			return;
 		}
 
-		$this->password = $sanitizedInput;
+		$this->password = $value;
 	}
+
+	// MARK: LOGIN
 
 	public function login(): void
 	{
@@ -61,7 +65,6 @@ final class Usuario extends UsuarioIntegrityErrors
 		$this->setPassword();
 
 		$this->checkValidationErrors();
-
 
 		$this->checkIntegrityErrors();
 
@@ -94,6 +97,8 @@ final class Usuario extends UsuarioIntegrityErrors
 			exit();
 		}
 	}
+
+	// MARK: CREATE
 
 	public function createUsuario(): void
 	{

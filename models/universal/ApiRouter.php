@@ -3,10 +3,8 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/Sanitizer.php';
-require_once __DIR__ . '/../../models/libro/LibroRead.php';
-require_once __DIR__ . '/../../models/libro/LibroWrite.php';
-require_once __DIR__ . '/../../models/categoria/Categoria.php';
 require_once __DIR__ . '/../../models/usuario/Usuario.php';
+require_once __DIR__ . '/../../models/mensaje/Mensaje.php';
 
 final class ApiRouter extends Sanitizer
 {
@@ -21,37 +19,19 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            'libros$',
+            'usuarios$',
             function (): void {
-                $libro = new LibroRead();
-                $libro->readLibros();
+                $usuario = new Usuario();
+                $usuario->readLibros();
             }
         );
 
         $this->setRoute(
             'GET',
-            'libros\?[^/]*',
+            'mensajes$',
             function (): void {
-                $libro = new LibroRead();
-                $libro->filterLibros();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'libros/[1-9]\d*$',
-            function (): void {
-                $libro = new LibroRead();
-                $libro->readLibro();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'categorias$',
-            function (): void {
-                $categoria = new Categoria();
-                $categoria->readCategorias();
+                $mensaje = new Mensaje();
+                $mensaje->readMensajes();
             }
         );
 
@@ -68,10 +48,19 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            'libros$',
+            'login',
             function (): void {
-                $libro = new LibroWrite();
-                $libro->createLibro();
+                $usuario = new Usuario();
+                $usuario->login();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'mensajes$',
+            function (): void {
+                $mensaje = new Mensaje();
+                $mensaje->createMensaje();
             }
         );
 
