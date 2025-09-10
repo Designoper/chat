@@ -15,6 +15,7 @@ export class Mensaje extends Fetch {
 	async initialize() {
 		this.formAction();
 		await this.getMensajes();
+
 		setInterval(async () => {
 			await this.getMensajes();
 		}, 2000);
@@ -83,7 +84,7 @@ export class Mensaje extends Fetch {
 		});
 	}
 
-	async writeMensaje(form, method) {
+	async writeMensaje(form) {
 		await this.fetchData(form);
 		// if (response.status === 201 && method === 'POST' || response.status === 200 && method === 'PUT' || response.status === 204 && method === 'DELETE') {
 		// 	await this.getLibros();

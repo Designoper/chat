@@ -14,14 +14,10 @@ html {
 	outline: var(--text) solid 4px;
 }
 
-:is(article, dialog) {
+form {
 	background-color: var(--secondary-bg);
 }
 
-:is(input, select, button, textarea) {
+:is(input, button) {
 	background-color: var(--terciary-bg);
-}
-
-footer {
-	background-color: var(--text);
 }

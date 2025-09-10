@@ -34,7 +34,7 @@ final class Mensaje extends ApiResponse
 
 	public function readMensajes(): void
 	{
-		$statement = 'SELECT * FROM mensajes ORDER BY id_mensaje ASC';
+		$statement = 'SELECT * FROM mensajes ORDER BY id_mensaje DESC';
 
 		$query = $this->getConnection()->prepare($statement);
 
