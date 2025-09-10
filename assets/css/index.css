@@ -19,6 +19,7 @@ dialog {
 
 form {
 	display: grid;
+	grid-template-columns: auto auto;
 	gap: 2em;
 
 	output:empty {

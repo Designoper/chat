@@ -13,8 +13,11 @@ export class Mensaje extends Fetch {
 	}
 
 	async initialize() {
-		await this.getMensajes();
 		this.formAction();
+		await this.getMensajes();
+		setInterval(async () => {
+			await this.getMensajes();
+		}, 2000);
 	}
 
 	async getMensajes() {

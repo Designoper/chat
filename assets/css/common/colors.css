@@ -14,7 +14,7 @@ html {
 	outline: var(--text) solid 4px;
 }
 
-:is(article, form, dialog) {
+:is(article, dialog) {
 	background-color: var(--secondary-bg);
 }
 
