@@ -1,18 +1,3 @@
-article {
-	display: grid;
-	padding: 2em;
-	border-radius: 0.5em;
-	gap: 1em 10%;
-	align-content: flex-start;
-}
-
-dialog {
-	width: 500px;
-	padding: 2em;
-	margin: auto;
-	border-radius: 0.25rem;
-}
-
 form {
 	width: 100%;
 	position: sticky;
