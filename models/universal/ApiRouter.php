@@ -22,7 +22,7 @@ final class ApiRouter extends Sanitizer
             'usuarios$',
             function (): void {
                 $usuario = new Usuario();
-                $usuario->readLibros();
+                $usuario->readUsuarios();
             }
         );
 
@@ -65,35 +65,6 @@ final class ApiRouter extends Sanitizer
         );
 
         // UPDATE ROUTES
-
-        $this->setRoute(
-            'POST',
-            'libros/[1-9]\d*$',
-            function (): void {
-                $libro = new LibroWrite();
-                $libro->updateLibro();
-            }
-        );
-
-        // MARK: DELETE ROUTES
-
-        $this->setRoute(
-            'DELETE',
-            'libros/[1-9]\d*$',
-            function (): void {
-                $libro = new LibroWrite();
-                $libro->deleteLibro();
-            }
-        );
-
-        $this->setRoute(
-            'DELETE',
-            'libros$',
-            function (): void {
-                $libro = new LibroWrite();
-                $libro->deleteAllLibros();
-            }
-        );
 
         $this->handleRequest();
     }

@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title>Chat</title>
-	<meta name="description" content="El chat de la gente guay">
+	<meta name="description" content="description">
 
 	<link href="./assets/css/common/reset.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
@@ -15,7 +15,7 @@
 	<link href="./assets/css/common/main-layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
 
-	<script src="./assets/js/Mensaje.js" type="module" async></script>
+	<script src="./assets/js/Usuario.js" type="module" async></script>
 
 </head>
 
@@ -23,23 +23,17 @@
 
 	<main id="main">
 
-		<h1>Chat</h1>
-
-		<section>
-
-			<output id="fetchoutput"></output>
-			<output id="errorcontainer"></output>
-
-		</section>
-
-	</main>
+		<h1>Crear usuario</h1>
 
 	<form>
 
-		<input id="contenido" name="contenido">
+		<input id="usuario" name="usuario">
+		<input id="password" name="password" type="password">
 		<button type="submit" value="POST">Enviar</button>
 
 	</form>
+
+	</main>
 
 </body>
 
