@@ -31,5 +31,19 @@ main {
 			justify-self: center;
 			padding: 0.5em 0.75em;
 		}
+
+		output {
+			&:empty {
+				display: none;
+			}
+
+			p {
+				margin-bottom: 1em;
+			}
+		}
+
+		a {
+			text-decoration: underline;
+		}
 	}
 }
