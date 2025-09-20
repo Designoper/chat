@@ -127,10 +127,14 @@ final class Usuario extends UsuarioIntegrityErrors
 		);
 
 		$query->execute();
+		$id_usuario = $query->insert_id;
 		$query->close();
 
 		$this->setStatus(201);
 		$this->setMessage("Usuario creado con éxito");
+		$this->setContent([
+			"id_usuario" => $id_usuario,
+		]);
 		$this->getResponse();
 	}
 }

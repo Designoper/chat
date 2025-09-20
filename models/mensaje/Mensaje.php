@@ -8,6 +8,7 @@ final class Mensaje extends ApiResponse
 {
 	private readonly string $contenido;
 	private readonly string $fecha;
+	private readonly int $id_usuario;
 
 	public function __construct()
 	{
@@ -21,6 +22,11 @@ final class Mensaje extends ApiResponse
 		return $this->contenido;
 	}
 
+	private function getIdUsuario(): int
+	{
+		return $this->id_usuario;
+	}
+
 	// MARK: SETTERS
 
 	private function setContenido(): void
@@ -30,11 +36,24 @@ final class Mensaje extends ApiResponse
 		$this->contenido = $value;
 	}
 
+	private function setIdUsuario(): void
+	{
+		$value = $_POST['id_usuario'] ?? null;
+
+		if (empty($value)) {
+			$this->setValidationError("El campo 'id_usuario' no puede estar vacío.");
+			return;
+		}
+
+		$this->id_usuario = (int) $value;
+	}
+
 	// MARK: READ MENSAJES
 
 	public function readMensajes(): void
 	{
 		$statement = 'SELECT * FROM mensajes
+		NATURAL JOIN usuarios
 		ORDER BY id_mensaje DESC';
 
 		$query = $this->getConnection()->prepare($statement);
@@ -60,22 +79,25 @@ final class Mensaje extends ApiResponse
 	public function createMensaje(): void
 	{
 		$this->setContenido();
+		$this->setIdUsuario();
 
 		$this->checkValidationErrors();
 
 		$contenido = $this->getContenido();
+		$id_usuario = $this->getIdUsuario();
 
 		$this->checkIntegrityErrors();
 
 		$statement =
-			"INSERT INTO mensajes (contenido)
-			VALUES (?)";
+			"INSERT INTO mensajes (contenido, id_usuario)
+			VALUES (?, ?)";
 
 		$query = $this->getConnection()->prepare($statement);
 
 		$query->bind_param(
-			"s",
-			$contenido
+			"si",
+			$contenido,
+			$id_usuario
 		);
 
 		$query->execute();

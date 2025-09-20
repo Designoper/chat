@@ -80,8 +80,12 @@ export class Usuario extends Fetch {
 		});
 	}
 
-	async writeUsuario(form) {
-		await this.fetchData(form);
+	async writeUsuario(form, method) {
+		const response = await this.fetchData(form);
+        if (response.status === 201 && method === 'POST') {
+			sessionStorage.setItem('id_usuario', response.content.id_usuario);
+            location.href = 'index.html';
+        }
 	}
 }
 

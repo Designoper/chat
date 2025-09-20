@@ -13,12 +13,26 @@ export class Mensaje extends Fetch {
 	}
 
 	async initialize() {
+		this.sessionCheck();
 		this.formAction();
 		await this.getMensajes();
 
 		setInterval(async () => {
 			await this.getMensajes();
 		}, 2000);
+	}
+
+	sessionCheck() {
+		const usuario = sessionStorage.getItem('id_usuario');
+		// const password = sessionStorage.getItem('password');
+		if (!usuario) {
+			location.href = 'crear-usuario.html';
+		}
+
+		const usuarioInput = document.querySelector('input#id_usuario');
+		if (usuarioInput) {
+			usuarioInput.value = usuario;
+		}
 	}
 
 	async getMensajes() {
@@ -29,7 +43,7 @@ export class Mensaje extends Fetch {
 	static mensajesTemplate(fetchedMensajes) {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
-			`<p>${mensaje.contenido} ${mensaje.fecha_creacion}</p>`
+			`<p>${mensaje.nombre}: ${mensaje.contenido} ${mensaje.fecha_creacion}</p>`
 		).join('');
 
 		return mensajes;
