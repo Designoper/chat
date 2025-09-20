@@ -24,7 +24,6 @@ export class Mensaje extends Fetch {
 
 	sessionCheck() {
 		const usuario = sessionStorage.getItem('id_usuario');
-		// const password = sessionStorage.getItem('password');
 		if (!usuario) {
 			location.href = 'crear-usuario.html';
 		}
