@@ -13,7 +13,7 @@
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/main-layout.css" rel="preload stylesheet" as="style">
-	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/crear-usuario.css" rel="preload stylesheet" as="style">
 
 	<script src="./assets/js/Usuario.js" type="module" async></script>
 
@@ -27,11 +27,23 @@
 
 		<form>
 
-			<label for="usuario">Usuario</label>
-			<input id="usuario" name="usuario">
-			<label for="password">Contraseña</label>
-			<input id="password" name="password" type="password">
-			<button type="submit" value="POST">Enviar</button>
+			<menu>
+				<li>
+					<label for="usuario">Usuario</label>
+					<input id="usuario" name="usuario" minlength="1" autocomplete="off" required>
+				</li>
+
+				<li>
+					<label for="password">Contraseña</label>
+					<input id="password" name="password" type="password" minlength="8" autocomplete="off" required>
+				</li>
+
+				<li>
+					<button type="submit" value="POST">Enviar</button>
+				</li>
+			</menu>
+
+			<p>¿Ya tienes cuenta? <a href="./login.html">Iniciar sesión</a></p>
 
 		</form>
 

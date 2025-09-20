@@ -1,0 +1,23 @@
+main {
+	form {
+		display: grid;
+		gap: 1em;
+		padding: 2em;
+		max-width: 375px;
+		justify-self: center;
+
+		menu {
+			display: grid;
+			gap: 1em;
+		}
+
+		input {
+			padding-inline: 0.5em;
+		}
+
+		button {
+			justify-self: center;
+			padding: 0.5em 0.75em;
+		}
+	}
+}

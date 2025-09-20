@@ -75,12 +75,7 @@ export class Mensaje extends Fetch {
 			form.onsubmit = (submitEvent) => {
 				submitEvent.preventDefault();
 				switch (method) {
-					// case 'GET':
-					//     this.filterLibros(form);
-					//     break;
 					case 'POST':
-						// case 'PUT':
-						// case 'DELETE':
 						this.writeMensaje(form, method);
 				}
 			}
@@ -99,9 +94,6 @@ export class Mensaje extends Fetch {
 
 	async writeMensaje(form) {
 		await this.fetchData(form);
-		// if (response.status === 201 && method === 'POST' || response.status === 200 && method === 'PUT' || response.status === 204 && method === 'DELETE') {
-		// 	await this.getLibros();
-		// }
 	}
 }
 

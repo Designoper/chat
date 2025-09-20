@@ -75,7 +75,7 @@ export class Usuario extends Fetch {
 
 		forms.forEach(form => {
 			if (form.getAttribute('action') === null) {
-				form.action = this.ENDPOINT;
+				form.action = Usuario.ENDPOINT;
 			}
 		});
 	}
