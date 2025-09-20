@@ -1,7 +1,7 @@
 import { Fetch } from "./Fetch.js";
 
 export class Usuario extends Fetch {
-	static ENDPOINT = `${location.protocol}//${location.host}/api/usuarios`;
+	static ENDPOINT = `${location.protocol}//${location.host}/api/login`;
 
 	constructor() {
 		super();
@@ -42,10 +42,10 @@ export class Usuario extends Fetch {
 
 	async writeUsuario(form, method) {
 		const response = await this.fetchData(form);
-        if (response.status === 201 && method === 'POST') {
+		if (response.status === 200 && method === 'POST') {
 			sessionStorage.setItem('id_usuario', response.content.id_usuario);
-            location.href = 'chat.html';
-        }
+			location.href = 'chat.html';
+		}
 	}
 }
 

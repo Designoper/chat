@@ -66,9 +66,9 @@ final class Usuario extends UsuarioIntegrityErrors
 
 		$this->checkValidationErrors();
 
-		$this->checkIntegrityErrors();
 
-		$statement = "SELECT *
+
+		$statement = "SELECT id_usuario
 		FROM usuarios
 		WHERE nombre = ?
 		AND PASSWORD = ?";
@@ -86,16 +86,23 @@ final class Usuario extends UsuarioIntegrityErrors
 
 		$query->execute();
 
-		$usuario = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$usuario = $query->get_result()->fetch_column(0);
+
 
 		$query->close();
 
 		if (!$usuario) {
 			$this->setStatus(401);
-			$this->setMessage("Credenciales inválidas");
-			$this->getResponse();
-			exit();
+			$this->setIntegrityError("El usuario o la contraseña son incorrectos.");
+			$this->checkIntegrityErrors();
 		}
+
+		$this->setStatus(200);
+		$this->setMessage("Login exitoso");
+		$this->setContent([
+			"id_usuario" => $usuario,
+		]);
+		$this->getResponse();
 	}
 
 	// MARK: CREATE

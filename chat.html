@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Chat</title>
+	<meta name="description" content="El chat de la gente guay">
+
+	<link href="./assets/css/common/reset.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/common/main-layout.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
+
+	<script src="./assets/js/Mensaje.js" type="module" async></script>
+
+</head>
+
+<body>
+
+	<main id="main">
+
+		<h1>Chat</h1>
+
+		<section>
+
+			<output id="fetchoutput"></output>
+			<output id="errorcontainer"></output>
+
+		</section>
+
+	</main>
+
+	<form>
+
+		<input type="number" id="id_usuario" name="id_usuario" hidden>
+		<input id="contenido" name="contenido" minlength="1" maxlength="255" autocomplete="off" placeholder="Escribe un mensaje..." required>
+		<button type="submit" value="POST">Enviar</button>
+
+	</form>
+
+</body>
+
+</html>
