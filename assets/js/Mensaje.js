@@ -31,7 +31,7 @@ export class Mensaje extends Fetch {
 
 		const usuarioInput = document.querySelector('input#id_usuario');
 		if (usuarioInput) {
-			usuarioInput.value = usuario;
+			usuarioInput.setAttribute('value', usuario);
 		}
 	}
 
