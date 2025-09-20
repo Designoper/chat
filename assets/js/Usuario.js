@@ -3,11 +3,6 @@ import { Fetch } from "./Fetch.js";
 export class Usuario extends Fetch {
 	static ENDPOINT = `${location.protocol}//${location.host}/api/usuarios`;
 
-	// static DOM_ELEMENTS = {
-	// 	OUTPUT: document.getElementById('fetchoutput'),
-	// 	ERROR_CONTAINER: document.getElementById('errorcontainer')
-	// };
-
 	constructor() {
 		super();
 	}

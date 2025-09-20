@@ -19,15 +19,6 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            'usuarios$',
-            function (): void {
-                $usuario = new Usuario();
-                $usuario->readUsuarios();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
             'mensajes$',
             function (): void {
                 $mensaje = new Mensaje();

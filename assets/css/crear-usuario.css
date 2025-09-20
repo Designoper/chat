@@ -1,14 +1,26 @@
 main {
 	form {
 		display: grid;
-		gap: 1em;
+		gap: 2em;
 		padding: 2em;
 		max-width: 375px;
 		justify-self: center;
 
+		&:has(:invalid) {
+			button:not([type="reset"], [type="button"]) {
+				opacity: 50%;
+				cursor: not-allowed;
+			}
+		}
+
 		menu {
 			display: grid;
 			gap: 1em;
+		}
+
+		li {
+			display: grid;
+			gap: 0.5em;
 		}
 
 		input {
