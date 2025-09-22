@@ -2,6 +2,8 @@ main {
 	display: grid;
 	gap: 5rem 0;
 	padding: 4rem 0;
+	max-width: 1200px;
+	margin: 0 auto;
 
 	h1 {
 		flex-basis: 100%;
@@ -12,8 +14,6 @@ main {
 		display: grid;
 		gap: 2rem 3.25rem;
 		padding: 0 10vw;
-		max-width: 1200px;
-		justify-self: center;
 	}
 
 	#fetchoutput {
