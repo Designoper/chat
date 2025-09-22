@@ -42,7 +42,13 @@ export class Mensaje extends Fetch {
 	static mensajesTemplate(fetchedMensajes) {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
-			`<p>${mensaje.nombre}: ${mensaje.contenido} ${mensaje.fecha_creacion}</p>`
+			`
+			<article ${mensaje.id_usuario == sessionStorage.getItem('id_usuario') ? 'class="mensaje-propio"': ''}>
+				<p>${mensaje.nombre}</p>
+				<p>${mensaje.contenido}</p>
+				<p>${mensaje.fecha_creacion}</p>
+			</article>
+			`
 		).join('');
 
 		return mensajes;

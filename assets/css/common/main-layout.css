@@ -12,6 +12,7 @@ main {
 		display: grid;
 		gap: 2rem 3.25rem;
 		padding: 0 10vw;
+		/* max-width: 1000px; */
 	}
 
 	#fetchoutput {

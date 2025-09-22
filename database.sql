@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS chat;
-CREATE DATABASE chat CHARACTER SET utf8mb4;
-USE chat;
+-- DROP DATABASE IF EXISTS chat;
+-- CREATE DATABASE chat CHARACTER SET utf8mb4;
+-- USE chat;
 
 CREATE TABLE usuarios (
 	id_usuario INT PRIMARY KEY AUTO_INCREMENT,
@@ -16,10 +16,10 @@ CREATE TABLE mensajes (
 	FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
 );
 
-INSERT INTO usuarios (nombre, password) VALUES
-("Juan", "1234"),
-("Manolo", "12345");
+-- INSERT INTO usuarios (nombre, password) VALUES
+-- ("Juan", "1234"),
+-- ("Manolo", "12345");
 
-INSERT INTO mensajes (contenido, id_usuario) VALUES
-("Hola, ¿cómo estás?", 1),
-("Muy bien, ¿y tú?", 2);
+-- INSERT INTO mensajes (contenido, id_usuario) VALUES
+-- ("Hola, ¿cómo estás?", 1),
+-- ("Muy bien, ¿y tú?", 2);
