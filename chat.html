@@ -13,7 +13,7 @@
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/main-layout.css" rel="preload stylesheet" as="style">
-	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/chat.css" rel="preload stylesheet" as="style">
 
 	<script src="./assets/js/Mensaje.js" type="module" async></script>
 
@@ -22,8 +22,6 @@
 <body>
 
 	<main id="main">
-
-		<h1>Chat</h1>
 
 		<section>
 
@@ -37,7 +35,7 @@
 	<form>
 
 		<input type="number" id="id_usuario" name="id_usuario" hidden>
-		<input id="contenido" name="contenido" minlength="1" maxlength="255" autocomplete="off" placeholder="Escribe un mensaje..." required>
+		<input id="contenido" name="contenido" minlength="1" maxlength="255" autocomplete="off" placeholder="Tu mensaje" required>
 		<button type="submit" value="POST">Enviar</button>
 
 	</form>

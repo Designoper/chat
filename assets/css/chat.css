@@ -1,0 +1,52 @@
+form {
+	width: 100%;
+	position: sticky;
+	left: 0;
+	bottom: 0;
+	padding: 1em 10vw;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 2em;
+}
+
+input {
+	border-radius: 0.25rem;
+	padding: 0.25em 0.75em;
+}
+
+button {
+	padding: 0.75em;
+	border-radius: 0.25rem;
+	transition: transform 0.5s;
+	justify-self: center;
+
+	&:hover {
+		transform: scale(107%);
+	}
+}
+
+article {
+	display: grid;
+	gap: 1em;
+	padding: 1em;
+	border-radius: 1em;
+	width: fit-content;
+	max-width: 85%;
+	border: solid 1px black;
+
+	p {
+		word-break: break-all;
+
+		&:nth-of-type(1) {
+			font-weight: bold;
+		}
+
+		&:nth-of-type(3) {
+			font-size: smaller;
+		}
+	}
+}
+
+.mensaje-propio {
+	justify-self: right;
+}

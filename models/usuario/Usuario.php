@@ -66,8 +66,6 @@ final class Usuario extends UsuarioIntegrityErrors
 
 		$this->checkValidationErrors();
 
-
-
 		$statement = "SELECT id_usuario
 		FROM usuarios
 		WHERE nombre = ?
