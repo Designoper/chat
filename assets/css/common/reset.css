@@ -1,28 +1,41 @@
+@view-transition {
+	navigation: auto;
+}
+
 * {
-	padding: 0;
 	margin: 0;
+	padding: 0;
 	border: 0;
 	box-sizing: border-box;
 	font: inherit;
 	line-height: 1.5;
 	text-box: trim-both cap alphabetic;
 	text-wrap: pretty;
-	hyphens: auto;
+	text-align: justify;
 	text-decoration: none;
+	hyphens: auto;
 	overflow-wrap: break-word;
 	color: inherit;
-	background-color: transparent;
+	background: none;
 	break-inside: avoid;
 	flex-wrap: wrap;
+	align-content: start;
+	scrollbar-gutter: stable;
 }
 
 html {
 	font-family: sans-serif;
-	scrollbar-gutter: stable;
+	font-size-adjust: from-font;
+	interpolate-size: allow-keywords;
+	scroll-behavior: smooth;
+}
+
+:is(ul, ol, menu) {
+	list-style: none;
 }
 
 li {
-	list-style: none;
+	text-wrap: initial;
 }
 
 :is(img, svg, video) {
@@ -39,7 +52,7 @@ img {
 	cursor: pointer;
 }
 
-:is(input:not([type="checkbox"]), select, textarea) {
+:is(input, datalist, select, textarea) {
 	width: 100%;
 	text-box: initial;
 }
@@ -50,4 +63,8 @@ img {
 
 textarea {
 	resize: none;
+}
+
+:is(select, ::picker(select)) {
+	appearance: base-select;
 }
