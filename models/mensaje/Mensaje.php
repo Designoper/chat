@@ -9,6 +9,7 @@ final class Mensaje extends ApiResponse
 	private readonly string $contenido;
 	private readonly string $fecha;
 	private readonly int $id_usuario;
+	private readonly int $id_mensaje;
 
 	public function __construct()
 	{
@@ -25,6 +26,11 @@ final class Mensaje extends ApiResponse
 	private function getIdUsuario(): int
 	{
 		return $this->id_usuario;
+	}
+
+	private function getIdMensaje(): int
+	{
+		return $this->id_mensaje;
 	}
 
 	// MARK: SETTERS
@@ -46,6 +52,18 @@ final class Mensaje extends ApiResponse
 		}
 
 		$this->id_usuario = (int) $value;
+	}
+
+	private function setIdMensaje(): void
+	{
+		$value = $_POST['id_mensaje'] ?? null;
+
+		if (empty($value)) {
+			$this->setValidationError("El campo 'id_mensaje' no puede estar vacío.");
+			return;
+		}
+
+		$this->id_mensaje = (int) $value;
 	}
 
 	// MARK: READ MENSAJES
@@ -105,6 +123,42 @@ final class Mensaje extends ApiResponse
 
 		$this->setStatus(201);
 		$this->setMessage("Mensaje creado con éxito");
+		$this->getResponse();
+	}
+
+	// MARK: DELETE MENSAJE
+
+	public function deleteMensaje(): void
+	{
+		$this->setIdMensaje();
+
+		$this->checkValidationErrors();
+
+		$id_mensaje = $this->getIdMensaje();
+
+		$this->checkIntegrityErrors();
+
+		$statement =
+			"DELETE FROM mensajes
+			WHERE id_mensaje = ?";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"i",
+			$id_mensaje
+		);
+
+		$query->execute();
+		$num_filas = $query->affected_rows;
+		$query->close();
+
+		if ($num_filas === 1) {
+			$this->setStatus(204);
+		} else {
+			$this->setStatus(404);
+			$this->setMessage('¡El mensaje solicitado no existe!');
+		}
 		$this->getResponse();
 	}
 }
