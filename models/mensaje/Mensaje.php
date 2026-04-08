@@ -54,16 +54,17 @@ final class Mensaje extends ApiResponse
 		$this->id_usuario = (int) $value;
 	}
 
-	private function setIdMensaje(): void
+	private function setIdMensaje(int $min = 1): void
 	{
-		$value = $_POST['id_mensaje'] ?? null;
+		$error_message = "El id del recurso debe ser un número entero superior o igual a $min y solo contener números.";
 
-		if (empty($value)) {
-			$this->setValidationError("El campo 'id_mensaje' no puede estar vacío.");
-			return;
-		}
+		$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+		$segments = explode('/', trim($path, '/'));
+		$value = end($segments);
 
-		$this->id_mensaje = (int) $value;
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))
+			? $this->id_mensaje = (int) $value
+			: $this->setValidationError($error_message);
 	}
 
 	// MARK: READ MENSAJES

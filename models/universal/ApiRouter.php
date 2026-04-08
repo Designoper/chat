@@ -55,6 +55,15 @@ final class ApiRouter extends Sanitizer
             }
         );
 
+        $this->setRoute(
+            'POST',
+            'mensajes/[1-9]\d*$',
+            function (): void {
+                $mensaje = new Mensaje();
+                $mensaje->deleteMensaje();
+            }
+        );
+
         // UPDATE ROUTES
 
         $this->handleRequest();
