@@ -32,7 +32,8 @@ article {
 	border-radius: 1em;
 	width: fit-content;
 	max-width: 85%;
-	border: solid 1px black;
+	/* border: solid 1px black; */
+	background-color: rgb(255, 141, 106);
 
 	p {
 		word-break: break-all;
