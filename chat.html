@@ -28,23 +28,22 @@
 
 	<main id="main">
 
-		<section>
+		<output id="fetchoutput"></output>
+		<output id="errorcontainer"></output>
 
-			<output id="fetchoutput"></output>
-			<output id="errorcontainer"></output>
+		<form>
 
-		</section>
+			<input type="number" id="id_usuario" name="id_usuario" hidden>
+			<input id="contenido" name="contenido" minlength="1" maxlength="255" autocomplete="off"
+				placeholder="Mensaje" required>
+
+			<button type="submit" value="POST">
+				<img src="https://cdn-icons-png.flaticon.com/512/3682/3682321.png" alt="Enviar mensaje">
+			</button>
+
+		</form>
 
 	</main>
-
-	<form>
-
-		<input type="number" id="id_usuario" name="id_usuario" hidden>
-		<input id="contenido" name="contenido" minlength="1" maxlength="255" autocomplete="off" placeholder="Tu mensaje"
-			required>
-		<button type="submit" value="POST">Enviar</button>
-
-	</form>
 
 </body>
 

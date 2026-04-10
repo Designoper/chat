@@ -2,8 +2,9 @@ main {
 	display: grid;
 	gap: 5rem 0;
 	padding: 4rem 0;
-	max-width: 1200px;
+	max-width: 60vw;
 	margin: 0 auto;
+
 
 	h1 {
 		flex-basis: 100%;
@@ -19,6 +20,7 @@ main {
 	#fetchoutput {
 		display: grid;
 		gap: 1.5em;
+
 	}
 }
 

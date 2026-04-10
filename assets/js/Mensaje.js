@@ -17,9 +17,9 @@ export class Mensaje extends Fetch {
 		this.formAction();
 		await this.getMensajes();
 
-		setInterval(async () => {
-			await this.getMensajes();
-		}, 2000);
+		// setInterval(async () => {
+		// 	await this.getMensajes();
+		// }, 2000);
 	}
 
 	sessionCheck() {
@@ -49,12 +49,12 @@ export class Mensaje extends Fetch {
 				<p>${mensaje.fecha_creacion}</p>
 				${mensaje.id_usuario == sessionStorage.getItem('id_usuario')
 					? `<form action="${Mensaje.ENDPOINT}/${mensaje.id_mensaje}" method="dialog">
-						<button type="submit" value='POST'>Eliminar mensaje</button>
+						<button type="submit" value='POST'>
+						<img src="https://cdn-icons-png.flaticon.com/512/16/16367.png">
+						</button>
 						</form>`
 					: ''}
 			</article>
-
-			</dialog>
 		`
 		).join('');
 
