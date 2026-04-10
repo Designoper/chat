@@ -47,9 +47,11 @@ export class Mensaje extends Fetch {
 				<p>${mensaje.nombre}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${mensaje.fecha_creacion}</p>
-				<form action="${Mensaje.ENDPOINT}/${mensaje.id_mensaje}" method="dialog">
-					<button type="submit" value='POST'>Eliminar mensaje</button>
-				</form>
+				${mensaje.id_usuario == sessionStorage.getItem('id_usuario')
+					? `<form action="${Mensaje.ENDPOINT}/${mensaje.id_mensaje}" method="dialog">
+						<button type="submit" value='POST'>Eliminar mensaje</button>
+						</form>`
+					: ''}
 			</article>
 
 			</dialog>
