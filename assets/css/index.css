@@ -1,53 +1,56 @@
-form {
-	width: 100%;
-	position: sticky;
-	left: 0;
-	bottom: 0;
-	padding: 3em;
-	display: grid;
-	grid-template-columns: 1fr auto;
-	gap: 2em;
-}
+main {
+	form {
+		display: grid;
+		gap: 2em;
+		padding: 2em;
+		max-width: 375px;
+		justify-self: center;
+		border-radius: 1em;
+		background-color: rgb(214, 214, 255);
 
-:is(input, select, textarea) {
-	border-radius: 0.25rem;
-	padding: 0.25em 0.75em;
-}
-
-button {
-	padding: 0.75em;
-	border-radius: 0.25rem;
-	transition: transform 0.5s;
-	justify-self: center;
-
-	&:hover {
-		transform: scale(107%);
-	}
-}
-
-article {
-	display: grid;
-	gap: 1em;
-	padding: 1em;
-	/* background-color: rgb(104, 104, 241); */
-	border-radius: 1em;
-	width: fit-content;
-	max-width: 85%;
-	border: solid 1px black;
-
-	p {
-		word-break: break-all;
-
-		&:nth-of-type(1) {
-			font-weight: bold;
+		&:has(:invalid) {
+			button:not([type="reset"], [type="button"]) {
+				opacity: 50%;
+				cursor: not-allowed;
+			}
 		}
 
-		&:nth-of-type(3) {
-			font-size: smaller;
+		menu {
+			display: grid;
+			gap: 1.5em;
+		}
+
+		li {
+			display: grid;
+			gap: 0.75em;
+		}
+
+		input {
+			padding-inline: 0.5em;
+			border-radius: 0.25em;
+			/* outline: solid 1px var(--text); */
+			background-color: white;
+		}
+
+		button {
+			justify-self: center;
+			padding: 0.5em 0.75em;
+			border-radius: 0.25em;
+			background-color: white;
+		}
+
+		output {
+			&:empty {
+				display: none;
+			}
+
+			p {
+				margin-bottom: 1em;
+			}
+		}
+
+		a {
+			text-decoration: underline;
 		}
 	}
-}
-
-.mensaje-propio {
-	justify-self: right;
 }

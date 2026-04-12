@@ -1,6 +1,7 @@
 html {
 	--primary-bg: hsl(180, 42%, 93%);
-	--secondary-bg: hsl(34, 57%, 70%);
+	--secondary-bg: rgb(214, 214, 255);
+;
 	--terciary-bg: hsl(0, 0%, 100%);
 	--text: hsl(0, 0%, 0%);
 	--text-light: hsl(0, 0%, 20%);
@@ -18,9 +19,9 @@ html {
 	background-color: var(--secondary-bg);
 } */
 
-input {
+/* input {
 	background-color: var(--terciary-bg);
-}
+} */
 
 /* button {
 	background-color: var(--secondary-bg);

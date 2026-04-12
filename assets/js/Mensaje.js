@@ -17,9 +17,9 @@ export class Mensaje extends Fetch {
 		this.formAction();
 		await this.getMensajes();
 
-		// setInterval(async () => {
-		// 	await this.getMensajes();
-		// }, 2000);
+		setInterval(async () => {
+			await this.getMensajes();
+		}, 2000);
 	}
 
 	sessionCheck() {
