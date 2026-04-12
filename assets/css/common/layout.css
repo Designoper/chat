@@ -1,34 +1,4 @@
 main {
 	display: grid;
 	gap: 5rem 0;
-	padding: 4rem 0;
-	max-width: 60vw;
-	margin: 0 auto;
-
-
-	h1 {
-		flex-basis: 100%;
-		grid-column: 1/-1;
-	}
-
-	section {
-		display: grid;
-		gap: 2rem 3.25rem;
-		padding: 0 10vw;
-	}
-
-	#fetchoutput {
-		display: grid;
-		gap: 1.5em;
-
-	}
-}
-
-@media screen and (1024px <=width) {
-	main {
-		section {
-			padding: 0 7.5vw;
-			gap: 2rem 3.5rem;
-		}
-	}
 }

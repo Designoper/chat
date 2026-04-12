@@ -50,7 +50,7 @@ export class Mensaje extends Fetch {
 				${mensaje.id_usuario == sessionStorage.getItem('id_usuario')
 					? `<form action="${Mensaje.ENDPOINT}/${mensaje.id_mensaje}" method="dialog">
 						<button type="submit" value='POST'>
-						<img src="https://cdn-icons-png.flaticon.com/512/16/16367.png">
+							<img src="../assets/img/papelera.svg" alt="Eliminar mensaje">
 						</button>
 						</form>`
 					: ''}

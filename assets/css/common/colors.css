@@ -18,6 +18,10 @@ html {
 	background-color: var(--secondary-bg);
 } */
 
-:is(input, button) {
+input {
 	background-color: var(--terciary-bg);
 }
+
+/* button {
+	background-color: var(--secondary-bg);
+} */

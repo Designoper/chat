@@ -1,4 +1,6 @@
 main {
+	padding: 4rem 0 0;
+
 	>form {
 		width: 100%;
 		position: sticky;
@@ -20,6 +22,7 @@ main {
 			border-radius: 0.25rem;
 			transition: transform 0.5s;
 			justify-self: center;
+			background-color: white;
 
 			&:hover {
 				transform: scale(107%);
@@ -34,11 +37,9 @@ main {
 	output {
 		form {
 			justify-self: right;
-			width: 2em;
 
-			button {
-				width: 2em;
-				display: block;
+			img {
+				width: 1.5em;
 			}
 		}
 
@@ -69,5 +70,13 @@ main {
 		.mensaje-propio {
 			justify-self: right;
 		}
+	}
+
+	#fetchoutput {
+		display: grid;
+		gap: 1.5em;
+		max-width: 60vw;
+		margin: 0 auto;
+		width: 100%;
 	}
 }
