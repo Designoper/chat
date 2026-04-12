@@ -1,28 +1,15 @@
 html {
 	--primary-bg: hsl(180, 42%, 93%);
 	--secondary-bg: rgb(214, 214, 255);
-;
-	--terciary-bg: hsl(0, 0%, 100%);
+	--terciary-bg: #bebeff;
 	--text: hsl(0, 0%, 0%);
 	--text-light: hsl(0, 0%, 20%);
 
 	color: var(--text-light);
 	background-color: var(--primary-bg);
-	scrollbar-color: var(--secondary-bg) var(--primary-bg);
+	scrollbar-color: var(--terciary-bg) var(--secondary-bg);
 }
 
 :focus-visible {
 	outline: var(--text) solid 4px;
 }
-
-/* form {
-	background-color: var(--secondary-bg);
-} */
-
-/* input {
-	background-color: var(--terciary-bg);
-} */
-
-/* button {
-	background-color: var(--secondary-bg);
-} */

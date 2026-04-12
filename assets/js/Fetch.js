@@ -59,18 +59,14 @@ export class Fetch {
 	errorChecker(response, output) {
 		if (response.validationErrors?.length > 0) {
 			output.innerHTML =
-				`<p>Errores de validación:</p>
-
-				<ul>
+				`<ul>
 					${response.validationErrors.map(error => `<li>${error}</li>`).join("")}
 				</ul>`
 		}
 
 		if (response.integrityErrors?.length > 0) {
 			output.innerHTML =
-				`<p>Errores de integridad:</p>
-
-				<ul>
+				`<ul>
 					${response.integrityErrors.map(error => `<li>${error}</li>`).join("")}
 				</ul>`
 		}

@@ -28,13 +28,12 @@ main {
 		input {
 			padding-inline: 0.5em;
 			border-radius: 0.25em;
-			/* outline: solid 1px var(--text); */
 			background-color: white;
 		}
 
 		button {
 			justify-self: center;
-			padding: 0.5em 0.75em;
+			padding: 0.75em;
 			border-radius: 0.25em;
 			background-color: white;
 		}
