@@ -1,4 +1,4 @@
-const VERSION = 12;
+const VERSION = 13;
 
 // Instalación: activar inmediatamente
 self.addEventListener("install", event => {
