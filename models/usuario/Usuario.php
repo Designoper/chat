@@ -143,11 +143,10 @@ final class Usuario extends UsuarioIntegrityErrors
 		$id_usuario = $query->insert_id;
 		$query->close();
 
+		$_SESSION['id_usuario'] = $id_usuario;
+
 		$this->setStatus(201);
 		$this->setMessage("Usuario creado con éxito");
-		$this->setContent([
-			"id_usuario" => $id_usuario,
-		]);
 		$this->getResponse();
 	}
 
