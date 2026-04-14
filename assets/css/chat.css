@@ -27,8 +27,9 @@ main {
 				transform: scale(107%);
 			}
 
-			img {
+			svg {
 				width: 1.5em;
+				fill: #bebeff;
 			}
 		}
 	}
