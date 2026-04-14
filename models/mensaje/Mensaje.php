@@ -72,10 +72,10 @@ final class Mensaje extends ApiResponse
 	public function readMensajes(): void
 	{
 		$statement =
-			'SELECT id_mensaje, contenido, fecha_creacion, id_usuario
+			'SELECT id_mensaje, contenido, fecha_creacion, id_usuario, nombre
 			FROM mensajes
 			NATURAL JOIN usuarios
-			ORDER BY id_mensaje DESC';
+			ORDER BY fecha_creacion DESC';
 
 		$query = $this->getConnection()->prepare($statement);
 
