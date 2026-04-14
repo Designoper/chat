@@ -32,12 +32,8 @@ self.addEventListener("fetch", event => {
 	const url = new URL(event.request.url);
 
 	// ❌ No interceptar tus APIs
-	if (
-		url.pathname.startsWith("/api/mensajes") ||
-		url.pathname.startsWith("/api/login") ||
-		url.pathname.startsWith("/api/usuarios")
-	) {
-		return; // dejar que el navegador haga fetch normal
+	if (url.pathname.startsWith("/api/")) {
+		return;
 	}
 
 	// ❌ No interceptar POST, PUT, DELETE, etc.
