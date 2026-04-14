@@ -87,7 +87,7 @@ final class Usuario extends UsuarioIntegrityErrors
 
 		$query->execute();
 
-		$usuario = $query->get_result()->fetch_assoc();
+		$usuario = $query->get_result()->fetch_column(0);
 
 		$query->close();
 
@@ -99,10 +99,7 @@ final class Usuario extends UsuarioIntegrityErrors
 
 		$this->setStatus(200);
 		$this->setMessage("Login exitoso");
-		$_SESSION['id_usuario'] = $usuario['id_usuario'];
-		// $this->setContent([
-		// 	"id_usuario" => $usuario,
-		// ]);
+		$_SESSION['id_usuario'] = $usuario;
 		$this->getResponse();
 	}
 
@@ -110,6 +107,8 @@ final class Usuario extends UsuarioIntegrityErrors
 
 	public function createUsuario(): void
 	{
+		session_start();
+
 		$this->setUsuario();
 		$this->setPassword();
 

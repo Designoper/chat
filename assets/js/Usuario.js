@@ -21,7 +21,6 @@ export class Usuario extends Form {
 	async loginUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
-			// sessionStorage.setItem('id_usuario', response.content.id_usuario);
 			location.href = 'chat.html';
 		}
 	}
@@ -40,12 +39,6 @@ export class Usuario extends Form {
 			usuarioInput.setAttribute('value', this.user);
 		}
 	}
-	// const usuario = sessionStorage.getItem('id_usuario');
-	// if (!usuario) {
-	// 	location.href = 'crear-usuario.html';
-	// }
-
-
 }
 
 (async () => {
