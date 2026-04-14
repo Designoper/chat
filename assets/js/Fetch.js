@@ -11,26 +11,28 @@ export class Fetch {
 
 		const init = {};
 		const userInputs = new FormData(form);
-		const sendButton = form.querySelector('button:not([type="reset"], [type="button"])');
-		const method = sendButton.value.toUpperCase();
+		const method = form.method;
 		const url = new URL(form.action);
 
-		init.method = method;
 		const output = form.querySelector('output');
+		const dialog = form.closest('dialog');
+
+		init.method = method;
 
 		switch (method) {
-			case 'GET':
-				url.search = new URLSearchParams(userInputs);
+			case 'post':
+				init.body = userInputs;
 				break;
 
-			case 'POST':
-				init.body = userInputs;
+			default:
+				url.search = new URLSearchParams(userInputs);
 		}
 
 		try {
 			const response = await fetch(url, init);
 
 			if (response.status === 204) {
+				this.resetForm(form, method, output, dialog);
 				return response;
 			}
 
@@ -38,7 +40,7 @@ export class Fetch {
 			json.status = response.status;
 
 			response.ok
-				? null
+				? this.resetForm(form, method, output, dialog)
 				: this.errorChecker(json, output);
 
 			return json;
@@ -63,5 +65,11 @@ export class Fetch {
 					${response.integrityErrors.map(error => `<li>${error}</li>`).join("")}
 				</ul>`
 		}
+	}
+
+	resetForm(form, method, output, dialog) {
+		form && method !== "get" ? form.reset() : null;
+		dialog ? dialog.close() : null;
+		output ? output.innerHTML = "" : null;
 	}
 }

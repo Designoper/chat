@@ -47,14 +47,14 @@ export class Mensaje extends Fetch {
 				<p>${mensaje.contenido}</p>
 				<p>${mensaje.fecha_creacion}</p>
 				${mensaje.id_usuario == sessionStorage.getItem('id_usuario')
-				? `<form action="${Mensaje.ENDPOINT}/${mensaje.id_mensaje}" method="dialog">
-						<button type="submit" value='POST'>
+				? `<form action="${Mensaje.ENDPOINT}/${mensaje.id_mensaje}" method="post">
+						<button formmethod="dialog">
 							<img src="../assets/img/papelera.svg" alt="Eliminar mensaje">
 						</button>
-						</form>`
+					</form>`
 				: ''}
 			</article>
-		`
+			`
 		).join('');
 
 		return mensajes;
@@ -72,16 +72,9 @@ export class Mensaje extends Fetch {
 		const forms = document.querySelectorAll('form');
 
 		forms.forEach(form => {
-
-			const submitButton = form.querySelector('button:not([type="reset"], [type="button"])');
-			const method = submitButton.value;
-
 			form.onsubmit = (submitEvent) => {
 				submitEvent.preventDefault();
-				switch (method) {
-					case 'POST':
-						this.writeMensaje(form, method);
-				}
+				this.writeMensaje(form);
 			}
 		});
 	}

@@ -86,7 +86,6 @@ final class Usuario extends UsuarioIntegrityErrors
 
 		$usuario = $query->get_result()->fetch_column(0);
 
-
 		$query->close();
 
 		if (!$usuario) {

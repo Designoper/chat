@@ -16,16 +16,9 @@ export class Usuario extends Fetch {
 		const forms = document.querySelectorAll('form');
 
 		forms.forEach(form => {
-
-			const submitButton = form.querySelector('button:not([type="reset"], [type="button"])');
-			const method = submitButton.value;
-
 			form.onsubmit = (submitEvent) => {
 				submitEvent.preventDefault();
-				switch (method) {
-					case 'POST':
-						this.writeUsuario(form, method);
-				}
+				this.login(form);
 			}
 		});
 	}
@@ -40,9 +33,9 @@ export class Usuario extends Fetch {
 		});
 	}
 
-	async writeUsuario(form, method) {
+	async login(form) {
 		const response = await this.fetchData(form);
-		if (response.status === 200 && method === 'POST') {
+		if (response.status === 200) {
 			sessionStorage.setItem('id_usuario', response.content.id_usuario);
 			location.href = 'chat.html';
 		}
