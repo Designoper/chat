@@ -2,6 +2,7 @@ import { Form } from "./Form.js";
 
 export class Usuario extends Form {
 	user = null;
+
 	constructor() {
 		super();
 	}
