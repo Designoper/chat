@@ -44,7 +44,7 @@ final class Mensaje extends ApiResponse
 
 	private function setIdUsuario(): void
 	{
-		$value = $_POST['id_usuario'] ?? null;
+		$value = $_SESSION['id_usuario'] ?? null;
 
 		if (empty($value)) {
 			$this->setValidationError("El campo 'id_usuario' no puede estar vacío.");
@@ -99,8 +99,6 @@ final class Mensaje extends ApiResponse
 
 	public function createMensaje(): void
 	{
-		session_start();
-
 		$this->setContenido();
 
 		$this->checkValidationErrors();

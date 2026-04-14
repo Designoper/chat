@@ -67,8 +67,6 @@ final class Usuario extends UsuarioIntegrityErrors
 
 	public function login(): void
 	{
-		session_start();
-
 		$this->setUsuario();
 		$this->setPassword();
 
@@ -113,8 +111,6 @@ final class Usuario extends UsuarioIntegrityErrors
 
 	public function createUsuario(): void
 	{
-		session_start();
-
 		$this->setUsuario();
 		$this->setPassword();
 
@@ -154,8 +150,6 @@ final class Usuario extends UsuarioIntegrityErrors
 
 	public function currentUsuario(): void
 	{
-		session_start();
-
 		if (!isset($_SESSION['id_usuario'])) {
 			$this->setStatus(401);
 			$this->setMessage("No hay usuario identificado");

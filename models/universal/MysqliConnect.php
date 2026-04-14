@@ -15,6 +15,8 @@ abstract class MysqliConnect extends EnvReader
 
 	protected function __construct()
 	{
+		session_start();
+
 		parent::__construct();
 
 		$this->setHostname();
