@@ -6,6 +6,7 @@ export class Form extends Fetch {
 	ENDPOINTS = {
 		CREAR_USUARIOS: `${this.ROOT}usuarios/crear`,
 		LOGIN_USUARIOS: `${this.ROOT}usuarios/login`,
+		CURRENT_USUARIOS: `${this.ROOT}usuarios/current`,
 		GET_MENSAJES: `${this.ROOT}mensajes`,
 		CREAR_MENSAJES: `${this.ROOT}mensajes/crear`,
 		ELIMINAR_MENSAJES: `${this.ROOT}mensajes`

@@ -6,6 +6,7 @@ require_once __DIR__ . '/UsuarioIntegrityErrors.php';
 
 final class Usuario extends UsuarioIntegrityErrors
 {
+	private readonly string $id_usuario;
 	private readonly string $usuario;
 	private readonly string $password;
 
@@ -61,6 +62,8 @@ final class Usuario extends UsuarioIntegrityErrors
 
 	public function login(): void
 	{
+		session_start();
+
 		$this->setUsuario();
 		$this->setPassword();
 
@@ -84,7 +87,7 @@ final class Usuario extends UsuarioIntegrityErrors
 
 		$query->execute();
 
-		$usuario = $query->get_result()->fetch_column(0);
+		$usuario = $query->get_result()->fetch_assoc();
 
 		$query->close();
 
@@ -96,9 +99,10 @@ final class Usuario extends UsuarioIntegrityErrors
 
 		$this->setStatus(200);
 		$this->setMessage("Login exitoso");
-		$this->setContent([
-			"id_usuario" => $usuario,
-		]);
+		$_SESSION['id_usuario'] = $usuario['id_usuario'];
+		// $this->setContent([
+		// 	"id_usuario" => $usuario,
+		// ]);
 		$this->getResponse();
 	}
 
@@ -138,6 +142,26 @@ final class Usuario extends UsuarioIntegrityErrors
 		$this->setMessage("Usuario creado con éxito");
 		$this->setContent([
 			"id_usuario" => $id_usuario,
+		]);
+		$this->getResponse();
+	}
+
+	// MARK: CURRENT
+
+	public function currentUsuario(): void
+	{
+		session_start();
+
+		if (!isset($_SESSION['id_usuario'])) {
+			$this->setStatus(409);
+			$this->setMessage("No hay usuario identificado");
+			$this->getResponse();
+		}
+
+		$this->setStatus(200);
+		$this->setMessage("Usuario identificado");
+		$this->setContent([
+			"id_usuario" => $_SESSION['id_usuario'],
 		]);
 		$this->getResponse();
 	}

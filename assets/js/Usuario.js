@@ -1,6 +1,7 @@
 import { Form } from "./Form.js";
 
 export class Usuario extends Form {
+	user = null;
 	constructor() {
 		super();
 	}
@@ -20,22 +21,31 @@ export class Usuario extends Form {
 	async loginUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
-			sessionStorage.setItem('id_usuario', response.content.id_usuario);
+			// sessionStorage.setItem('id_usuario', response.content.id_usuario);
 			location.href = 'chat.html';
 		}
 	}
 
-	sessionCheck() {
-		const usuario = sessionStorage.getItem('id_usuario');
-		if (!usuario) {
+	async sessionCheck() {
+		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS, 'get');
+
+		if (response.status === 409) {
 			location.href = 'crear-usuario.html';
 		}
 
+		this.user = response.content.id_usuario;
+
 		const usuarioInput = document.querySelector('input#id_usuario');
 		if (usuarioInput) {
-			usuarioInput.setAttribute('value', usuario);
+			usuarioInput.setAttribute('value', this.user);
 		}
 	}
+	// const usuario = sessionStorage.getItem('id_usuario');
+	// if (!usuario) {
+	// 	location.href = 'crear-usuario.html';
+	// }
+
+
 }
 
 (async () => {

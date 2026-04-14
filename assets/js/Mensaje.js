@@ -27,11 +27,11 @@ export class Mensaje extends Usuario {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
-			<article ${mensaje.id_usuario == sessionStorage.getItem('id_usuario') ? 'class="mensaje-propio"' : ''}>
+			<article ${mensaje.id_usuario == this.user ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${mensaje.fecha_creacion}</p>
-				${mensaje.id_usuario == sessionStorage.getItem('id_usuario')
+				${mensaje.id_usuario == this.user
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
 						<button>
 							<img src="../assets/img/papelera.svg" alt="Eliminar mensaje">
