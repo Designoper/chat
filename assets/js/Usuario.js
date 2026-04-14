@@ -33,11 +33,6 @@ export class Usuario extends Form {
 		}
 
 		this.user = response.content.id_usuario;
-
-		const usuarioInput = document.querySelector('input#id_usuario');
-		if (usuarioInput) {
-			usuarioInput.setAttribute('value', this.user);
-		}
 	}
 }
 
