@@ -13,7 +13,6 @@ export class Usuario extends Form {
 	async createUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 201) {
-			// sessionStorage.setItem('id_usuario', response.content.id_usuario);
 			window.location.href = 'chat.html';
 		}
 	}
