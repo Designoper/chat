@@ -13,7 +13,7 @@ export class Usuario extends Form {
 	async createUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 201) {
-			sessionStorage.setItem('id_usuario', response.content.id_usuario);
+			// sessionStorage.setItem('id_usuario', response.content.id_usuario);
 			location.href = 'chat.html';
 		}
 	}
@@ -28,7 +28,7 @@ export class Usuario extends Form {
 	async sessionCheck() {
 		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS, 'get');
 
-		if (response.status === 409) {
+		if (response.status === 401) {
 			location.href = 'crear-usuario.html';
 		}
 

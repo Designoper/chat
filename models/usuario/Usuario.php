@@ -152,7 +152,7 @@ final class Usuario extends UsuarioIntegrityErrors
 		session_start();
 
 		if (!isset($_SESSION['id_usuario'])) {
-			$this->setStatus(409);
+			$this->setStatus(401);
 			$this->setMessage("No hay usuario identificado");
 			$this->getResponse();
 		}
