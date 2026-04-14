@@ -15,8 +15,8 @@ export class Fetch {
 		const method = sendButton.value.toUpperCase();
 		const url = new URL(form.action);
 
+		init.method = method;
 		const output = form.querySelector('output');
-		const dialog = form.closest('dialog');
 
 		switch (method) {
 			case 'GET':
@@ -24,20 +24,13 @@ export class Fetch {
 				break;
 
 			case 'POST':
-			case 'PUT':
-				init.method = 'POST';
 				init.body = userInputs;
-				break;
-
-			case 'DELETE':
-				init.method = 'DELETE';
 		}
 
 		try {
 			const response = await fetch(url, init);
 
 			if (response.status === 204) {
-				this.resetForm(form, method, output, dialog);
 				return response;
 			}
 
@@ -45,7 +38,7 @@ export class Fetch {
 			json.status = response.status;
 
 			response.ok
-				? this.resetForm(form, method, output, dialog)
+				? null
 				: this.errorChecker(json, output);
 
 			return json;
@@ -70,11 +63,5 @@ export class Fetch {
 					${response.integrityErrors.map(error => `<li>${error}</li>`).join("")}
 				</ul>`
 		}
-	}
-
-	resetForm(form, method, errorContainer, dialog) {
-		form && method !== "GET" ? form.reset() : null;
-		dialog ? dialog.close() : null;
-		errorContainer ? errorContainer.innerHTML = "" : null;
 	}
 }

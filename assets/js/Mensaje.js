@@ -5,7 +5,6 @@ export class Mensaje extends Fetch {
 
 	static DOM_ELEMENTS = {
 		OUTPUT: document.getElementById('fetchoutput'),
-		ERROR_CONTAINER: document.getElementById('errorcontainer')
 	};
 
 	constructor() {
@@ -43,17 +42,17 @@ export class Mensaje extends Fetch {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
-			<article ${mensaje.id_usuario == sessionStorage.getItem('id_usuario') ? 'class="mensaje-propio"': ''}>
+			<article ${mensaje.id_usuario == sessionStorage.getItem('id_usuario') ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${mensaje.fecha_creacion}</p>
 				${mensaje.id_usuario == sessionStorage.getItem('id_usuario')
-					? `<form action="${Mensaje.ENDPOINT}/${mensaje.id_mensaje}" method="dialog">
+				? `<form action="${Mensaje.ENDPOINT}/${mensaje.id_mensaje}" method="dialog">
 						<button type="submit" value='POST'>
 							<img src="../assets/img/papelera.svg" alt="Eliminar mensaje">
 						</button>
 						</form>`
-					: ''}
+				: ''}
 			</article>
 		`
 		).join('');
@@ -63,16 +62,8 @@ export class Mensaje extends Fetch {
 
 	printMensajes(mensajes) {
 
-		if (mensajes.content.length === 0) {
-			Mensaje.DOM_ELEMENTS.OUTPUT.innerHTML = "";
-			Mensaje.DOM_ELEMENTS.ERROR_CONTAINER.innerHTML = mensajes.message;
-		}
-
-		else {
-			const content = Mensaje.mensajesTemplate(mensajes.content);
-			Mensaje.DOM_ELEMENTS.OUTPUT.innerHTML = content;
-			Mensaje.DOM_ELEMENTS.ERROR_CONTAINER.innerHTML = "";
-		}
+		const content = Mensaje.mensajesTemplate(mensajes.content);
+		Mensaje.DOM_ELEMENTS.OUTPUT.innerHTML = content;
 
 		this.formHandler();
 	}
