@@ -4,6 +4,7 @@ export class Fetch {
 	async simpleFetch(url) {
 		const response = await fetch(url);
 		const json = await response.json();
+		json.status = response.status;
 		return json;
 	}
 
@@ -11,7 +12,6 @@ export class Fetch {
 
 		const init = {};
 		const userInputs = new FormData(form);
-		// const method = method;
 		const url = new URL(action);
 
 		const output = form.querySelector('output');

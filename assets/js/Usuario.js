@@ -14,14 +14,14 @@ export class Usuario extends Form {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 201) {
 			// sessionStorage.setItem('id_usuario', response.content.id_usuario);
-			location.href = 'chat.html';
+			window.location.href = 'chat.html';
 		}
 	}
 
 	async loginUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
-			location.href = 'chat.html';
+			window.location.href = 'chat.html';
 		}
 	}
 
@@ -29,7 +29,7 @@ export class Usuario extends Form {
 		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS, 'get');
 
 		if (response.status === 401) {
-			location.href = 'crear-usuario.html';
+			window.location.href = 'crear-usuario.html';
 		}
 
 		this.user = response.content.id_usuario;

@@ -6,7 +6,7 @@ require_once __DIR__ . '/UsuarioIntegrityErrors.php';
 
 final class Usuario extends UsuarioIntegrityErrors
 {
-	private readonly string $id_usuario;
+	private readonly int $id_usuario;
 	private readonly string $usuario;
 	private readonly string $password;
 
@@ -16,6 +16,11 @@ final class Usuario extends UsuarioIntegrityErrors
 	}
 
 	// MARK: GETTERS
+
+	private function getIdUsuario(): int
+	{
+		return $this->id_usuario;
+	}
 
 	private function getUsuario(): string
 	{
@@ -87,19 +92,20 @@ final class Usuario extends UsuarioIntegrityErrors
 
 		$query->execute();
 
-		$usuario = $query->get_result()->fetch_column(0);
+		$id_usuario = $query->get_result()->fetch_column(0);
 
 		$query->close();
 
-		if (!$usuario) {
+		if (!$id_usuario) {
 			$this->setStatus(401);
 			$this->setIntegrityError("El usuario o la contraseña son incorrectos.");
 			$this->checkIntegrityErrors();
 		}
 
+		$_SESSION['id_usuario'] = $id_usuario;
+
 		$this->setStatus(200);
 		$this->setMessage("Login exitoso");
-		$_SESSION['id_usuario'] = $usuario;
 		$this->getResponse();
 	}
 
