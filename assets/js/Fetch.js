@@ -7,12 +7,12 @@ export class Fetch {
 		return json;
 	}
 
-	async fetchData(form) {
+	async fetchData(form, method, action = form.action) {
 
 		const init = {};
 		const userInputs = new FormData(form);
-		const method = form.method;
-		const url = new URL(form.action);
+		// const method = method;
+		const url = new URL(action);
 
 		const output = form.querySelector('output');
 		const dialog = form.closest('dialog');

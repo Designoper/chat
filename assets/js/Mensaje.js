@@ -1,9 +1,7 @@
-import { Fetch } from "./Fetch.js";
+import { Usuario } from "./Usuario.js";
 
-export class Mensaje extends Fetch {
-	static ENDPOINT = `${location.protocol}//${location.host}/api/mensajes`;
-
-	static DOM_ELEMENTS = {
+export class Mensaje extends Usuario {
+	DOM_ELEMENTS = {
 		OUTPUT: document.getElementById('fetchoutput'),
 	};
 
@@ -13,7 +11,6 @@ export class Mensaje extends Fetch {
 
 	async initialize() {
 		this.sessionCheck();
-		this.formAction();
 		await this.getMensajes();
 
 		setInterval(async () => {
@@ -21,24 +18,12 @@ export class Mensaje extends Fetch {
 		}, 2000);
 	}
 
-	sessionCheck() {
-		const usuario = sessionStorage.getItem('id_usuario');
-		if (!usuario) {
-			location.href = 'crear-usuario.html';
-		}
-
-		const usuarioInput = document.querySelector('input#id_usuario');
-		if (usuarioInput) {
-			usuarioInput.setAttribute('value', usuario);
-		}
-	}
-
 	async getMensajes() {
-		const response = await this.simpleFetch(Mensaje.ENDPOINT);
+		const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
 		this.printMensajes(response);
 	}
 
-	static mensajesTemplate(fetchedMensajes) {
+	mensajesTemplate(fetchedMensajes) {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
@@ -47,8 +32,8 @@ export class Mensaje extends Fetch {
 				<p>${mensaje.contenido}</p>
 				<p>${mensaje.fecha_creacion}</p>
 				${mensaje.id_usuario == sessionStorage.getItem('id_usuario')
-				? `<form action="${Mensaje.ENDPOINT}/${mensaje.id_mensaje}" method="post">
-						<button formmethod="dialog">
+				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
+						<button>
 							<img src="../assets/img/papelera.svg" alt="Eliminar mensaje">
 						</button>
 					</form>`
@@ -62,35 +47,18 @@ export class Mensaje extends Fetch {
 
 	printMensajes(mensajes) {
 
-		const content = Mensaje.mensajesTemplate(mensajes.content);
-		Mensaje.DOM_ELEMENTS.OUTPUT.innerHTML = content;
+		const content = this.mensajesTemplate(mensajes.content);
+		this.DOM_ELEMENTS.OUTPUT.innerHTML = content;
 
 		this.formHandler();
 	}
 
-	formHandler() {
-		const forms = document.querySelectorAll('form');
-
-		forms.forEach(form => {
-			form.onsubmit = (submitEvent) => {
-				submitEvent.preventDefault();
-				this.writeMensaje(form);
-			}
-		});
+	async writeMensaje(form, method, action) {
+		await this.fetchData(form, method, action);
 	}
 
-	formAction() {
-		const forms = document.querySelectorAll('form');
-
-		forms.forEach(form => {
-			if (form.getAttribute('action') === null) {
-				form.action = Mensaje.ENDPOINT;
-			}
-		});
-	}
-
-	async writeMensaje(form) {
-		await this.fetchData(form);
+	async deleteMensaje(form, method) {
+		await this.fetchData(form, method);
 	}
 }
 

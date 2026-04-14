@@ -19,7 +19,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
-            'mensajes$',
+            'mensajes',
             function (): void {
                 $mensaje = new Mensaje();
                 $mensaje->readMensajes();
@@ -30,7 +30,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            'usuarios',
+            'usuarios/crear',
             function (): void {
                 $usuario = new Usuario();
                 $usuario->createUsuario();
@@ -39,7 +39,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            'login',
+            'usuarios/login',
             function (): void {
                 $usuario = new Usuario();
                 $usuario->login();
@@ -48,7 +48,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            'mensajes$',
+            'mensajes/crear',
             function (): void {
                 $mensaje = new Mensaje();
                 $mensaje->createMensaje();
