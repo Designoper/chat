@@ -45,8 +45,9 @@ main {
 		form {
 			justify-self: right;
 
-			img {
+			svg {
 				width: 1.5em;
+				fill: #9f9fff;
 			}
 		}
 
