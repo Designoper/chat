@@ -34,6 +34,12 @@ final class Usuario extends UsuarioIntegrityErrors
 
 	// MARK: SETTERS
 
+	private function setIdUsuario(): void
+	{
+		$value = $_SESSION['id_usuario'] ?? null;
+		$this->id_usuario = $value;
+	}
+
 	private function setUsuario(): void
 	{
 		$value = $_POST['usuario'] ?? null;

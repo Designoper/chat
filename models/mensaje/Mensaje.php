@@ -6,10 +6,10 @@ require_once __DIR__ . '/../universal/ApiResponse.php';
 
 final class Mensaje extends ApiResponse
 {
-	private readonly string $contenido;
-	private readonly string $fecha;
-	private readonly int $id_usuario;
 	private readonly int $id_mensaje;
+	private readonly string $contenido;
+	private readonly string $fecha_creacion;
+	private readonly int $id_usuario;
 
 	public function __construct()
 	{
@@ -17,6 +17,11 @@ final class Mensaje extends ApiResponse
 	}
 
 	// MARK: GETTERS
+
+	private function getIdMensaje(): int
+	{
+		return $this->id_mensaje;
+	}
 
 	private function getContenido(): string
 	{
@@ -28,12 +33,20 @@ final class Mensaje extends ApiResponse
 		return $this->id_usuario;
 	}
 
-	private function getIdMensaje(): int
-	{
-		return $this->id_mensaje;
-	}
-
 	// MARK: SETTERS
+
+	private function setIdMensaje(int $min = 1): void
+	{
+		$error_message = "El id del recurso debe ser un número entero superior o igual a $min y solo contener números.";
+
+		$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+		$segments = explode('/', trim($path, '/'));
+		$value = end($segments);
+
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))
+			? $this->id_mensaje = (int) $value
+			: $this->setValidationError($error_message);
+	}
 
 	private function setContenido(): void
 	{
@@ -52,19 +65,6 @@ final class Mensaje extends ApiResponse
 		}
 
 		$this->id_usuario = (int) $value;
-	}
-
-	private function setIdMensaje(int $min = 1): void
-	{
-		$error_message = "El id del recurso debe ser un número entero superior o igual a $min y solo contener números.";
-
-		$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-		$segments = explode('/', trim($path, '/'));
-		$value = end($segments);
-
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))
-			? $this->id_mensaje = (int) $value
-			: $this->setValidationError($error_message);
 	}
 
 	// MARK: READ MENSAJES
@@ -137,18 +137,21 @@ final class Mensaje extends ApiResponse
 		$this->checkValidationErrors();
 
 		$id_mensaje = $this->getIdMensaje();
+		$id_usuario = $_SESSION['id_usuario'];
 
 		$this->checkIntegrityErrors();
 
 		$statement =
 			"DELETE FROM mensajes
-			WHERE id_mensaje = ?";
+			WHERE id_mensaje = ?
+			AND id_usuario = ?";
 
 		$query = $this->getConnection()->prepare($statement);
 
 		$query->bind_param(
-			"i",
-			$id_mensaje
+			"ii",
+			$id_mensaje,
+			$id_usuario
 		);
 
 		$query->execute();
