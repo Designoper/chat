@@ -1,6 +1,6 @@
-import { Form } from "./Form.js";
+import { Endpoint } from "./Endpoint.js";
 
-export class Usuario extends Form {
+export class Usuario extends Endpoint {
 	user = null;
 
 	constructor() {
@@ -22,6 +22,13 @@ export class Usuario extends Form {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
 			window.location.href = 'chat.html';
+		}
+	}
+
+	async logout(form, method, action) {
+		const response = await this.fetchData(form, method, action);
+		if (response.status === 200) {
+			window.location.href = 'index.html';
 		}
 	}
 

@@ -113,6 +113,38 @@ final class Usuario extends UsuarioIntegrityErrors
 		$this->getResponse();
 	}
 
+	// MARK: LOGOUT
+
+	public function logout(): void
+	{
+		// Asegurar que la sesión está iniciada
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+
+		$_SESSION = [];
+
+		// Invalidar cookie de sesión si existe
+		if (ini_get("session.use_cookies")) {
+			$params = session_get_cookie_params();
+			setcookie(
+				session_name(),
+				'',
+				time() - 42000,
+				$params["path"],
+				$params["domain"],
+				$params["secure"],
+				$params["httponly"]
+			);
+		}
+
+		session_destroy();
+
+		$this->setStatus(200);
+		$this->setMessage("Logout exitoso");
+		$this->getResponse();
+	}
+
 	// MARK: CREATE
 
 	public function createUsuario(): void

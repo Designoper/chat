@@ -47,6 +47,15 @@ final class ApiRouter extends Sanitizer
         );
 
         $this->setRoute(
+            'POST',
+            'usuarios/logout',
+            function (): void {
+                $usuario = new Usuario();
+                $usuario->logout();
+            }
+        );
+
+        $this->setRoute(
             'GET',
             'usuarios/current',
             function (): void {

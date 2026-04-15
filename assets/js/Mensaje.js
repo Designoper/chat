@@ -1,9 +1,7 @@
 import { Usuario } from "./Usuario.js";
 
 export class Mensaje extends Usuario {
-	DOM_ELEMENTS = {
-		OUTPUT: document.getElementById('fetchoutput'),
-	};
+	MENSAJES_OUTPUT = document.getElementById('fetchoutput');
 
 	constructor() {
 		super();
@@ -50,7 +48,7 @@ export class Mensaje extends Usuario {
 	printMensajes(mensajes) {
 
 		const content = this.mensajesTemplate(mensajes.content);
-		this.DOM_ELEMENTS.OUTPUT.innerHTML = content;
+		this.MENSAJES_OUTPUT.innerHTML = content;
 
 		this.formHandler();
 	}

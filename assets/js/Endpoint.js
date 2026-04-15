@@ -1,11 +1,12 @@
 import { Fetch } from "./Fetch.js";
 
-export class Form extends Fetch {
+export class Endpoint extends Fetch {
 	ROOT = `${location.protocol}//${location.host}/api/`;
 
 	ENDPOINTS = {
 		CREAR_USUARIOS: `${this.ROOT}usuarios/crear`,
 		LOGIN_USUARIOS: `${this.ROOT}usuarios/login`,
+		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,
 		CURRENT_USUARIOS: `${this.ROOT}usuarios/current`,
 		GET_MENSAJES: `${this.ROOT}mensajes`,
 		CREAR_MENSAJES: `${this.ROOT}mensajes/crear`,
@@ -30,6 +31,9 @@ export class Form extends Fetch {
 						break;
 					case 'login-usuario':
 						this.loginUsuario(form, 'post', this.ENDPOINTS.LOGIN_USUARIOS);
+						break;
+					case 'logout-usuario':
+						this.logout(form, 'post', this.ENDPOINTS.LOGOUT_USUARIOS);
 						break;
 					case 'crear-mensaje':
 						this.writeMensaje(form, 'post', this.ENDPOINTS.CREAR_MENSAJES);

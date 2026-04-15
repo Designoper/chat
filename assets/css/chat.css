@@ -1,14 +1,24 @@
 main {
-	>form {
+	>section {
+		display: grid;
+					gap: 2em;
+
+		grid-template-columns: auto 1fr;
 		width: 100%;
 		position: sticky;
 		left: 0;
 		bottom: 0;
 		padding: 1em 10vw;
-		display: grid;
-		grid-template-columns: 1fr auto;
-		gap: 2em;
 		background-color: #bebeff;
+
+		form {
+			display: grid;
+			gap: 2em;
+
+			&:nth-of-type(2) {
+				grid-template-columns: 1fr auto;
+			}
+		}
 
 		input {
 			border-radius: 0.25rem;
