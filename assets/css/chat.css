@@ -8,7 +8,7 @@ main {
 		left: 0;
 		bottom: 0;
 		padding: 1em 10vw;
-		background-color: #bebeff;
+		background-color: var(--terciary-bg);
 
 		form {
 			display: grid;
@@ -22,7 +22,7 @@ main {
 		input {
 			border-radius: 0.25rem;
 			padding: 0.25em 0.75em;
-			background-color: white;
+			background-color: var(--white);
 		}
 
 		button {
@@ -30,7 +30,7 @@ main {
 			border-radius: 0.25rem;
 			transition: transform 0.5s;
 			justify-self: center;
-			background-color: white;
+			background-color: var(--white);
 
 			&:hover {
 				transform: scale(107%);
@@ -38,7 +38,7 @@ main {
 
 			svg {
 				width: 1.5em;
-				fill: #bebeff;
+				fill: var(--terciary-bg);
 			}
 		}
 	}
@@ -56,7 +56,7 @@ main {
 
 			svg {
 				width: 1.5em;
-				fill: #9f9fff;
+				fill: var(--quartery-bg);
 			}
 		}
 
@@ -67,7 +67,7 @@ main {
 			border-radius: 1em;
 			width: fit-content;
 			max-width: 85%;
-			background-color: rgb(214, 214, 255);
+			background-color: var(--secondary-bg);
 
 			p {
 				word-break: break-all;

@@ -1,9 +1,11 @@
 html {
 	--primary-bg: hsl(180, 42%, 93%);
-	--secondary-bg: rgb(214, 214, 255);
-	--terciary-bg: #bebeff;
+	--secondary-bg: hsl(240, 100%, 92%);
+	--terciary-bg: hsl(240, 100%, 87%);
+	--quartery-bg: hsl(240, 100%, 81%);
 	--text: hsl(0, 0%, 0%);
 	--text-light: hsl(0, 0%, 20%);
+	--white: hsl(0, 0%, 100%);
 
 	color: var(--text-light);
 	background-color: var(--primary-bg);
@@ -11,5 +13,5 @@ html {
 }
 
 :focus-visible {
-	outline: var(--text) solid 4px;
+	outline: var(--text-light) solid 4px;
 }
