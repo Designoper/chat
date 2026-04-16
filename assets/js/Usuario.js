@@ -18,6 +18,13 @@ export class Usuario extends Endpoint {
 		}
 	}
 
+	async deleteUsuario(form, method, action) {
+		const response = await this.fetchData(form, method, action);
+		if (response.status === 204) {
+			window.location.href = 'crear-usuario.html';
+		}
+	}
+
 	async loginUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
