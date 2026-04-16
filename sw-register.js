@@ -1,5 +1,5 @@
 const PATHNAME = "/";
-const FILENAME = "sw-uninstall.js";
+const FILENAME = "sw-empty.js";
 
 if ("serviceWorker" in navigator) {
 	navigator.serviceWorker.register(`${PATHNAME}${FILENAME}`)
