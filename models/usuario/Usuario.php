@@ -69,6 +69,45 @@ final class Usuario extends UsuarioIntegrityErrors
 		$this->password = $value;
 	}
 
+	// MARK: CREATE
+
+	public function createUsuario(): void
+	{
+		$this->setUsuario();
+		$this->setPassword();
+
+		$this->checkValidationErrors();
+
+		$usuario = $this->getUsuario();
+		$password = $this->getPassword();
+
+		$this->nombreUsuarioExists($usuario);
+
+		$this->checkIntegrityErrors();
+
+		$statement =
+			"INSERT INTO usuarios (nombre, password)
+			VALUES (?, ?)";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"ss",
+			$usuario,
+			$password
+		);
+
+		$query->execute();
+		$id_usuario = $query->insert_id;
+		$query->close();
+
+		$_SESSION['id_usuario'] = $id_usuario;
+
+		$this->setStatus(201);
+		$this->setMessage("Usuario creado con éxito");
+		$this->getResponse();
+	}
+
 	// MARK: LOGIN
 
 	public function login(): void
@@ -145,45 +184,6 @@ final class Usuario extends UsuarioIntegrityErrors
 		$this->getResponse();
 	}
 
-	// MARK: CREATE
-
-	public function createUsuario(): void
-	{
-		$this->setUsuario();
-		$this->setPassword();
-
-		$this->checkValidationErrors();
-
-		$usuario = $this->getUsuario();
-		$password = $this->getPassword();
-
-		$this->nombreUsuarioExists($usuario);
-
-		$this->checkIntegrityErrors();
-
-		$statement =
-			"INSERT INTO usuarios (nombre, password)
-			VALUES (?, ?)";
-
-		$query = $this->getConnection()->prepare($statement);
-
-		$query->bind_param(
-			"ss",
-			$usuario,
-			$password
-		);
-
-		$query->execute();
-		$id_usuario = $query->insert_id;
-		$query->close();
-
-		$_SESSION['id_usuario'] = $id_usuario;
-
-		$this->setStatus(201);
-		$this->setMessage("Usuario creado con éxito");
-		$this->getResponse();
-	}
-
 	// MARK: CURRENT
 
 	public function currentUsuario(): void
@@ -199,6 +199,41 @@ final class Usuario extends UsuarioIntegrityErrors
 		$this->setContent([
 			"id_usuario" => $_SESSION['id_usuario'],
 		]);
+		$this->getResponse();
+	}
+
+	// MARK: DELETE
+
+	public function deleteUsuario(): void
+	{
+		$this->setIdUsuario();
+
+		if (!$this->getIdUsuario()) {
+			$this->setStatus(401);
+			$this->setMessage("No hay usuario identificado");
+			$this->getResponse();
+		}
+
+		$id_usuario = $_SESSION['id_usuario'];
+
+		$statement =
+			"DELETE FROM usuarios
+			WHERE id_usuario = ?";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"i",
+			$id_usuario
+		);
+
+		$query->execute();
+		$query->close();
+
+		unset($_SESSION['id_usuario']);
+
+		$this->setStatus(200);
+		$this->setMessage("Usuario eliminado con éxito");
 		$this->getResponse();
 	}
 }
