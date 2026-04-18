@@ -93,9 +93,15 @@ final class Usuario extends UsuarioIntegrityErrors
 		$statement =
 			"SELECT id_usuario, nombre
 			 FROM usuarios
+			 WHERE id_usuario != ?
 			 ORDER BY nombre ASC";
 
 		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"i",
+			$_SESSION['id_usuario']
+		);
 
 		$query->execute();
 
@@ -235,6 +241,7 @@ final class Usuario extends UsuarioIntegrityErrors
 		if (!isset($_SESSION['id_usuario'])) {
 			$this->setStatus(401);
 			$this->setMessage("No hay usuario identificado");
+			header("Location: /index.html");
 			$this->getResponse();
 		}
 

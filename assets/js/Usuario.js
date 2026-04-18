@@ -30,15 +30,10 @@ export class Usuario extends Endpoint {
 	usuariosTemplate(fetchedUsuarios) {
 
 		const usuarios = fetchedUsuarios.map(usuario =>
-
-			`${usuario.id_usuario == this.user
-				? ''
-				:
-				`<form name="usuario-receptor">
-					<input type="hidden" value="${usuario.id_usuario}" name="id_receptor">
-					<button>${usuario.nombre}</button>
-				</form>`
-			}`
+			`<form name="usuario-receptor">
+				<input type="hidden" value="${usuario.id_usuario}" name="id_receptor">
+				<button>${usuario.nombre}</button>
+			</form>`
 		).join('');
 
 		return usuarios;
@@ -71,6 +66,8 @@ export class Usuario extends Endpoint {
 			window.location.href = 'index.html';
 		}
 	}
+
+	// Pasar al servidor
 
 	async sessionCheck() {
 		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS);
