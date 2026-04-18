@@ -2,6 +2,9 @@ import { Endpoint } from "./Endpoint.js";
 
 export class Usuario extends Endpoint {
 	user = null;
+	id_receptor;
+	MAIN = document.getElementById('main');
+	USUARIOS_OUTPUT = document.getElementById('usuariosoutput');
 
 	constructor() {
 		super();
@@ -11,10 +14,41 @@ export class Usuario extends Endpoint {
 		this.formHandler();
 	}
 
+	async getUsuarios() {
+		const response = await this.simpleFetch(this.ENDPOINTS.GET_USUARIOS);
+		this.printUsuarios(response);
+	}
+
+	printUsuarios(usuarios) {
+
+		const content = this.usuariosTemplate(usuarios.content);
+		this.MAIN.innerHTML = content;
+
+		this.formHandler();
+		// console.log(this.id_receptor);
+	}
+
+	usuariosTemplate(fetchedUsuarios) {
+
+		const usuarios = fetchedUsuarios.map(usuario =>
+
+			`${usuario.id_usuario == this.user
+				? ''
+				:
+				`<form name="usuario-receptor">
+					<input type="hidden" value="${usuario.id_usuario}" name="id_receptor">
+					<button>${usuario.nombre}</button>
+				</form>`
+			}`
+		).join('');
+		// console.log(usuarios)
+		return usuarios;
+	}
+
 	async createUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 201) {
-			window.location.href = 'chat.html';
+			window.location.href = 'sala-principal.html';
 		}
 	}
 
@@ -28,7 +62,7 @@ export class Usuario extends Endpoint {
 	async loginUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
-			window.location.href = 'chat.html';
+			window.location.href = 'sala-principal.html';
 		}
 	}
 
@@ -40,13 +74,15 @@ export class Usuario extends Endpoint {
 	}
 
 	async sessionCheck() {
-		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS, 'get');
+		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS);
 
 		if (response.status === 401) {
 			window.location.href = 'crear-usuario.html';
 		}
 
 		this.user = response.content.id_usuario;
+		// console.log(response.content);
+		// console.log(this.user);
 	}
 }
 

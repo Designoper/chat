@@ -9,6 +9,7 @@ final class Usuario extends UsuarioIntegrityErrors
 	private readonly int $id_usuario;
 	private readonly string $usuario;
 	private readonly string $password;
+	private readonly string $id_receptor;
 
 	public function __construct()
 	{
@@ -30,6 +31,10 @@ final class Usuario extends UsuarioIntegrityErrors
 	private function getPassword(): string
 	{
 		return $this->password;
+	}
+	private function getIdReceptor(): string
+	{
+		return $this->id_receptor;
 	}
 
 	// MARK: SETTERS
@@ -67,6 +72,45 @@ final class Usuario extends UsuarioIntegrityErrors
 		// }
 
 		$this->password = $value;
+	}
+
+	private function setIdReceptor(): void
+	{
+		$value = $_POST['id_receptor'] ?? null;
+
+		if (empty($value)) {
+			$this->setValidationError("El campo 'id_receptor' no puede estar vacío.");
+			return;
+		}
+
+		$this->id_receptor = $value;
+	}
+
+	// MARK: READ
+
+	public function readUsuarios(): void
+	{
+		$statement =
+			"SELECT id_usuario, nombre
+			 FROM usuarios
+			 ORDER BY nombre ASC";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->execute();
+
+		$usuarios = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$message =
+			$usuarios
+			? 'Usuarios obtenidos.'
+			: 'No hay ningún usuario.';
+
+		$query->close();
+
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($usuarios);
+		$this->getResponse();
 	}
 
 	// MARK: CREATE
@@ -199,6 +243,19 @@ final class Usuario extends UsuarioIntegrityErrors
 		$this->setContent([
 			"id_usuario" => $_SESSION['id_usuario'],
 		]);
+		$this->getResponse();
+	}
+
+	// MARK: RECEPTOR
+
+	public function usuarioReceptor(): void
+	{
+
+		$this->setIdReceptor();
+		$_SESSION['id_receptor'] = $this->getIdReceptor();
+
+		$this->setStatus(200);
+		$this->setMessage("Receptor establecido");
 		$this->getResponse();
 	}
 

@@ -9,8 +9,12 @@ export class Endpoint extends Fetch {
 		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,
 		CURRENT_USUARIOS: `${this.ROOT}usuarios/current`,
 		GET_MENSAJES: `${this.ROOT}mensajes`,
+		GET_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos`,
+		GET_USUARIOS: `${this.ROOT}usuarios`,
 		CREAR_MENSAJES: `${this.ROOT}mensajes/crear`,
-		ELIMINAR_MENSAJES: `${this.ROOT}mensajes`
+		CREAR_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos/crear`,
+		ELIMINAR_MENSAJES: `${this.ROOT}mensajes`,
+		USUARIO_RECEPTOR: `${this.ROOT}usuarios/receptor`
 	};
 
 	constructor() {
@@ -38,6 +42,25 @@ export class Endpoint extends Fetch {
 					case 'crear-mensaje':
 						this.writeMensaje(form, 'post', this.ENDPOINTS.CREAR_MENSAJES);
 						break;
+					case 'crear-mensaje-directo':
+						this.writeMensajeDirecto(form, 'post', this.ENDPOINTS.CREAR_MENSAJES_DIRECTOS);
+						break;
+
+
+					// case 'usuario-receptor':
+					// 	this.id_receptor = form.querySelector('input[type="hidden"]').value;
+					// 	this.writeChat();
+					// 	this.formHandler();
+					// 	break;
+
+					case 'usuario-receptor':
+						// this.id_receptor = form.querySelector('input[type="hidden"]').value;
+						// this.writeChat();
+						// this.formHandler();
+						this.usuarioReceptor(form, 'post', this.ENDPOINTS.USUARIO_RECEPTOR);
+						break;
+
+
 					case 'eliminar-mensaje':
 						this.deleteMensaje(form, 'post');
 						break;

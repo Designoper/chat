@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/../../models/usuario/Usuario.php';
 require_once __DIR__ . '/../../models/mensaje/Mensaje.php';
+require_once __DIR__ . '/../../models/mensaje/MensajeDirecto.php';
 
 final class ApiRouter extends Sanitizer
 {
@@ -19,6 +20,15 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'GET',
+            'mensajes-directos',
+            function (): void {
+                $mensaje = new MensajeDirecto();
+                $mensaje->readMensajesDirectos();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
             'mensajes',
             function (): void {
                 $mensaje = new Mensaje();
@@ -26,7 +36,36 @@ final class ApiRouter extends Sanitizer
             }
         );
 
+        $this->setRoute(
+            'GET',
+            'usuarios/current',
+            function (): void {
+                $usuario = new Usuario();
+                $usuario->currentUsuario();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            'usuarios',
+            function (): void {
+                $usuario = new Usuario();
+                $usuario->readUsuarios();
+            }
+        );
+
+
+
         // MARK: POST ROUTES
+
+        $this->setRoute(
+            'POST',
+            'usuarios/receptor',
+            function (): void {
+                $usuario = new Usuario();
+                $usuario->usuarioReceptor();
+            }
+        );
 
         $this->setRoute(
             'POST',
@@ -56,20 +95,20 @@ final class ApiRouter extends Sanitizer
         );
 
         $this->setRoute(
-            'GET',
-            'usuarios/current',
-            function (): void {
-                $usuario = new Usuario();
-                $usuario->currentUsuario();
-            }
-        );
-
-        $this->setRoute(
             'POST',
             'mensajes/crear',
             function (): void {
                 $mensaje = new Mensaje();
                 $mensaje->createMensaje();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'mensajes-directos/crear',
+            function (): void {
+                $mensaje = new MensajeDirecto();
+                $mensaje->createMensajeDirecto();
             }
         );
 
