@@ -11,10 +11,6 @@ export class MensajeDirecto extends Usuario {
 		this.sessionCheck();
 		this.getUsuarios();
 		// await this.getMensajesDirectos();
-
-		// setInterval(async () => {
-		// 	await this.getMensajes();
-		// }, 2000);
 	}
 
 	writeChat() {

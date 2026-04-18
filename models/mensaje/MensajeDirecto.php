@@ -55,31 +55,19 @@ final class MensajeDirecto extends ApiResponse
 		$this->contenido = $value;
 	}
 
-	// private function setIdUsuario(): void
-	// {
-	// 	$value = $_SESSION['id_usuario'] ?? null;
-
-	// 	if (empty($value)) {
-	// 		$this->setValidationError("El campo 'id_usuario' no puede estar vacío.");
-	// 		return;
-	// 	}
-
-	// 	$this->id_usuario = (int) $value;
-	// }
-
 	private function setIdReceptor(): void
 	{
 		$value = $_SESSION['id_receptor'] ?? null;
 
-		// if (empty($value)) {
-		// 	$this->setValidationError("El campo 'id_receptor' no puede estar vacío.");
-		// 	return;
-		// }
+		if (empty($value)) {
+			$this->setValidationError("El campo 'id_receptor' no puede estar vacío.");
+			return;
+		}
 
-		// if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))) {
-		// 	$this->setValidationError("El campo 'id_receptor' debe ser un número entero superior o igual a 1 y solo contener números.");
-		// 	return;
-		// }
+		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))) {
+			$this->setValidationError("El campo 'id_receptor' debe ser un número entero superior o igual a 1 y solo contener números.");
+			return;
+		}
 
 		$this->id_receptor = (int) $value;
 	}
@@ -92,15 +80,6 @@ final class MensajeDirecto extends ApiResponse
 		$this->setIdReceptor();
 
 		$id_receptor = $this->getIdReceptor();
-
-		// $statement =
-		// 	'SELECT mensajes_directos.id_mensaje, mensajes_directos.contenido, mensajes_directos.fecha_creacion, mensajes_directos.id_emisor, mensajes_directos.id_receptor, usuarios.nombre
-		// 	FROM mensajes_directos
-		// 	JOIN usuarios ON mensajes_directos.id_emisor = usuarios.id_usuario
-		// 	JOIN usuarios ON mensajes_directos.id_receptor = usuarios.id_usuario
-		// 	WHERE (id_emisor = ? AND id_receptor = ?)
-		// 	OR (id_emisor = ? AND id_receptor = ?)
-		// 	ORDER BY mensajes_directos.fecha_creacion DESC';
 
 		$statement =
 			'SELECT

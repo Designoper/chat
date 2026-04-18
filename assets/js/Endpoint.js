@@ -4,17 +4,23 @@ export class Endpoint extends Fetch {
 	ROOT = `${location.protocol}//${location.host}/api/`;
 
 	ENDPOINTS = {
+
+		// GET
+
+		GET_MENSAJES: `${this.ROOT}mensajes`,
+		GET_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos`,
+		GET_USUARIOS: `${this.ROOT}usuarios`,
+		USUARIO_RECEPTOR: `${this.ROOT}usuarios/receptor`,
+
+		// POST
+
 		CREAR_USUARIOS: `${this.ROOT}usuarios/crear`,
 		LOGIN_USUARIOS: `${this.ROOT}usuarios/login`,
 		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,
 		CURRENT_USUARIOS: `${this.ROOT}usuarios/current`,
-		GET_MENSAJES: `${this.ROOT}mensajes`,
-		GET_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos`,
-		GET_USUARIOS: `${this.ROOT}usuarios`,
 		CREAR_MENSAJES: `${this.ROOT}mensajes/crear`,
 		CREAR_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos/crear`,
 		ELIMINAR_MENSAJES: `${this.ROOT}mensajes`,
-		USUARIO_RECEPTOR: `${this.ROOT}usuarios/receptor`
 	};
 
 	constructor() {
