@@ -33,33 +33,26 @@ export class Endpoint extends Fetch {
 					case 'crear-usuario':
 						this.createUsuario(form, 'post', this.ENDPOINTS.CREAR_USUARIOS);
 						break;
+
 					case 'login-usuario':
 						this.loginUsuario(form, 'post', this.ENDPOINTS.LOGIN_USUARIOS);
 						break;
+
 					case 'logout-usuario':
 						this.logout(form, 'post', this.ENDPOINTS.LOGOUT_USUARIOS);
 						break;
+
 					case 'crear-mensaje':
 						this.writeMensaje(form, 'post', this.ENDPOINTS.CREAR_MENSAJES);
 						break;
+
 					case 'crear-mensaje-directo':
 						this.writeMensajeDirecto(form, 'post', this.ENDPOINTS.CREAR_MENSAJES_DIRECTOS);
 						break;
 
-
-					// case 'usuario-receptor':
-					// 	this.id_receptor = form.querySelector('input[type="hidden"]').value;
-					// 	this.writeChat();
-					// 	this.formHandler();
-					// 	break;
-
 					case 'usuario-receptor':
-						// this.id_receptor = form.querySelector('input[type="hidden"]').value;
-						// this.writeChat();
-						// this.formHandler();
 						this.usuarioReceptor(form, 'post', this.ENDPOINTS.USUARIO_RECEPTOR);
 						break;
-
 
 					case 'eliminar-mensaje':
 						this.deleteMensaje(form, 'post');

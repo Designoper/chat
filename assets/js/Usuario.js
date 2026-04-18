@@ -25,7 +25,6 @@ export class Usuario extends Endpoint {
 		this.MAIN.innerHTML = content;
 
 		this.formHandler();
-		// console.log(this.id_receptor);
 	}
 
 	usuariosTemplate(fetchedUsuarios) {
@@ -41,7 +40,7 @@ export class Usuario extends Endpoint {
 				</form>`
 			}`
 		).join('');
-		// console.log(usuarios)
+
 		return usuarios;
 	}
 
@@ -81,8 +80,6 @@ export class Usuario extends Endpoint {
 		}
 
 		this.user = response.content.id_usuario;
-		// console.log(response.content);
-		// console.log(this.user);
 	}
 }
 

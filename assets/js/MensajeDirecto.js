@@ -41,8 +41,6 @@ export class MensajeDirecto extends Usuario {
 		}, 2000);
 	}
 
-	// aRREGLAR ESTO, NO FUNCIONA: HAY QUE ENVIAR UN POST CON EL ID DEL RECEPTOR PARA QUE DEVUELVA LOS MENSAJES DIRECTOS ENTRE AMBOS USUARIOS
-
 	async getMensajesDirectos(receptor) {
 		const response = await this.simpleFetch(`${this.ENDPOINTS.GET_MENSAJES_DIRECTOS}?id_receptor=${receptor}`);
 		this.printMensajesDirectos(response);
@@ -78,8 +76,6 @@ export class MensajeDirecto extends Usuario {
 		output.innerHTML = content;
 
 		this.formHandler();
-
-
 	}
 
 	async writeMensajeDirecto(form, method, action) {
@@ -99,7 +95,6 @@ export class MensajeDirecto extends Usuario {
 // async deleteMensaje(form, method) {
 // 	await this.fetchData(form, method);
 // }
-
 
 (async () => {
 	await new MensajeDirecto().initialize();
