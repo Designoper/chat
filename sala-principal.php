@@ -1,3 +1,11 @@
+<?php
+
+declare(strict_types=1);
+
+include_once __DIR__ . '/models/universal/Auth.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -35,8 +43,8 @@
 	<main id="main">
 
 		<menu>
-			<li><a href="./chat.html">Chat general</a></li>
-			<li><a href="./sala-chat-directo.html">Chat directo</a></li>
+			<li><a href="./chat.php">Chat general</a></li>
+			<li><a href="./sala-chat-directo.php">Chat directo</a></li>
 		</menu>
 
 	</main>

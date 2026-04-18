@@ -1,3 +1,11 @@
+<?php
+
+declare(strict_types=1);
+
+include_once __DIR__ . '/models/universal/Auth.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 

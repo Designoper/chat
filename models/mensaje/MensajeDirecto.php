@@ -95,17 +95,15 @@ final class MensajeDirecto extends ApiResponse
 			JOIN usuarios ur ON m.id_receptor = ur.id_usuario
 			WHERE (m.id_emisor = ? AND m.id_receptor = ?)
 			OR (m.id_emisor = ? AND m.id_receptor = ?)
-			AND m.id_emisor != ?
 			ORDER BY m.fecha_creacion DESC';
 
 		$query = $this->getConnection()->prepare($statement);
 
 		$query->bind_param(
-			"iiiii",
+			"iiii",
 			$id_emisor,
 			$id_receptor,
 			$id_receptor,
-			$id_emisor,
 			$id_emisor
 		);
 

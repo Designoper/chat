@@ -1,3 +1,11 @@
+<?php
+
+declare(strict_types=1);
+
+include_once __DIR__ . '/models/universal/Auth.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -23,6 +31,11 @@
 	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
+
+	<!-- <script>
+		window.ID_USUARIO = <?php echo json_encode($_SESSION['id_usuario']); ?>;
+		console.log(window.ID_USUARIO);
+	</script> -->
 
 	<script src="./assets/js/MensajeDirecto.js" type="module" async></script>
 

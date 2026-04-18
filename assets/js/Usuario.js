@@ -42,21 +42,21 @@ export class Usuario extends Endpoint {
 	async createUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 201) {
-			window.location.href = 'sala-principal.html';
+			window.location.href = 'sala-principal.php';
 		}
 	}
 
 	async deleteUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 204) {
-			window.location.href = 'crear-usuario.html';
+			window.location.href = 'crear-usuario.php';
 		}
 	}
 
 	async loginUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
-			window.location.href = 'sala-principal.html';
+			window.location.href = 'sala-principal.php';
 		}
 	}
 
@@ -67,14 +67,8 @@ export class Usuario extends Endpoint {
 		}
 	}
 
-	// Pasar al servidor
-
 	async sessionCheck() {
 		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS);
-
-		if (response.status === 401) {
-			window.location.href = 'crear-usuario.html';
-		}
 
 		this.user = response.content.id_usuario;
 	}

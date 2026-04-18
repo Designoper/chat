@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/UsuarioIntegrityErrors.php';
 
-final class Usuario extends UsuarioIntegrityErrors
+class Usuario extends UsuarioIntegrityErrors
 {
 	private readonly int $id_usuario;
 	private readonly string $usuario;
@@ -241,7 +241,6 @@ final class Usuario extends UsuarioIntegrityErrors
 		if (!isset($_SESSION['id_usuario'])) {
 			$this->setStatus(401);
 			$this->setMessage("No hay usuario identificado");
-			header("Location: /index.html");
 			$this->getResponse();
 		}
 
@@ -257,7 +256,6 @@ final class Usuario extends UsuarioIntegrityErrors
 
 	public function usuarioReceptor(): void
 	{
-
 		$this->setIdReceptor();
 		$_SESSION['id_receptor'] = $this->getIdReceptor();
 

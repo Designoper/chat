@@ -8,8 +8,8 @@ export class MensajeDirecto extends Usuario {
 	}
 
 	async initialize() {
-		this.sessionCheck();
 		this.getUsuarios();
+		this.sessionCheck();
 		// await this.getMensajesDirectos();
 	}
 
@@ -29,8 +29,8 @@ export class MensajeDirecto extends Usuario {
 				</button>
 			</form>
 
-			<a href="sala-principal.html">Volver a sala principal</a>
-			<a href="sala-chat-directo.html">Chatear con otro usuario</a>
+			<a href="sala-principal.php">Volver a sala principal</a>
+			<a href="sala-chat-directo.php">Chatear con otro usuario</a>
 		`;
 		setInterval(async () => {
 			await this.getMensajesDirectos(this.id_receptor);
@@ -46,11 +46,11 @@ export class MensajeDirecto extends Usuario {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
-			<article ${mensaje.id_usuario == this.user ? 'class="mensaje-propio"' : ''}>
+			<article ${mensaje.id_emisor == this.user ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre_emisor}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${mensaje.fecha_creacion}</p>
-				${mensaje.id_usuario == this.user
+				${mensaje.id_emisor == this.user
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
 						<button>
 							<svg viewBox="0 0 928 983">
@@ -80,7 +80,6 @@ export class MensajeDirecto extends Usuario {
 
 	async usuarioReceptor(form, method, action) {
 		const response = await this.fetchData(form, method, action);
-		console.log(response);
 		if (response.status === 200) {
 			this.writeChat();
 			this.formHandler();

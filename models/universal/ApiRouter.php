@@ -54,8 +54,6 @@ final class ApiRouter extends Sanitizer
             }
         );
 
-
-
         // MARK: POST ROUTES
 
         $this->setRoute(
