@@ -294,13 +294,13 @@ class Usuario extends UsuarioIntegrityErrors
 
 	public function deleteUsuario(): void
 	{
-		$this->setIdUsuario();
+		// $this->setIdUsuario();
 
-		if (!$this->getIdUsuario()) {
-			$this->setStatus(401);
-			$this->setMessage("No hay usuario identificado");
-			$this->getResponse();
-		}
+		// if (!$this->getIdUsuario()) {
+		// 	$this->setStatus(401);
+		// 	$this->setMessage("No hay usuario identificado");
+		// 	$this->getResponse();
+		// }
 
 		$id_usuario = $_SESSION['id_usuario'];
 
@@ -320,8 +320,7 @@ class Usuario extends UsuarioIntegrityErrors
 
 		unset($_SESSION['id_usuario']);
 
-		$this->setStatus(200);
-		$this->setMessage("Usuario eliminado con éxito");
+		$this->setStatus(204);
 		$this->getResponse();
 	}
 }

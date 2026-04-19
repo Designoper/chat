@@ -58,7 +58,7 @@ final class Mensaje extends ApiResponse
 
 	private function setIdReceptor(): void
 	{
-		$value = $_SESSION['id_receptor'] ?? null;
+		$value = $_GET['id_receptor'] ?? null;
 
 		if (empty($value)) {
 			$this->setValidationError("El campo 'id_receptor' no puede estar vacío.");
@@ -196,13 +196,13 @@ final class Mensaje extends ApiResponse
 	public function createMensajeDirecto(): void
 	{
 		$this->setContenido();
-		$this->setIdReceptor();
+		// $this->setIdReceptor();
 
 		$this->checkValidationErrors();
 
 		$id_emisor = $_SESSION['id_usuario'];
 		$contenido = $this->getContenido();
-		$id_receptor = $_SESSION['id_receptor'];
+		$id_receptor = $_POST["id_receptor"];
 
 		$this->checkIntegrityErrors();
 

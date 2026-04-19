@@ -1,6 +1,7 @@
 import { Usuario } from "./Usuario.js";
 
 export class MensajeDirecto extends Usuario {
+	id_receptor;
 	// MENSAJES_OUTPUT = document.getElementById('fetchoutput');
 
 	constructor() {
@@ -8,12 +9,20 @@ export class MensajeDirecto extends Usuario {
 	}
 
 	async initialize() {
-		this.getUsuarios();
+		this.getIdReceptor();
 		this.sessionCheck();
+		this.writeChat();
 		// await this.getMensajesDirectos();
 	}
 
+	getIdReceptor() {
+		const currentURL = new URL(window.location.href);
+		const idReceptor = currentURL.searchParams.get('id');
+		this.id_receptor = idReceptor;
+	}
+
 	writeChat() {
+
 		this.MAIN.innerHTML = `
 			<h1>Chat directo con ${this.id_receptor}</h1>
 			<section id="fetchoutput"></section>
@@ -33,12 +42,12 @@ export class MensajeDirecto extends Usuario {
 			<a href="./chat-privado.php">Chatear con otro usuario</a>
 		`;
 		setInterval(async () => {
-			await this.getMensajesDirectos(this.id_receptor);
+			await this.getMensajesDirectos();
 		}, 2000);
 	}
 
-	async getMensajesDirectos(receptor) {
-		const response = await this.simpleFetch(`${this.ENDPOINTS.GET_MENSAJES_DIRECTOS}?id_receptor=${receptor}`);
+	async getMensajesDirectos() {
+		const response = await this.simpleFetch(`${this.ENDPOINTS.GET_MENSAJES_DIRECTOS}?id_receptor=${this.id_receptor}`);
 		this.printMensajesDirectos(response);
 	}
 
@@ -77,8 +86,6 @@ export class MensajeDirecto extends Usuario {
 	async writeMensajeDirecto(form, method, action) {
 		await this.fetchData(form, method, action);
 	}
-
-
 
 	async deleteMensaje(form, method) {
 		await this.fetchData(form, method);
