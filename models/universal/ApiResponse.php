@@ -60,7 +60,7 @@ abstract class ApiResponse extends MysqliConnect
         $this->status = $status;
     }
 
-    protected function setMessage($message): void
+    protected function setMessage(string $message): void
     {
         $this->message = $message;
         $this->response['message'] = $this->getMessage();

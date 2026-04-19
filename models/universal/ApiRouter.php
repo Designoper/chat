@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/../../models/usuario/Usuario.php';
 require_once __DIR__ . '/../../models/mensaje/Mensaje.php';
-require_once __DIR__ . '/../../models/mensaje/MensajeDirecto.php';
+// require_once __DIR__ . '/../../models/mensaje/MensajeDirecto.php';
 
 final class ApiRouter extends Sanitizer
 {
@@ -22,7 +22,7 @@ final class ApiRouter extends Sanitizer
             'GET',
             'mensajes-directos',
             function (): void {
-                new MensajeDirecto()->readMensajesDirectos();
+                new Mensaje()->readMensajesDirectos();
             }
         );
 
@@ -96,7 +96,7 @@ final class ApiRouter extends Sanitizer
             'POST',
             'mensajes-directos/crear',
             function (): void {
-                new MensajeDirecto()->createMensajeDirecto();
+                new Mensaje()->createMensajeDirecto();
             }
         );
 

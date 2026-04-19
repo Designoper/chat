@@ -8,8 +8,8 @@ final class Mensaje extends ApiResponse
 {
 	private readonly int $id_mensaje;
 	private readonly string $contenido;
-	private readonly int $id_emisor;
-	private readonly int $id_receptor;
+	private readonly string $fecha_creacion;
+	private readonly int $id_usuario;
 
 	public function __construct()
 	{
@@ -28,9 +28,9 @@ final class Mensaje extends ApiResponse
 		return $this->contenido;
 	}
 
-	private function getIdReceptor(): int
+	private function getIdUsuario(): int
 	{
-		return $this->id_receptor;
+		return $this->id_usuario;
 	}
 
 	// MARK: SETTERS
@@ -55,21 +55,16 @@ final class Mensaje extends ApiResponse
 		$this->contenido = $value;
 	}
 
-	private function setIdReceptor(): void
+	private function setIdUsuario(): void
 	{
-		$value = $_SESSION['id_receptor'] ?? null;
+		$value = $_SESSION['id_usuario'] ?? null;
 
 		if (empty($value)) {
-			$this->setValidationError("El campo 'id_receptor' no puede estar vacío.");
+			$this->setValidationError("El campo 'id_usuario' no puede estar vacío.");
 			return;
 		}
 
-		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))) {
-			$this->setValidationError("El campo 'id_receptor' debe ser un número entero superior o igual a 1 y solo contener números.");
-			return;
-		}
-
-		$this->id_receptor = (int) $value;
+		$this->id_usuario = (int) $value;
 	}
 
 	// MARK: READ MENSAJES
@@ -77,71 +72,22 @@ final class Mensaje extends ApiResponse
 	public function readMensajes(): void
 	{
 		$statement =
-			'SELECT *
+			'SELECT id_mensaje, contenido, fecha_creacion, id_usuario, nombre
 			FROM mensajes
-			WHERE es_publico = 1
-			ORDER BY fecha_creacion';
+			NATURAL JOIN usuarios
+			ORDER BY fecha_creacion DESC';
 
 		$query = $this->getConnection()->prepare($statement);
 
 		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
 
+		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$message =
 			$mensajes
 			? 'Mensajes obtenidos.'
 			: 'No hay ningún mensaje.';
 
-		$this->setStatus(200);
-		$this->setMessage($message);
-		$this->setContent($mensajes);
-		$this->getResponse();
-	}
-
-	// MARK: READ MENSAJES DIRECTOS
-
-	public function readMensajesDirectos(): void
-	{
-		$id_emisor = $_SESSION['id_usuario'];
-		$this->setIdReceptor();
-
-		$id_receptor = $this->getIdReceptor();
-
-		$statement =
-			'SELECT
-				mensajes.id_mensaje,
-				mensajes.contenido,
-				mensajes.fecha_creacion,
-				mensajes.id_emisor,
-				usuarios.nombre
-			FROM mensajes
-			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-			WHERE es_publico = 0
-			AND (
-				(id_emisor = ? AND id_receptor = ?)
-			OR (id_emisor = ? AND id_receptor = ?)
-			)
-			ORDER BY fecha_creacion';
-
-		$query = $this->getConnection()->prepare($statement);
-
-		$query->bind_param(
-			"iiii",
-			$id_emisor,
-			$id_receptor,
-			$id_receptor,
-			$id_emisor
-		);
-
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
-
-		$message =
-			$mensajes
-			? 'Mensajes obtenidos.'
-			: 'No hay ningún mensaje.';
 
 		$this->setStatus(200);
 		$this->setMessage($message);
@@ -157,14 +103,14 @@ final class Mensaje extends ApiResponse
 
 		$this->checkValidationErrors();
 
-		$id_usuario = $_SESSION['id_usuario'];
 		$contenido = $this->getContenido();
+		$id_usuario = $_SESSION['id_usuario'];
 
 		$this->checkIntegrityErrors();
 
 		$statement =
-			"INSERT INTO mensajes (contenido, id_emisor, es_publico)
-			VALUES (?, ?, 1)";
+			"INSERT INTO mensajes (contenido, id_usuario)
+			VALUES (?, ?)";
 
 		$query = $this->getConnection()->prepare($statement);
 
@@ -172,42 +118,6 @@ final class Mensaje extends ApiResponse
 			"si",
 			$contenido,
 			$id_usuario
-		);
-
-		$query->execute();
-		$query->close();
-
-		$this->setStatus(201);
-		$this->setMessage("Mensaje creado con éxito");
-		$this->getResponse();
-	}
-
-	// MARK: CREATE MENSAJE DIRECTO
-
-	public function createMensajeDirecto(): void
-	{
-		$this->setContenido();
-		$this->setIdReceptor();
-
-		$this->checkValidationErrors();
-
-		$id_emisor = $_SESSION['id_usuario'];
-		$contenido = $this->getContenido();
-		$id_receptor = $_SESSION['id_receptor'];
-
-		$this->checkIntegrityErrors();
-
-		$statement =
-			"INSERT INTO mensajes (contenido, id_emisor, id_receptor, es_publico)
-			VALUES (?, ?, ?, 0)";
-
-		$query = $this->getConnection()->prepare($statement);
-
-		$query->bind_param(
-			"sii",
-			$contenido,
-			$id_emisor,
-			$id_receptor
 		);
 
 		$query->execute();
@@ -234,7 +144,7 @@ final class Mensaje extends ApiResponse
 		$statement =
 			"DELETE FROM mensajes
 			WHERE id_mensaje = ?
-			AND id_emisor = ?";
+			AND id_usuario = ?";
 
 		$query = $this->getConnection()->prepare($statement);
 

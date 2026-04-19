@@ -47,7 +47,7 @@ export class MensajeDirecto extends Usuario {
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
 			<article ${mensaje.id_emisor == this.user ? 'class="mensaje-propio"' : ''}>
-				<p>${mensaje.nombre_emisor}</p>
+				<p>${mensaje.nombre}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${mensaje.fecha_creacion}</p>
 				${mensaje.id_emisor == this.user
@@ -85,11 +85,11 @@ export class MensajeDirecto extends Usuario {
 			this.formHandler();
 		}
 	}
-}
 
-// async deleteMensaje(form, method) {
-// 	await this.fetchData(form, method);
-// }
+	async deleteMensaje(form, method) {
+		await this.fetchData(form, method);
+	}
+}
 
 (async () => {
 	await new MensajeDirecto().initialize();
