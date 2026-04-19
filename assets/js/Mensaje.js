@@ -8,6 +8,8 @@ export class Mensaje extends Usuario {
 	}
 
 	async initialize() {
+		this.sessionCheck();
+
 		await this.getMensajes();
 
 		setInterval(async () => {
@@ -24,11 +26,11 @@ export class Mensaje extends Usuario {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
-			<article ${mensaje.id_usuario == this.user ? 'class="mensaje-propio"' : ''}>
+			<article ${mensaje.id_emisor == this.user ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${mensaje.fecha_creacion}</p>
-				${mensaje.id_usuario == this.user
+				${mensaje.id_emisor == this.user
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
 						<button>
 							<svg viewBox="0 0 928 983">

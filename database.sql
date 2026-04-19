@@ -12,10 +12,8 @@ CREATE TABLE mensajes (
     id_mensaje INT PRIMARY KEY AUTO_INCREMENT,
     contenido TEXT NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
     id_emisor INT NOT NULL,
     id_receptor INT NULL,
-    es_publico BOOLEAN NOT NULL DEFAULT 1,
 
     FOREIGN KEY (id_emisor)
         REFERENCES usuarios(id_usuario)
@@ -28,4 +26,3 @@ CREATE TABLE mensajes (
 
 CREATE INDEX idx_mensajes_emisor ON mensajes(id_emisor);
 CREATE INDEX idx_mensajes_receptor ON mensajes(id_receptor);
-CREATE INDEX idx_mensajes_publicos ON mensajes(es_publico);

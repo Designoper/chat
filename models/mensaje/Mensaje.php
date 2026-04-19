@@ -78,9 +78,15 @@ final class Mensaje extends ApiResponse
 	public function readMensajes(): void
 	{
 		$statement =
-			'SELECT *
+			'SELECT
+				mensajes.id_mensaje,
+				mensajes.contenido,
+				mensajes.fecha_creacion,
+				mensajes.id_emisor,
+				usuarios.nombre
 			FROM mensajes
-			WHERE es_publico = 1
+			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+			WHERE id_receptor IS NULL
 			ORDER BY fecha_creacion';
 
 		$query = $this->getConnection()->prepare($statement);
@@ -120,7 +126,7 @@ final class Mensaje extends ApiResponse
 				usuarios.nombre
 			FROM mensajes
 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-			WHERE es_publico = 0
+			WHERE mensajes.id_receptor IS NOT NULL
 			AND (
 				(id_emisor = ? AND id_receptor = ?)
 			OR (id_emisor = ? AND id_receptor = ?)
@@ -166,8 +172,8 @@ final class Mensaje extends ApiResponse
 		$this->checkIntegrityErrors();
 
 		$statement =
-			"INSERT INTO mensajes (contenido, id_emisor, es_publico)
-			VALUES (?, ?, 1)";
+			"INSERT INTO mensajes (contenido, id_emisor)
+			VALUES (?, ?)";
 
 		$query = $this->getConnection()->prepare($statement);
 
@@ -201,8 +207,8 @@ final class Mensaje extends ApiResponse
 		$this->checkIntegrityErrors();
 
 		$statement =
-			"INSERT INTO mensajes (contenido, id_emisor, id_receptor, es_publico)
-			VALUES (?, ?, ?, 0)";
+			"INSERT INTO mensajes (contenido, id_emisor, id_receptor)
+			VALUES (?, ?, ?)";
 
 		$query = $this->getConnection()->prepare($statement);
 

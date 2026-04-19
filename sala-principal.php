@@ -45,8 +45,8 @@ new Usuario()->auth();
 	<main id="main">
 
 		<menu>
-			<li><a href="./chat.php">Chat general</a></li>
-			<li><a href="./sala-chat-directo.php">Chat directo</a></li>
+			<li><a href="./chat-publico.php">Chat publico</a></li>
+			<li><a href="./chat-privado.php">Chat privado</a></li>
 		</menu>
 
 	</main>
