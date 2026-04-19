@@ -34,11 +34,6 @@ new Usuario()->auth();
 	<link href="./assets/css/common/layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
 
-	<!-- <script>
-		window.ID_USUARIO = <?php echo json_encode($_SESSION['id_usuario']); ?>;
-		console.log(window.ID_USUARIO);
-	</script> -->
-
 	<script src="./assets/js/MensajeDirecto.js" type="module" async></script>
 
 	<script src="./sw-register.js" defer></script>
