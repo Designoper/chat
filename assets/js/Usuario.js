@@ -41,7 +41,6 @@ export class Usuario extends Endpoint {
 
 	async createUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
-		console.log(response);
 		if (response.status === 201) {
 			window.location.href = 'sala-principal.php';
 		}
