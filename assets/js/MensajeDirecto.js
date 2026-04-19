@@ -40,7 +40,6 @@ export class MensajeDirecto extends Usuario {
 			</form>
 
 			<a href="./sala-principal.php">Volver a sala principal</a>
-			<a href="./chat-privado.php">Chatear con otro usuario</a>
 		`;
 		setInterval(async () => {
 			await this.getMensajesDirectos();
