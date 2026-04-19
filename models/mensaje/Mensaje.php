@@ -106,6 +106,8 @@ final class Mensaje extends ApiResponse
 		$id_emisor = $_SESSION['id_usuario'];
 		$this->setIdReceptor();
 
+		$this->checkValidationErrors();
+
 		$id_receptor = $this->getIdReceptor();
 
 		$statement =
