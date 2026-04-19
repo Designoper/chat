@@ -234,6 +234,16 @@ class Usuario extends UsuarioIntegrityErrors
 		$this->getResponse();
 	}
 
+	// MARK: AUTH
+
+	public function auth(): void
+	{
+		if (!isset($_SESSION['id_usuario'])) {
+			header("Location: index.html");
+			exit;
+		}
+	}
+
 	// MARK: CURRENT
 
 	public function currentUsuario(): void
