@@ -78,13 +78,7 @@ export class MensajeDirecto extends Usuario {
 		await this.fetchData(form, method, action);
 	}
 
-	async usuarioReceptor(form, method, action) {
-		const response = await this.fetchData(form, method, action);
-		if (response.status === 200) {
-			this.writeChat();
-			this.formHandler();
-		}
-	}
+
 
 	async deleteMensaje(form, method) {
 		await this.fetchData(form, method);

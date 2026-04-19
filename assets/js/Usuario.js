@@ -2,8 +2,8 @@ import { Endpoint } from "./Endpoint.js";
 
 export class Usuario extends Endpoint {
 	user = null;
-	id_receptor;
 	MAIN = document.getElementById('main');
+	menu = document.querySelector('menu');
 	USUARIOS_OUTPUT = document.getElementById('usuariosoutput');
 
 	constructor() {
@@ -20,20 +20,16 @@ export class Usuario extends Endpoint {
 	}
 
 	printUsuarios(usuarios) {
-
 		const content = this.usuariosTemplate(usuarios.content);
-		this.MAIN.innerHTML = content;
-
-		this.formHandler();
+		this.menu.insertAdjacentHTML('beforeend', content);
 	}
 
 	usuariosTemplate(fetchedUsuarios) {
 
 		const usuarios = fetchedUsuarios.map(usuario =>
-			`<form name="usuario-receptor">
-				<input type="hidden" value="${usuario.id_usuario}" name="id_receptor">
-				<button>${usuario.nombre}</button>
-			</form>`
+			`<li>
+				<a href="chat-privado.php?id=${usuario.id_usuario}">${usuario.nombre}</a>
+			</li>`
 		).join('');
 
 		return usuarios;
@@ -42,28 +38,28 @@ export class Usuario extends Endpoint {
 	async createUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 201) {
-			window.location.href = 'sala-principal.php';
+			location.href = 'sala-principal.php';
 		}
 	}
 
 	async deleteUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 204) {
-			window.location.href = 'crear-usuario.php';
+			location.href = 'crear-usuario.php';
 		}
 	}
 
 	async loginUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
-			window.location.href = 'sala-principal.php';
+			location.href = 'sala-principal.php';
 		}
 	}
 
 	async logout(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
-			window.location.href = 'index.html';
+			location.href = 'index.html';
 		}
 	}
 
@@ -75,5 +71,11 @@ export class Usuario extends Endpoint {
 }
 
 (async () => {
+
 	await new Usuario().initialize();
+
+	if (location.pathname === '/sala-principal.php') {
+		await new Usuario().getUsuarios();
+	}
+
 })();

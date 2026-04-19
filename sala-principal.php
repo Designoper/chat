@@ -46,7 +46,6 @@ new Usuario()->auth();
 
 		<menu>
 			<li><a href="./chat-publico.php">Chat publico</a></li>
-			<li><a href="./chat-privado.php">Chat privado</a></li>
 		</menu>
 
 	</main>
