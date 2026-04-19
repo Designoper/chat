@@ -32,6 +32,7 @@ class Usuario extends UsuarioIntegrityErrors
 	{
 		return $this->password;
 	}
+
 	private function getIdReceptor(): string
 	{
 		return $this->id_receptor;
@@ -57,7 +58,7 @@ class Usuario extends UsuarioIntegrityErrors
 		$this->usuario = $value;
 	}
 
-	private function setPassword(): void
+	private function setPasswordHashed(): void
 	{
 		$value = $_POST['password'] ?? null;
 
@@ -66,12 +67,19 @@ class Usuario extends UsuarioIntegrityErrors
 			return;
 		}
 
-		// if (!preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/', $value)) {
-		// 	$this->setValidationError("El campo 'password' debe tener como mínimo 8 carácteres, de los cuales 1 debe ser minúscula, 1 mayúscula y 1 número.");
-		// 	return;
-		// }
+		$this->password = password_hash($value, PASSWORD_DEFAULT);
+	}
 
-		$this->password = $value;
+	private function setPasswordPlain(): void
+	{
+		$value = $_POST['password'] ?? null;
+
+		if (empty($value)) {
+			$this->setValidationError("El campo 'password' no puede estar vacío.");
+			return;
+		}
+
+		$this->password = $value; // sin hash
 	}
 
 	private function setIdReceptor(): void
@@ -124,7 +132,7 @@ class Usuario extends UsuarioIntegrityErrors
 	public function createUsuario(): void
 	{
 		$this->setUsuario();
-		$this->setPassword();
+		$this->setPasswordHashed();
 
 		$this->checkValidationErrors();
 
@@ -163,39 +171,47 @@ class Usuario extends UsuarioIntegrityErrors
 	public function login(): void
 	{
 		$this->setUsuario();
-		$this->setPassword();
+		$this->setPasswordPlain();
 
 		$this->checkValidationErrors();
 
-		$statement = "SELECT id_usuario
-		FROM usuarios
-		WHERE nombre = ?
-		AND PASSWORD = ?";
+		$statement =
+			"SELECT id_usuario, password
+			FROM usuarios
+			WHERE nombre = ?";
 
 		$query = $this->getConnection()->prepare($statement);
 
 		$usuario = $this->getUsuario();
-		$password = $this->getPassword();
+		$passwordIngresada = $this->getPassword();
 
 		$query->bind_param(
-			"ss",
-			$usuario,
-			$password
+			"s",
+			$usuario
 		);
 
 		$query->execute();
 
-		$id_usuario = $query->get_result()->fetch_column(0);
+		$result = $query->get_result();
+		$row = $result->fetch_assoc();
 
 		$query->close();
 
-		if (!$id_usuario) {
+		if (!$row) {
 			$this->setStatus(401);
 			$this->setIntegrityError("El usuario o la contraseña son incorrectos.");
 			$this->checkIntegrityErrors();
 		}
 
-		$_SESSION['id_usuario'] = $id_usuario;
+		$hashGuardado = $row['password'];
+
+		if (!password_verify($passwordIngresada, $hashGuardado)) {
+			$this->setStatus(401);
+			$this->setIntegrityError("El usuario o la contraseña son incorrectos.");
+			$this->checkIntegrityErrors();
+		}
+
+		$_SESSION['id_usuario'] = $row['id_usuario'];
 
 		$this->setStatus(200);
 		$this->setMessage("Login exitoso");
