@@ -2,6 +2,7 @@ import { Usuario } from "./Usuario.js";
 
 export class MensajeDirecto extends Usuario {
 	id_receptor;
+	nombre_receptor;
 	// MENSAJES_OUTPUT = document.getElementById('fetchoutput');
 
 	constructor() {
@@ -12,19 +13,19 @@ export class MensajeDirecto extends Usuario {
 		this.getIdReceptor();
 		this.sessionCheck();
 		this.writeChat();
-		// await this.getMensajesDirectos();
 	}
 
 	getIdReceptor() {
 		const currentURL = new URL(window.location.href);
 		const idReceptor = currentURL.searchParams.get('id');
+		const nombreReceptor = currentURL.searchParams.get('usuario');
 		this.id_receptor = idReceptor;
+		this.nombre_receptor = nombreReceptor;
 	}
 
 	writeChat() {
-
 		this.MAIN.innerHTML = `
-			<h1>Chat directo con ${this.id_receptor}</h1>
+			<h1>Chat directo con ${this.nombre_receptor}</h1>
 			<section id="fetchoutput"></section>
 
 			<form name="crear-mensaje-directo" action="${this.ENDPOINTS.CREAR_MENSAJES_DIRECTOS}">
