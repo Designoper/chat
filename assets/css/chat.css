@@ -13,13 +13,14 @@ main {
 		form {
 			display: grid;
 			gap: 2em;
+			align-content: center;
 
 			&:nth-of-type(2) {
 				grid-template-columns: 1fr auto;
 			}
 		}
 
-		input {
+		textarea {
 			border-radius: 0.25rem;
 			padding: 0.25em 0.75em;
 			background-color: var(--white);
@@ -30,6 +31,7 @@ main {
 			border-radius: 0.25rem;
 			transition: transform 0.5s;
 			justify-self: center;
+			align-self: center;
 			background-color: var(--white);
 
 			&:hover {

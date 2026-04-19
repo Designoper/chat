@@ -32,7 +32,7 @@ new Usuario()->auth();
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/layout.css" rel="preload stylesheet" as="style">
-	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/sala-principal.css" rel="preload stylesheet" as="style">
 
 	<script src="./assets/js/Usuario.js" type="module" async></script>
 
@@ -44,9 +44,21 @@ new Usuario()->auth();
 
 	<main id="main">
 
+	<h1>¿Con quién quieres chatear?</h1>
 		<menu>
-			<li><a href="./chat-publico.php">Chat publico</a></li>
+			<li><a href="./chat-publico.php">Chat público</a></li>
 		</menu>
+
+		<form name="logout-usuario">
+
+			<button>
+				<svg viewBox="0 0 654 752">
+					<path
+						d="M418.624 610.432L653.12 375.936 418.512 141.328l-56.56 56.56L500.032 336H176v80h323.92L362.064 553.872l56.56 56.56zM80 80h368V0H0v752h448v-80H80V80z" />
+				</svg>
+			</button>
+
+		</form>
 
 	</main>
 

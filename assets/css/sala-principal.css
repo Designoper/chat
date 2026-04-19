@@ -1,0 +1,13 @@
+main {
+	menu {
+		display: flex;
+		gap: 2em;
+
+		a {
+			padding: 1em;
+			border-radius: 0.5em;
+			background-color: var(--terciary-bg);
+			/* color: var(--terciary-bg); */
+		}
+	}
+}

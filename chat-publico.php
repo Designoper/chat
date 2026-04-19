@@ -61,7 +61,7 @@ new Usuario()->auth();
 
 			<form name="crear-mensaje">
 
-				<input placeholder="Mensaje" name="contenido" autocomplete="off" minlength="1" maxlength="255" required>
+				<textarea placeholder="Mensaje" name="contenido" autocomplete="off" minlength="1" maxlength="255" required></textarea>
 
 				<button>
 					<svg viewBox="0 0 512 512">
