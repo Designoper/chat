@@ -32,7 +32,7 @@ new Usuario()->auth();
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/layout.css" rel="preload stylesheet" as="style">
-	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/chat.css" rel="preload stylesheet" as="style">
 
 	<script src="./assets/js/MensajeDirecto.js" type="module" async></script>
 
