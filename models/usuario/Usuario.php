@@ -79,7 +79,7 @@ class Usuario extends UsuarioIntegrityErrors
 			return;
 		}
 
-		$this->password = $value; // sin hash
+		$this->password = $value;
 	}
 
 	private function setIdReceptor(): void

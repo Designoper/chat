@@ -35,8 +35,9 @@ final class Mensaje extends ApiResponse
 
 	// MARK: SETTERS
 
-	private function setIdMensaje(int $min = 1): void
+	private function setIdMensaje(): void
 	{
+		$min = 1;
 		$error_message = "El id del recurso debe ser un número entero superior o igual a $min y solo contener números.";
 
 		$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
