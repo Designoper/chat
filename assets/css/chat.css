@@ -2,7 +2,8 @@ main {
 	>section {
 		display: grid;
 		gap: 2em;
-		grid-template-columns: auto 1fr;
+		grid-template-columns: auto auto 1fr;
+		align-content: center;
 		width: 100%;
 		position: sticky;
 		left: 0;

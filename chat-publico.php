@@ -48,6 +48,8 @@ new Usuario()->auth();
 
 		<section>
 
+			<a href="./sala-principal.php">Volver</a>
+
 			<form name="logout-usuario">
 
 				<button>
