@@ -22,8 +22,7 @@ final class ApiRouter extends Sanitizer
             'GET',
             'mensajes-directos',
             function (): void {
-                $mensaje = new MensajeDirecto();
-                $mensaje->readMensajesDirectos();
+                new MensajeDirecto()->readMensajesDirectos();
             }
         );
 
@@ -31,8 +30,7 @@ final class ApiRouter extends Sanitizer
             'GET',
             'mensajes$',
             function (): void {
-                $mensaje = new Mensaje();
-                $mensaje->readMensajes();
+                new Mensaje()->readMensajes();
             }
         );
 
@@ -40,8 +38,7 @@ final class ApiRouter extends Sanitizer
             'GET',
             'usuarios/current',
             function (): void {
-                $usuario = new Usuario();
-                $usuario->currentUsuario();
+                new Usuario()->currentUsuario();
             }
         );
 
@@ -49,8 +46,7 @@ final class ApiRouter extends Sanitizer
             'GET',
             'usuarios$',
             function (): void {
-                $usuario = new Usuario();
-                $usuario->readUsuarios();
+                new Usuario()->readUsuarios();
             }
         );
 
@@ -60,8 +56,7 @@ final class ApiRouter extends Sanitizer
             'POST',
             'usuarios/receptor',
             function (): void {
-                $usuario = new Usuario();
-                $usuario->usuarioReceptor();
+                new Usuario()->usuarioReceptor();
             }
         );
 
@@ -69,8 +64,7 @@ final class ApiRouter extends Sanitizer
             'POST',
             'usuarios/crear',
             function (): void {
-                $usuario = new Usuario();
-                $usuario->createUsuario();
+                new Usuario()->createUsuario();
             }
         );
 
@@ -78,8 +72,7 @@ final class ApiRouter extends Sanitizer
             'POST',
             'usuarios/login',
             function (): void {
-                $usuario = new Usuario();
-                $usuario->login();
+                new Usuario()->login();
             }
         );
 
@@ -87,8 +80,7 @@ final class ApiRouter extends Sanitizer
             'POST',
             'usuarios/logout',
             function (): void {
-                $usuario = new Usuario();
-                $usuario->logout();
+                new Usuario()->logout();
             }
         );
 
@@ -96,8 +88,7 @@ final class ApiRouter extends Sanitizer
             'POST',
             'mensajes/crear',
             function (): void {
-                $mensaje = new Mensaje();
-                $mensaje->createMensaje();
+                new Mensaje()->createMensaje();
             }
         );
 
@@ -105,8 +96,7 @@ final class ApiRouter extends Sanitizer
             'POST',
             'mensajes-directos/crear',
             function (): void {
-                $mensaje = new MensajeDirecto();
-                $mensaje->createMensajeDirecto();
+                new MensajeDirecto()->createMensajeDirecto();
             }
         );
 
@@ -114,8 +104,7 @@ final class ApiRouter extends Sanitizer
             'POST',
             'mensajes/[1-9]\d*$',
             function (): void {
-                $mensaje = new Mensaje();
-                $mensaje->deleteMensaje();
+                new Mensaje()->deleteMensaje();
             }
         );
 
