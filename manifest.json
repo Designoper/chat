@@ -1,6 +1,6 @@
 {
-	"name": "Chat",
-	"short_name": "Chat",
+	"name": "Chatv2",
+	"short_name": "Chatv2",
 	"start_url": "/",
 	"scope": "/",
 	"display": "standalone",
