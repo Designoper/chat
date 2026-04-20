@@ -1,10 +1,10 @@
 {
-	"name": "Chatv2",
-	"short_name": "Chatv2",
+	"name": "Chat",
+	"short_name": "Chat",
 	"start_url": "/",
 	"scope": "/",
 	"display": "standalone",
-	"version": "2.0",
+	"version": "1.0",
 	"background_color": "#ffffff",
 	"theme_color": "#0a3d62",
 	"icons": [
