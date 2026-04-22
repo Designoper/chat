@@ -5,7 +5,6 @@ declare(strict_types=1);
 require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/../../models/usuario/Usuario.php';
 require_once __DIR__ . '/../../models/mensaje/Mensaje.php';
-// require_once __DIR__ . '/../../models/mensaje/MensajeDirecto.php';
 
 final class ApiRouter extends Sanitizer
 {
