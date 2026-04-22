@@ -10,6 +10,49 @@ export class MensajeDirecto extends Usuario {
 		super();
 	}
 
+	formatearFecha(date) {
+		const instant = Temporal.PlainDateTime.from(`${date}`);
+		const UTC = Temporal.Instant.from(`${date}Z`);
+
+		const Time = {
+			year: instant.year,
+			month: instant.month,
+			day: instant.day,
+			dayOfWeek: instant.dayOfWeek,
+			dayOfYear: instant.dayOfYear,
+			daysInYear: instant.daysInYear,
+			hour: instant.hour,
+			hoursInDay: instant.hoursInDay,
+			minute: instant.minute,
+			second: instant.second,
+		}
+
+		switch(instant.dayOfWeek) {
+			case 1:
+				Time.dayOfWeekName = 'Lunes';
+				break;
+			case 2:
+				Time.dayOfWeekName = 'Martes';
+				break;
+			case 3:
+				Time.dayOfWeekName = 'Miércoles';
+				break;
+			case 4:
+				Time.dayOfWeekName = 'Jueves';
+				break;
+			case 5:
+				Time.dayOfWeekName = 'Viernes';
+				break;
+			case 6:
+				Time.dayOfWeekName = 'Sábado';
+				break;
+			case 7:
+				Time.dayOfWeekName = 'Domingo';
+		}
+
+		return Time;
+	}
+
 	async initialize() {
 		this.getIdReceptor();
 		this.sessionCheck();
@@ -26,7 +69,7 @@ export class MensajeDirecto extends Usuario {
 
 	writeChat() {
 		this.h1.innerHTML = `Chat privado con ${this.nombre_receptor}`;
-		this.input.setAttribute('value',`${this.id_receptor}`);
+		this.input.setAttribute('value', `${this.id_receptor}`);
 
 		setInterval(async () => {
 			await this.getMensajesDirectos();
@@ -45,7 +88,7 @@ export class MensajeDirecto extends Usuario {
 			<article ${mensaje.id_emisor == this.user ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre}</p>
 				<p>${mensaje.contenido}</p>
-				<p>${mensaje.fecha_creacion}</p>
+				<p>${this.formatearFecha(mensaje.fecha_creacion).dayOfWeekName}</p>
 				${mensaje.id_emisor == this.user
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
 						<button>
