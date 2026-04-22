@@ -1,9 +1,10 @@
 import { Usuario } from "./Usuario.js";
 
 export class MensajeDirecto extends Usuario {
+	h1 = document.querySelector('h1');
+	input = document.querySelector('input[type="hidden"]');
 	id_receptor;
 	nombre_receptor;
-	// MENSAJES_OUTPUT = document.getElementById('fetchoutput');
 
 	constructor() {
 		super();
@@ -24,38 +25,9 @@ export class MensajeDirecto extends Usuario {
 	}
 
 	writeChat() {
-		this.MAIN.innerHTML = `
-			<h1>Chat directo con ${this.nombre_receptor}</h1>
-			<output id="fetchoutput"></output>
+		this.h1.innerHTML = `Chat privado con ${this.nombre_receptor}`;
+		this.input.setAttribute('value',`${this.id_receptor}`);
 
-			<section>
-
-				<a href="./sala-principal.php">Volver</a>
-
-				<form name="logout-usuario">
-
-					<button>
-						<svg viewBox="0 0 654 752">
-							<path
-								d="M418.624 610.432L653.12 375.936 418.512 141.328l-56.56 56.56L500.032 336H176v80h323.92L362.064 553.872l56.56 56.56zM80 80h368V0H0v752h448v-80H80V80z" />
-						</svg>
-					</button>
-
-				</form>
-
-				<form name="crear-mensaje-directo" action="${this.ENDPOINTS.CREAR_MENSAJES_DIRECTOS}">
-					<input type="hidden" name="id_receptor" value="${this.id_receptor}">
-					<textarea placeholder="Mensaje" name="contenido" autocomplete="off" minlength="1" maxlength="255" required></textarea>
-					<button>
-						<svg viewBox="0 0 512 512">
-							<path
-								d="M5.091 175.195c-2.418-.846-4.092-3.522-4.091-6.54V7.202c0-2.279.949-4.402 2.53-5.664S7.113.043 8.866.913l499.636 249.199c2.114 1.053 3.498 3.54 3.498 6.283s-1.384 5.229-3.498 6.282L8.866 511.876c-1.753.87-3.758.635-5.337-.625S1 507.866 1 505.587V344.134c-.001-3.018 1.673-5.694 4.091-6.54l213.958-74.667c2.426-.844 4.098-3.508 4.098-6.533s-1.671-5.69-4.098-6.533L5.091 175.195z" />
-						</svg>
-					</button>
-				</form>
-
-			</section>
-		`;
 		setInterval(async () => {
 			await this.getMensajesDirectos();
 		}, 2000);
@@ -91,7 +63,7 @@ export class MensajeDirecto extends Usuario {
 	}
 
 	printMensajesDirectos(mensajes) {
-		const output = document.getElementById('fetchoutput');
+		const output = document.querySelector('output');
 		const content = this.mensajesDirectosTemplate(mensajes.content);
 		output.innerHTML = content;
 
