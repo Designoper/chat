@@ -15,6 +15,11 @@ export class MensajeDirecto extends Usuario {
 		this.getIdReceptor();
 		this.sessionCheck();
 		this.writeChat();
+		await this.getMensajesDirectos();
+
+		setInterval(async () => {
+			await this.getMensajesDirectos();
+		}, 2000);
 	}
 
 	getIdReceptor() {
@@ -23,16 +28,12 @@ export class MensajeDirecto extends Usuario {
 		const nombreReceptor = currentURL.searchParams.get('usuario');
 		this.id_receptor = idReceptor;
 		this.nombre_receptor = nombreReceptor;
-		history.replaceState({}, "", "/chat-privado");
+		// history.replaceState({}, "", "/chat-privado");
 	}
 
 	writeChat() {
 		this.h1.innerHTML = `Chat privado con ${this.nombre_receptor}`;
 		this.input.setAttribute('value', `${this.id_receptor}`);
-
-		setInterval(async () => {
-			await this.getMensajesDirectos();
-		}, 2000);
 	}
 
 	async getMensajesDirectos() {
