@@ -23,6 +23,7 @@ export class MensajeDirecto extends Usuario {
 		const nombreReceptor = currentURL.searchParams.get('usuario');
 		this.id_receptor = idReceptor;
 		this.nombre_receptor = nombreReceptor;
+		history.replaceState({}, "", "/chat-privado");
 	}
 
 	writeChat() {
