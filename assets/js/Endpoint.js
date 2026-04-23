@@ -1,7 +1,7 @@
 import { Fetch } from "./Fetch.js";
 
 export class Endpoint extends Fetch {
-	ROOT = `${location.protocol}//${location.host}/api/`;
+	ROOT = `${location.origin}/api/`;
 
 	ENDPOINTS = {
 
