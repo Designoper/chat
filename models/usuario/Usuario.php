@@ -175,11 +175,13 @@ class Usuario extends ApiResponse
             VALUES (?, ?)";
 
 			$query = $this->getConnection()->prepare($statement);
+
 			$query->bind_param(
 				"ss",
 				$usuario,
 				$password
 			);
+
 			$query->execute();
 
 			$id_usuario = $query->insert_id;
@@ -201,7 +203,6 @@ class Usuario extends ApiResponse
 		$this->setMessage("Usuario creado con éxito");
 		$this->getResponse();
 	}
-
 
 	// MARK: LOGIN
 
@@ -282,8 +283,7 @@ class Usuario extends ApiResponse
 
 		session_destroy();
 
-		$this->setStatus(200);
-		$this->setMessage("Logout exitoso");
+		$this->setStatus(204);
 		$this->getResponse();
 	}
 
@@ -331,14 +331,6 @@ class Usuario extends ApiResponse
 
 	public function deleteUsuario(): void
 	{
-		// $this->setIdUsuario();
-
-		// if (!$this->getIdUsuario()) {
-		// 	$this->setStatus(401);
-		// 	$this->setMessage("No hay usuario identificado");
-		// 	$this->getResponse();
-		// }
-
 		$id_usuario = $_SESSION['id_usuario'];
 
 		$statement =
