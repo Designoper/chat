@@ -50,7 +50,7 @@ export class Mensaje extends Usuario {
 					</form>`
 				: ''
 			}
-			</article >
+			</article>
 			`
 		).join('');
 
