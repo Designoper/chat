@@ -19,9 +19,9 @@ abstract class Sanitizer
             return '';
         }
 
-        $value = (string) $value;
-        $value = trim($value);
-        $value = stripslashes($value);
+        $value = (string) $value
+        |> trim(...)
+        |> stripslashes(...);
         return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
