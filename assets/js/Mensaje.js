@@ -34,8 +34,10 @@ export class Mensaje extends Usuario {
 				{
 					weekday: "long",
 					year: "numeric",
-					month: "long",
-					day: "numeric"
+					month: "numeric",
+					day: "numeric",
+					hour: "numeric",
+					minute: "numeric"
 				}
 			)}</p>
 				${mensaje.id_emisor == this.user

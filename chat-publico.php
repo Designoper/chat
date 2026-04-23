@@ -20,7 +20,7 @@ new Usuario()->auth();
 	<title>Chat</title>
 	<meta name="description" content="El chat de la gente guay">
 
-	<link href="./manifest.json" rel="manifest">
+	<link href="./manifest.jsonc" rel="manifest">
 
 	<link href="./assets/img/icons/favicon.svg" rel="icon" type="image/svg+xml">
 	<link href="./assets/img/icons/icon-512.png" rel="icon" type="image/png">
