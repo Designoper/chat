@@ -78,16 +78,16 @@ final class Mensaje extends ApiResponse
 	public function readMensajes(): void
 	{
 		$statement =
-			'SELECT
+			"SELECT
 				mensajes.id_mensaje,
 				mensajes.contenido,
-				mensajes.fecha_creacion,
+				DATE_FORMAT(CONVERT_TZ(mensajes.fecha_creacion, @@session.time_zone, '+00:00'), '%Y-%m-%dT%H:%i:%sZ') AS fecha_creacion,
 				mensajes.id_emisor,
 				usuarios.nombre
 			FROM mensajes
 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
 			WHERE id_receptor IS NULL
-			ORDER BY fecha_creacion';
+			ORDER BY fecha_creacion";
 
 		$query = $this->getConnection()->prepare($statement);
 
@@ -118,10 +118,10 @@ final class Mensaje extends ApiResponse
 		$id_receptor = $this->getIdReceptor();
 
 		$statement =
-			'SELECT
+			"SELECT
 				mensajes.id_mensaje,
 				mensajes.contenido,
-				mensajes.fecha_creacion,
+				DATE_FORMAT(CONVERT_TZ(mensajes.fecha_creacion, @@session.time_zone, '+00:00'), '%Y-%m-%dT%H:%i:%sZ') AS fecha_creacion,
 				mensajes.id_emisor,
 				usuarios.nombre
 			FROM mensajes
@@ -131,7 +131,7 @@ final class Mensaje extends ApiResponse
 				(id_emisor = ? AND id_receptor = ?)
 			OR (id_emisor = ? AND id_receptor = ?)
 			)
-			ORDER BY fecha_creacion';
+			ORDER BY fecha_creacion";
 
 		$query = $this->getConnection()->prepare($statement);
 
