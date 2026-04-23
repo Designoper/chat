@@ -81,12 +81,12 @@ final class Mensaje extends ApiResponse
 			"SELECT
 				mensajes.id_mensaje,
 				mensajes.contenido,
-				DATE_FORMAT(CONVERT_TZ(mensajes.fecha_creacion, @@session.time_zone, '+00:00'), '%Y-%m-%dT%H:%i:%sZ') AS fecha_creacion,
+				DATE_FORMAT(mensajes.fecha_creacion, '%Y-%m-%dT%H:%i:%sZ') AS fecha_creacion,
 				mensajes.id_emisor,
 				usuarios.nombre
 			FROM mensajes
 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-			WHERE id_receptor IS NULL
+			WHERE mensajes.id_receptor IS NULL
 			ORDER BY fecha_creacion";
 
 		$query = $this->getConnection()->prepare($statement);
@@ -121,7 +121,7 @@ final class Mensaje extends ApiResponse
 			"SELECT
 				mensajes.id_mensaje,
 				mensajes.contenido,
-				DATE_FORMAT(CONVERT_TZ(mensajes.fecha_creacion, @@session.time_zone, '+00:00'), '%Y-%m-%dT%H:%i:%sZ') AS fecha_creacion,
+				DATE_FORMAT(mensajes.fecha_creacion, '%Y-%m-%dT%H:%i:%sZ') AS fecha_creacion,
 				mensajes.id_emisor,
 				usuarios.nombre
 			FROM mensajes

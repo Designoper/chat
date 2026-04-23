@@ -50,7 +50,7 @@ export class MensajeDirecto extends Usuario {
 				{
 					weekday: "long",
 					year: "numeric",
-					month: "long",
+					month: "numeric",
 					day: "numeric"
 				}
 			)}</p>
