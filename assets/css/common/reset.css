@@ -13,7 +13,8 @@
 	text-wrap: pretty;
 	text-align: justify;
 	text-decoration: none;
-	hyphens: auto;
+	word-break: break-word;
+	/* hyphens: auto; */
 	overflow-wrap: break-word;
 	color: inherit;
 	background: none;

@@ -77,8 +77,6 @@ main {
 			background-color: var(--secondary-bg);
 
 			p {
-				word-break: break-all;
-
 				&:nth-of-type(1) {
 					font-weight: bold;
 					font-size: 1.25rem;
