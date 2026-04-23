@@ -14,8 +14,8 @@
 	text-align: justify;
 	text-decoration: none;
 	word-break: break-word;
-	/* hyphens: auto; */
 	overflow-wrap: break-word;
+	/* hyphens: auto; */
 	color: inherit;
 	background: none;
 	break-inside: avoid;
