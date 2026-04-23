@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/UsuarioIntegrityErrors.php';
+require_once __DIR__ . '/../universal/ApiResponse.php';
 
-class Usuario extends UsuarioIntegrityErrors
+class Usuario extends ApiResponse
 {
 	private readonly int $id_usuario;
 	private readonly string $usuario;
@@ -169,25 +169,31 @@ class Usuario extends UsuarioIntegrityErrors
 		$usuario = $this->getUsuario();
 		$password = $this->getPassword();
 
-		$this->nombreUsuarioExists($usuario);
+		try {
+			$statement =
+				"INSERT INTO usuarios (nombre, password)
+            VALUES (?, ?)";
 
-		$this->checkIntegrityErrors();
+			$query = $this->getConnection()->prepare($statement);
+			$query->bind_param(
+				"ss",
+				$usuario,
+				$password
+			);
+			$query->execute();
 
-		$statement =
-			"INSERT INTO usuarios (nombre, password)
-			VALUES (?, ?)";
+			$id_usuario = $query->insert_id;
+			$query->close();
+		} catch (\mysqli_sql_exception $error) {
 
-		$query = $this->getConnection()->prepare($statement);
+			if ($error->getCode() === 1062) {
+				$this->setStatus(409);
+				$this->setIntegrityError('¡Este nombre de usuario ya existe!');
+				$this->checkIntegrityErrors();
+			}
 
-		$query->bind_param(
-			"ss",
-			$usuario,
-			$password
-		);
-
-		$query->execute();
-		$id_usuario = $query->insert_id;
-		$query->close();
+			throw $error;
+		}
 
 		$_SESSION['id_usuario'] = $id_usuario;
 
@@ -195,6 +201,7 @@ class Usuario extends UsuarioIntegrityErrors
 		$this->setMessage("Usuario creado con éxito");
 		$this->getResponse();
 	}
+
 
 	// MARK: LOGIN
 
