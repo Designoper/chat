@@ -11,7 +11,7 @@
 	line-height: 1.5;
 	text-box: trim-both cap alphabetic;
 	text-wrap: pretty;
-	text-align: justify;
+	/* text-align: justify; */
 	text-decoration: none;
 	word-break: break-word;
 	overflow-wrap: break-word;
