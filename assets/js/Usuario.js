@@ -58,7 +58,7 @@ export class Usuario extends Endpoint {
 
 	async logout(form, method, action) {
 		const response = await this.fetchData(form, method, action);
-		if (response.status === 200) {
+		if (response.status === 204) {
 			location.href = 'index.html';
 		}
 	}
