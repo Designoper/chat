@@ -1,4 +1,5 @@
 import { Usuario } from "./Usuario.js";
+import formatearFecha from "./utils/fecha.js";
 
 export class MensajeDirecto extends Usuario {
 	h1 = document.querySelector('h1');
@@ -8,96 +9,6 @@ export class MensajeDirecto extends Usuario {
 
 	constructor() {
 		super();
-	}
-
-	formatearFecha(date) {
-
-		const instant = Temporal.Instant.from(date);
-		const localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		const fullDate = instant.toZonedDateTimeISO(localTimeZone);
-
-		const Time = {
-			year: fullDate.year,
-			month: fullDate.month,
-			day: fullDate.day,
-			dayOfWeek: fullDate.dayOfWeek,
-			dayOfYear: fullDate.dayOfYear,
-			daysInYear: fullDate.daysInYear,
-			hour: fullDate.hour,
-			hoursInDay: fullDate.hoursInDay,
-			minute: fullDate.minute.toString().padStart(2, "0"),
-			second: fullDate.second,
-		}
-
-		const dayName = fullDate.toLocaleString(undefined, { weekday: "long" });
-		const monthName = fullDate.toLocaleString(undefined, { month: "long" });
-
-		Time.dayOfWeekName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
-		Time.monthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
-
-		// switch (fullDate.dayOfWeek) {
-		// 	case 1:
-		// 		Time.dayOfWeekName = 'Lunes';
-		// 		break;
-		// 	case 2:
-		// 		Time.dayOfWeekName = 'Martes';
-		// 		break;
-		// 	case 3:
-		// 		Time.dayOfWeekName = 'Miércoles';
-		// 		break;
-		// 	case 4:
-		// 		Time.dayOfWeekName = 'Jueves';
-		// 		break;
-		// 	case 5:
-		// 		Time.dayOfWeekName = 'Viernes';
-		// 		break;
-		// 	case 6:
-		// 		Time.dayOfWeekName = 'Sábado';
-		// 		break;
-		// 	case 7:
-		// 		Time.dayOfWeekName = 'Domingo';
-		// }
-
-		// switch (fullDate.month) {
-		// 	case 1:
-		// 		Time.monthName = 'Enero';
-		// 		break;
-		// 	case 2:
-		// 		Time.monthName = 'Febrero';
-		// 		break;
-		// 	case 3:
-		// 		Time.monthName = 'Marzo';
-		// 		break;
-		// 	case 4:
-		// 		Time.monthName = 'Abril';
-		// 		break;
-		// 	case 5:
-		// 		Time.monthName = 'Mayo';
-		// 		break;
-		// 	case 6:
-		// 		Time.monthName = 'Junio';
-		// 		break;
-		// 	case 7:
-		// 		Time.monthName = 'Julio';
-		// 		break;
-		// 	case 8:
-		// 		Time.monthName = 'Agosto';
-		// 		break;
-		// 	case 9:
-		// 		Time.monthName = 'Septiembre';
-		// 		break;
-		// 	case 10:
-		// 		Time.monthName = 'Octubre';
-		// 		break;
-		// 	case 11:
-		// 		Time.monthName = 'Noviembre';
-		// 		break;
-		// 	case 12:
-		// 		Time.monthName = 'Diciembre';
-		// 		break;
-		// }
-
-		return Time;
 	}
 
 	async initialize() {
@@ -135,7 +46,14 @@ export class MensajeDirecto extends Usuario {
 			<article ${mensaje.id_emisor == this.user ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre}</p>
 				<p>${mensaje.contenido}</p>
-				<p>${this.formatearFecha(mensaje.fecha_creacion).hour}:${this.formatearFecha(mensaje.fecha_creacion).minute}</p>
+				<p>${formatearFecha(mensaje.fecha_creacion).toLocaleString(undefined,
+				{
+					weekday: "long",
+					year: "numeric",
+					month: "long",
+					day: "numeric"
+				}
+			)}</p>
 				${mensaje.id_emisor == this.user
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
 						<button>

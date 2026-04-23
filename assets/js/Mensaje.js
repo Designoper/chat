@@ -1,4 +1,5 @@
 import { Usuario } from "./Usuario.js";
+import formatearFecha from "./utils/fecha.js";
 
 export class Mensaje extends Usuario {
 	MENSAJES_OUTPUT = document.getElementById('fetchoutput');
@@ -29,7 +30,14 @@ export class Mensaje extends Usuario {
 			<article ${mensaje.id_emisor == this.user ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre}</p>
 				<p>${mensaje.contenido}</p>
-				<p>${mensaje.fecha_creacion}</p>
+					<p>${formatearFecha(mensaje.fecha_creacion).toLocaleString(undefined,
+				{
+					weekday: "long",
+					year: "numeric",
+					month: "long",
+					day: "numeric"
+				}
+			)}</p>
 				${mensaje.id_emisor == this.user
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
 						<button>
@@ -38,8 +46,9 @@ export class Mensaje extends Usuario {
 							</svg>
 						</button>
 					</form>`
-				: ''}
-			</article>
+				: ''
+			}
+			</article >
 			`
 		).join('');
 
