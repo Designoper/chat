@@ -9,7 +9,7 @@ class Usuario extends ApiResponse
 	private readonly int $id_usuario;
 	private readonly string $usuario;
 	private readonly string $password;
-	private readonly string $id_receptor;
+	private readonly int $id_receptor;
 
 	public function __construct()
 	{
@@ -33,7 +33,7 @@ class Usuario extends ApiResponse
 		return $this->password;
 	}
 
-	private function getIdReceptor(): string
+	private function getIdReceptor(): int
 	{
 		return $this->id_receptor;
 	}
