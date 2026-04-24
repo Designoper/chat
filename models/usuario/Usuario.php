@@ -42,38 +42,32 @@ class Usuario extends ApiResponse
 
 	private function setUsuario(): void
 	{
-		$value = $_POST['usuario'] ?? null;
+		$name = 'usuario';
+		$value = $_POST[$name] ?? null;
 
-		if (empty($value)) {
-			$this->setValidationError("El campo 'usuario' no puede estar vacío.");
-			return;
-		}
-
-		$this->usuario = $value;
+		empty($value)
+			? $this->setValidationError("El campo $name no puede estar vacío.")
+			: $this->usuario = $value;
 	}
 
 	private function setPasswordHashed(): void
 	{
-		$value = $_POST['password'] ?? null;
+		$name = 'password';
+		$value = $_POST[$name] ?? null;
 
-		if (empty($value)) {
-			$this->setValidationError("El campo 'password' no puede estar vacío.");
-			return;
-		}
-
-		$this->password = password_hash($value, PASSWORD_DEFAULT);
+		empty($value)
+			? $this->setValidationError("El campo $name no puede estar vacío.")
+			: $this->password = password_hash($value, PASSWORD_DEFAULT);
 	}
 
 	private function setPasswordPlain(): void
 	{
-		$value = $_POST['password'] ?? null;
+		$name = 'password';
+		$value = $_POST[$name] ?? null;
 
-		if (empty($value)) {
-			$this->setValidationError("El campo 'password' no puede estar vacío.");
-			return;
-		}
-
-		$this->password = $value;
+		empty($value)
+			? $this->setValidationError("El campo $name no puede estar vacío.")
+			: $this->password = $value;
 	}
 
 	// MARK: READ
