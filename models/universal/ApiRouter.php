@@ -53,14 +53,6 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            'usuarios/receptor',
-            function (): void {
-                new Usuario()->usuarioReceptor();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
             'usuarios/crear',
             function (): void {
                 new Usuario()->createUsuario();

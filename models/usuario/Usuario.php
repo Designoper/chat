@@ -9,7 +9,6 @@ class Usuario extends ApiResponse
 	private readonly int $id_usuario;
 	private readonly string $usuario;
 	private readonly string $password;
-	private readonly int $id_receptor;
 
 	public function __construct()
 	{
@@ -31,11 +30,6 @@ class Usuario extends ApiResponse
 	private function getPassword(): string
 	{
 		return $this->password;
-	}
-
-	private function getIdReceptor(): int
-	{
-		return $this->id_receptor;
 	}
 
 	// MARK: SETTERS
@@ -80,18 +74,6 @@ class Usuario extends ApiResponse
 		}
 
 		$this->password = $value;
-	}
-
-	private function setIdReceptor(): void
-	{
-		$value = $_POST['id_receptor'] ?? null;
-
-		if (empty($value)) {
-			$this->setValidationError("El campo 'id_receptor' no puede estar vacío.");
-			return;
-		}
-
-		$this->id_receptor = $value;
 	}
 
 	// MARK: READ
@@ -312,18 +294,6 @@ class Usuario extends ApiResponse
 		$this->setContent([
 			"id_usuario" => $_SESSION['id_usuario'],
 		]);
-		$this->getResponse();
-	}
-
-	// MARK: RECEPTOR
-
-	public function usuarioReceptor(): void
-	{
-		$this->setIdReceptor();
-		$_SESSION['id_receptor'] = $this->getIdReceptor();
-
-		$this->setStatus(200);
-		$this->setMessage("Receptor establecido");
 		$this->getResponse();
 	}
 

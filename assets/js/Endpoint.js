@@ -17,7 +17,6 @@ export class Endpoint extends Fetch {
 		LOGIN_USUARIOS: `${this.ROOT}usuarios/login`,
 		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,
 		CURRENT_USUARIOS: `${this.ROOT}usuarios/current`,
-		// USUARIO_RECEPTOR: `${this.ROOT}usuarios/receptor`,
 		CREAR_MENSAJES: `${this.ROOT}mensajes/crear`,
 		CREAR_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos/crear`,
 		ELIMINAR_MENSAJES: `${this.ROOT}mensajes`,
@@ -55,10 +54,6 @@ export class Endpoint extends Fetch {
 					case 'crear-mensaje-directo':
 						this.writeMensajeDirecto(form, 'post', this.ENDPOINTS.CREAR_MENSAJES_DIRECTOS);
 						break;
-
-					// case 'usuario-receptor':
-					// 	this.usuarioReceptor(form, 'post', this.ENDPOINTS.USUARIO_RECEPTOR);
-					// 	break;
 
 					case 'eliminar-mensaje':
 						this.deleteMensaje(form, 'post');
