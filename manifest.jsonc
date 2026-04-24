@@ -24,7 +24,7 @@
 		},
 		// 58 px margen por lado
 		{
-			"src": "/assets/img/icons/maskable-icon-192.png",
+			"src": "./assets/img/icons/maskable-icon-192.png",
 			"sizes": "192x192",
 			"type": "image/png",
 			"purpose": "maskable"
