@@ -265,6 +265,7 @@ class Usuario extends ApiResponse
 	// MARK: CURRENT
 
 	public function currentUsuario(): void
+	//MARK: CAMBIAR CON API RESPONSE
 	{
 		if (!isset($_SESSION['id_usuario'])) {
 			$this->setStatus(401);
