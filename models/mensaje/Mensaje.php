@@ -8,12 +8,14 @@ final class Mensaje extends ApiResponse
 {
 	private readonly int $id_mensaje;
 	private readonly string $contenido;
-	private readonly int $id_emisor;
+	private readonly ?int $id_emisor;
 	private readonly int $id_receptor;
 
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->setIdEmisor();
 	}
 
 	// MARK: GETTERS
@@ -51,26 +53,63 @@ final class Mensaje extends ApiResponse
 
 	private function setContenido(): void
 	{
-		$value = $_POST['contenido'] ?? "";
+		$name = 'contenido';
+		$value = $_POST[$name] ?? null;
+
+		if (empty($value)) {
+			$this->setValidationError("El campo $name no puede estar vacío.");
+			return;
+		}
 
 		$this->contenido = $value;
 	}
 
-	private function setIdReceptor(): void
+	private function setIdEmisor(): void
 	{
-		$value = $_GET['id_receptor'] ?? null;
+		$name = 'id_usuario';
+		$value = $_SESSION[$name] ?? null;
 
-		if (empty($value)) {
-			$this->setValidationError("El campo 'id_receptor' no puede estar vacío.");
-			return;
-		}
+		$this->id_emisor = $value;
+	}
 
-		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => 1)))) {
-			$this->setValidationError("El campo 'id_receptor' debe ser un número entero superior o igual a 1 y solo contener números.");
+	private function setIdReceptorFromPost(): void
+	{
+		$name = 'id_receptor';
+		$value = $_POST[$name] ?? null;
+		$min = 1;
+
+		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
+			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
 			return;
 		}
 
 		$this->id_receptor = (int) $value;
+	}
+
+	private function setIdReceptorFromGet(): void
+	{
+		$name = 'id_receptor';
+		$value = $_GET[$name] ?? null;
+		$min = 1;
+
+		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
+			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
+			return;
+		}
+
+		$this->id_receptor = (int) $value;
+	}
+
+
+	// MARK: AUTH
+
+	public function auth(): void
+	{
+		if ($this->id_emisor === null) {
+			$this->setStatus(401);
+			$this->setIntegrityError('No hay sesión');
+			$this->checkIntegrityErrors();
+		}
 	}
 
 	// MARK: READ MENSAJES
@@ -110,11 +149,12 @@ final class Mensaje extends ApiResponse
 
 	public function readMensajesDirectos(): void
 	{
-		$id_emisor = $_SESSION['id_usuario'];
-		$this->setIdReceptor();
+		$this->auth();
+		$this->setIdReceptorFromGet();
 
 		$this->checkValidationErrors();
 
+		$id_emisor = $this->id_emisor;
 		$id_receptor = $this->getIdReceptor();
 
 		$statement =
@@ -162,11 +202,12 @@ final class Mensaje extends ApiResponse
 
 	public function createMensaje(): void
 	{
+		$this->auth();
 		$this->setContenido();
 
 		$this->checkValidationErrors();
 
-		$id_usuario = $_SESSION['id_usuario'];
+		$id_emisor = $this->id_emisor;
 		$contenido = $this->getContenido();
 
 		$this->checkIntegrityErrors();
@@ -180,7 +221,7 @@ final class Mensaje extends ApiResponse
 		$query->bind_param(
 			"si",
 			$contenido,
-			$id_usuario
+			$id_emisor
 		);
 
 		$query->execute();
@@ -195,14 +236,15 @@ final class Mensaje extends ApiResponse
 
 	public function createMensajeDirecto(): void
 	{
+		$this->auth();
 		$this->setContenido();
-		// $this->setIdReceptor();
+		$this->setIdReceptorFromPost();
 
 		$this->checkValidationErrors();
 
-		$id_emisor = $_SESSION['id_usuario'];
+		$id_receptor = $this->getIdReceptor();
+		$id_emisor = $this->id_emisor;
 		$contenido = $this->getContenido();
-		$id_receptor = $_POST["id_receptor"];
 
 		$this->checkIntegrityErrors();
 
@@ -231,12 +273,12 @@ final class Mensaje extends ApiResponse
 
 	public function deleteMensaje(): void
 	{
+		$this->auth();
 		$this->setIdMensaje();
-
 		$this->checkValidationErrors();
 
 		$id_mensaje = $this->getIdMensaje();
-		$id_usuario = $_SESSION['id_usuario'];
+		$id_emisor = $this->id_emisor;
 
 		$this->checkIntegrityErrors();
 
@@ -250,7 +292,7 @@ final class Mensaje extends ApiResponse
 		$query->bind_param(
 			"ii",
 			$id_mensaje,
-			$id_usuario
+			$id_emisor
 		);
 
 		$query->execute();

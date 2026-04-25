@@ -6,7 +6,7 @@ require_once __DIR__ . '/../universal/ApiResponse.php';
 
 class Usuario extends ApiResponse
 {
-	private readonly int $id_usuario;
+	private readonly ?int $id_usuario;
 	private readonly string $usuario;
 	private readonly string $password;
 
@@ -15,28 +15,12 @@ class Usuario extends ApiResponse
 		parent::__construct();
 	}
 
-	// MARK: GETTERS
-
-	private function getIdUsuario(): int
-	{
-		return $this->id_usuario;
-	}
-
-	private function getUsuario(): string
-	{
-		return $this->usuario;
-	}
-
-	private function getPassword(): string
-	{
-		return $this->password;
-	}
-
 	// MARK: SETTERS
 
 	private function setIdUsuario(): void
 	{
-		$value = $_SESSION['id_usuario'] ?? null;
+		$name = 'id_usuario';
+		$value = $_SESSION[$name] ?? null;
 		$this->id_usuario = $value;
 	}
 
@@ -142,8 +126,8 @@ class Usuario extends ApiResponse
 
 		$this->checkValidationErrors();
 
-		$usuario = $this->getUsuario();
-		$password = $this->getPassword();
+		$usuario = $this->usuario;
+		$password = $this->password;
 
 		try {
 			$statement =
@@ -196,8 +180,8 @@ class Usuario extends ApiResponse
 
 		$query = $this->getConnection()->prepare($statement);
 
-		$usuario = $this->getUsuario();
-		$passwordIngresada = $this->getPassword();
+		$usuario = $this->usuario;
+		$passwordIngresada = $this->password;
 
 		$query->bind_param(
 			"s",
@@ -267,7 +251,10 @@ class Usuario extends ApiResponse
 
 	public function auth(): void
 	{
-		if (!isset($_SESSION['id_usuario'])) {
+		$this->setIdUsuario();
+		$id_usuario = $this->id_usuario;
+
+		if ($id_usuario === null) {
 			header("Location: index.html");
 			exit;
 		}
@@ -295,7 +282,8 @@ class Usuario extends ApiResponse
 
 	public function deleteUsuario(): void
 	{
-		$id_usuario = $_SESSION['id_usuario'];
+		$this->setIdUsuario();
+		$id_usuario = $this->id_usuario;
 
 		$statement =
 			"DELETE FROM usuarios
