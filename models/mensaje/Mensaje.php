@@ -15,7 +15,8 @@ final class Mensaje extends ApiResponse
 	{
 		parent::__construct();
 
-		$this->setIdEmisor();
+		// $this->setIdEmisor();
+		$this->id_emisor = $this->getAuthenticatedUserId();
 	}
 
 	// MARK: GETTERS
@@ -64,13 +65,13 @@ final class Mensaje extends ApiResponse
 		$this->contenido = $value;
 	}
 
-	private function setIdEmisor(): void
-	{
-		$name = 'id_usuario';
-		$value = $_SESSION[$name] ?? null;
+	// private function setIdEmisor(): void
+	// {
+	// 	$name = 'id_usuario';
+	// 	$value = $_SESSION[$name] ?? null;
 
-		$this->id_emisor = $value;
-	}
+	// 	$this->id_emisor = $value;
+	// }
 
 	private function setIdReceptorFromPost(): void
 	{

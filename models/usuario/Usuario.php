@@ -6,23 +6,25 @@ require_once __DIR__ . '/../universal/ApiResponse.php';
 
 class Usuario extends ApiResponse
 {
-	private readonly ?int $id_usuario;
+	private ?int $id_usuario;
 	private readonly string $usuario;
 	private readonly string $password;
 
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->id_usuario = $this->getAuthenticatedUserId();
 	}
 
 	// MARK: SETTERS
 
-	private function setIdUsuario(): void
-	{
-		$name = 'id_usuario';
-		$value = $_SESSION[$name] ?? null;
-		$this->id_usuario = $value;
-	}
+	// private function setIdUsuario(): void
+	// {
+	// 	$name = 'id_usuario';
+	// 	$value = $_SESSION[$name] ?? null;
+	// 	$this->id_usuario = $value;
+	// }
 
 	private function setUsuario(): void
 	{
@@ -251,10 +253,10 @@ class Usuario extends ApiResponse
 
 	public function auth(): void
 	{
-		$this->setIdUsuario();
-		$id_usuario = $this->id_usuario;
+		// $this->setIdUsuario();
+		// $id_usuario = $this->getAuthenticatedUserId();
 
-		if ($id_usuario === null) {
+		if ($this->id_usuario === null) {
 			header("Location: index.html");
 			exit;
 		}
@@ -282,8 +284,9 @@ class Usuario extends ApiResponse
 
 	public function deleteUsuario(): void
 	{
-		$this->setIdUsuario();
-		$id_usuario = $this->id_usuario;
+		// $this->setIdUsuario();
+		$this->auth();
+		$id_usuario = $this->getAuthenticatedUserId();
 
 		$statement =
 			"DELETE FROM usuarios
