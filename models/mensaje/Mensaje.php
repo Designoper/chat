@@ -8,7 +8,7 @@ final class Mensaje extends ApiResponse
 {
 	private readonly int $id_mensaje;
 	private readonly string $contenido;
-	private readonly ?int $id_emisor;
+	private ?int $id_emisor;
 	private readonly int $id_receptor;
 
 	public function __construct()
