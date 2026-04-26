@@ -18,23 +18,6 @@ final class Mensaje extends ApiResponse
 		$this->id_emisor = $this->getAuthenticatedUserId();
 	}
 
-	// MARK: GETTERS
-
-	private function getIdMensaje(): int
-	{
-		return $this->id_mensaje;
-	}
-
-	private function getContenido(): string
-	{
-		return $this->contenido;
-	}
-
-	private function getIdReceptor(): int
-	{
-		return $this->id_receptor;
-	}
-
 	// MARK: SETTERS
 
 	private function setIdMensaje(): void
@@ -147,7 +130,7 @@ final class Mensaje extends ApiResponse
 		$this->checkValidationErrors();
 
 		$id_emisor = $this->id_emisor;
-		$id_receptor = $this->getIdReceptor();
+		$id_receptor = $this->id_receptor;
 
 		$statement =
 			"SELECT
@@ -200,7 +183,7 @@ final class Mensaje extends ApiResponse
 		$this->checkValidationErrors();
 
 		$id_emisor = $this->id_emisor;
-		$contenido = $this->getContenido();
+		$contenido = $this->contenido;
 
 		$this->checkIntegrityErrors();
 
@@ -234,9 +217,9 @@ final class Mensaje extends ApiResponse
 
 		$this->checkValidationErrors();
 
-		$id_receptor = $this->getIdReceptor();
+		$id_receptor = $this->id_receptor;
 		$id_emisor = $this->id_emisor;
-		$contenido = $this->getContenido();
+		$contenido = $this->contenido;
 
 		$this->checkIntegrityErrors();
 
@@ -269,7 +252,7 @@ final class Mensaje extends ApiResponse
 		$this->setIdMensaje();
 		$this->checkValidationErrors();
 
-		$id_mensaje = $this->getIdMensaje();
+		$id_mensaje = $this->id_mensaje;
 		$id_emisor = $this->id_emisor;
 
 		$this->checkIntegrityErrors();
