@@ -19,13 +19,6 @@ class Usuario extends ApiResponse
 
 	// MARK: SETTERS
 
-	// private function setIdUsuario(): void
-	// {
-	// 	$name = 'id_usuario';
-	// 	$value = $_SESSION[$name] ?? null;
-	// 	$this->id_usuario = $value;
-	// }
-
 	private function setUsuario(): void
 	{
 		$name = 'usuario';
@@ -70,7 +63,7 @@ class Usuario extends ApiResponse
 
 		$query->bind_param(
 			"i",
-			$_SESSION['id_usuario']
+			$this->id_usuario
 		);
 
 		$query->execute();
@@ -253,9 +246,6 @@ class Usuario extends ApiResponse
 
 	public function auth(): void
 	{
-		// $this->setIdUsuario();
-		// $id_usuario = $this->getAuthenticatedUserId();
-
 		if ($this->id_usuario === null) {
 			header("Location: index.html");
 			exit;
@@ -265,9 +255,8 @@ class Usuario extends ApiResponse
 	// MARK: CURRENT
 
 	public function currentUsuario(): void
-	//MARK: CAMBIAR CON API RESPONSE
 	{
-		if (!isset($_SESSION['id_usuario'])) {
+		if ($this->id_usuario === null) {
 			$this->setStatus(401);
 			$this->setMessage("No hay usuario identificado");
 			$this->getResponse();
@@ -276,7 +265,7 @@ class Usuario extends ApiResponse
 		$this->setStatus(200);
 		$this->setMessage("Usuario identificado");
 		$this->setContent([
-			"id_usuario" => $_SESSION['id_usuario'],
+			"id_usuario" => $this->id_usuario,
 		]);
 		$this->getResponse();
 	}
@@ -285,9 +274,11 @@ class Usuario extends ApiResponse
 
 	public function deleteUsuario(): void
 	{
-		// $this->setIdUsuario();
-		$this->auth();
-		$id_usuario = $this->getAuthenticatedUserId();
+		if ($this->id_usuario === null) {
+			$this->setStatus(401);
+			$this->setMessage("No hay usuario identificado");
+			$this->getResponse();
+		}
 
 		$statement =
 			"DELETE FROM usuarios
@@ -297,7 +288,7 @@ class Usuario extends ApiResponse
 
 		$query->bind_param(
 			"i",
-			$id_usuario
+			$this->id_usuario
 		);
 
 		$query->execute();

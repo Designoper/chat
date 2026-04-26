@@ -15,7 +15,6 @@ final class Mensaje extends ApiResponse
 	{
 		parent::__construct();
 
-		// $this->setIdEmisor();
 		$this->id_emisor = $this->getAuthenticatedUserId();
 	}
 
@@ -64,14 +63,6 @@ final class Mensaje extends ApiResponse
 
 		$this->contenido = $value;
 	}
-
-	// private function setIdEmisor(): void
-	// {
-	// 	$name = 'id_usuario';
-	// 	$value = $_SESSION[$name] ?? null;
-
-	// 	$this->id_emisor = $value;
-	// }
 
 	private function setIdReceptorFromPost(): void
 	{
