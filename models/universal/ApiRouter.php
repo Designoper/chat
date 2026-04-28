@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/../../models/usuario/Usuario.php';
 require_once __DIR__ . '/../../models/mensaje/Mensaje.php';
+require_once __DIR__ . '/../../models/mensaje/Grupo.php';
 
 final class ApiRouter extends Sanitizer
 {
@@ -22,6 +23,14 @@ final class ApiRouter extends Sanitizer
             'mensajes-directos',
             function (): void {
                 new Mensaje()->readMensajesDirectos();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            'mensajes-grupales',
+            function (): void {
+                new Mensaje()->readMensajesGrupales();
             }
         );
 
@@ -93,9 +102,41 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
+            'mensajes-grupales/crear',
+            function (): void {
+                new Mensaje()->createMensajeGrupal();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
             'mensajes/[1-9]\d*$',
             function (): void {
                 new Mensaje()->deleteMensaje();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'grupos/crear$',
+            function (): void {
+                new Grupo()->createGrupo();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'grupos/invitar$',
+            function (): void {
+                new Grupo()->invitar();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'grupos/invitar$',
+            function (): void {
+                new Grupo()->aceptarInvitacion();
             }
         );
 

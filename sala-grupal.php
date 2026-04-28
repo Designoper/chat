@@ -44,13 +44,9 @@ new Usuario()->auth();
 
 	<main id="main">
 
-		<h1>¿Con quién quieres chatear?</h1>
+		<h1>Sala grupal</h1>
 
-		<menu>
-			<li><a href="./chat-publico.php">Chat público</a></li>
-		</menu>
-
-		<a href="./sala-grupal.php">Sala grupal</a>
+		<menu></menu>
 
 		<form name="logout-usuario">
 

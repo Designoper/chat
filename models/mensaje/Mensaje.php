@@ -10,6 +10,7 @@ final class Mensaje extends ApiResponse
 	private readonly string $contenido;
 	private ?int $id_emisor;
 	private readonly int $id_receptor;
+	private readonly int $id_grupo;
 
 	public function __construct()
 	{
@@ -75,6 +76,19 @@ final class Mensaje extends ApiResponse
 		$this->id_receptor = (int) $value;
 	}
 
+		private function setIdGrupo(): void
+	{
+		$name = 'id_grupo';
+		$value = $_POST[$name] ?? null;
+		$min = 1;
+
+		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
+			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
+			return;
+		}
+
+		$this->id_grupo = (int) $value;
+	}
 
 	// MARK: AUTH
 
@@ -173,6 +187,50 @@ final class Mensaje extends ApiResponse
 		$this->getResponse();
 	}
 
+	// MARK: READ MENSAJES GRUPALES
+
+	public function readMensajesGrupales(): void
+	{
+		$this->auth();
+		$this->setIdGrupo();
+
+		$this->checkValidationErrors();
+
+		$id_grupo = $this->id_grupo;
+
+		$statement =
+			"SELECT
+				mensajes.id_mensaje,
+				mensajes.contenido,
+				DATE_FORMAT(mensajes.fecha_creacion, '%Y-%m-%dT%H:%i:%sZ') AS fecha_creacion,
+				mensajes.id_emisor,
+				usuarios.nombre
+			FROM mensajes
+			WHERE mensajes.id_grupo = ?
+			ORDER BY fecha_creacion";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"i",
+			$id_grupo
+		);
+
+		$query->execute();
+		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$query->close();
+
+		$message =
+			$mensajes
+			? 'Mensajes obtenidos.'
+			: 'No hay ningún mensaje.';
+
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($mensajes);
+		$this->getResponse();
+	}
+
 	// MARK: CREATE MENSAJE
 
 	public function createMensaje(): void
@@ -234,6 +292,42 @@ final class Mensaje extends ApiResponse
 			$contenido,
 			$id_emisor,
 			$id_receptor
+		);
+
+		$query->execute();
+		$query->close();
+
+		$this->setStatus(201);
+		$this->setMessage("Mensaje creado con éxito");
+		$this->getResponse();
+	}
+
+	// MARK: CREATE MENSAJE GRUPAL
+
+	public function createMensajeGrupal(): void
+	{
+		$this->auth();
+		$this->setContenido();
+
+		$this->checkValidationErrors();
+
+		$id_emisor = $this->id_emisor;
+		$contenido = $this->contenido;
+		$id_grupo = $this->id_grupo;
+
+		$this->checkIntegrityErrors();
+
+		$statement =
+			"INSERT INTO mensajes (contenido, id_emisor, id_grupo)
+			VALUES (?, ?, ?)";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"sii",
+			$contenido,
+			$id_emisor,
+			$id_grupo
 		);
 
 		$query->execute();
