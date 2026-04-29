@@ -16,7 +16,7 @@ CREATE TABLE grupos (
 CREATE TABLE membresias (
     id_usuario INT NOT NULL,
     id_grupo INT NOT NULL,
-    rol ENUM('fundador,miembro,pendiente')
+    rol ENUM ('fundador','miembro','pendiente') NOT NULL,
 
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
