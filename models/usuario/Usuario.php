@@ -7,7 +7,7 @@ require_once __DIR__ . '/../universal/ApiResponse.php';
 class Usuario extends ApiResponse
 {
 	private ?int $id_usuario;
-	private readonly string $usuario;
+	private readonly string $nombre_usuario;
 	private readonly string $password;
 
 	public function __construct()
@@ -19,14 +19,14 @@ class Usuario extends ApiResponse
 
 	// MARK: SETTERS
 
-	private function setUsuario(): void
+	private function setNombreUsuario(): void
 	{
-		$name = 'usuario';
+		$name = 'nombre_usuario';
 		$value = $_POST[$name] ?? null;
 
 		empty($value)
 			? $this->setValidationError("El campo $name no puede estar vacío.")
-			: $this->usuario = $value;
+			: $this->nombre_usuario = $value;
 	}
 
 	private function setPasswordHashed(): void
@@ -54,10 +54,10 @@ class Usuario extends ApiResponse
 	public function readUsuarios(): void
 	{
 		$statement =
-			"SELECT id_usuario, nombre
+			"SELECT id_usuario, nombre_usuario
 			 FROM usuarios
 			 WHERE id_usuario != ?
-			 ORDER BY nombre ASC";
+			 ORDER BY nombre_usuario ASC";
 
 		$query = $this->getConnection()->prepare($statement);
 
@@ -116,24 +116,24 @@ class Usuario extends ApiResponse
 
 	public function createUsuario(): void
 	{
-		$this->setUsuario();
+		$this->setNombreUsuario();
 		$this->setPasswordHashed();
 
 		$this->checkValidationErrors();
 
-		$usuario = $this->usuario;
+		$nombre_usuario = $this->nombre_usuario;
 		$password = $this->password;
 
 		try {
 			$statement =
-				"INSERT INTO usuarios (nombre, password)
+				"INSERT INTO usuarios (nombre_usuario, password)
             VALUES (?, ?)";
 
 			$query = $this->getConnection()->prepare($statement);
 
 			$query->bind_param(
 				"ss",
-				$usuario,
+				$nombre_usuario,
 				$password
 			);
 
@@ -163,7 +163,7 @@ class Usuario extends ApiResponse
 
 	public function login(): void
 	{
-		$this->setUsuario();
+		$this->setNombreUsuario();
 		$this->setPasswordPlain();
 
 		$this->checkValidationErrors();
@@ -171,16 +171,16 @@ class Usuario extends ApiResponse
 		$statement =
 			"SELECT id_usuario, password
 			FROM usuarios
-			WHERE nombre = ?";
+			WHERE nombre_usuario = ?";
 
 		$query = $this->getConnection()->prepare($statement);
 
-		$usuario = $this->usuario;
+		$nombre_usuario = $this->nombre_usuario;
 		$passwordIngresada = $this->password;
 
 		$query->bind_param(
 			"s",
-			$usuario
+			$nombre_usuario
 		);
 
 		$query->execute();

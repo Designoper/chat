@@ -4,19 +4,21 @@ USE chat;
 
 CREATE TABLE usuarios (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(50) NOT NULL UNIQUE,
+    nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE grupos (
     id_grupo INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(150) NOT NULL UNIQUE
+    nombre_grupo VARCHAR(150) NOT NULL UNIQUE
 );
 
 CREATE TABLE membresias (
-    id_usuario INT NOT NULL,
-    id_grupo INT NOT NULL,
+    id_usuario INT,
+    id_grupo INT,
     rol ENUM ('fundador','miembro','pendiente') NOT NULL,
+
+    PRIMARY KEY (id_usuario, id_grupo),
 
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
@@ -30,7 +32,7 @@ CREATE TABLE membresias (
 CREATE TABLE mensajes (
     id_mensaje INT PRIMARY KEY AUTO_INCREMENT,
     contenido TEXT NOT NULL,
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_emisor INT NOT NULL,
     id_receptor INT NULL,
     id_grupo INT NULL,

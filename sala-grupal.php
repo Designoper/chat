@@ -50,7 +50,7 @@ new Usuario()->auth();
 
 		<form name="crear-grupo">
 
-			<input name="nombre">
+			<input name="nombre_grupo">
 			<button>Crear grupo
 				<!-- <svg viewBox="0 0 654 752">
 					<path

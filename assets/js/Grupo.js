@@ -29,7 +29,7 @@ export class Grupo extends Endpoint {
 
 		const grupos = fetchedGrupos.map(grupo =>
 			`<li>
-				<a href="chat-grupal.php?id=${grupo.id_grupo}">${grupo.nombre}</a>
+				<a href="chat-grupal.php?id=${grupo.id_grupo}">${grupo.nombre_grupo}</a>
 			</li>`
 		).join('');
 

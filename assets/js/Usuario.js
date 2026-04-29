@@ -28,7 +28,7 @@ export class Usuario extends Endpoint {
 
 		const usuarios = fetchedUsuarios.map(usuario =>
 			`<li>
-				<a href="chat-privado.php?id=${usuario.id_usuario}&usuario=${usuario.nombre}">${usuario.nombre}</a>
+				<a href="chat-privado.php?id=${usuario.id_usuario}&usuario=${usuario.nombre_usuario}">${usuario.nombre_usuario}</a>
 			</li>`
 		).join('');
 

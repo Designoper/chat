@@ -9,7 +9,7 @@ final class Grupo extends ApiResponse
 	private readonly int $id_grupo;
 	private readonly int $id_fundador;
 	private readonly int $id_usuario;
-	private readonly string $nombre;
+	private readonly string $nombre_grupo;
 
 	public function __construct()
 	{
@@ -20,9 +20,9 @@ final class Grupo extends ApiResponse
 
 	// MARK: SETTERS
 
-	private function setNombre(): void
+	private function setNombreGrupo(): void
 	{
-		$name = 'nombre';
+		$name = 'nombre_grupo';
 		$value = $_POST[$name] ?? null;
 
 		if (empty($value)) {
@@ -30,7 +30,7 @@ final class Grupo extends ApiResponse
 			return;
 		}
 
-		$this->nombre = $value;
+		$this->nombre_grupo = $value;
 	}
 
 	private function setIdGrupo(): void
@@ -80,11 +80,11 @@ final class Grupo extends ApiResponse
 	public function readGrupos(): void
 	{
 		$statement =
-			"SELECT grupos.id_grupo, grupos.nombre, membresias.id_usuario, membresias.rol, usuarios.nombre
+			"SELECT grupos.id_grupo, grupos.nombre_grupo, membresias.id_usuario, membresias.rol, usuarios.nombre_usuario
 			FROM grupos
 			LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
 			LEFT JOIN usuarios on membresias.id_usuario = usuarios.id_usuario
-			ORDER BY grupos.nombre ASC";
+			ORDER BY grupos.nombre_grupo ASC";
 
 		$query = $this->getConnection()->prepare($statement);
 
@@ -108,21 +108,21 @@ final class Grupo extends ApiResponse
 
 	public function createGrupo(): void
 	{
-		$this->setNombre();
+		$this->setNombreGrupo();
 
 		$this->checkValidationErrors();
 
-		$nombre = $this->nombre;
+		$nombre_grupo = $this->nombre_grupo;
 
 		$statement =
-			"INSERT INTO grupos (nombre)
+			"INSERT INTO grupos (nombre_grupo)
 		 VALUES (?)";
 
 		$query = $this->getConnection()->prepare($statement);
 
 		$query->bind_param(
 			"s",
-			$nombre
+			$nombre_grupo
 		);
 
 		$query->execute();

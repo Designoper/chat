@@ -28,9 +28,9 @@ export class Mensaje extends Usuario {
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
 			<article ${mensaje.id_emisor == this.user ? 'class="mensaje-propio"' : ''}>
-				<p>${mensaje.nombre}</p>
+				<p>${mensaje.nombre_usuario}</p>
 				<p>${mensaje.contenido}</p>
-					<p>${formatearFecha(mensaje.fecha_creacion).toLocaleString(undefined,
+					<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
 				{
 					weekday: "long",
 					year: "numeric",
