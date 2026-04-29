@@ -10,6 +10,7 @@ export class Endpoint extends Fetch {
 		GET_MENSAJES: `${this.ROOT}mensajes`,
 		GET_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos`,
 		GET_USUARIOS: `${this.ROOT}usuarios`,
+		GET_GRUPOS: `${this.ROOT}grupos`,
 
 		// POST
 
@@ -20,6 +21,7 @@ export class Endpoint extends Fetch {
 		CREAR_MENSAJES: `${this.ROOT}mensajes/crear`,
 		CREAR_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos/crear`,
 		ELIMINAR_MENSAJES: `${this.ROOT}mensajes`,
+		CREAR_GRUPOS: `${this.ROOT}grupos/crear`
 	};
 
 	constructor() {
@@ -57,6 +59,10 @@ export class Endpoint extends Fetch {
 
 					case 'eliminar-mensaje':
 						this.deleteMensaje(form, 'post');
+						break;
+
+					case 'crear-grupo':
+						this.createGrupo(form, 'post', this.ENDPOINTS.CREAR_GRUPOS);
 						break;
 				}
 			}

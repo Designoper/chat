@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/../../models/usuario/Usuario.php';
 require_once __DIR__ . '/../../models/mensaje/Mensaje.php';
-require_once __DIR__ . '/../../models/mensaje/Grupo.php';
+require_once __DIR__ . '/../../models/grupo/Grupo.php';
 
 final class ApiRouter extends Sanitizer
 {
@@ -55,6 +55,14 @@ final class ApiRouter extends Sanitizer
             'usuarios$',
             function (): void {
                 new Usuario()->readUsuarios();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            'grupos$',
+            function (): void {
+                new Grupo()->readGrupos();
             }
         );
 

@@ -63,9 +63,9 @@ new Usuario()->auth();
 
 			</form>
 
-			<form name="crear-mensaje-directo">
+			<form name="crear-mensaje-grupal">
 
-				<input type="hidden" name="id_receptor">
+				<input type="hidden" name="id_grupo">
 				<textarea placeholder="Mensaje" name="contenido" autocomplete="off" minlength="1" maxlength="255" required></textarea>
 
 				<button>

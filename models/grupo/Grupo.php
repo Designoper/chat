@@ -79,51 +79,29 @@ final class Grupo extends ApiResponse
 
 	public function readGrupos(): void
 	{
-		$nombre = $this->nombre;
-
 		$statement =
 			"SELECT grupos.id_grupo, grupos.nombre, membresias.id_usuario, membresias.rol, usuarios.nombre
 			FROM grupos
-			LEFT JOIN membresias on membresias.id_grupo = grupo.id_grupo
-			LEFT JOIN usuarios on membresias.id_usuario = usuarios.id_usuario";
+			LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
+			LEFT JOIN usuarios on membresias.id_usuario = usuarios.id_usuario
+			ORDER BY grupos.nombre ASC";
 
 		$query = $this->getConnection()->prepare($statement);
 
-		$query->bind_param(
-			"s",
-			$nombre
-		);
-
 		$query->execute();
-
-		$id_grupo = $query->insert_id;
+		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		$id_fundador = $this->id_fundador;
-		$rol = 'fundador';
+		$message =
+			$grupos
+			? 'Grupos obtenidos.'
+			: 'No hay ningún grupo.';
 
-
-
-		$statement2 =
-			"INSERT INTO membresias (id_usuario, id_grupo, rol)
-		 VALUES (?, ?, ?)";
-
-		$query = $this->getConnection()->prepare($statement2);
-
-		$query->bind_param(
-			"iis",
-			$id_fundador,
-			$id_grupo,
-			$rol
-		);
-
-		$query->execute();
-		$query->close();
-
-
-		$this->setStatus(201);
-		$this->setMessage("Grupo creado con éxito");
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($grupos);
 		$this->getResponse();
+
 	}
 
 	// MARK: CREAR GRUPO
