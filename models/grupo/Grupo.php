@@ -47,6 +47,20 @@ final class Grupo extends ApiResponse
 		$this->id_grupo = (int) $value;
 	}
 
+	private function setIdGrupoFromGet(): void
+	{
+		$name = 'id_grupo';
+		$value = $_GET[$name] ?? null;
+		$min = 1;
+
+		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
+			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
+			return;
+		}
+
+		$this->id_grupo = (int) $value;
+	}
+
 	private function setIdUsuario(): void
 	{
 		$name = 'id_usuario';
@@ -167,6 +181,46 @@ final class Grupo extends ApiResponse
 		$this->getResponse();
 	}
 
+	// MARK: READ GRUPOS NO MIEMBRO
+
+	public function readGruposNoMiembro(): void
+	{
+		$this->setIdGrupoFromGet();
+		$id_grupo = $this->id_grupo;
+		// $id_usuario = $this->id_fundador;
+		// $rolPendiente = 'pendiente';
+
+		$statement =
+			"SELECT id_usuario, nombre_usuario
+			FROM usuarios
+			WHERE id_usuario NOT IN (
+				SELECT id_usuario
+				FROM membresias
+				WHERE id_grupo = ?
+			);";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"i",
+			$id_grupo,
+		);
+
+		$query->execute();
+		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$query->close();
+
+		$message =
+			$grupos
+			? 'No miembros obtenidos.'
+			: 'Cambiar.';
+
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($grupos);
+		$this->getResponse();
+	}
+
 	// MARK: CREAR GRUPO
 
 	public function createGrupo(): void
@@ -229,7 +283,7 @@ final class Grupo extends ApiResponse
 
 		$this->checkValidationErrors();
 
-		$id_fundador = $this->getAuthenticatedUserId();
+		// $id_fundador = $this->getAuthenticatedUserId();
 		$id_usuario = $this->id_usuario;
 		$id_grupo = $this->id_grupo;
 		$rol = 'pendiente';

@@ -13,6 +13,7 @@ export class Endpoint extends Fetch {
 		GET_GRUPOS: `${this.ROOT}grupos`,
 		GET_GRUPOS_MIEMBRO: `${this.ROOT}grupos/miembro`,
 		GET_GRUPOS_PENDIENTE: `${this.ROOT}grupos/pendiente`,
+		GET_GRUPOS_NO_MIEMBRO: `${this.ROOT}grupos/no-miembro`,
 
 		// POST
 
@@ -24,6 +25,7 @@ export class Endpoint extends Fetch {
 		CREAR_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos/crear`,
 		ELIMINAR_MENSAJES: `${this.ROOT}mensajes`,
 		CREAR_GRUPOS: `${this.ROOT}grupos/crear`,
+		INVITAR: `${this.ROOT}grupos/invitar`,
 		ACEPTAR_INVITACION: `${this.ROOT}grupos/aceptar`
 	};
 
@@ -70,6 +72,10 @@ export class Endpoint extends Fetch {
 
 					case 'aceptar-invitacion':
 						this.aceptarInvitacion(form, 'post', this.ENDPOINTS.ACEPTAR_INVITACION);
+						break;
+
+					case 'invitar':
+						this.invitar(form, 'post', this.ENDPOINTS.INVITAR);
 						break;
 				}
 			}
