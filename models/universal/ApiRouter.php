@@ -66,6 +66,22 @@ final class ApiRouter extends Sanitizer
             }
         );
 
+        $this->setRoute(
+            'GET',
+            'grupos/miembro$',
+            function (): void {
+                new Grupo()->readGruposMiembro();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            'grupos/pendiente$',
+            function (): void {
+                new Grupo()->readGruposPendiente();
+            }
+        );
+
         // MARK: POST ROUTES
 
         $this->setRoute(
@@ -142,7 +158,7 @@ final class ApiRouter extends Sanitizer
 
         $this->setRoute(
             'POST',
-            'grupos/invitar$',
+            'grupos/aceptar',
             function (): void {
                 new Grupo()->aceptarInvitacion();
             }

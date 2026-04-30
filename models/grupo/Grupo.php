@@ -7,9 +7,9 @@ require_once __DIR__ . '/../universal/ApiResponse.php';
 final class Grupo extends ApiResponse
 {
 	private readonly int $id_grupo;
+	private readonly string $nombre_grupo;
 	private readonly int $id_fundador;
 	private readonly int $id_usuario;
-	private readonly string $nombre_grupo;
 
 	public function __construct()
 	{
@@ -61,20 +61,6 @@ final class Grupo extends ApiResponse
 		$this->id_usuario = (int) $value;
 	}
 
-	// public function invitar(): void
-	// {
-	// 	$name = 'id_fundador';
-	// 	$value = $_POST[$name] ?? null;
-	// 	$min = 1;
-
-	// 	if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
-	// 		$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
-	// 		return;
-	// 	}
-
-	// 	$this->id_fundador = (int) $value;
-	// }
-
 	// MARK: READ GRUPOS
 
 	public function readGrupos(): void
@@ -101,7 +87,84 @@ final class Grupo extends ApiResponse
 		$this->setMessage($message);
 		$this->setContent($grupos);
 		$this->getResponse();
+	}
 
+	// MARK: READ GRUPOS MIEMBRO
+
+	public function readGruposMiembro(): void
+	{
+		$id_usuario = $this->id_fundador;
+		$rolFundador = 'fundador';
+		$rolMiembro = 'miembro';
+
+		$statement =
+			"SELECT grupos.id_grupo, grupos.nombre_grupo
+			FROM grupos
+			LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
+			WHERE membresias.id_usuario = ?
+			AND (membresias.rol = ? OR membresias.rol = ?)
+			ORDER BY grupos.nombre_grupo ASC";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"iss",
+			$id_usuario,
+			$rolFundador,
+			$rolMiembro
+		);
+
+		$query->execute();
+		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$query->close();
+
+		$message =
+			$grupos
+			? 'Grupos obtenidos.'
+			: 'No hay ningún grupo.';
+
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($grupos);
+		$this->getResponse();
+	}
+
+	// MARK: READ GRUPOS PENDIENTE
+
+	public function readGruposPendiente(): void
+	{
+		$id_usuario = $this->id_fundador;
+		$rolPendiente = 'pendiente';
+
+		$statement =
+			"SELECT grupos.id_grupo, grupos.nombre_grupo
+			FROM grupos
+			LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
+			WHERE membresias.id_usuario = ?
+			AND membresias.rol = ?
+			ORDER BY grupos.nombre_grupo ASC";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"is",
+			$id_usuario,
+			$rolPendiente,
+		);
+
+		$query->execute();
+		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$query->close();
+
+		$message =
+			$grupos
+			? 'Grupos obtenidos.'
+			: 'No hay ningún grupo.';
+
+		$this->setStatus(200);
+		$this->setMessage($message);
+		$this->setContent($grupos);
+		$this->getResponse();
 	}
 
 	// MARK: CREAR GRUPO
@@ -197,11 +260,10 @@ final class Grupo extends ApiResponse
 	public function aceptarInvitacion(): void
 	{
 		$this->setIdGrupo();
-		$this->setIdUsuario();
 
 		$this->checkValidationErrors();
 
-		$id_usuario = $this->id_usuario;
+		$id_usuario = $this->id_fundador;
 		$id_grupo = $this->id_grupo;
 		$rol = 'miembro';
 

@@ -1,35 +1,67 @@
 import { Endpoint } from "./Endpoint.js";
 
 export class Grupo extends Endpoint {
-	user = null;
-	MAIN = document.getElementById('main');
+	// user = null;
+	main = document.getElementById('main');
 	menu = document.querySelector('menu');
-	// USUARIOS_OUTPUT = document.getElementById('usuariosoutput');
+	div = document.querySelector('div');
 
 	constructor() {
 		super();
 	}
 
 	async initialize() {
-		this.formHandler();
-		this.getGrupos();
+		this.getGruposMiembro();
+		this.getGruposPendiente();
 	}
 
-	async getGrupos() {
-		const response = await this.simpleFetch(this.ENDPOINTS.GET_GRUPOS);
-		this.printGrupos(response);
+	async getGruposMiembro() {
+		const response = await this.simpleFetch(this.ENDPOINTS.GET_GRUPOS_MIEMBRO);
+		this.printGruposMiembro(response);
 	}
 
-	printGrupos(grupos) {
-		const content = this.gruposTemplate(grupos.content);
+	async getGruposPendiente() {
+		const response = await this.simpleFetch(this.ENDPOINTS.GET_GRUPOS_PENDIENTE);
+		this.printGruposPendiente(response);
+	}
+
+	printGruposMiembro(grupos) {
+		const content = this.gruposMiembroTemplate(grupos.content);
 		this.menu.innerHTML = content;
+		this.formHandler();
 	}
 
-	gruposTemplate(fetchedGrupos) {
+	printGruposPendiente(grupos) {
+		const content = this.gruposPendienteTemplate(grupos.content);
+		this.div.innerHTML = content;
+		this.formHandler();
+	}
+
+	gruposMiembroTemplate(fetchedGrupos) {
 
 		const grupos = fetchedGrupos.map(grupo =>
 			`<li>
-				<a href="chat-grupal.php?id=${grupo.id_grupo}">${grupo.nombre_grupo}</a>
+				<p>${grupo.nombre_grupo}</p>
+				<form name="invitar">
+					<p>Invitar a...</p>
+					<button>Mandar inv</button>
+				</form>
+				<a href="chat-grupal.php?id=${grupo.id_grupo}">Entrar</a>
+			</li>`
+		).join('');
+
+		return grupos;
+	}
+
+	gruposPendienteTemplate(fetchedGrupos) {
+
+		const grupos = fetchedGrupos.map(grupo =>
+			`<li>
+				<p>${grupo.nombre_grupo}</p>
+				<form name="aceptar-invitacion">
+					<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
+					<button>Aceptar invitación</button>
+				</form>
 			</li>`
 		).join('');
 
@@ -39,22 +71,23 @@ export class Grupo extends Endpoint {
 	async createGrupo(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 201) {
-			this.getGrupos();
+			this.getGruposMiembro();
 		}
 	}
 
-	async deleteUsuario(form, method, action) {
+	async aceptarInvitacion(form, method, action) {
 		const response = await this.fetchData(form, method, action);
-		if (response.status === 204) {
-			location.href = 'crear-usuario.php';
+		if (response.status === 200) {
+			this.getGruposMiembro();
+			this.getGruposPendiente();
 		}
 	}
 
-	async sessionCheck() {
-		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS);
+	// async sessionCheck() {
+	// 	const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS);
 
-		this.user = response.content.id_usuario;
-	}
+	// 	this.user = response.content.id_usuario;
+	// }
 }
 
 (async () => {

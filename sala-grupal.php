@@ -46,11 +46,17 @@ new Usuario()->auth();
 
 		<h1>Sala grupal</h1>
 
+		<h2>Tus grupos</h2>
+
 		<menu></menu>
+
+		<h2>Invitaciones pendientes</h2>
+
+		<div></div>
 
 		<form name="crear-grupo">
 
-			<input name="nombre_grupo">
+			<input name="nombre_grupo" required>
 			<button>Crear grupo
 				<!-- <svg viewBox="0 0 654 752">
 					<path
