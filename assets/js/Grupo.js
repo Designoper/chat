@@ -1,7 +1,6 @@
 import { Endpoint } from "./Endpoint.js";
 
 export class Grupo extends Endpoint {
-	// user = null;
 	main = document.getElementById('main');
 	menu = document.querySelector('menu');
 	div = document.querySelector('div');
@@ -14,7 +13,6 @@ export class Grupo extends Endpoint {
 	async initialize() {
 		this.getGruposMiembro();
 		this.getGruposPendiente();
-		// this.getGruposNoMiembro();
 	}
 
 	async getGruposMiembro() {
@@ -26,11 +24,6 @@ export class Grupo extends Endpoint {
 		const response = await this.simpleFetch(this.ENDPOINTS.GET_GRUPOS_PENDIENTE);
 		this.printGruposPendiente(response);
 	}
-
-	// async getGruposNoMiembro() {
-	// 	const response = await this.simpleFetch(this.ENDPOINTS.GET_GRUPOS_NO_MIEMBRO);
-	// 	this.printGruposNoMiembro(response);
-	// }
 
 	async printGruposMiembro(grupos) {
 		const content = await this.gruposMiembroTemplate(grupos.content);
@@ -57,26 +50,27 @@ export class Grupo extends Endpoint {
 					.map(user => `<option value="${user.id_usuario}">${user.nombre_usuario}</option>`)
 					.join('');
 
-				return `
-					<li>
-						<p>${grupo.nombre_grupo}</p>
-						<form name="invitar">
-							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
-							<select name="id_usuario">
-								<option>Invitar a...</option>
-								${opciones}
-							</select>
-							<button>Mandar invitación</button>
-						</form>
-						<a href="chat-grupal.php?id=${grupo.id_grupo}">Entrar</a>
-					</li>
-				`;
+				const formInvitar =
+				`<li>
+					<p>${grupo.nombre_grupo}</p>
+					<form name="invitar">
+						<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
+						<select name="id_usuario">
+							<option>Invitar a...</option>
+							${opciones}
+						</select>
+						<button>Mandar invitación</button>
+					</form>
+					<a href="chat-grupal.php?id=${grupo.id_grupo}">Entrar</a>
+				</li>`
+
+				return formInvitar;
+
 			})
 		);
 
 		return grupos.join('');
 	}
-
 
 	gruposPendienteTemplate(fetchedGrupos) {
 
