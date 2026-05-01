@@ -1,10 +1,8 @@
 import { Endpoint } from "./Endpoint.js";
 
 export class Grupo extends Endpoint {
-	main = document.getElementById('main');
 	menu = document.querySelector('menu');
 	div = document.querySelector('div');
-	select = document.querySelectorAll('select');
 
 	constructor() {
 		super();
@@ -109,12 +107,6 @@ export class Grupo extends Endpoint {
 			this.getGruposPendiente();
 		}
 	}
-
-	// async sessionCheck() {
-	// 	const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS);
-
-	// 	this.user = response.content.id_usuario;
-	// }
 }
 
 (async () => {
