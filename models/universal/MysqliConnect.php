@@ -59,6 +59,11 @@ abstract class MysqliConnect extends EnvReader
 		return $this->host;
 	}
 
+	protected function getAuthenticatedUserId(): ?int
+	{
+		return $_SESSION['id_usuario'] ?? null;
+	}
+
 	// MARK: SETTERS
 
 	private function setHostname(): void

@@ -45,11 +45,6 @@ abstract class ApiResponse extends MysqliConnect
         return $this->integrityErrors;
     }
 
-    protected function getAuthenticatedUserId(): ?int
-    {
-        return $_SESSION['id_usuario'] ?? null;
-    }
-
     protected function getResponse(): never
     {
         http_response_code($this->getStatus());
