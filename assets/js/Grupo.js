@@ -1,6 +1,6 @@
-import { Endpoint } from "./Endpoint.js";
+import Endpoint from "./Endpoint.js";
 
-export class Grupo extends Endpoint {
+export default class Grupo extends Endpoint {
 	menu = document.querySelector('menu');
 	div = document.querySelector('div');
 

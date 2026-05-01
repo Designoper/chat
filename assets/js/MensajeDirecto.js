@@ -1,7 +1,7 @@
-import { Usuario } from "./Usuario.js";
+import Usuario from "./Usuario.js";
 import formatearFecha from "./utils/fecha.js";
 
-export class MensajeDirecto extends Usuario {
+export default class MensajeDirecto extends Usuario {
 	h1 = document.querySelector('h1');
 	input = document.querySelector('input[type="hidden"]');
 	id_receptor;

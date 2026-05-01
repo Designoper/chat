@@ -1,6 +1,6 @@
-import { Endpoint } from "./Endpoint.js";
+import Endpoint from "./Endpoint.js";
 
-export class Usuario extends Endpoint {
+export default class Usuario extends Endpoint {
 	user = null;
 	MAIN = document.getElementById('main');
 	menu = document.querySelector('menu');

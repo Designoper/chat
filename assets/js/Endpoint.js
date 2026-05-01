@@ -1,6 +1,6 @@
-import { Fetch } from "./Fetch.js";
+import Fetch from "./Fetch.js";
 
-export class Endpoint extends Fetch {
+export default class Endpoint extends Fetch {
 	ROOT = `${location.origin}/api/`;
 
 	ENDPOINTS = {

@@ -1,4 +1,4 @@
-export class Fetch {
+export default class Fetch {
 	constructor() { }
 
 	async simpleFetch(url) {

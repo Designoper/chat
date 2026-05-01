@@ -1,7 +1,7 @@
-import { Usuario } from "./Usuario.js";
+import Usuario from "./Usuario.js";
 import formatearFecha from "./utils/fecha.js";
 
-export class Mensaje extends Usuario {
+export default class Mensaje extends Usuario {
 	MENSAJES_OUTPUT = document.getElementById('fetchoutput');
 
 	constructor() {
