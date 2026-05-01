@@ -23,12 +23,11 @@ export default class MensajeDirecto extends Usuario {
 	}
 
 	getIdReceptor() {
-		const currentURL = new URL(window.location.href);
+		const currentURL = new URL(location.href);
 		const idReceptor = currentURL.searchParams.get('id');
 		const nombreReceptor = currentURL.searchParams.get('usuario');
 		this.id_receptor = idReceptor;
 		this.nombre_receptor = nombreReceptor;
-		// history.replaceState({}, "", "/chat-privado");
 	}
 
 	writeChat() {

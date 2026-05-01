@@ -76,10 +76,24 @@ final class Mensaje extends ApiResponse
 		$this->id_receptor = (int) $value;
 	}
 
-		private function setIdGrupo(): void
+	private function setIdGrupoFromPost(): void
 	{
 		$name = 'id_grupo';
 		$value = $_POST[$name] ?? null;
+		$min = 1;
+
+		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
+			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
+			return;
+		}
+
+		$this->id_grupo = (int) $value;
+	}
+
+	private function setIdGrupoFromGet(): void
+	{
+		$name = 'id_grupo';
+		$value = $_GET[$name] ?? null;
 		$min = 1;
 
 		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
@@ -192,7 +206,7 @@ final class Mensaje extends ApiResponse
 	public function readMensajesGrupales(): void
 	{
 		$this->auth();
-		$this->setIdGrupo();
+		$this->setIdGrupoFromGet();
 
 		$this->checkValidationErrors();
 
@@ -206,6 +220,7 @@ final class Mensaje extends ApiResponse
 				mensajes.id_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
+			LEFT JOIN usuarios on mensajes.id_emisor = usuarios.id_usuario
 			WHERE mensajes.id_grupo = ?
 			ORDER BY fecha_envio ASC";
 
@@ -308,6 +323,7 @@ final class Mensaje extends ApiResponse
 	{
 		$this->auth();
 		$this->setContenido();
+		$this->setIdGrupoFromPost();
 
 		$this->checkValidationErrors();
 
@@ -334,7 +350,7 @@ final class Mensaje extends ApiResponse
 		$query->close();
 
 		$this->setStatus(201);
-		$this->setMessage("Mensaje creado con éxito");
+		$this->setMessage("Mensaje grupal creado con éxito");
 		$this->getResponse();
 	}
 
