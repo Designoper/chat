@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../universal/ApiResponse.php';
+require_once __DIR__ . '/universal/ApiResponse.php';
 
 class Usuario extends ApiResponse
 {

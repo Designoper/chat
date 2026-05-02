@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/models/usuario/Usuario.php';
+require_once __DIR__ . '/models/Usuario.php';
 
 new Usuario()->auth();
 
