@@ -172,8 +172,6 @@ final class ApiRouter extends Sanitizer
             }
         );
 
-        // UPDATE ROUTES
-
         $this->handleRequest();
     }
 
