@@ -1,7 +1,7 @@
 import Endpoint from "./Endpoint.js";
 
 export default class Usuario extends Endpoint {
-	user = null;
+	id_usuario = null;
 	MAIN = document.getElementById('main');
 	menu = document.querySelector('menu');
 	USUARIOS_OUTPUT = document.getElementById('usuariosoutput');
@@ -28,7 +28,7 @@ export default class Usuario extends Endpoint {
 
 		const usuarios = fetchedUsuarios.map(usuario =>
 			`<li>
-				<a href="chat-privado.php?id=${usuario.id_usuario}&usuario=${usuario.nombre_usuario}">${usuario.nombre_usuario}</a>
+				<a href="chat-privado.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">${usuario.nombre_usuario}</a>
 			</li>`
 		).join('');
 
@@ -67,7 +67,7 @@ export default class Usuario extends Endpoint {
 	async sessionCheck() {
 		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS);
 
-		this.user = response.content.id_usuario;
+		this.id_usuario = response.content.id_usuario;
 	}
 }
 

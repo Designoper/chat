@@ -4,15 +4,14 @@ import formatearFecha from "./utils/fecha.js";
 export default class MensajeGrupal extends Usuario {
 	h1 = document.querySelector('h1');
 	input = document.querySelector('input[type="hidden"]');
-	id_grupo;
-	nombre_grupo;
+	id_grupo = new URL(location.href).searchParams.get('id-grupo');
+	nombre_grupo = new URL(location.href).searchParams.get('nombre-grupo');
 
 	constructor() {
 		super();
 	}
 
 	async initialize() {
-		this.getUrlData();
 		this.sessionCheck();
 		this.writeChat();
 		await this.getMensajesGrupales();
@@ -20,14 +19,6 @@ export default class MensajeGrupal extends Usuario {
 		setInterval(async () => {
 			await this.getMensajesGrupales();
 		}, 2000);
-	}
-
-	getUrlData() {
-		const currentURL = new URL(location.href);
-		const idGrupo = currentURL.searchParams.get('id-grupo');
-		const nombreGrupo = currentURL.searchParams.get('nombre-grupo');
-		this.id_grupo = idGrupo;
-		this.nombre_grupo = nombreGrupo;
 	}
 
 	writeChat() {
@@ -44,7 +35,7 @@ export default class MensajeGrupal extends Usuario {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
-			<article ${mensaje.id_emisor == this.user ? 'class="mensaje-propio"' : ''}>
+			<article ${mensaje.id_emisor == this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre_usuario}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
@@ -57,7 +48,7 @@ export default class MensajeGrupal extends Usuario {
 					minute: "numeric"
 				}
 			)}</p>
-				${mensaje.id_emisor == this.user
+				${mensaje.id_emisor == this.id_usuario
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
 						<button>
 							<svg viewBox="0 0 928 983">

@@ -4,15 +4,14 @@ import formatearFecha from "./utils/fecha.js";
 export default class MensajeDirecto extends Usuario {
 	h1 = document.querySelector('h1');
 	input = document.querySelector('input[type="hidden"]');
-	id_receptor;
-	nombre_receptor;
+	id_receptor = new URL(location.href).searchParams.get('id-receptor');
+	nombre_receptor = new URL(location.href).searchParams.get('nombre-receptor');
 
 	constructor() {
 		super();
 	}
 
 	async initialize() {
-		this.getIdReceptor();
 		this.sessionCheck();
 		this.writeChat();
 		await this.getMensajesDirectos();
@@ -20,14 +19,6 @@ export default class MensajeDirecto extends Usuario {
 		setInterval(async () => {
 			await this.getMensajesDirectos();
 		}, 2000);
-	}
-
-	getIdReceptor() {
-		const currentURL = new URL(location.href);
-		const idReceptor = currentURL.searchParams.get('id');
-		const nombreReceptor = currentURL.searchParams.get('usuario');
-		this.id_receptor = idReceptor;
-		this.nombre_receptor = nombreReceptor;
 	}
 
 	writeChat() {
@@ -44,20 +35,21 @@ export default class MensajeDirecto extends Usuario {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
-			<article ${mensaje.id_emisor == this.user ? 'class="mensaje-propio"' : ''}>
+			<article ${mensaje.id_emisor == this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre_usuario}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
-				{
-					weekday: "long",
-					year: "numeric",
-					month: "numeric",
-					day: "numeric",
-					hour: "numeric",
-					minute: "numeric"
-				}
-			)}</p>
-				${mensaje.id_emisor == this.user
+					{
+						weekday: "long",
+						year: "numeric",
+						month: "numeric",
+						day: "numeric",
+						hour: "numeric",
+						minute: "numeric"
+					}
+				)}
+				</p>
+				${mensaje.id_emisor == this.id_usuario
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
 						<button>
 							<svg viewBox="0 0 928 983">

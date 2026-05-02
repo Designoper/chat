@@ -27,7 +27,7 @@ export default class Mensaje extends Usuario {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
-			<article ${mensaje.id_emisor == this.user ? 'class="mensaje-propio"' : ''}>
+			<article ${mensaje.id_emisor == this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre_usuario}</p>
 				<p>${mensaje.contenido}</p>
 					<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
@@ -40,7 +40,7 @@ export default class Mensaje extends Usuario {
 					minute: "numeric"
 				}
 			)}</p>
-				${mensaje.id_emisor == this.user
+				${mensaje.id_emisor == this.id_usuario
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
 						<button>
 							<svg viewBox="0 0 928 983">
