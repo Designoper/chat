@@ -2,7 +2,7 @@ main {
 	>section {
 		display: grid;
 		gap: 2em;
-		grid-template-columns: auto auto 1fr;
+		grid-template-columns: auto 1fr;
 		align-content: center;
 		width: 100%;
 		position: fixed;
@@ -15,14 +15,19 @@ main {
 			display: grid;
 			gap: 2em;
 			align-content: center;
-
-			&:nth-of-type(2) {
-				grid-template-columns: 1fr auto;
-			}
+			grid-template-columns: 1fr auto;
 		}
 
 		a {
 			align-self: center;
+			padding: 0.75em;
+			background-color: var(--white);
+			border-radius: 0.25rem;
+
+			svg {
+				width: 1.5em;
+				fill: var(--quartery-bg);
+			}
 		}
 
 		textarea {
@@ -91,6 +96,7 @@ main {
 
 		.mensaje-propio {
 			justify-self: right;
+			/* border-radius: 1em 0 1em 1em; */
 		}
 	}
 }

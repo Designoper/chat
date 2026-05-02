@@ -2,7 +2,7 @@ import Usuario from "./Usuario.js";
 import formatearFecha from "./utils/fecha.js";
 
 export default class Mensaje extends Usuario {
-	MENSAJES_OUTPUT = document.getElementById('fetchoutput');
+	MENSAJES_OUTPUT = document.querySelector('output');
 
 	constructor() {
 		super();

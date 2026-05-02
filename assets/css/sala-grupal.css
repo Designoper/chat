@@ -18,21 +18,31 @@ main {
 		gap: 1em;
 	}
 
-	button {
-		padding: 1em;
-		background-color: tomato;
+	form {
+		display: grid;
+		gap: 1em;
 	}
 
-	a{
+	button {
 		padding: 1em;
-		background-color: rgb(71, 255, 95);
+		border-radius: 1em;
+		background-color: var(--quartery-bg);
+	}
+
+	a {
+		justify-self: center;
+		width: fit-content;
+		padding: 1em;
+		border-radius: 1em;
+		background-color: var(--terciary-bg);
 	}
 
 	article {
 		display: grid;
 		padding: 2em;
+		border-radius: 1em;
 		width: fit-content;
 		gap: 1em;
-		background-color: violet;
+		background-color: var(--secondary-bg);
 	}
 }

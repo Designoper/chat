@@ -44,22 +44,15 @@ new Usuario()->auth();
 
 	<main id="main">
 
-		<output id="fetchoutput"></output>
+		<output></output>
 
 		<section>
 
-			<a href="./sala-principal.php">Volver</a>
-
-			<form name="logout-usuario">
-
-				<button>
-					<svg viewBox="0 0 654 752">
-						<path
-							d="M418.624 610.432L653.12 375.936 418.512 141.328l-56.56 56.56L500.032 336H176v80h323.92L362.064 553.872l56.56 56.56zM80 80h368V0H0v752h448v-80H80V80z" />
-					</svg>
-				</button>
-
-			</form>
+			<a href="./sala-principal.php">
+				<svg viewBox="0 0 122.88 108.06">
+					<path d="M63.94,24.28a14.28,14.28,0,0,0-20.36-20L4.1,44.42a14.27,14.27,0,0,0,0,20l38.69,39.35a14.27,14.27,0,0,0,20.35-20L48.06,68.41l60.66-.29a14.27,14.27,0,1,0-.23-28.54l-59.85.28,15.3-15.58Z" />
+				</svg>
+			</a>
 
 			<form name="crear-mensaje">
 
