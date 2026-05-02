@@ -20,34 +20,9 @@ abstract class ApiResponse extends MysqliConnect
 
     // MARK: GETTERS
 
-    private function getStatus(): int
-    {
-        return $this->status;
-    }
-
-    private function getMessage(): string
-    {
-        return $this->message;
-    }
-
-    private function getContent(): array
-    {
-        return $this->content;
-    }
-
-    private function getValidationErrors(): array
-    {
-        return $this->validationErrors;
-    }
-
-    private function getIntegrityErrors(): array
-    {
-        return $this->integrityErrors;
-    }
-
     protected function getResponse(): never
     {
-        http_response_code($this->getStatus());
+        http_response_code($this->status);
         header('Content-Type: application/json');
         echo json_encode($this->response);
         exit();
@@ -63,13 +38,13 @@ abstract class ApiResponse extends MysqliConnect
     protected function setMessage(string $message): void
     {
         $this->message = $message;
-        $this->response['message'] = $this->getMessage();
+        $this->response['message'] = $this->message;
     }
 
     protected function setContent(array $content): void
     {
         $this->content = $content;
-        $this->response['content'] = $this->getContent();
+        $this->response['content'] = $this->content;
     }
 
     protected function setValidationError(string $validationError): void
@@ -79,7 +54,7 @@ abstract class ApiResponse extends MysqliConnect
 
     private function setValidationErrors(): void
     {
-        $this->response['validationErrors'] = $this->getValidationErrors();
+        $this->response['validationErrors'] = $this->validationErrors;
     }
 
     protected function setIntegrityError(string $integrityError): void
@@ -89,14 +64,14 @@ abstract class ApiResponse extends MysqliConnect
 
     private function setIntegrityErrors(): void
     {
-        $this->response['integrityErrors'] = $this->getIntegrityErrors();
+        $this->response['integrityErrors'] = $this->integrityErrors;
     }
 
     // MARK: CHECKERS
 
     protected function checkValidationErrors(): void
     {
-        if (!empty($this->getValidationErrors())) {
+        if (!empty($this->validationErrors)) {
             $this->setStatus(400);
             $this->setMessage("Hay errores de validación");
             $this->setValidationErrors();
@@ -106,7 +81,7 @@ abstract class ApiResponse extends MysqliConnect
 
     protected function checkIntegrityErrors(): void
     {
-        if (!empty($this->getIntegrityErrors())) {
+        if (!empty($this->integrityErrors)) {
             $this->setMessage("Hay errores de integridad");
             $this->setIntegrityErrors();
             $this->getResponse();
