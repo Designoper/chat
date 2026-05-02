@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/ApiResponse.php';
+require_once __DIR__ . '/universal/Response.php';
 
-final class Grupo extends ApiResponse
+final class Grupo extends Response
 {
 	private readonly int $id_grupo;
 	private readonly string $nombre_grupo;

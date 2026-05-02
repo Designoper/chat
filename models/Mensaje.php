@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/ApiResponse.php';
+require_once __DIR__ . '/universal/Response.php';
 
-final class Mensaje extends ApiResponse
+final class Mensaje extends Response
 {
 	private readonly int $id_mensaje;
 	private readonly string $contenido;
