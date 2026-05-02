@@ -2,9 +2,7 @@ import Endpoint from "./Endpoint.js";
 
 export default class Usuario extends Endpoint {
 	id_usuario = null;
-	MAIN = document.getElementById('main');
 	menu = document.querySelector('menu');
-	USUARIOS_OUTPUT = document.getElementById('usuariosoutput');
 
 	constructor() {
 		super();
