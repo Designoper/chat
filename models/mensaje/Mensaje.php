@@ -23,14 +23,14 @@ final class Mensaje extends ApiResponse
 
 	private function setIdMensaje(): void
 	{
-		$min = 1;
-		$error_message = "El id del recurso debe ser un número entero superior o igual a $min y solo contener números.";
+		$min_range = 1;
+		$error_message = "El id del recurso debe ser un número entero superior o igual a $min_range y solo contener números.";
 
 		$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 		$segments = explode('/', trim($path, '/'));
 		$value = end($segments);
 
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->id_mensaje = (int) $value
 			: $this->setValidationError($error_message);
 	}
@@ -39,69 +39,45 @@ final class Mensaje extends ApiResponse
 	{
 		$name = 'contenido';
 		$value = $_POST[$name] ?? null;
+		$error_message = "El campo $name no puede estar vacío.";
 
-		if (empty($value)) {
-			$this->setValidationError("El campo $name no puede estar vacío.");
-			return;
-		}
-
-		$this->contenido = $value;
+		empty($value)
+			? $this->setValidationError($error_message)
+			: $this->contenido = $value;
 	}
 
-	private function setIdReceptorFromPost(): void
+	private function setIdReceptor(string $method): void
 	{
+		$method = match ($method) {
+			'$_GET' => $_GET,
+			'$_POST' => $_POST,
+		};
+
 		$name = 'id_receptor';
-		$value = $_POST[$name] ?? null;
-		$min = 1;
+		$value = $method[$name] ?? null;
+		$min_range = 1;
+		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
-		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
-			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
-			return;
-		}
-
-		$this->id_receptor = (int) $value;
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
+			? $this->id_receptor = (int) $value
+			: $this->setValidationError($error_message);
 	}
 
-	private function setIdReceptorFromGet(): void
+	private function setIdGrupo(string $method): void
 	{
-		$name = 'id_receptor';
-		$value = $_GET[$name] ?? null;
-		$min = 1;
+		$method = match ($method) {
+			'$_GET' => $_GET,
+			'$_POST' => $_POST,
+		};
 
-		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
-			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
-			return;
-		}
-
-		$this->id_receptor = (int) $value;
-	}
-
-	private function setIdGrupoFromPost(): void
-	{
 		$name = 'id_grupo';
-		$value = $_POST[$name] ?? null;
-		$min = 1;
+		$value = $method[$name] ?? null;
+		$min_range = 1;
+		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
-		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
-			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
-			return;
-		}
-
-		$this->id_grupo = (int) $value;
-	}
-
-	private function setIdGrupoFromGet(): void
-	{
-		$name = 'id_grupo';
-		$value = $_GET[$name] ?? null;
-		$min = 1;
-
-		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
-			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
-			return;
-		}
-
-		$this->id_grupo = (int) $value;
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
+			? $this->id_grupo = (int) $value
+			: $this->setValidationError($error_message);
 	}
 
 	// MARK: AUTH
@@ -153,7 +129,7 @@ final class Mensaje extends ApiResponse
 	public function readMensajesDirectos(): void
 	{
 		$this->auth();
-		$this->setIdReceptorFromGet();
+		$this->setIdReceptor('$_GET');
 
 		$this->checkValidationErrors();
 
@@ -206,7 +182,7 @@ final class Mensaje extends ApiResponse
 	public function readMensajesGrupales(): void
 	{
 		$this->auth();
-		$this->setIdGrupoFromGet();
+		$this->setIdGrupo('$_GET');
 
 		$this->checkValidationErrors();
 
@@ -286,7 +262,7 @@ final class Mensaje extends ApiResponse
 	{
 		$this->auth();
 		$this->setContenido();
-		$this->setIdReceptorFromPost();
+		$this->setIdReceptor('$_POST');
 
 		$this->checkValidationErrors();
 
@@ -323,7 +299,7 @@ final class Mensaje extends ApiResponse
 	{
 		$this->auth();
 		$this->setContenido();
-		$this->setIdGrupoFromPost();
+		$this->setIdGrupo('$_POST');
 
 		$this->checkValidationErrors();
 

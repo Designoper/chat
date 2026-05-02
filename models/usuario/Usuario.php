@@ -23,9 +23,10 @@ class Usuario extends ApiResponse
 	{
 		$name = 'nombre_usuario';
 		$value = $_POST[$name] ?? null;
+		$error_message = "El campo $name no puede estar vacío.";
 
 		empty($value)
-			? $this->setValidationError("El campo $name no puede estar vacío.")
+			? $this->setValidationError($error_message)
 			: $this->nombre_usuario = $value;
 	}
 
@@ -33,9 +34,10 @@ class Usuario extends ApiResponse
 	{
 		$name = 'password';
 		$value = $_POST[$name] ?? null;
+		$error_message = "El campo $name no puede estar vacío.";
 
 		empty($value)
-			? $this->setValidationError("El campo $name no puede estar vacío.")
+			? $this->setValidationError($error_message)
 			: $this->password = password_hash($value, PASSWORD_DEFAULT);
 	}
 
@@ -43,9 +45,10 @@ class Usuario extends ApiResponse
 	{
 		$name = 'password';
 		$value = $_POST[$name] ?? null;
+		$error_message = "El campo $name no puede estar vacío.";
 
 		empty($value)
-			? $this->setValidationError("El campo $name no puede estar vacío.")
+			? $this->setValidationError($error_message)
 			: $this->password = $value;
 	}
 

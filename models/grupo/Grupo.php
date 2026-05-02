@@ -25,40 +25,24 @@ final class Grupo extends ApiResponse
 		$name = 'nombre_grupo';
 		$value = $_POST[$name] ?? null;
 
-		if (empty($value)) {
-			$this->setValidationError("El campo $name no puede estar vacío.");
-			return;
-		}
-
-		$this->nombre_grupo = $value;
+		empty($value)
+			? $this->setValidationError("El campo $name no puede estar vacío.")
+			: $this->nombre_grupo = $value;
 	}
 
-	private function setIdGrupo(): void
+	private function setIdGrupo(string $method): void
 	{
+		$method = match ($method) {
+			'$_GET' => $_GET,
+			'$_POST' => $_POST,
+		};
 		$name = 'id_grupo';
-		$value = $_POST[$name] ?? null;
+		$value = $method[$name] ?? null;
 		$min = 1;
 
-		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
-			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
-			return;
-		}
-
-		$this->id_grupo = (int) $value;
-	}
-
-	private function setIdGrupoFromGet(): void
-	{
-		$name = 'id_grupo';
-		$value = $_GET[$name] ?? null;
-		$min = 1;
-
-		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
-			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
-			return;
-		}
-
-		$this->id_grupo = (int) $value;
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))
+			? $this->id_grupo = (int) $value
+			: $this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
 	}
 
 	private function setIdUsuario(): void
@@ -67,12 +51,9 @@ final class Grupo extends ApiResponse
 		$value = $_POST[$name] ?? null;
 		$min = 1;
 
-		if (!filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))) {
-			$this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
-			return;
-		}
-
-		$this->id_usuario = (int) $value;
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))
+			? $this->id_usuario = (int) $value
+			: $this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
 	}
 
 	// MARK: READ GRUPOS
@@ -185,10 +166,8 @@ final class Grupo extends ApiResponse
 
 	public function readGruposNoMiembro(): void
 	{
-		$this->setIdGrupoFromGet();
+		$this->setIdGrupo('$_GET');
 		$id_grupo = $this->id_grupo;
-		// $id_usuario = $this->id_fundador;
-		// $rolPendiente = 'pendiente';
 
 		$statement =
 			"SELECT id_usuario, nombre_usuario
@@ -268,7 +247,6 @@ final class Grupo extends ApiResponse
 		$query->execute();
 		$query->close();
 
-
 		$this->setStatus(201);
 		$this->setMessage("Grupo creado con éxito");
 		$this->getResponse();
@@ -278,7 +256,7 @@ final class Grupo extends ApiResponse
 
 	public function invitar(): void
 	{
-		$this->setIdGrupo();
+		$this->setIdGrupo('$_POST');
 		$this->setIdUsuario();
 
 		$this->checkValidationErrors();
@@ -313,7 +291,7 @@ final class Grupo extends ApiResponse
 
 	public function aceptarInvitacion(): void
 	{
-		$this->setIdGrupo();
+		$this->setIdGrupo('$_POST');
 
 		$this->checkValidationErrors();
 

@@ -19,35 +19,15 @@ abstract class MysqliConnect extends EnvReader
 
 		parent::__construct();
 
-		$this->setHostname();
-		$this->setUsername();
-		$this->setPassword();
-		$this->setDatabase();
+		$this->hostname = getenv('HOSTNAME');
+		$this->username = getenv('USERNAME');
+		$this->password = getenv('PASSWORD');
+		$this->database = getenv('DATABASE');
 		$this->setConnection();
 		$this->setHost();
 	}
 
 	// MARK: GETTERS
-
-	private function getHostname(): string
-	{
-		return $this->hostname;
-	}
-
-	private function getUsername(): string
-	{
-		return $this->username;
-	}
-
-	private function getPassword(): string
-	{
-		return $this->password;
-	}
-
-	private function getDatabase(): string
-	{
-		return $this->database;
-	}
 
 	protected function getConnection(): mysqli
 	{
@@ -66,33 +46,13 @@ abstract class MysqliConnect extends EnvReader
 
 	// MARK: SETTERS
 
-	private function setHostname(): void
-	{
-		$this->hostname = getenv('HOSTNAME');
-	}
-
-	private function setUsername(): void
-	{
-		$this->username = getenv('USERNAME');
-	}
-
-	private function setPassword(): void
-	{
-		$this->password = getenv('PASSWORD');
-	}
-
-	private function setDatabase(): void
-	{
-		$this->database = getenv('DATABASE');
-	}
-
 	private function setConnection(): void
 	{
 		$this->connection = new mysqli(
-			$this->getHostname(),
-			$this->getUsername(),
-			$this->getPassword(),
-			$this->getDatabase()
+			$this->hostname,
+			$this->username,
+			$this->password,
+			$this->database
 		);
 
 		$this->connection->set_charset('utf8');
