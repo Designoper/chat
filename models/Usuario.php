@@ -130,7 +130,7 @@ class Usuario extends ApiResponse
 		try {
 			$statement =
 				"INSERT INTO usuarios (nombre_usuario, password)
-            VALUES (?, ?)";
+            	VALUES (?, ?)";
 
 			$query = $this->getConnection()->prepare($statement);
 
