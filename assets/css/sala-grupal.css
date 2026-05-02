@@ -1,0 +1,38 @@
+main {
+	section {
+		display: grid;
+		gap: 2em;
+		padding: 0 10vw;
+	}
+
+	h2 {
+		font-size: 2em;
+	}
+
+	h3 {
+		font-size: 1.5em;
+	}
+
+	output {
+		display: flex;
+		gap: 1em;
+	}
+
+	button {
+		padding: 1em;
+		background-color: tomato;
+	}
+
+	a{
+		padding: 1em;
+		background-color: rgb(71, 255, 95);
+	}
+
+	article {
+		display: grid;
+		padding: 2em;
+		width: fit-content;
+		gap: 1em;
+		background-color: violet;
+	}
+}

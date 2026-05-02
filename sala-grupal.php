@@ -32,7 +32,7 @@ new Usuario()->auth();
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/layout.css" rel="preload stylesheet" as="style">
-	<link href="./assets/css/sala-principal.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/sala-grupal.css" rel="preload stylesheet" as="style">
 
 	<script src="./assets/js/Grupo.js" type="module" async></script>
 
@@ -50,7 +50,7 @@ new Usuario()->auth();
 
 			<h2>Tus grupos</h2>
 
-			<menu></menu>
+			<output></output>
 
 		</section>
 

@@ -1,7 +1,7 @@
 import Endpoint from "./Endpoint.js";
 
 export default class Grupo extends Endpoint {
-	menu = document.querySelector('menu');
+	output = document.querySelector('output');
 	div = document.querySelector('div');
 
 	constructor() {
@@ -25,7 +25,7 @@ export default class Grupo extends Endpoint {
 
 	async printGruposMiembro(grupos) {
 		const content = await this.gruposMiembroTemplate(grupos.content);
-		this.menu.innerHTML = content;
+		this.output.innerHTML = content;
 		this.formHandler();
 	}
 
@@ -49,8 +49,9 @@ export default class Grupo extends Endpoint {
 					.join('');
 
 				const formInvitar =
-				`<li>
-					<p>${grupo.nombre_grupo}</p>
+				`<article>
+
+					<h3>${grupo.nombre_grupo}</h3>
 
 					<form name="invitar">
 						<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
@@ -62,7 +63,8 @@ export default class Grupo extends Endpoint {
 					</form>
 
 					<a href="./chat-grupal.php?id-grupo=${grupo.id_grupo}&nombre-grupo=${grupo.nombre_grupo}">Entrar</a>
-				</li>`
+
+				</article>`
 
 				return formInvitar;
 
