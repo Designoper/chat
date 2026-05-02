@@ -259,11 +259,11 @@ class Usuario extends ApiResponse
 
 	public function currentUsuario(): void
 	{
-		if ($this->id_usuario === null) {
-			$this->setStatus(401);
-			$this->setMessage("No hay usuario identificado");
-			$this->getResponse();
-		}
+		// if ($this->id_usuario === null) {
+		// 	$this->setStatus(401);
+		// 	$this->setMessage("No hay usuario identificado");
+		// 	$this->getResponse();
+		// }
 
 		$this->setStatus(200);
 		$this->setMessage("Usuario identificado");

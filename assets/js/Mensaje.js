@@ -9,8 +9,6 @@ export default class Mensaje extends Usuario {
 	}
 
 	async initialize() {
-		this.sessionCheck();
-
 		await this.getMensajes();
 
 		setInterval(async () => {

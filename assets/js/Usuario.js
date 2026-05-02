@@ -1,11 +1,12 @@
 import Endpoint from "./Endpoint.js";
 
 export default class Usuario extends Endpoint {
-	id_usuario = null;
+	id_usuario;
 	menu = document.querySelector('menu');
 
 	constructor() {
 		super();
+		this.sessionCheck();
 	}
 
 	async initialize() {
@@ -64,7 +65,6 @@ export default class Usuario extends Endpoint {
 
 	async sessionCheck() {
 		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS);
-
 		this.id_usuario = response.content.id_usuario;
 	}
 }

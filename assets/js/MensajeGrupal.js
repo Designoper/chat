@@ -12,7 +12,6 @@ export default class MensajeGrupal extends Usuario {
 	}
 
 	async initialize() {
-		this.sessionCheck();
 		this.writeChat();
 		await this.getMensajesGrupales();
 
