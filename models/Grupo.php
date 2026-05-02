@@ -158,7 +158,7 @@ final class Grupo extends ApiResponse
 		$message =
 			$grupos
 			? 'Grupos obtenidos.'
-			: 'No hay ningún grupo.';
+			: 'No tienes ninguna invitación pendiente.';
 
 		$this->setStatus(200);
 		$this->setMessage($message);
