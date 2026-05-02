@@ -46,36 +46,31 @@ new Usuario()->auth();
 
 		<h1>Sala grupal</h1>
 
-		<h2>Tus grupos</h2>
+		<section>
 
-		<menu></menu>
+			<h2>Tus grupos</h2>
 
-		<h2>Invitaciones pendientes</h2>
+			<menu></menu>
 
-		<div></div>
+		</section>
 
-		<form name="crear-grupo">
+		<section>
 
-			<input name="nombre_grupo" required>
-			<button>Crear grupo
-				<!-- <svg viewBox="0 0 654 752">
-					<path
-						d="M418.624 610.432L653.12 375.936 418.512 141.328l-56.56 56.56L500.032 336H176v80h323.92L362.064 553.872l56.56 56.56zM80 80h368V0H0v752h448v-80H80V80z" />
-				</svg> -->
-			</button>
+			<h2>Invitaciones pendientes</h2>
 
-		</form>
+			<div></div>
 
-		<form name="logout-usuario">
+			<form name="crear-grupo">
 
-			<button>
-				<svg viewBox="0 0 654 752">
-					<path
-						d="M418.624 610.432L653.12 375.936 418.512 141.328l-56.56 56.56L500.032 336H176v80h323.92L362.064 553.872l56.56 56.56zM80 80h368V0H0v752h448v-80H80V80z" />
-				</svg>
-			</button>
+				<label for="nombre_grupo">Nombre del grupo</label>
+				<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
+				<button>Crear grupo</button>
 
-		</form>
+			</form>
+
+		</section>
+
+		<a href="./sala-principal.php">Volver</a>
 
 	</main>
 

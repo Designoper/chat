@@ -12,7 +12,7 @@ export default class MensajeGrupal extends Usuario {
 	}
 
 	async initialize() {
-		this.getIdReceptor();
+		this.getUrlData();
 		this.sessionCheck();
 		this.writeChat();
 		await this.getMensajesGrupales();
@@ -22,7 +22,7 @@ export default class MensajeGrupal extends Usuario {
 		}, 2000);
 	}
 
-	getIdReceptor() {
+	getUrlData() {
 		const currentURL = new URL(location.href);
 		const idGrupo = currentURL.searchParams.get('id-grupo');
 		const nombreGrupo = currentURL.searchParams.get('nombre-grupo');

@@ -51,15 +51,17 @@ export default class Grupo extends Endpoint {
 				const formInvitar =
 				`<li>
 					<p>${grupo.nombre_grupo}</p>
+
 					<form name="invitar">
 						<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
-						<select name="id_usuario">
-							<option>Invitar a...</option>
+						<select name="id_usuario" required>
+							<option value="">Invitar a...</option>
 							${opciones}
 						</select>
 						<button>Mandar invitación</button>
 					</form>
-					<a href="chat-grupal.php?id-grupo=${grupo.id_grupo}&nombre-grupo=${grupo.nombre_grupo}">Entrar</a>
+
+					<a href="./chat-grupal.php?id-grupo=${grupo.id_grupo}&nombre-grupo=${grupo.nombre_grupo}">Entrar</a>
 				</li>`
 
 				return formInvitar;

@@ -43,7 +43,7 @@ main {
 	height: 100%;
 } */
 
-:is(ul, ol, menu) {
+li {
 	list-style: none;
 }
 
