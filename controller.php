@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/models/universal/ApiRouter.php';
+require_once __DIR__ . '/models/universal/Router.php';
 
-new ApiRouter();
+new Router();

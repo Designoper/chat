@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../models/Usuario.php';
 require_once __DIR__ . '/../../models/Mensaje.php';
 require_once __DIR__ . '/../../models/Grupo.php';
 
-final class ApiRouter
+final class Router
 {
     private const string COMMON_PATH = '/api/';
     private array $routes = [];
