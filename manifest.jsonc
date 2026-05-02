@@ -1,6 +1,6 @@
 {
-	"name": "Chat",
-	"short_name": "Chat",
+	"name": "Whatschat",
+	"short_name": "Whatschat",
 	"start_url": "/",
 	"scope": "/",
 	"display": "standalone",

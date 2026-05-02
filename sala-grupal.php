@@ -58,7 +58,7 @@ new Usuario()->auth();
 
 			<h2>Invitaciones pendientes</h2>
 
-			<div></div>
+			<output></output>
 
 		</section>
 

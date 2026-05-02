@@ -48,9 +48,8 @@ new Usuario()->auth();
 
 		<menu>
 			<li><a href="./chat-publico.php">Chat público</a></li>
+			<li><a href="./sala-grupal.php">Chat de grupos</a></li>
 		</menu>
-
-		<a href="./sala-grupal.php">Sala grupal</a>
 
 		<form name="logout-usuario">
 

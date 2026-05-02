@@ -1,8 +1,8 @@
 import Endpoint from "./Endpoint.js";
 
 export default class Grupo extends Endpoint {
-	output = document.querySelector('output');
-	div = document.querySelector('div');
+	outputMiembro = document.querySelector('output');
+	outputPendiente = document.querySelector('section:nth-of-type(2) output');
 
 	constructor() {
 		super();
@@ -25,13 +25,13 @@ export default class Grupo extends Endpoint {
 
 	async printGruposMiembro(grupos) {
 		const content = await this.gruposMiembroTemplate(grupos.content);
-		this.output.innerHTML = content;
+		this.outputMiembro.innerHTML = content;
 		this.formHandler();
 	}
 
 	printGruposPendiente(grupos) {
 		const content = this.gruposPendienteTemplate(grupos.content);
-		this.div.innerHTML = content;
+		this.outputPendiente.innerHTML = content;
 		this.formHandler();
 	}
 
@@ -77,13 +77,13 @@ export default class Grupo extends Endpoint {
 	gruposPendienteTemplate(fetchedGrupos) {
 
 		const grupos = fetchedGrupos.map(grupo =>
-			`<li>
-				<p>${grupo.nombre_grupo}</p>
+			`<article>
+				<h3>${grupo.nombre_grupo}</h3>
 				<form name="aceptar-invitacion">
 					<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
 					<button>Aceptar invitación</button>
 				</form>
-			</li>`
+			</article>`
 		).join('');
 
 		return grupos;
