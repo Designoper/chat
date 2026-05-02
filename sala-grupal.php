@@ -60,6 +60,12 @@ new Usuario()->auth();
 
 			<div></div>
 
+		</section>
+
+		<section>
+
+			<h2>Crear nuevo grupo</h2>
+
 			<form name="crear-grupo">
 
 				<label for="nombre_grupo">Nombre del grupo</label>
