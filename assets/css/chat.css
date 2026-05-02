@@ -1,7 +1,7 @@
 main {
 	>section {
 		display: grid;
-		gap: 1.5em;
+		gap: 1.25em;
 		grid-template-columns: auto 1fr;
 		align-content: center;
 		width: 100%;
@@ -13,19 +13,19 @@ main {
 
 		form {
 			display: grid;
-			gap: 1.5em;
+			gap: 1.25em;
 			align-content: center;
 			grid-template-columns: 1fr auto;
 		}
 
 		a {
 			align-self: center;
-			padding: 0.75em;
+			padding: 0.5em;
 			background-color: var(--white);
 			border-radius: 0.25rem;
 
 			svg {
-				height: 1.25em;
+				height: 1em;
 				fill: var(--quartery-bg);
 			}
 		}
@@ -37,7 +37,7 @@ main {
 		}
 
 		button {
-			padding: 0.75em;
+			padding: 0.5em;
 			border-radius: 0.25rem;
 			transition: transform 0.5s;
 			justify-self: center;
@@ -50,7 +50,7 @@ main {
 
 			svg {
 				/* width: 1.25em; */
-				height: 1.25em;
+				height: 1em;
 				fill: var(--terciary-bg);
 			}
 		}

@@ -17,8 +17,8 @@ new Usuario()->auth();
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="text-scale" content="scale">
 
-	<title>Chat</title>
-	<meta name="description" content="El chat de la gente guay">
+	<title>Chat público</title>
+	<meta name="description" content="Habla con todo el mundo">
 
 	<link href="./manifest.jsonc" rel="manifest">
 

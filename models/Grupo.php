@@ -24,9 +24,10 @@ final class Grupo extends ApiResponse
 	{
 		$name = 'nombre_grupo';
 		$value = $_POST[$name] ?? null;
+		$error_message = "El campo $name no puede estar vacío.";
 
 		empty($value)
-			? $this->setValidationError("El campo $name no puede estar vacío.")
+			? $this->setValidationError($error_message)
 			: $this->nombre_grupo = $value;
 	}
 
@@ -36,24 +37,27 @@ final class Grupo extends ApiResponse
 			'$_GET' => $_GET,
 			'$_POST' => $_POST,
 		};
+
 		$name = 'id_grupo';
 		$value = $method[$name] ?? null;
-		$min = 1;
+		$min_range = 1;
+		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->id_grupo = (int) $value
-			: $this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
+			: $this->setValidationError($error_message);
 	}
 
 	private function setIdUsuario(): void
 	{
 		$name = 'id_usuario';
 		$value = $_POST[$name] ?? null;
-		$min = 1;
+		$min_range = 1;
+		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min)))
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->id_usuario = (int) $value
-			: $this->setValidationError("El campo $name debe ser un número entero superior o igual a $min y solo contener números.");
+			: $this->setValidationError($error_message);
 	}
 
 	// MARK: READ GRUPOS
@@ -261,7 +265,6 @@ final class Grupo extends ApiResponse
 
 		$this->checkValidationErrors();
 
-		// $id_fundador = $this->getAuthenticatedUserId();
 		$id_usuario = $this->id_usuario;
 		$id_grupo = $this->id_grupo;
 		$rol = 'pendiente';
