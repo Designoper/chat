@@ -212,7 +212,7 @@ final class Grupo extends ApiResponse
 
 		$statement =
 			"INSERT INTO grupos (nombre_grupo)
-		 VALUES (?)";
+		 	VALUES (?)";
 
 		$query = $this->getConnection()->prepare($statement);
 
@@ -233,7 +233,7 @@ final class Grupo extends ApiResponse
 
 		$statement2 =
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
-		 VALUES (?, ?, ?)";
+		 	VALUES (?, ?, ?)";
 
 		$query = $this->getConnection()->prepare($statement2);
 
