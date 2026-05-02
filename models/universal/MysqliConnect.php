@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/EnvReader.php';
+require_once __DIR__ . '/Sanitizer.php';
 
-abstract class MysqliConnect extends EnvReader
+abstract class MysqliConnect extends Sanitizer
 {
 	private readonly string $hostname;
 	private readonly string $username;

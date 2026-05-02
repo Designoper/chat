@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-abstract class Sanitizer
+require_once __DIR__ . '/EnvReader.php';
+
+abstract class Sanitizer extends EnvReader
 {
     protected function __construct()
     {
+        parent::__construct();
+
         $this->sanitizeGlobals();
     }
 
