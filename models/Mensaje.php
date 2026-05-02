@@ -222,6 +222,38 @@ final class Mensaje extends ApiResponse
 		$this->getResponse();
 	}
 
+	// MARK: IS AUTOR MENSAJE
+
+	private function isAutorMensaje() : bool
+	{
+		$this->setIdMensaje();
+
+		$this->checkValidationErrors();
+
+		$id_usuario = $this->getAuthenticatedUserId();
+		$id_mensaje = $this->id_mensaje;
+
+		$statement =
+			"SELECT mensajes.id_emisor
+			FROM mensajes
+			WHERE mensajes.id_mensaje = ?";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"i",
+			$id_mensaje
+		);
+
+		$query->execute();
+		$autor = $query->get_result()->fetch_assoc();
+		$query->close();
+
+		return $autor === $id_usuario
+			? true
+			: false;
+	}
+
 	// MARK: CREATE MENSAJE
 
 	public function createMensaje(): void
@@ -334,9 +366,13 @@ final class Mensaje extends ApiResponse
 
 	public function deleteMensaje(): void
 	{
-		$this->auth();
-		$this->setIdMensaje();
-		$this->checkValidationErrors();
+		$autor = $this->isAutorMensaje();
+
+		if (!$autor) {
+			$this->setStatus(403);
+			$this->setIntegrityError('No eres el autor del mensaje');
+			$this->checkIntegrityErrors();
+		}
 
 		$id_mensaje = $this->id_mensaje;
 		$id_emisor = $this->id_emisor;

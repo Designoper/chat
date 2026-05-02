@@ -204,7 +204,7 @@ final class Grupo extends ApiResponse
 		$this->getResponse();
 	}
 
-	// MARK: CREAR GRUPO
+	// MARK: CREATE GRUPO
 
 	public function createGrupo(): void
 	{
