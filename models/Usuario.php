@@ -85,36 +85,6 @@ class Usuario extends MysqliConnect
 		$this->getResponse();
 	}
 
-	// public function readUsuario()
-	// {
-	// 	$statement =
-	// 		"SELECT nombre
-	// 		 FROM usuarios
-	// 		 WHERE id_usuario = ?";
-
-	// 	$query = $this->getConnection()->prepare($statement);
-
-	// 	$query->bind_param(
-	// 		"i",
-	// 		$_SESSION['id_usuario']
-	// 	);
-
-	// 	$query->execute();
-
-	// 	$usuario = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-	// 	$message =
-	// 		$usuario
-	// 		? 'Usuario obtenido.'
-	// 		: 'No hay ningún usuario.';
-
-	// 	$query->close();
-
-	// 	$this->setStatus(200);
-	// 	$this->setMessage($message);
-	// 	$this->setContent($usuario);
-	// 	$this->getResponse();
-	// }
-
 	// MARK: CREATE
 
 	public function createUsuario(): void
@@ -261,11 +231,7 @@ class Usuario extends MysqliConnect
 
 	public function deleteUsuario(): void
 	{
-		if ($this->id_usuario === null) {
-			$this->setStatus(401);
-			$this->setMessage("No hay usuario identificado");
-			$this->getResponse();
-		}
+		$this->authEndpoint();
 
 		$statement =
 			"DELETE FROM usuarios
