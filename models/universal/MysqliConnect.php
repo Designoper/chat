@@ -78,7 +78,7 @@ abstract class MysqliConnect extends Response
 		}
 	}
 
-	public function authEndpoint(): void
+	protected function authEndpoint(): void
 	{
 		if ($this->session_user === null) {
 			$this->setStatus(401);
