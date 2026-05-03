@@ -209,6 +209,8 @@ final class Grupo extends MysqliConnect
 	public function isAutorGrupo(): void
 	{
 		$this->setIdGrupo('$_POST');
+		$this->checkValidationErrors();
+
 		$id_usuario = $this->id_fundador;
 		$id_grupo = $this->id_grupo;
 		$rolFundador = 'fundador';
