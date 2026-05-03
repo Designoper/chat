@@ -50,5 +50,5 @@ CREATE TABLE mensajes (
         ON DELETE CASCADE
 );
 
-CREATE INDEX idx_mensajes_emisor ON mensajes(id_emisor);
-CREATE INDEX idx_mensajes_receptor ON mensajes(id_receptor);
+-- CREATE INDEX idx_mensajes_emisor ON mensajes(id_emisor);
+-- CREATE INDEX idx_mensajes_receptor ON mensajes(id_receptor);
