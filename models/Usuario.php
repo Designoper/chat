@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/Response.php';
+require_once __DIR__ . '/universal/MysqliConnect.php';
 
-class Usuario extends Response
+class Usuario extends MysqliConnect
 {
 	private ?int $id_usuario;
 	private readonly string $nombre_usuario;
@@ -245,26 +245,10 @@ class Usuario extends Response
 		$this->getResponse();
 	}
 
-	// MARK: AUTH
-
-	public function auth(): void
-	{
-		if ($this->id_usuario === null) {
-			header("Location: index.html");
-			exit;
-		}
-	}
-
 	// MARK: CURRENT
 
 	public function currentUsuario(): void
 	{
-		// if ($this->id_usuario === null) {
-		// 	$this->setStatus(401);
-		// 	$this->setMessage("No hay usuario identificado");
-		// 	$this->getResponse();
-		// }
-
 		$this->setStatus(200);
 		$this->setMessage("Usuario identificado");
 		$this->setContent([

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/Response.php';
+require_once __DIR__ . '/universal/MysqliConnect.php';
 
-final class Mensaje extends Response
+final class Mensaje extends MysqliConnect
 {
 	private readonly int $id_mensaje;
 	private readonly string $contenido;
@@ -80,17 +80,6 @@ final class Mensaje extends Response
 			: $this->setValidationError($error_message);
 	}
 
-	// MARK: AUTH
-
-	public function auth(): void
-	{
-		if ($this->id_emisor === null) {
-			$this->setStatus(401);
-			$this->setIntegrityError('No hay sesión');
-			$this->checkIntegrityErrors();
-		}
-	}
-
 	// MARK: READ MENSAJES
 
 	public function readMensajes(): void
@@ -128,7 +117,7 @@ final class Mensaje extends Response
 
 	public function readMensajesDirectos(): void
 	{
-		$this->auth();
+		$this->authEndpoint();
 		$this->setIdReceptor('$_GET');
 
 		$this->checkValidationErrors();
@@ -181,7 +170,7 @@ final class Mensaje extends Response
 
 	public function readMensajesGrupales(): void
 	{
-		$this->auth();
+		$this->authEndpoint();
 		$this->setIdGrupo('$_GET');
 
 		$this->checkValidationErrors();
@@ -224,13 +213,13 @@ final class Mensaje extends Response
 
 	// MARK: IS AUTOR MENSAJE
 
-	private function isAutorMensaje() : bool
+	private function isAutorMensaje(): bool
 	{
 		$this->setIdMensaje();
 
 		$this->checkValidationErrors();
 
-		$id_usuario = $this->getAuthenticatedUserId();
+		$id_usuario = $this->id_emisor;
 		$id_mensaje = $this->id_mensaje;
 
 		$statement =
@@ -249,7 +238,7 @@ final class Mensaje extends Response
 		$autor = $query->get_result()->fetch_assoc();
 		$query->close();
 
-		return $autor === $id_usuario
+		return $autor['id_emisor'] === $id_usuario
 			? true
 			: false;
 	}
@@ -258,7 +247,7 @@ final class Mensaje extends Response
 
 	public function createMensaje(): void
 	{
-		$this->auth();
+		$this->authEndpoint();
 		$this->setContenido();
 
 		$this->checkValidationErrors();
@@ -292,7 +281,7 @@ final class Mensaje extends Response
 
 	public function createMensajeDirecto(): void
 	{
-		$this->auth();
+		$this->authEndpoint();
 		$this->setContenido();
 		$this->setIdReceptor('$_POST');
 
@@ -329,7 +318,7 @@ final class Mensaje extends Response
 
 	public function createMensajeGrupal(): void
 	{
-		$this->auth();
+		$this->authEndpoint();
 		$this->setContenido();
 		$this->setIdGrupo('$_POST');
 

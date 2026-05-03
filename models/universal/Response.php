@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/MysqliConnect.php';
+require_once __DIR__ . '/Sanitizer.php';
 
-abstract class Response extends MysqliConnect
+abstract class Response extends Sanitizer
 {
     private readonly int $status;
     private readonly string $message;

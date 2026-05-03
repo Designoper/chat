@@ -20,7 +20,7 @@ final class Router
             'GET',
             'mensajes-directos',
             function (): void {
-                new Mensaje()->readMensajesDirectos();
+               new Mensaje()->readMensajesDirectos();
             }
         );
 

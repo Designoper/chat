@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/Sanitizer.php';
+require_once __DIR__ . '/Response.php';
 
-abstract class MysqliConnect extends Sanitizer
+abstract class MysqliConnect extends Response
 {
 	private readonly string $hostname;
 	private readonly string $username;
@@ -12,12 +12,15 @@ abstract class MysqliConnect extends Sanitizer
 	private readonly string $database;
 	private readonly mysqli $connection;
 	private readonly string $host;
+	private readonly ?int $session_user;
 
 	protected function __construct()
 	{
 		session_start();
 
 		parent::__construct();
+
+		$this->session_user = $_SESSION['id_usuario'] ?? null;
 
 		$this->hostname = getenv('HOSTNAME');
 		$this->username = getenv('USERNAME');
@@ -41,7 +44,7 @@ abstract class MysqliConnect extends Sanitizer
 
 	protected function getAuthenticatedUserId(): ?int
 	{
-		return $_SESSION['id_usuario'] ?? null;
+		return $this->session_user;
 	}
 
 	// MARK: SETTERS
@@ -63,5 +66,24 @@ abstract class MysqliConnect extends Sanitizer
 		$protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
 		$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 		$this->host = $protocol . '://' . $host;
+	}
+
+	// MARK: AUTHENTICATION
+
+	public function authBrowser(): void
+	{
+		if ($this->session_user === null) {
+			header("Location: index.html");
+			exit;
+		}
+	}
+
+	public function authEndpoint(): void
+	{
+		if ($this->session_user === null) {
+			$this->setStatus(401);
+			$this->setIntegrityError('No hay sesión');
+			$this->checkIntegrityErrors();
+		}
 	}
 }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/Response.php';
+require_once __DIR__ . '/universal/MysqliConnect.php';
 
-final class Grupo extends Response
+final class Grupo extends MysqliConnect
 {
 	private readonly int $id_grupo;
 	private readonly string $nombre_grupo;
