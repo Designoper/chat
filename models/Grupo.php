@@ -204,6 +204,41 @@ final class Grupo extends MysqliConnect
 		$this->getResponse();
 	}
 
+	// MARK: IS AUTOR GRUPO
+
+	public function isAutorGrupo(): void
+	{
+		$this->setIdGrupo('$_POST');
+		$id_usuario = $this->id_fundador;
+		$id_grupo = $this->id_grupo;
+		$rolFundador = 'fundador';
+
+		$statement =
+			"SELECT rol
+			FROM membresias
+			WHERE id_usuario = ?
+			AND id_grupo = ?";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"ii",
+			$id_usuario,
+			$id_grupo
+		);
+
+		$query->execute();
+
+		$autor = $query->get_result()->fetch_assoc();
+		$query->close();
+
+		if ($autor['rol'] !== $rolFundador) {
+			$this->setStatus(403);
+			$this->setIntegrityError('No eres el fundador del grupo');
+			$this->checkIntegrityErrors();
+		}
+	}
+
 	// MARK: CREATE GRUPO
 
 	public function createGrupo(): void

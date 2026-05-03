@@ -213,7 +213,7 @@ final class Mensaje extends MysqliConnect
 
 	// MARK: IS AUTOR MENSAJE
 
-	private function isAutorMensaje(): bool
+	private function isAutorMensaje(): void
 	{
 		$this->setIdMensaje();
 
@@ -238,9 +238,11 @@ final class Mensaje extends MysqliConnect
 		$autor = $query->get_result()->fetch_assoc();
 		$query->close();
 
-		return $autor['id_emisor'] === $id_usuario
-			? true
-			: false;
+		if ($autor['id_emisor'] !== $id_usuario) {
+			$this->setStatus(403);
+			$this->setIntegrityError('No eres el autor del mensaje');
+			$this->checkIntegrityErrors();
+		}
 	}
 
 	// MARK: CREATE MENSAJE
@@ -355,13 +357,7 @@ final class Mensaje extends MysqliConnect
 
 	public function deleteMensaje(): void
 	{
-		$autor = $this->isAutorMensaje();
-
-		if (!$autor) {
-			$this->setStatus(403);
-			$this->setIntegrityError('No eres el autor del mensaje');
-			$this->checkIntegrityErrors();
-		}
+		$this->isAutorMensaje();
 
 		$id_mensaje = $this->id_mensaje;
 		$id_emisor = $this->id_emisor;
