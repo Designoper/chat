@@ -20,7 +20,7 @@ final class Router
             'GET',
             'mensajes-directos',
             function (): void {
-               new Mensaje()->readMensajesDirectos();
+                new Mensaje()->readMensajesDirectos();
             }
         );
 
@@ -111,6 +111,14 @@ final class Router
             'usuarios/logout',
             function (): void {
                 new Usuario()->logout();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'usuarios/delete',
+            function (): void {
+                new Usuario()->deleteUsuario();
             }
         );
 

@@ -44,7 +44,7 @@ export default class Usuario extends Endpoint {
 	async deleteUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 204) {
-			location.href = 'crear-usuario.php';
+			location.href = 'crear-usuario.html';
 		}
 	}
 

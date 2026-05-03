@@ -22,6 +22,7 @@ export default class Endpoint extends Fetch {
 		LOGIN_USUARIOS: `${this.ROOT}usuarios/login`,
 		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,
 		CURRENT_USUARIOS: `${this.ROOT}usuarios/current`,
+		DELETE_USUARIOS: `${this.ROOT}usuarios/delete`,
 		CREAR_MENSAJES: `${this.ROOT}mensajes/crear`,
 		CREAR_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos/crear`,
 		CREAR_MENSAJES_GRUPALES: `${this.ROOT}mensajes-grupales/crear`,
@@ -54,6 +55,10 @@ export default class Endpoint extends Fetch {
 
 					case 'logout-usuario':
 						this.logout(form, 'post', this.ENDPOINTS.LOGOUT_USUARIOS);
+						break;
+
+					case 'delete-usuario':
+						this.deleteUsuario(form, 'post', this.ENDPOINTS.DELETE_USUARIOS);
 						break;
 
 					case 'crear-mensaje':

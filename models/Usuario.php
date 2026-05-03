@@ -248,6 +248,7 @@ class Usuario extends MysqliConnect
 		$query->close();
 
 		unset($_SESSION['id_usuario']);
+		session_destroy();
 
 		$this->setStatus(204);
 		$this->getResponse();
