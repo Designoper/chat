@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/universal/MysqliConnect.php';
 
-final class Grupo extends MysqliConnect
+class Grupo extends MysqliConnect
 {
 	private readonly int $id_grupo;
 	private readonly string $nombre_grupo;
@@ -31,11 +31,11 @@ final class Grupo extends MysqliConnect
 			: $this->nombre_grupo = $value;
 	}
 
-	private function setIdGrupo(string $method): void
+	private function setIdGrupo(): void
 	{
-		$method = match ($method) {
-			'$_GET' => $_GET,
-			'$_POST' => $_POST,
+		$method = match ($_SERVER['REQUEST_METHOD']) {
+			'GET' => $_GET,
+			'POST' => $_POST,
 		};
 
 		$name = 'id_grupo';
@@ -170,7 +170,7 @@ final class Grupo extends MysqliConnect
 
 	public function readGruposNoMiembro(): void
 	{
-		$this->setIdGrupo('$_GET');
+		$this->setIdGrupo();
 		$id_grupo = $this->id_grupo;
 
 		$statement =
@@ -208,7 +208,7 @@ final class Grupo extends MysqliConnect
 
 	public function isAutorGrupo(): void
 	{
-		$this->setIdGrupo('$_POST');
+		$this->setIdGrupo();
 		$this->checkValidationErrors();
 
 		$id_usuario = $this->id_fundador;
@@ -297,7 +297,7 @@ final class Grupo extends MysqliConnect
 
 	public function invitar(): void
 	{
-		$this->setIdGrupo('$_POST');
+		$this->setIdGrupo();
 		$this->setIdUsuario();
 
 		$this->checkValidationErrors();
@@ -331,7 +331,7 @@ final class Grupo extends MysqliConnect
 
 	public function aceptarInvitacion(): void
 	{
-		$this->setIdGrupo('$_POST');
+		$this->setIdGrupo();
 
 		$this->checkValidationErrors();
 

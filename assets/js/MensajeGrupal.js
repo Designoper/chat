@@ -80,6 +80,4 @@ export default class MensajeGrupal extends Usuario {
 	}
 }
 
-(async () => {
-	await new MensajeGrupal().initialize();
-})();
+new MensajeGrupal().initialize();

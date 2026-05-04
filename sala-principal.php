@@ -47,8 +47,14 @@ new Usuario()->authBrowser();
 		<h1>¿Con quién quieres chatear?</h1>
 
 		<menu>
-			<li><a href="./chat-publico.php">Chat público</a></li>
-			<li><a href="./sala-grupal.php">Chat de grupos</a></li>
+			<li>
+				<a href="./chat-publico.php">Chat público</a>
+				<span></span>
+			</li>
+			<li>
+				<a href="./sala-grupal.php">Chat de grupos</a>
+				<span></span>
+			</li>
 		</menu>
 
 		<form name="logout-usuario">

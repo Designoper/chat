@@ -8,7 +8,9 @@ export default class Endpoint extends Fetch {
 		// GET
 
 		GET_MENSAJES: `${this.ROOT}mensajes`,
+		GET_MENSAJES_NO_LEIDOS: `${this.ROOT}mensajes/no-leidos`,
 		GET_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos`,
+		GET_MENSAJES_DIRECTOS_NO_LEIDOS: `${this.ROOT}mensajes-directos/no-leidos`,
 		GET_MENSAJES_GRUPALES: `${this.ROOT}mensajes-grupales`,
 		GET_USUARIOS: `${this.ROOT}usuarios`,
 		GET_GRUPOS: `${this.ROOT}grupos`,
@@ -23,6 +25,8 @@ export default class Endpoint extends Fetch {
 		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,
 		CURRENT_USUARIOS: `${this.ROOT}usuarios/current`,
 		DELETE_USUARIOS: `${this.ROOT}usuarios/delete`,
+		ULTIMA_CONEXION_CHAT_PUBLICO: `${this.ROOT}mensajes/ultima-conexion`,
+		ULTIMA_CONEXION_CHAT_DIRECTO: `${this.ROOT}mensajes-directos/ultima-conexion`,
 		CREAR_MENSAJES: `${this.ROOT}mensajes/crear`,
 		CREAR_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos/crear`,
 		CREAR_MENSAJES_GRUPALES: `${this.ROOT}mensajes-grupales/crear`,

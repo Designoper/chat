@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/universal/MysqliConnect.php';
 
-final class Mensaje extends MysqliConnect
+class Mensaje extends MysqliConnect
 {
 	private readonly int $id_mensaje;
 	private readonly string $contenido;
@@ -46,11 +46,11 @@ final class Mensaje extends MysqliConnect
 			: $this->contenido = $value;
 	}
 
-	private function setIdReceptor(string $method): void
+	private function setIdReceptor(): void
 	{
-		$method = match ($method) {
-			'$_GET' => $_GET,
-			'$_POST' => $_POST,
+		$method = match ($_SERVER['REQUEST_METHOD']) {
+			'GET' => $_GET,
+			'POST' => $_POST,
 		};
 
 		$name = 'id_receptor';
@@ -63,11 +63,11 @@ final class Mensaje extends MysqliConnect
 			: $this->setValidationError($error_message);
 	}
 
-	private function setIdGrupo(string $method): void
+	private function setIdGrupo(): void
 	{
-		$method = match ($method) {
-			'$_GET' => $_GET,
-			'$_POST' => $_POST,
+		$method = match ($_SERVER['REQUEST_METHOD']) {
+			'GET' => $_GET,
+			'POST' => $_POST,
 		};
 
 		$name = 'id_grupo';
@@ -78,6 +78,154 @@ final class Mensaje extends MysqliConnect
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->id_grupo = (int) $value
 			: $this->setValidationError($error_message);
+	}
+
+	// MARK: ULTIMA CONEXION PUBLICA
+
+	public function setUltimaConexionPublica(): void
+	{
+		$this->authEndpoint();
+
+		$id_usuario = $this->id_emisor;
+
+		$statement =
+			"INSERT INTO ultima_conexion (id_usuario, id_receptor, id_grupo)
+			VALUES (?, 0, 0)
+			ON DUPLICATE KEY UPDATE id_usuario = ?";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"ii",
+			$id_usuario,
+			$id_usuario
+		);
+
+		$query->execute();
+		$query->close();
+
+		$this->setStatus(200);
+		$this->setMessage("Última conexión pública actualizada con éxito");
+		$this->getResponse();
+	}
+
+	// MARK: ULTIMA CONEXION DIRECTA
+
+	public function setUltimaConexionDirecta(): void
+	{
+		$this->authEndpoint();
+
+		$this->setIdReceptor();
+
+		$this->checkValidationErrors();
+
+		$id_usuario = $this->id_emisor;
+		$id_receptor = $this->id_receptor;
+
+		$statement =
+			"INSERT INTO ultima_conexion (id_usuario, id_receptor, id_grupo)
+			VALUES (?, ?, 0)
+			ON DUPLICATE KEY UPDATE id_usuario = ?";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"iii",
+			$id_usuario,
+			$id_receptor,
+			$id_usuario
+		);
+
+		$query->execute();
+		$query->close();
+
+		$this->setStatus(200);
+		$this->setMessage("Última conexión directa actualizada con éxito");
+		$this->getResponse();
+	}
+
+	// MARK: COUNT UNREAD DIRECT MESSAGES
+
+	public function countUnreadDirectMessages(): void
+	{
+		$this->authEndpoint();
+
+		$this->setIdReceptor();
+
+		$this->checkValidationErrors();
+
+		$id_emisor = $this->id_emisor;
+		$id_receptor = $this->id_receptor;
+
+		$statement =
+			"SELECT COUNT(*) AS num_mensajes
+			FROM mensajes
+			WHERE mensajes.id_receptor = ?
+			AND mensajes.id_emisor = ?
+			AND mensajes.fecha_envio > COALESCE((
+				SELECT ultima_conexion
+				FROM ultima_conexion
+				WHERE id_usuario = ?
+				AND id_receptor = ?
+				AND id_grupo = 0
+			), '1970-01-01 00:00:01')";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"iiii",
+			$id_emisor,
+			$id_receptor,
+			$id_emisor,
+			$id_receptor
+		);
+
+		$query->execute();
+		$result = $query->get_result()->fetch_assoc();
+		$query->close();
+
+		$this->setStatus(200);
+		$this->setMessage('Número de mensajes directos no leídos obtenido con éxito');
+		$this->setContent(['num_mensajes' => $result['num_mensajes']]);
+		$this->getResponse();
+	}
+
+	// MARK: COUNT UNREAD PUBLIC MESSAGES
+
+	public function countUnreadPublicMessages(): void
+	{
+		$this->authEndpoint();
+
+		$statement =
+			"SELECT COUNT(*) AS num_mensajes
+			FROM mensajes
+			WHERE mensajes.id_receptor IS NULL
+			AND mensajes.id_grupo IS NULL
+			AND mensajes.id_emisor != ?
+			AND mensajes.fecha_envio > (
+				SELECT ultima_conexion
+				FROM ultima_conexion
+				WHERE id_usuario = ?
+				AND id_receptor = 0
+				AND id_grupo = 0
+			)";
+
+		$query = $this->getConnection()->prepare($statement);
+
+		$query->bind_param(
+			"ii",
+			$this->id_emisor,
+			$this->id_emisor
+		);
+
+		$query->execute();
+		$result = $query->get_result()->fetch_assoc();
+		$query->close();
+
+		$this->setStatus(200);
+		$this->setMessage('Número de mensajes públicos no leídos obtenido con éxito');
+		$this->setContent(['num_mensajes' => $result['num_mensajes']]);
+		$this->getResponse();
 	}
 
 	// MARK: READ MENSAJES
@@ -118,7 +266,7 @@ final class Mensaje extends MysqliConnect
 	public function readMensajesDirectos(): void
 	{
 		$this->authEndpoint();
-		$this->setIdReceptor('$_GET');
+		$this->setIdReceptor();
 
 		$this->checkValidationErrors();
 
@@ -171,7 +319,7 @@ final class Mensaje extends MysqliConnect
 	public function readMensajesGrupales(): void
 	{
 		$this->authEndpoint();
-		$this->setIdGrupo('$_GET');
+		$this->setIdGrupo();
 
 		$this->checkValidationErrors();
 
@@ -285,7 +433,7 @@ final class Mensaje extends MysqliConnect
 	{
 		$this->authEndpoint();
 		$this->setContenido();
-		$this->setIdReceptor('$_POST');
+		$this->setIdReceptor();
 
 		$this->checkValidationErrors();
 
@@ -322,7 +470,7 @@ final class Mensaje extends MysqliConnect
 	{
 		$this->authEndpoint();
 		$this->setContenido();
-		$this->setIdGrupo('$_POST');
+		$this->setIdGrupo();
 
 		$this->checkValidationErrors();
 

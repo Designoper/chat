@@ -113,6 +113,4 @@ export default class Grupo extends Endpoint {
 	}
 }
 
-(async () => {
-	await new Grupo().initialize();
-})();
+new Grupo().initialize();

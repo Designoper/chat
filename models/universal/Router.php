@@ -18,7 +18,15 @@ final class Router
 
         $this->setRoute(
             'GET',
-            'mensajes-directos',
+            'mensajes-directos/no-leidos',
+            function (): void {
+                new Mensaje()->countUnreadDirectMessages();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            'mensajes-directos(?:\?id_receptor=[1-9]\d*)?$',
             function (): void {
                 new Mensaje()->readMensajesDirectos();
             }
@@ -26,7 +34,7 @@ final class Router
 
         $this->setRoute(
             'GET',
-            'mensajes-grupales',
+            'mensajes-grupales(?:\?id_grupo=[1-9]\d*)?$',
             function (): void {
                 new Mensaje()->readMensajesGrupales();
             }
@@ -37,6 +45,14 @@ final class Router
             'mensajes$',
             function (): void {
                 new Mensaje()->readMensajes();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
+            'mensajes/no-leidos$',
+            function (): void {
+                new Mensaje()->countUnreadPublicMessages();
             }
         );
 
@@ -151,6 +167,22 @@ final class Router
             'mensajes/[1-9]\d*$',
             function (): void {
                 new Mensaje()->deleteMensaje();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'mensajes/ultima-conexion$',
+            function (): void {
+                new Mensaje()->setUltimaConexionPublica();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'mensajes-directos/ultima-conexion$',
+            function (): void {
+                new Mensaje()->setUltimaConexionDirecta();
             }
         );
 

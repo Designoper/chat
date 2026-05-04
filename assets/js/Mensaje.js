@@ -16,9 +16,16 @@ export default class Mensaje extends Usuario {
 		}, 2000);
 	}
 
+	async setUltimaConexion() {
+		await fetch(`${this.ENDPOINTS.ULTIMA_CONEXION_CHAT_PUBLICO}`, {
+			method: 'post',
+		});
+	}
+
 	async getMensajes() {
 		const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
 		this.printMensajes(response);
+		await this.setUltimaConexion();
 	}
 
 	mensajesTemplate(fetchedMensajes) {
@@ -28,7 +35,7 @@ export default class Mensaje extends Usuario {
 			<article ${mensaje.id_emisor == this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre_usuario}</p>
 				<p>${mensaje.contenido}</p>
-					<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
+				<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
 				{
 					weekday: "long",
 					year: "numeric",
@@ -72,6 +79,4 @@ export default class Mensaje extends Usuario {
 	}
 }
 
-(async () => {
-	await new Mensaje().initialize();
-})();
+new Mensaje().initialize();
