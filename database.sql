@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS chat;
-CREATE DATABASE chat CHARACTER SET utf8mb4;
-USE chat;
+-- DROP DATABASE IF EXISTS chat;
+-- CREATE DATABASE chat CHARACTER SET utf8mb4;
+-- USE chat;
 
 CREATE TABLE usuarios (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
@@ -50,7 +50,7 @@ CREATE TABLE mensajes (
         ON DELETE CASCADE
 );
 
-CREATE TABLE ultima_conexion (
+CREATE TABLE conexion (
     id_ultima_conexion INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
     id_receptor INT NOT NULL DEFAULT 0,
@@ -60,7 +60,7 @@ CREATE TABLE ultima_conexion (
     DEFAULT CURRENT_TIMESTAMP
     ON UPDATE CURRENT_TIMESTAMP,
 
-    UNIQUE KEY ux_ultima_conexion (id_usuario, id_receptor, id_grupo),
+    UNIQUE KEY ux_conexion (id_usuario, id_receptor, id_grupo),
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
         ON DELETE CASCADE

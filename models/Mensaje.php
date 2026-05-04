@@ -89,16 +89,15 @@ class Mensaje extends MysqliConnect
 		$id_usuario = $this->id_emisor;
 
 		$statement =
-			"INSERT INTO ultima_conexion (id_usuario, id_receptor, id_grupo)
-			VALUES (?, 0, 0)
-			ON DUPLICATE KEY UPDATE id_usuario = ?";
+			"INSERT INTO conexion (id_usuario, id_receptor, ultima_conexion, id_grupo)
+			VALUES (?, 0, CURRENT_TIMESTAMP, 0)
+			ON DUPLICATE KEY UPDATE ultima_conexion = CURRENT_TIMESTAMP";
 
 		$query = $this->getConnection()->prepare($statement);
 
 		$query->bind_param(
-			"ii",
+			"i",
 			$id_usuario,
-			$id_usuario
 		);
 
 		$query->execute();
@@ -123,17 +122,16 @@ class Mensaje extends MysqliConnect
 		$id_receptor = $this->id_receptor;
 
 		$statement =
-			"INSERT INTO ultima_conexion (id_usuario, id_receptor, id_grupo)
-			VALUES (?, ?, 0)
-			ON DUPLICATE KEY UPDATE id_usuario = ?";
+			"INSERT INTO conexion (id_usuario, id_receptor, ultima_conexion, id_grupo)
+			VALUES (?, ?, CURRENT_TIMESTAMP, 0)
+			ON DUPLICATE KEY UPDATE ultima_conexion = CURRENT_TIMESTAMP";
 
 		$query = $this->getConnection()->prepare($statement);
 
 		$query->bind_param(
-			"iii",
+			"ii",
 			$id_usuario,
 			$id_receptor,
-			$id_usuario
 		);
 
 		$query->execute();
@@ -164,7 +162,7 @@ class Mensaje extends MysqliConnect
 			AND mensajes.id_emisor = ?
 			AND mensajes.fecha_envio > COALESCE((
 				SELECT ultima_conexion
-				FROM ultima_conexion
+				FROM conexion
 				WHERE id_usuario = ?
 				AND id_receptor = ?
 				AND id_grupo = 0
@@ -204,7 +202,7 @@ class Mensaje extends MysqliConnect
 			AND mensajes.id_emisor != ?
 			AND mensajes.fecha_envio > (
 				SELECT ultima_conexion
-				FROM ultima_conexion
+				FROM conexion
 				WHERE id_usuario = ?
 				AND id_receptor = 0
 				AND id_grupo = 0
