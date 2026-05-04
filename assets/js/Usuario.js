@@ -31,24 +31,26 @@ export default class Usuario extends Endpoint {
 					`${this.ENDPOINTS.GET_MENSAJES_DIRECTOS_NO_LEIDOS}?id_receptor=${usuario.id_usuario}`
 				);
 
-				const test = mensajesNoLeidos.content.num_mensajes
+				const num = mensajesNoLeidos.content.num_mensajes;
 
-				const test2 = test > 0
-					? `(${test})`
+				const badge = num > 0
+					? `(${num})`
 					: '';
 
-				const dom =
-				`<li>
-					<a href="chat-privado.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">${usuario.nombre_usuario}</a>
-					<span>${test2}</span>
-				</li>`;
-
-				return dom;
+				return `
+                <li>
+                    <a href="chat-privado.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">
+                        ${usuario.nombre_usuario}
+                    </a>
+                    <span>${badge}</span>
+                </li>
+            `;
 			})
 		);
 
-		return usuarios;
+		return usuarios.join('');
 	}
+
 
 	async createUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);
