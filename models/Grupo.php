@@ -15,7 +15,7 @@ final class Grupo extends MysqliConnect
 	{
 		parent::__construct();
 
-		$this->id_fundador = $this->getAuthenticatedUserId();
+		$this->id_fundador = $this->session_user;
 	}
 
 	// MARK: SETTERS
@@ -71,7 +71,7 @@ final class Grupo extends MysqliConnect
 			LEFT JOIN usuarios on membresias.id_usuario = usuarios.id_usuario
 			ORDER BY grupos.nombre_grupo ASC";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->execute();
 		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -104,7 +104,7 @@ final class Grupo extends MysqliConnect
 			AND (membresias.rol = ? OR membresias.rol = ?)
 			ORDER BY grupos.nombre_grupo ASC";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"iss",
@@ -143,7 +143,7 @@ final class Grupo extends MysqliConnect
 			AND membresias.rol = ?
 			ORDER BY grupos.nombre_grupo ASC";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"is",
@@ -182,7 +182,7 @@ final class Grupo extends MysqliConnect
 				WHERE id_grupo = ?
 			);";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"i",
@@ -221,7 +221,7 @@ final class Grupo extends MysqliConnect
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"ii",
@@ -255,7 +255,7 @@ final class Grupo extends MysqliConnect
 			"INSERT INTO grupos (nombre_grupo)
 		 	VALUES (?)";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"s",
@@ -276,7 +276,7 @@ final class Grupo extends MysqliConnect
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, ?)";
 
-		$query = $this->getConnection()->prepare($statement2);
+		$query = $this->connection->prepare($statement2);
 
 		$query->bind_param(
 			"iis",
@@ -310,7 +310,7 @@ final class Grupo extends MysqliConnect
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 VALUES (?, ?, ?)";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"iis",
@@ -345,7 +345,7 @@ final class Grupo extends MysqliConnect
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"sii",

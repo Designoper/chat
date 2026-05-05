@@ -189,7 +189,7 @@ final class FileManager extends MysqliConnect
             FROM $table
             WHERE $primaryKey = ?";
 
-        $query = $this->getConnection()->prepare($statement);
+        $query = $this->connection->prepare($statement);
 
         $query->bind_param(
             "i",

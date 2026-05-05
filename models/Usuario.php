@@ -14,7 +14,7 @@ final class Usuario extends MysqliConnect
 	{
 		parent::__construct();
 
-		$this->id_usuario = $this->getAuthenticatedUserId();
+		$this->id_usuario = $this->session_user;
 	}
 
 	// MARK: SETTERS
@@ -64,7 +64,7 @@ final class Usuario extends MysqliConnect
 			 WHERE id_usuario != ?
 			 ORDER BY nombre_usuario ASC";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"i",
@@ -104,7 +104,7 @@ final class Usuario extends MysqliConnect
 				"INSERT INTO usuarios (nombre_usuario, password)
             	VALUES (?, ?)";
 
-			$query = $this->getConnection()->prepare($statement);
+			$query = $this->connection->prepare($statement);
 
 			$query->bind_param(
 				"ss",
@@ -151,7 +151,7 @@ final class Usuario extends MysqliConnect
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"s",
@@ -241,7 +241,7 @@ final class Usuario extends MysqliConnect
 			"DELETE FROM usuarios
 			WHERE id_usuario = ?";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"i",

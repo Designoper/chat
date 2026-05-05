@@ -16,7 +16,7 @@ final class Mensaje extends MysqliConnect
 	{
 		parent::__construct();
 
-		$this->id_emisor = $this->getAuthenticatedUserId();
+		$this->id_emisor = $this->session_user;
 	}
 
 	// MARK: SETTERS
@@ -92,7 +92,7 @@ final class Mensaje extends MysqliConnect
 			ON DUPLICATE KEY
 			UPDATE ultima_conexion = CURRENT_TIMESTAMP";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"i",
@@ -116,7 +116,7 @@ final class Mensaje extends MysqliConnect
 			ON DUPLICATE KEY
 			UPDATE ultima_conexion = CURRENT_TIMESTAMP";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"ii",
@@ -154,7 +154,7 @@ final class Mensaje extends MysqliConnect
 				AND id_grupo = 0
 			), '1970-01-01 00:00:01')";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"iiii",
@@ -196,7 +196,7 @@ final class Mensaje extends MysqliConnect
 				AND id_grupo = 0
 			), '1970-01-01 00:00:01')";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"ii",
@@ -232,7 +232,7 @@ final class Mensaje extends MysqliConnect
 			WHERE mensajes.id_receptor IS NULL
 			ORDER BY fecha_envio ASC";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->execute();
 		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -278,7 +278,7 @@ final class Mensaje extends MysqliConnect
 			)
 			ORDER BY fecha_envio ASC";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"iiii",
@@ -327,7 +327,7 @@ final class Mensaje extends MysqliConnect
 			WHERE mensajes.id_grupo = ?
 			ORDER BY fecha_envio ASC";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"i",
@@ -365,7 +365,7 @@ final class Mensaje extends MysqliConnect
 			FROM mensajes
 			WHERE mensajes.id_mensaje = ?";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"i",
@@ -401,7 +401,7 @@ final class Mensaje extends MysqliConnect
 			"INSERT INTO mensajes (contenido, id_emisor)
 			VALUES (?, ?)";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"si",
@@ -437,7 +437,7 @@ final class Mensaje extends MysqliConnect
 			"INSERT INTO mensajes (contenido, id_emisor, id_receptor)
 			VALUES (?, ?, ?)";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"sii",
@@ -474,7 +474,7 @@ final class Mensaje extends MysqliConnect
 			"INSERT INTO mensajes (contenido, id_emisor, id_grupo)
 			VALUES (?, ?, ?)";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"sii",
@@ -507,7 +507,7 @@ final class Mensaje extends MysqliConnect
 			WHERE id_mensaje = ?
 			AND id_emisor = ?";
 
-		$query = $this->getConnection()->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"ii",

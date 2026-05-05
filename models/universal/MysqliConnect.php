@@ -10,9 +10,9 @@ abstract class MysqliConnect extends Response
 	private readonly string $username;
 	private readonly string $password;
 	private readonly string $database;
-	private readonly mysqli $connection;
-	private readonly string $host;
-	private readonly ?int $session_user;
+	protected readonly mysqli $connection;
+	protected readonly string $host;
+	protected readonly ?int $session_user;
 
 	protected function __construct()
 	{
@@ -28,23 +28,6 @@ abstract class MysqliConnect extends Response
 		$this->database = getenv('DATABASE');
 		$this->setConnection();
 		$this->setHost();
-	}
-
-	// MARK: GETTERS
-
-	protected function getConnection(): mysqli
-	{
-		return $this->connection;
-	}
-
-	protected function getHost(): string
-	{
-		return $this->host;
-	}
-
-	protected function getAuthenticatedUserId(): ?int
-	{
-		return $this->session_user;
 	}
 
 	// MARK: SETTERS
