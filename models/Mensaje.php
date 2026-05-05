@@ -8,7 +8,7 @@ final class Mensaje extends MysqliConnect
 {
 	private readonly int $id_mensaje;
 	private readonly string $contenido;
-	private ?int $id_emisor;
+	private readonly ?int $id_emisor;
 	private readonly int $id_receptor;
 	private readonly int $id_grupo;
 
@@ -180,6 +180,8 @@ final class Mensaje extends MysqliConnect
 	{
 		$this->authEndpoint();
 
+		$id_emisor = $this->id_emisor;
+
 		$statement =
 			"SELECT COUNT(*) AS num_mensajes
 			FROM mensajes
@@ -198,8 +200,8 @@ final class Mensaje extends MysqliConnect
 
 		$query->bind_param(
 			"ii",
-			$this->id_emisor,
-			$this->id_emisor
+			$id_emisor,
+			$id_emisor
 		);
 
 		$query->execute();

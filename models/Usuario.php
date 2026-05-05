@@ -6,7 +6,7 @@ require_once __DIR__ . '/universal/MysqliConnect.php';
 
 final class Usuario extends MysqliConnect
 {
-	private ?int $id_usuario;
+	private readonly ?int $id_usuario;
 	private readonly string $nombre_usuario;
 	private readonly string $password;
 
@@ -56,6 +56,8 @@ final class Usuario extends MysqliConnect
 
 	public function readUsuarios(): void
 	{
+		$id_usuario = $this->id_usuario;
+
 		$statement =
 			"SELECT id_usuario, nombre_usuario
 			 FROM usuarios
@@ -66,7 +68,7 @@ final class Usuario extends MysqliConnect
 
 		$query->bind_param(
 			"i",
-			$this->id_usuario
+			$id_usuario
 		);
 
 		$query->execute();
@@ -141,15 +143,15 @@ final class Usuario extends MysqliConnect
 
 		$this->checkValidationErrors();
 
+		$nombre_usuario = $this->nombre_usuario;
+		$passwordIngresada = $this->password;
+
 		$statement =
 			"SELECT id_usuario, password
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
 		$query = $this->getConnection()->prepare($statement);
-
-		$nombre_usuario = $this->nombre_usuario;
-		$passwordIngresada = $this->password;
 
 		$query->bind_param(
 			"s",
@@ -233,6 +235,8 @@ final class Usuario extends MysqliConnect
 	{
 		$this->authEndpoint();
 
+		$id_usuario = $this->id_usuario;
+
 		$statement =
 			"DELETE FROM usuarios
 			WHERE id_usuario = ?";
@@ -241,7 +245,7 @@ final class Usuario extends MysqliConnect
 
 		$query->bind_param(
 			"i",
-			$this->id_usuario
+			$id_usuario
 		);
 
 		$query->execute();
