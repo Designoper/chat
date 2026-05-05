@@ -186,13 +186,13 @@ class Mensaje extends MysqliConnect
 			WHERE mensajes.id_receptor IS NULL
 			AND mensajes.id_grupo IS NULL
 			AND mensajes.id_emisor != ?
-			AND mensajes.fecha_envio > (
+			AND mensajes.fecha_envio > COALESCE((
 				SELECT ultima_conexion
 				FROM conexion
 				WHERE id_usuario = ?
 				AND id_receptor = 0
 				AND id_grupo = 0
-			)";
+			), '1970-01-01 00:00:01')";
 
 		$query = $this->getConnection()->prepare($statement);
 
