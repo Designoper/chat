@@ -84,8 +84,6 @@ class Mensaje extends MysqliConnect
 
 	private function setUltimaConexionPublica(): void
 	{
-		// $this->authEndpoint();
-
 		$id_usuario = $this->id_emisor;
 
 		$statement =
@@ -103,22 +101,12 @@ class Mensaje extends MysqliConnect
 
 		$query->execute();
 		$query->close();
-
-		// $this->setStatus(200);
-		// $this->setMessage("Última conexión pública actualizada con éxito");
-		// $this->getResponse();
 	}
 
 	// MARK: ULTIMA CONEXION DIRECTA
 
 	private function setUltimaConexionDirecta(): void
 	{
-		// $this->authEndpoint();
-
-		// $this->setIdReceptor();
-
-		// $this->checkValidationErrors();
-
 		$id_usuario = $this->id_emisor;
 		$id_receptor = $this->id_receptor;
 
@@ -138,10 +126,6 @@ class Mensaje extends MysqliConnect
 
 		$query->execute();
 		$query->close();
-
-		// $this->setStatus(200);
-		// $this->setMessage("Última conexión directa actualizada con éxito");
-		// $this->getResponse();
 	}
 
 	// MARK: COUNT UNREAD DIRECT MESSAGES
@@ -288,7 +272,7 @@ class Mensaje extends MysqliConnect
 			WHERE mensajes.id_receptor IS NOT NULL
 			AND (
 				(id_emisor = ? AND id_receptor = ?)
-			OR (id_emisor = ? AND id_receptor = ?)
+				OR (id_emisor = ? AND id_receptor = ?)
 			)
 			ORDER BY fecha_envio ASC";
 

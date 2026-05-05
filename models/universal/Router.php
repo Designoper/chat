@@ -170,22 +170,6 @@ final class Router
             }
         );
 
-        // $this->setRoute(
-        //     'POST',
-        //     'mensajes/ultima-conexion$',
-        //     function (): void {
-        //         new Mensaje()->setUltimaConexionPublica();
-        //     }
-        // );
-
-        // $this->setRoute(
-        //     'POST',
-        //     'mensajes-directos/ultima-conexion$',
-        //     function (): void {
-        //         new Mensaje()->setUltimaConexionDirecta();
-        //     }
-        // );
-
         $this->setRoute(
             'POST',
             'grupos/crear',
