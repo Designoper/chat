@@ -82,16 +82,17 @@ class Mensaje extends MysqliConnect
 
 	// MARK: ULTIMA CONEXION PUBLICA
 
-	public function setUltimaConexionPublica(): void
+	private function setUltimaConexionPublica(): void
 	{
-		$this->authEndpoint();
+		// $this->authEndpoint();
 
 		$id_usuario = $this->id_emisor;
 
 		$statement =
 			"INSERT INTO conexion (id_usuario, id_receptor, ultima_conexion, id_grupo)
 			VALUES (?, 0, CURRENT_TIMESTAMP, 0)
-			ON DUPLICATE KEY UPDATE ultima_conexion = CURRENT_TIMESTAMP";
+			ON DUPLICATE KEY
+			UPDATE ultima_conexion = CURRENT_TIMESTAMP";
 
 		$query = $this->getConnection()->prepare($statement);
 
@@ -103,20 +104,20 @@ class Mensaje extends MysqliConnect
 		$query->execute();
 		$query->close();
 
-		$this->setStatus(200);
-		$this->setMessage("Última conexión pública actualizada con éxito");
-		$this->getResponse();
+		// $this->setStatus(200);
+		// $this->setMessage("Última conexión pública actualizada con éxito");
+		// $this->getResponse();
 	}
 
 	// MARK: ULTIMA CONEXION DIRECTA
 
-	public function setUltimaConexionDirecta(): void
+	private function setUltimaConexionDirecta(): void
 	{
-		$this->authEndpoint();
+		// $this->authEndpoint();
 
-		$this->setIdReceptor();
+		// $this->setIdReceptor();
 
-		$this->checkValidationErrors();
+		// $this->checkValidationErrors();
 
 		$id_usuario = $this->id_emisor;
 		$id_receptor = $this->id_receptor;
@@ -124,7 +125,8 @@ class Mensaje extends MysqliConnect
 		$statement =
 			"INSERT INTO conexion (id_usuario, id_receptor, ultima_conexion, id_grupo)
 			VALUES (?, ?, CURRENT_TIMESTAMP, 0)
-			ON DUPLICATE KEY UPDATE ultima_conexion = CURRENT_TIMESTAMP";
+			ON DUPLICATE KEY
+			UPDATE ultima_conexion = CURRENT_TIMESTAMP";
 
 		$query = $this->getConnection()->prepare($statement);
 
@@ -137,9 +139,9 @@ class Mensaje extends MysqliConnect
 		$query->execute();
 		$query->close();
 
-		$this->setStatus(200);
-		$this->setMessage("Última conexión directa actualizada con éxito");
-		$this->getResponse();
+		// $this->setStatus(200);
+		// $this->setMessage("Última conexión directa actualizada con éxito");
+		// $this->getResponse();
 	}
 
 	// MARK: COUNT UNREAD DIRECT MESSAGES
@@ -230,6 +232,8 @@ class Mensaje extends MysqliConnect
 
 	public function readMensajes(): void
 	{
+		$this->authEndpoint();
+
 		$statement =
 			"SELECT
 				mensajes.id_mensaje,
@@ -256,6 +260,7 @@ class Mensaje extends MysqliConnect
 		$this->setStatus(200);
 		$this->setMessage($message);
 		$this->setContent($mensajes);
+		$this->setUltimaConexionPublica();
 		$this->getResponse();
 	}
 
@@ -309,6 +314,7 @@ class Mensaje extends MysqliConnect
 		$this->setStatus(200);
 		$this->setMessage($message);
 		$this->setContent($mensajes);
+		$this->setUltimaConexionDirecta();
 		$this->getResponse();
 	}
 

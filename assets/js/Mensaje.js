@@ -16,16 +16,16 @@ export default class Mensaje extends Usuario {
 		}, 2000);
 	}
 
-	async setUltimaConexion() {
-		await fetch(`${this.ENDPOINTS.ULTIMA_CONEXION_CHAT_PUBLICO}`, {
-			method: 'post',
-		});
-	}
+	// async setUltimaConexion() {
+	// 	await fetch(`${this.ENDPOINTS.ULTIMA_CONEXION_CHAT_PUBLICO}`, {
+	// 		method: 'post',
+	// 	});
+	// }
 
 	async getMensajes() {
 		const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
 		this.printMensajes(response);
-		await this.setUltimaConexion();
+		// await this.setUltimaConexion();
 	}
 
 	mensajesTemplate(fetchedMensajes) {

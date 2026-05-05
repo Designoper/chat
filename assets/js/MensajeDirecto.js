@@ -20,15 +20,15 @@ export default class MensajeDirecto extends Usuario {
 		}, 2000);
 	}
 
-	async setUltimaConexionChatDirecto() {
-		const formData = new FormData();
-		formData.append('id_receptor', this.id_receptor);
+	// async setUltimaConexionChatDirecto() {
+	// 	const formData = new FormData();
+	// 	formData.append('id_receptor', this.id_receptor);
 
-		await fetch(this.ENDPOINTS.ULTIMA_CONEXION_CHAT_DIRECTO, {
-			method: 'POST',
-			body: formData
-		});
-	}
+	// 	await fetch(this.ENDPOINTS.ULTIMA_CONEXION_CHAT_DIRECTO, {
+	// 		method: 'POST',
+	// 		body: formData
+	// 	});
+	// }
 
 	writeChat() {
 		this.h1.innerHTML = `Chat privado con ${this.nombre_receptor}`;
@@ -38,7 +38,7 @@ export default class MensajeDirecto extends Usuario {
 	async getMensajesDirectos() {
 		const response = await this.simpleFetch(`${this.ENDPOINTS.GET_MENSAJES_DIRECTOS}?id_receptor=${this.id_receptor}`);
 		this.printMensajesDirectos(response);
-		await this.setUltimaConexionChatDirecto();
+		// await this.setUltimaConexionChatDirecto();
 	}
 
 	mensajesDirectosTemplate(fetchedMensajes) {
