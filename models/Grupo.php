@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/universal/MysqliConnect.php';
 
-class Grupo extends MysqliConnect
+final class Grupo extends MysqliConnect
 {
 	private readonly int $id_grupo;
 	private readonly string $nombre_grupo;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/universal/MysqliConnect.php';
 
-class Usuario extends MysqliConnect
+final class Usuario extends MysqliConnect
 {
 	private ?int $id_usuario;
 	private readonly string $nombre_usuario;
