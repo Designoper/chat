@@ -9,9 +9,9 @@ abstract class Response extends Sanitizer
     private readonly int $status;
     private readonly string $message;
     private readonly array $content;
-    private array $validationErrors = [];
-    private array $integrityErrors = [];
-    private array $response = [];
+    private array $validationErrors;
+    private array $integrityErrors;
+    private array $response;
 
     protected function __construct()
     {
