@@ -379,7 +379,7 @@ final class Mensaje extends MysqliConnect
 		if ($autor['id_emisor'] !== $id_usuario) {
 			$this->setStatus(403);
 			$this->setIntegrityError('No eres el autor del mensaje');
-			$this->checkIntegrityErrors();
+			// $this->checkIntegrityErrors();
 		}
 	}
 
@@ -395,7 +395,7 @@ final class Mensaje extends MysqliConnect
 		$id_emisor = $this->id_emisor;
 		$contenido = $this->contenido;
 
-		$this->checkIntegrityErrors();
+		// $this->checkIntegrityErrors();
 
 		$statement =
 			"INSERT INTO mensajes (contenido, id_emisor)
@@ -431,7 +431,7 @@ final class Mensaje extends MysqliConnect
 		$id_emisor = $this->id_emisor;
 		$contenido = $this->contenido;
 
-		$this->checkIntegrityErrors();
+		// $this->checkIntegrityErrors();
 
 		$statement =
 			"INSERT INTO mensajes (contenido, id_emisor, id_receptor)
@@ -468,7 +468,7 @@ final class Mensaje extends MysqliConnect
 		$contenido = $this->contenido;
 		$id_grupo = $this->id_grupo;
 
-		$this->checkIntegrityErrors();
+		// $this->checkIntegrityErrors();
 
 		$statement =
 			"INSERT INTO mensajes (contenido, id_emisor, id_grupo)
@@ -500,7 +500,7 @@ final class Mensaje extends MysqliConnect
 		$id_mensaje = $this->id_mensaje;
 		$id_emisor = $this->id_emisor;
 
-		$this->checkIntegrityErrors();
+		// $this->checkIntegrityErrors();
 
 		$statement =
 			"DELETE FROM mensajes

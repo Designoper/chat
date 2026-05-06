@@ -121,7 +121,7 @@ final class Usuario extends MysqliConnect
 			if ($error->getCode() === 1062) {
 				$this->setStatus(409);
 				$this->setIntegrityError('¡Este nombre de usuario ya existe!');
-				$this->checkIntegrityErrors();
+				// $this->checkIntegrityErrors();
 			}
 
 			throw $error;
@@ -168,7 +168,7 @@ final class Usuario extends MysqliConnect
 		if (!$row) {
 			$this->setStatus(401);
 			$this->setIntegrityError("El usuario o la contraseña son incorrectos.");
-			$this->checkIntegrityErrors();
+			// $this->checkIntegrityErrors();
 		}
 
 		$hashGuardado = $row['password'];
@@ -176,7 +176,7 @@ final class Usuario extends MysqliConnect
 		if (!password_verify($passwordIngresada, $hashGuardado)) {
 			$this->setStatus(401);
 			$this->setIntegrityError("El usuario o la contraseña son incorrectos.");
-			$this->checkIntegrityErrors();
+			// $this->checkIntegrityErrors();
 		}
 
 		$_SESSION['id_usuario'] = $row['id_usuario'];

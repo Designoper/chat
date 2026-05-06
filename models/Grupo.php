@@ -237,7 +237,6 @@ final class Grupo extends MysqliConnect
 		if ($autor['rol'] !== $rolFundador) {
 			$this->setStatus(403);
 			$this->setIntegrityError('No eres el fundador del grupo');
-			$this->checkIntegrityErrors();
 		}
 	}
 

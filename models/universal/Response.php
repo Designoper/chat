@@ -10,8 +10,8 @@ abstract class Response extends Sanitizer
     private readonly string $message;
     private readonly array $content;
     private array $validationErrors;
-    private array $integrityErrors;
-    private array $response;
+    private readonly string $integrityErrors;
+    private readonly array $response;
 
     protected function __construct()
     {
@@ -22,10 +22,43 @@ abstract class Response extends Sanitizer
 
     protected function getResponse(): never
     {
+        $this->setResponse();
+
         http_response_code($this->status);
         header('Content-Type: application/json');
         echo json_encode($this->response);
         exit();
+    }
+
+    private function setResponse(): void
+    {
+        if (property_exists($this, 'validationErrors')) {
+            $this->response = [
+                'message' => $this->message,
+                'validationErrors' => $this->validationErrors
+            ];
+            return;
+        }
+
+        if (property_exists($this, 'integrityErrors')) {
+            $this->response = [
+                'message' => $this->message,
+                'integrityErrors' => $this->integrityErrors
+            ];
+            return;
+        }
+
+        if (property_exists($this, 'content')) {
+            $this->response = [
+                'message' => $this->message,
+                'content' => $this->content
+            ];
+            return;
+        }
+
+        property_exists($this, 'message')
+            ? $this->response = ['message' => $this->message]
+            : $this->response = [];
     }
 
     // MARK: SETTERS
@@ -38,13 +71,11 @@ abstract class Response extends Sanitizer
     protected function setMessage(string $message): void
     {
         $this->message = $message;
-        $this->response['message'] = $this->message;
     }
 
     protected function setContent(array $content): void
     {
         $this->content = $content;
-        $this->response['content'] = $this->content;
     }
 
     protected function setValidationError(string $validationError): void
@@ -52,19 +83,10 @@ abstract class Response extends Sanitizer
         $this->validationErrors[] = $validationError;
     }
 
-    private function setValidationErrors(): void
-    {
-        $this->response['validationErrors'] = $this->validationErrors;
-    }
-
     protected function setIntegrityError(string $integrityError): void
     {
-        $this->integrityErrors[] = $integrityError;
-    }
-
-    private function setIntegrityErrors(): void
-    {
-        $this->response['integrityErrors'] = $this->integrityErrors;
+        $this->integrityErrors = $integrityError;
+        $this->checkIntegrityErrors();
     }
 
     // MARK: CHECKERS
@@ -74,17 +96,13 @@ abstract class Response extends Sanitizer
         if (!empty($this->validationErrors)) {
             $this->setStatus(400);
             $this->setMessage("Hay errores de validación");
-            $this->setValidationErrors();
             $this->getResponse();
         }
     }
 
-    protected function checkIntegrityErrors(): void
+    private function checkIntegrityErrors(): void
     {
-        if (!empty($this->integrityErrors)) {
-            $this->setMessage("Hay errores de integridad");
-            $this->setIntegrityErrors();
-            $this->getResponse();
-        }
+        $this->setMessage("Hay errores de integridad");
+        $this->getResponse();
     }
 }
