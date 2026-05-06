@@ -7,21 +7,25 @@ export default class Mensaje extends Usuario {
 	constructor() {
 		super();
 		this.sessionCheck();
+		this.ultimoId = 0; // ← AHORA ES PARTE DE LA CLASE
 	}
+
 
 	async initialize() {
 		await this.getMensajes();
 		this.test();
-
-		// setInterval(async () => {
-		// 	await this.getMensajes();
-		// }, 2000);
 	}
 
 	async getMensajes() {
 		const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
 		this.printMensajes(response);
+
+		const mensajes = response.content;
+		if (mensajes.length > 0) {
+			this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
+		}
 	}
+
 
 	appendMensaje(mensaje) {
 		const html = `
@@ -47,19 +51,21 @@ export default class Mensaje extends Usuario {
 	}
 
 	test() {
-		let ultimoId = 0;
-
-		const evtSource = new EventSource(`${location.origin}/api/stream-mensajes.php?ultimo_id=${ultimoId}`);
+		const evtSource = new EventSource(
+			`${location.origin}/api/stream-mensajes.php?ultimo_id=${this.ultimoId}`
+		);
 
 		evtSource.addEventListener("mensaje", (e) => {
 			const mensaje = JSON.parse(e.data);
-			console.log(mensaje);
+			// console.log(mensaje);
 			this.appendMensaje(mensaje);
-			ultimoId = mensaje.id_mensaje;
+			this.ultimoId = mensaje.id_mensaje; // ← AHORA SÍ SE ACTUALIZA
 		});
 
+
+
 		evtSource.addEventListener("ping", () => {
-			console.log("keepalive");
+			// console.log("keepalive");
 		});
 	}
 
