@@ -85,7 +85,7 @@ final readonly class Grupo extends MysqliConnect
 		$this->status = 200;
 		$this->message = $message;
 		$this->content = $grupos;
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: READ GRUPOS MIEMBRO
@@ -125,7 +125,7 @@ final readonly class Grupo extends MysqliConnect
 		$this->status = 200;
 		$this->message = $message;
 		$this->content = $grupos;
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: READ GRUPOS PENDIENTE
@@ -163,7 +163,7 @@ final readonly class Grupo extends MysqliConnect
 		$this->status = 200;
 		$this->message = $message;
 		$this->content = $grupos;
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: READ GRUPOS NO MIEMBRO
@@ -201,7 +201,7 @@ final readonly class Grupo extends MysqliConnect
 		$this->status = 200;
 		$this->message = $message;
 		$this->content = $grupos;
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: IS AUTOR GRUPO
@@ -289,7 +289,7 @@ final readonly class Grupo extends MysqliConnect
 
 		$this->status = 201;
 		$this->message = "Grupo creado con éxito";
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: INVITAR
@@ -323,7 +323,7 @@ final readonly class Grupo extends MysqliConnect
 
 		$this->status = 201;
 		$this->message = "Invitación creada con éxito";
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: ACEPTAR INVITACIÓN
@@ -358,6 +358,6 @@ final readonly class Grupo extends MysqliConnect
 
 		$this->status = 200;
 		$this->message = "Invitación aceptada con éxito";
-		$this->getResponse();
+		$this->sendResponse();
 	}
 }

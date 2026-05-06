@@ -21,9 +21,9 @@ abstract readonly class Response extends Sanitizer
 
     // MARK: GETTERS
 
-    protected function getResponse(): never
+    protected function sendResponse(): never
     {
-        $this->setResponse();
+        $this->buildResponse();
 
         http_response_code($this->status);
         header('Content-Type: application/json');
@@ -31,7 +31,7 @@ abstract readonly class Response extends Sanitizer
         exit();
     }
 
-    private function setResponse(): void
+    private function buildResponse(): void
     {
         if (!empty($this->errors->getValidationErrors())) {
             $this->response = [
@@ -49,7 +49,7 @@ abstract readonly class Response extends Sanitizer
             return;
         }
 
-        if (property_exists($this, 'content')) {
+        if (property_exists($this, 'content') && !empty($this->content)) {
             $this->response = [
                 'message' => $this->message,
                 'content' => $this->content
@@ -57,9 +57,22 @@ abstract readonly class Response extends Sanitizer
             return;
         }
 
+        // if (property_exists($this, 'content')) {
+        //     $this->response = [
+        //         'message' => $this->message,
+        //         'content' => $this->content
+        //     ];
+        //     return;
+        // }
+
+        if (property_exists($this, 'status') && $this->status === 204) {
+            $this->response = [];
+            return;
+        }
+
         property_exists($this, 'message')
             ? $this->response = ['message' => $this->message]
-            : $this->response = [];
+            : null;
     }
 
     // MARK: CHECKERS
@@ -69,7 +82,7 @@ abstract readonly class Response extends Sanitizer
         if (!empty($this->errors->getValidationErrors())) {
             $this->status = 400;
             $this->message = "Hay errores de validación";
-            $this->getResponse();
+            $this->sendResponse();
         }
     }
 
@@ -77,7 +90,7 @@ abstract readonly class Response extends Sanitizer
     {
         if (!empty($this->errors->getIntegrityErrors())) {
             $this->message = "Hay errores de integridad";
-            $this->getResponse();
+            $this->sendResponse();
         }
     }
 }

@@ -84,7 +84,7 @@ final readonly class Usuario extends MysqliConnect
 		$this->status = 200;
 		$this->message = $message;
 		$this->content = $usuarios;
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: CREATE
@@ -131,7 +131,7 @@ final readonly class Usuario extends MysqliConnect
 
 		$this->status = 201;
 		$this->message = "Usuario creado con éxito";
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: LOGIN
@@ -183,7 +183,7 @@ final readonly class Usuario extends MysqliConnect
 
 		$this->status = 200;
 		$this->message = "Login exitoso";
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: LOGOUT
@@ -214,7 +214,7 @@ final readonly class Usuario extends MysqliConnect
 		session_destroy();
 
 		$this->status = 204;
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: CURRENT
@@ -226,7 +226,7 @@ final readonly class Usuario extends MysqliConnect
 		$this->content = [
 			"id_usuario" => $this->id_usuario,
 		];
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: DELETE

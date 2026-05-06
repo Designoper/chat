@@ -171,7 +171,7 @@ final readonly class Mensaje extends MysqliConnect
 		$this->status = 200;
 		$this->message = 'Número de mensajes directos no leídos obtenido con éxito';
 		$this->content = ['num_mensajes' => $result['num_mensajes']];
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: COUNT UNREAD PUBLIC MESSAGES
@@ -211,7 +211,7 @@ final readonly class Mensaje extends MysqliConnect
 		$this->status = 200;
 		$this->message = 'Número de mensajes públicos no leídos obtenido con éxito';
 		$this->content = ['num_mensajes' => $result['num_mensajes']];
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: READ MENSAJES
@@ -247,7 +247,7 @@ final readonly class Mensaje extends MysqliConnect
 		$this->message = $message;
 		$this->content = $mensajes;
 		$this->setUltimaConexionPublica();
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: READ MENSAJES DIRECTOS
@@ -301,7 +301,7 @@ final readonly class Mensaje extends MysqliConnect
 		$this->message = $message;
 		$this->content = $mensajes;
 		$this->setUltimaConexionDirecta();
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: READ MENSAJES GRUPALES
@@ -346,7 +346,7 @@ final readonly class Mensaje extends MysqliConnect
 		$this->status = 200;
 		$this->message = $message;
 		$this->content = $mensajes;
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: IS AUTOR MENSAJE
@@ -414,7 +414,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$this->status = 201;
 		$this->message = "Mensaje creado con éxito";
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: CREATE MENSAJE DIRECTO
@@ -451,7 +451,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$this->status = 201;
 		$this->message = "Mensaje creado con éxito";
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: CREATE MENSAJE GRUPAL
@@ -488,7 +488,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$this->status = 201;
 		$this->message = "Mensaje grupal creado con éxito";
-		$this->getResponse();
+		$this->sendResponse();
 	}
 
 	// MARK: DELETE MENSAJE
@@ -525,6 +525,6 @@ final readonly class Mensaje extends MysqliConnect
 			$this->status = 404;
 			$this->message = '¡El mensaje solicitado no existe!';
 		}
-		$this->getResponse();
+		$this->sendResponse();
 	}
 }
