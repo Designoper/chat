@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/universal/MysqliConnect.php';
 
-final class Mensaje extends MysqliConnect
+final readonly class Mensaje extends MysqliConnect
 {
-	private readonly int $id_mensaje;
-	private readonly string $contenido;
-	private readonly ?int $id_emisor;
-	private readonly int $id_receptor;
-	private readonly int $id_grupo;
+	private int $id_mensaje;
+	private string $contenido;
+	private ?int $id_emisor;
+	private int $id_receptor;
+	private int $id_grupo;
 
 	public function __construct()
 	{

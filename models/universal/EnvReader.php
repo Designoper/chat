@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-abstract class EnvReader
+abstract readonly class EnvReader
 {
     protected function __construct()
     {

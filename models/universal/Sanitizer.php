@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/EnvReader.php';
 
-abstract class Sanitizer extends EnvReader
+abstract readonly class Sanitizer extends EnvReader
 {
     protected function __construct()
     {

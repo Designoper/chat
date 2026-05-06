@@ -5,13 +5,13 @@ declare(strict_types=1);
 require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/ErrorHandler.php';
 
-abstract class Response extends Sanitizer
+abstract readonly class Response extends Sanitizer
 {
-    private readonly int $status;
-    private readonly string $message;
-    private readonly array $content;
-    protected readonly ErrorHandler $errors;
-    private readonly array $response;
+    private int $status;
+    private string $message;
+    private array $content;
+    protected ErrorHandler $errors;
+    private array $response;
 
     protected function __construct()
     {

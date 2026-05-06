@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/Response.php';
 
-abstract class MysqliConnect extends Response
+abstract readonly class MysqliConnect extends Response
 {
-	private readonly string $hostname;
-	private readonly string $username;
-	private readonly string $password;
-	private readonly string $database;
-	protected readonly mysqli $connection;
-	protected readonly string $host;
-	protected readonly ?int $session_user;
+	private string $hostname;
+	private string $username;
+	private string $password;
+	private string $database;
+	protected mysqli $connection;
+	protected string $host;
+	protected ?int $session_user;
 
 	protected function __construct()
 	{
