@@ -58,10 +58,8 @@ CREATE TABLE conexion (
     id_receptor INT NULL,
     id_grupo INT NULL,
     ultima_conexion TIMESTAMP NOT NULL
-        DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
+        DEFAULT CURRENT_TIMESTAMP,
 
-    -- Unicidad por tipo de conexión
     UNIQUE KEY ux_privada (id_usuario, id_receptor),
     UNIQUE KEY ux_grupo (id_usuario, id_grupo),
     UNIQUE KEY ux_publica (id_usuario),
@@ -78,29 +76,6 @@ CREATE TABLE conexion (
         REFERENCES grupos(id_grupo)
         ON DELETE SET NULL
 );
-
-
--- CREATE TABLE ultima_conexion (
---     id_usuario INT NOT NULL,
---     ultima_conexion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     id_receptor INT NULL,
---     id_grupo INT NULL,
-
---     PRIMARY KEY (id_usuario, id_receptor, id_grupo),
-
-
---     FOREIGN KEY (id_usuario)
---         REFERENCES usuarios(id_usuario)
---         ON DELETE CASCADE,
-
---     FOREIGN KEY (id_receptor)
---         REFERENCES usuarios(id_usuario)
---         ON DELETE CASCADE,
-
---     FOREIGN KEY (id_grupo)
---         REFERENCES grupos(id_grupo)
---         ON DELETE CASCADE
--- );
 
 -- CREATE INDEX idx_mensajes_emisor ON mensajes(id_emisor);
 -- CREATE INDEX idx_mensajes_receptor ON mensajes(id_receptor);
