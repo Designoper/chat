@@ -87,8 +87,8 @@ final readonly class Mensaje extends MysqliConnect
 		$id_usuario = $this->id_emisor;
 
 		$statement =
-			"INSERT INTO conexion (id_usuario, id_receptor, ultima_conexion, id_grupo)
-			VALUES (?, 0, CURRENT_TIMESTAMP, 0)
+			"INSERT INTO conexion (id_usuario, ultima_conexion)
+			VALUES (?, CURRENT_TIMESTAMP)
 			ON DUPLICATE KEY
 			UPDATE ultima_conexion = CURRENT_TIMESTAMP";
 
@@ -111,8 +111,8 @@ final readonly class Mensaje extends MysqliConnect
 		$id_receptor = $this->id_receptor;
 
 		$statement =
-			"INSERT INTO conexion (id_usuario, id_receptor, ultima_conexion, id_grupo)
-			VALUES (?, ?, CURRENT_TIMESTAMP, 0)
+			"INSERT INTO conexion (id_usuario, id_receptor, ultima_conexion)
+			VALUES (?, ?, CURRENT_TIMESTAMP)
 			ON DUPLICATE KEY
 			UPDATE ultima_conexion = CURRENT_TIMESTAMP";
 
@@ -151,7 +151,7 @@ final readonly class Mensaje extends MysqliConnect
 				FROM conexion
 				WHERE id_usuario = ?
 				AND id_receptor = ?
-				AND id_grupo = 0
+				AND id_grupo IS NULL
 			), '1970-01-01 00:00:01')";
 
 		$query = $this->connection->prepare($statement);
@@ -192,8 +192,8 @@ final readonly class Mensaje extends MysqliConnect
 				SELECT ultima_conexion
 				FROM conexion
 				WHERE id_usuario = ?
-				AND id_receptor = 0
-				AND id_grupo = 0
+				AND id_receptor IS NULL
+				AND id_grupo IS NULL
 			), '1970-01-01 00:00:01')";
 
 		$query = $this->connection->prepare($statement);

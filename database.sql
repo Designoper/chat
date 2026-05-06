@@ -55,24 +55,30 @@ CREATE TABLE mensajes (
 CREATE TABLE conexion (
     id_ultima_conexion INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
-    id_receptor INT NOT NULL DEFAULT 0,
-    id_grupo INT NOT NULL DEFAULT 0,
-    -- ultima_conexion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id_receptor INT NULL,
+    id_grupo INT NULL,
     ultima_conexion TIMESTAMP NOT NULL
-    DEFAULT CURRENT_TIMESTAMP,
-    -- ON UPDATE CURRENT_TIMESTAMP,
+        DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
 
-    UNIQUE KEY ux_conexion (id_usuario, id_receptor, id_grupo),
+    -- Unicidad por tipo de conexión
+    UNIQUE KEY ux_privada (id_usuario, id_receptor),
+    UNIQUE KEY ux_grupo (id_usuario, id_grupo),
+    UNIQUE KEY ux_publica (id_usuario),
+
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
-        ON DELETE CASCADE
-    -- FOREIGN KEY (id_receptor)
-    --     REFERENCES usuarios(id_usuario)
-    --     ON DELETE CASCADE,
-    -- FOREIGN KEY (id_grupo)
-    --     REFERENCES grupos(id_grupo)
-    --     ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (id_receptor)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE SET NULL,
+
+    FOREIGN KEY (id_grupo)
+        REFERENCES grupos(id_grupo)
+        ON DELETE SET NULL
 );
+
 
 -- CREATE TABLE ultima_conexion (
 --     id_usuario INT NOT NULL,
