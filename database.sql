@@ -1,6 +1,8 @@
--- DROP DATABASE IF EXISTS chat;
--- CREATE DATABASE chat CHARACTER SET utf8mb4;
--- USE chat;
+DROP DATABASE IF EXISTS chat;
+CREATE DATABASE chat CHARACTER SET utf8mb4;
+USE chat;
+
+SET default_storage_engine=InnoDB;
 
 CREATE TABLE usuarios (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
@@ -43,11 +45,11 @@ CREATE TABLE mensajes (
 
     FOREIGN KEY (id_receptor)
         REFERENCES usuarios(id_usuario)
-        ON DELETE CASCADE,
+        ON DELETE SET NULL,
 
     FOREIGN KEY (id_grupo)
         REFERENCES grupos(id_grupo)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
 );
 
 CREATE TABLE conexion (
@@ -57,8 +59,8 @@ CREATE TABLE conexion (
     id_grupo INT NOT NULL DEFAULT 0,
     -- ultima_conexion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ultima_conexion TIMESTAMP NOT NULL
-    DEFAULT CURRENT_TIMESTAMP
-    ON UPDATE CURRENT_TIMESTAMP,
+    DEFAULT CURRENT_TIMESTAMP,
+    -- ON UPDATE CURRENT_TIMESTAMP,
 
     UNIQUE KEY ux_conexion (id_usuario, id_receptor, id_grupo),
     FOREIGN KEY (id_usuario)
