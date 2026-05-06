@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/MysqliConnect.php';
 
-final class FileManager extends MysqliConnect
+final readonly class FileManager extends MysqliConnect
 {
     private const string IMAGE_PATH = '/assets/img/';
     public const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
 
-    private readonly string $extraDirectories;
-    private readonly string $uniqueFilename;
+    private string $extraDirectories;
+    private string $uniqueFilename;
 
-    private readonly ?array $file;
-    private readonly bool $deleteCheckbox;
+    private ?array $file;
+    private bool $deleteCheckbox;
 
     public function __construct()
     {
