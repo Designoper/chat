@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../models/Grupo.php';
 final class Router
 {
     private const string COMMON_PATH = '/api/';
-    private array $routes = [];
+    private array $routes;
 
     public function __construct()
     {
