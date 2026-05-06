@@ -7,8 +7,7 @@ final class ErrorHandler
     private array $validationErrors = [];
     private array $integrityErrors = [];
 
-    // public function __construct() {
-    // }
+    public function __construct() {}
 
     public function setValidationError(string $message): void
     {
