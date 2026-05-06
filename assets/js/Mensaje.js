@@ -11,16 +11,58 @@ export default class Mensaje extends Usuario {
 
 	async initialize() {
 		await this.getMensajes();
+		this.test();
 
-		setInterval(async () => {
-			await this.getMensajes();
-		}, 2000);
+		// setInterval(async () => {
+		// 	await this.getMensajes();
+		// }, 2000);
 	}
 
 	async getMensajes() {
 		const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
 		this.printMensajes(response);
 	}
+
+	appendMensaje(mensaje) {
+		const html = `
+        <article ${mensaje.id_emisor == this.id_usuario ? 'class="mensaje-propio"' : ''}>
+            <p>${mensaje.nombre_usuario}</p>
+            <p>${mensaje.contenido}</p>
+            <p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
+			{
+				weekday: "long",
+				year: "numeric",
+				month: "numeric",
+				day: "numeric",
+				hour: "numeric",
+				minute: "numeric"
+			})}</p>
+        </article>
+    `;
+
+		this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", html);
+
+		// Auto-scroll
+		// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
+	}
+
+	test() {
+		let ultimoId = 0;
+
+		const evtSource = new EventSource(`${location.origin}/api/stream-mensajes.php?ultimo_id=${ultimoId}`);
+
+		evtSource.addEventListener("mensaje", (e) => {
+			const mensaje = JSON.parse(e.data);
+			console.log(mensaje);
+			this.appendMensaje(mensaje);
+			ultimoId = mensaje.id_mensaje;
+		});
+
+		evtSource.addEventListener("ping", () => {
+			console.log("keepalive");
+		});
+	}
+
 
 	mensajesTemplate(fetchedMensajes) {
 

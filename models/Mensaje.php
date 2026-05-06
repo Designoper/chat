@@ -527,4 +527,33 @@ final readonly class Mensaje extends MysqliConnect
 		}
 		$this->sendResponse();
 	}
+
+	public function getNuevosMensajesPublicos(int $ultimo_id)
+	{
+		$statement =
+			"SELECT mensajes.id_mensaje,
+				mensajes.contenido,
+				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+				mensajes.id_emisor,
+				usuarios.nombre_usuario
+			FROM mensajes
+			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+            WHERE mensajes.id_mensaje > ?
+            AND mensajes.id_receptor IS NULL
+			AND mensajes.id_grupo IS NULL
+            ORDER BY mensajes.id_mensaje ASC";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"i",
+			$ultimo_id
+		);
+
+		$query->execute();
+		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$query->close();
+
+		return $mensajes;
+	}
 }
