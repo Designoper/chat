@@ -49,7 +49,7 @@ abstract readonly class Response extends Sanitizer
             return;
         }
 
-        if (property_exists($this, 'content') && !empty($this->content)) {
+        if (isset($this->content)) {
             $this->response = [
                 'message' => $this->message,
                 'content' => $this->content
@@ -57,22 +57,12 @@ abstract readonly class Response extends Sanitizer
             return;
         }
 
-        // if (property_exists($this, 'content')) {
-        //     $this->response = [
-        //         'message' => $this->message,
-        //         'content' => $this->content
-        //     ];
-        //     return;
-        // }
-
-        if (property_exists($this, 'status') && $this->status === 204) {
+        if ($this->status === 204) {
             $this->response = [];
             return;
         }
 
-        property_exists($this, 'message')
-            ? $this->response = ['message' => $this->message]
-            : null;
+        $this->response = ['message' => $this->message];
     }
 
     // MARK: CHECKERS

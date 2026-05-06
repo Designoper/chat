@@ -1,14 +1,11 @@
-// import Endpoint from "./Endpoint.js";
 import Endpoint from "./Endpoint.js";
-import Usuario from "./Usuario.js";
 
-export default class Grupo extends Usuario {
+export default class Grupo extends Endpoint {
 	outputMiembro = document.querySelector('output');
 	outputPendiente = document.querySelector('section:nth-of-type(2) output');
 
 	constructor() {
 		super();
-		// this.sessionCheck();
 	}
 
 	async initialize() {
@@ -40,17 +37,12 @@ export default class Grupo extends Usuario {
 
 	async gruposMiembroTemplate(fetchedGrupos) {
 
-		// console.log(fetchedGrupos);
-
 		const grupos = await Promise.all(
 			fetchedGrupos.map(async grupo => {
-				console.log(grupo);
 
 				const invitables = await this.simpleFetch(
 					`${this.ENDPOINTS.GET_GRUPOS_NO_MIEMBRO}?id_grupo=${grupo.id_grupo}`
 				);
-
-				console.log(invitables);
 
 				const opciones = invitables.content
 					.map(user => `<option value="${user.id_usuario}">${user.nombre_usuario}</option>`)
