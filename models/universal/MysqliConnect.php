@@ -64,7 +64,7 @@ abstract readonly class MysqliConnect extends Response
 	protected function authEndpoint(): void
 	{
 		if ($this->session_user === null) {
-			$this->setStatus(401);
+			$this->status = 401;
 			$this->errors->setIntegrityError('No hay sesión');
 		}
 	}

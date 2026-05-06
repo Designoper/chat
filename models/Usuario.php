@@ -81,9 +81,9 @@ final readonly class Usuario extends MysqliConnect
 
 		$query->close();
 
-		$this->setStatus(200);
-		$this->setMessage($message);
-		$this->setContent($usuarios);
+		$this->status = 200;
+		$this->message = $message;
+		$this->content = $usuarios;
 		$this->getResponse();
 	}
 
@@ -119,7 +119,7 @@ final readonly class Usuario extends MysqliConnect
 		} catch (\mysqli_sql_exception $error) {
 
 			if ($error->getCode() === 1062) {
-				$this->setStatus(409);
+				$this->status = 409;
 				$this->errors->setIntegrityError('¡Este nombre de usuario ya existe!');
 				$this->checkIntegrityErrors();
 			}
@@ -129,8 +129,8 @@ final readonly class Usuario extends MysqliConnect
 
 		$_SESSION['id_usuario'] = $id_usuario;
 
-		$this->setStatus(201);
-		$this->setMessage("Usuario creado con éxito");
+		$this->status = 201;
+		$this->message = "Usuario creado con éxito";
 		$this->getResponse();
 	}
 
@@ -166,7 +166,7 @@ final readonly class Usuario extends MysqliConnect
 		$query->close();
 
 		if (!$row) {
-			$this->setStatus(401);
+			$this->status = 401;
 			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
 			// $this->checkIntegrityErrors();
 		}
@@ -174,15 +174,15 @@ final readonly class Usuario extends MysqliConnect
 		$hashGuardado = $row['password'];
 
 		if (!password_verify($passwordIngresada, $hashGuardado)) {
-			$this->setStatus(401);
+			$this->status = 401;
 			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
 			// $this->checkIntegrityErrors();
 		}
 
 		$_SESSION['id_usuario'] = $row['id_usuario'];
 
-		$this->setStatus(200);
-		$this->setMessage("Login exitoso");
+		$this->status = 200;
+		$this->message = "Login exitoso";
 		$this->getResponse();
 	}
 
@@ -213,7 +213,7 @@ final readonly class Usuario extends MysqliConnect
 
 		session_destroy();
 
-		$this->setStatus(204);
+		$this->status = 204;
 		$this->getResponse();
 	}
 
@@ -221,11 +221,11 @@ final readonly class Usuario extends MysqliConnect
 
 	public function currentUsuario(): void
 	{
-		$this->setStatus(200);
-		$this->setMessage("Usuario identificado");
-		$this->setContent([
+		$this->status = 200;
+		$this->message = "Usuario identificado";
+		$this->content = [
 			"id_usuario" => $this->id_usuario,
-		]);
+		];
 		$this->getResponse();
 	}
 

@@ -82,9 +82,9 @@ final readonly class Grupo extends MysqliConnect
 			? 'Grupos obtenidos.'
 			: 'No hay ningún grupo.';
 
-		$this->setStatus(200);
-		$this->setMessage($message);
-		$this->setContent($grupos);
+		$this->status = 200;
+		$this->message = $message;
+		$this->content = $grupos;
 		$this->getResponse();
 	}
 
@@ -122,9 +122,9 @@ final readonly class Grupo extends MysqliConnect
 			? 'Grupos obtenidos.'
 			: 'No hay ningún grupo.';
 
-		$this->setStatus(200);
-		$this->setMessage($message);
-		$this->setContent($grupos);
+		$this->status = 200;
+		$this->message = $message;
+		$this->content = $grupos;
 		$this->getResponse();
 	}
 
@@ -160,9 +160,9 @@ final readonly class Grupo extends MysqliConnect
 			? 'Grupos obtenidos.'
 			: 'No tienes ninguna invitación pendiente.';
 
-		$this->setStatus(200);
-		$this->setMessage($message);
-		$this->setContent($grupos);
+		$this->status = 200;
+		$this->message = $message;
+		$this->content = $grupos;
 		$this->getResponse();
 	}
 
@@ -198,9 +198,9 @@ final readonly class Grupo extends MysqliConnect
 			? 'No miembros obtenidos.'
 			: 'Cambiar.';
 
-		$this->setStatus(200);
-		$this->setMessage($message);
-		$this->setContent($grupos);
+		$this->status = 200;
+		$this->message = $message;
+		$this->content = $grupos;
 		$this->getResponse();
 	}
 
@@ -235,7 +235,7 @@ final readonly class Grupo extends MysqliConnect
 		$query->close();
 
 		if ($autor['rol'] !== $rolFundador) {
-			$this->setStatus(403);
+			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el fundador del grupo');
 		}
 	}
@@ -287,8 +287,8 @@ final readonly class Grupo extends MysqliConnect
 		$query->execute();
 		$query->close();
 
-		$this->setStatus(201);
-		$this->setMessage("Grupo creado con éxito");
+		$this->status = 201;
+		$this->message = "Grupo creado con éxito";
 		$this->getResponse();
 	}
 
@@ -321,8 +321,8 @@ final readonly class Grupo extends MysqliConnect
 		$query->execute();
 		$query->close();
 
-		$this->setStatus(201);
-		$this->setMessage("Invitación creada con éxito");
+		$this->status = 201;
+		$this->message = "Invitación creada con éxito";
 		$this->getResponse();
 	}
 
@@ -356,8 +356,8 @@ final readonly class Grupo extends MysqliConnect
 		$query->execute();
 		$query->close();
 
-		$this->setStatus(200);
-		$this->setMessage("Invitación aceptada con éxito");
+		$this->status = 200;
+		$this->message = "Invitación aceptada con éxito";
 		$this->getResponse();
 	}
 }

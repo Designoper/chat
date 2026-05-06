@@ -7,9 +7,9 @@ require_once __DIR__ . '/ErrorHandler.php';
 
 abstract readonly class Response extends Sanitizer
 {
-    private int $status;
-    private string $message;
-    private array $content;
+    protected int $status;
+    protected string $message;
+    protected array $content;
     protected ErrorHandler $errors;
     private array $response;
 
@@ -62,30 +62,13 @@ abstract readonly class Response extends Sanitizer
             : $this->response = [];
     }
 
-    // MARK: SETTERS
-
-    protected function setStatus(int $status): void
-    {
-        $this->status = $status;
-    }
-
-    protected function setMessage(string $message): void
-    {
-        $this->message = $message;
-    }
-
-    protected function setContent(array $content): void
-    {
-        $this->content = $content;
-    }
-
     // MARK: CHECKERS
 
     protected function checkValidationErrors(): void
     {
         if (!empty($this->errors->getValidationErrors())) {
-            $this->setStatus(400);
-            $this->setMessage("Hay errores de validación");
+            $this->status = 400;
+            $this->message = "Hay errores de validación";
             $this->getResponse();
         }
     }
@@ -93,7 +76,7 @@ abstract readonly class Response extends Sanitizer
     protected function checkIntegrityErrors(): void
     {
         if (!empty($this->errors->getIntegrityErrors())) {
-            $this->setMessage("Hay errores de integridad");
+            $this->message = "Hay errores de integridad";
             $this->getResponse();
         }
     }
