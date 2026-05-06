@@ -11,7 +11,7 @@ abstract readonly class MysqliConnect extends Response
 	private string $password;
 	private string $database;
 	protected mysqli $connection;
-	protected string $host;
+	protected string $domain;
 	protected ?int $session_user;
 
 	protected function __construct()
@@ -27,7 +27,7 @@ abstract readonly class MysqliConnect extends Response
 		$this->password = getenv('PASSWORD');
 		$this->database = getenv('DATABASE');
 		$this->setConnection();
-		$this->setHost();
+		$this->setDomain();
 	}
 
 	// MARK: SETTERS
@@ -44,11 +44,11 @@ abstract readonly class MysqliConnect extends Response
 		$this->connection->set_charset('utf8');
 	}
 
-	private function setHost(): void
+	private function setDomain(): void
 	{
 		$protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
 		$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-		$this->host = $protocol . '://' . $host;
+		$this->domain = $protocol . '://' . $host;
 	}
 
 	// MARK: AUTHENTICATION
