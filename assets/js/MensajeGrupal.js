@@ -9,6 +9,7 @@ export default class MensajeGrupal extends Usuario {
 
 	constructor() {
 		super();
+		this.sessionCheck();
 	}
 
 	async initialize() {

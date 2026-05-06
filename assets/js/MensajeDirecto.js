@@ -9,6 +9,7 @@ export default class MensajeDirecto extends Usuario {
 
 	constructor() {
 		super();
+		this.sessionCheck();
 	}
 
 	async initialize() {

@@ -65,7 +65,7 @@ abstract class MysqliConnect extends Response
 	{
 		if ($this->session_user === null) {
 			$this->setStatus(401);
-			$this->setIntegrityError('No hay sesión');
+			$this->errors->setIntegrityError('No hay sesión');
 		}
 	}
 }

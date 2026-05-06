@@ -27,7 +27,7 @@ final class Grupo extends MysqliConnect
 		$error_message = "El campo $name no puede estar vacío.";
 
 		empty($value)
-			? $this->setValidationError($error_message)
+			? $this->errors->setValidationError($error_message)
 			: $this->nombre_grupo = $value;
 	}
 
@@ -45,7 +45,7 @@ final class Grupo extends MysqliConnect
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->id_grupo = (int) $value
-			: $this->setValidationError($error_message);
+			: $this->errors->setValidationError($error_message);
 	}
 
 	private function setIdUsuario(): void
@@ -57,7 +57,7 @@ final class Grupo extends MysqliConnect
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->id_usuario = (int) $value
-			: $this->setValidationError($error_message);
+			: $this->errors->setValidationError($error_message);
 	}
 
 	// MARK: READ GRUPOS
@@ -236,7 +236,7 @@ final class Grupo extends MysqliConnect
 
 		if ($autor['rol'] !== $rolFundador) {
 			$this->setStatus(403);
-			$this->setIntegrityError('No eres el fundador del grupo');
+			$this->errors->setIntegrityError('No eres el fundador del grupo');
 		}
 	}
 

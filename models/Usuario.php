@@ -26,7 +26,7 @@ final class Usuario extends MysqliConnect
 		$error_message = "El campo $name no puede estar vacío.";
 
 		empty($value)
-			? $this->setValidationError($error_message)
+			? $this->errors->setValidationError($error_message)
 			: $this->nombre_usuario = $value;
 	}
 
@@ -37,7 +37,7 @@ final class Usuario extends MysqliConnect
 		$error_message = "El campo $name no puede estar vacío.";
 
 		empty($value)
-			? $this->setValidationError($error_message)
+			? $this->errors->setValidationError($error_message)
 			: $this->password = password_hash($value, PASSWORD_DEFAULT);
 	}
 
@@ -48,7 +48,7 @@ final class Usuario extends MysqliConnect
 		$error_message = "El campo $name no puede estar vacío.";
 
 		empty($value)
-			? $this->setValidationError($error_message)
+			? $this->errors->setValidationError($error_message)
 			: $this->password = $value;
 	}
 
@@ -120,8 +120,8 @@ final class Usuario extends MysqliConnect
 
 			if ($error->getCode() === 1062) {
 				$this->setStatus(409);
-				$this->setIntegrityError('¡Este nombre de usuario ya existe!');
-				// $this->checkIntegrityErrors();
+				$this->errors->setIntegrityError('¡Este nombre de usuario ya existe!');
+				$this->checkIntegrityErrors();
 			}
 
 			throw $error;
@@ -167,7 +167,7 @@ final class Usuario extends MysqliConnect
 
 		if (!$row) {
 			$this->setStatus(401);
-			$this->setIntegrityError("El usuario o la contraseña son incorrectos.");
+			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
 			// $this->checkIntegrityErrors();
 		}
 
@@ -175,7 +175,7 @@ final class Usuario extends MysqliConnect
 
 		if (!password_verify($passwordIngresada, $hashGuardado)) {
 			$this->setStatus(401);
-			$this->setIntegrityError("El usuario o la contraseña son incorrectos.");
+			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
 			// $this->checkIntegrityErrors();
 		}
 

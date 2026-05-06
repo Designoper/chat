@@ -6,7 +6,6 @@ export default class Usuario extends Endpoint {
 
 	constructor() {
 		super();
-		this.sessionCheck();
 	}
 
 	async initialize() {

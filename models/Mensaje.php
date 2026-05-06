@@ -32,7 +32,7 @@ final class Mensaje extends MysqliConnect
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->id_mensaje = (int) $value
-			: $this->setValidationError($error_message);
+			: $this->errors->setValidationError($error_message);
 	}
 
 	private function setContenido(): void
@@ -42,7 +42,7 @@ final class Mensaje extends MysqliConnect
 		$error_message = "El campo $name no puede estar vacío.";
 
 		empty($value)
-			? $this->setValidationError($error_message)
+			? $this->errors->setValidationError($error_message)
 			: $this->contenido = $value;
 	}
 
@@ -60,7 +60,7 @@ final class Mensaje extends MysqliConnect
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->id_receptor = (int) $value
-			: $this->setValidationError($error_message);
+			: $this->errors->setValidationError($error_message);
 	}
 
 	private function setIdGrupo(): void
@@ -77,7 +77,7 @@ final class Mensaje extends MysqliConnect
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->id_grupo = (int) $value
-			: $this->setValidationError($error_message);
+			: $this->errors->setValidationError($error_message);
 	}
 
 	// MARK: ULTIMA CONEXION PUBLICA
@@ -378,7 +378,7 @@ final class Mensaje extends MysqliConnect
 
 		if ($autor['id_emisor'] !== $id_usuario) {
 			$this->setStatus(403);
-			$this->setIntegrityError('No eres el autor del mensaje');
+			$this->errors->setIntegrityError('No eres el autor del mensaje');
 			// $this->checkIntegrityErrors();
 		}
 	}

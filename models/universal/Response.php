@@ -3,19 +3,20 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/Sanitizer.php';
+require_once __DIR__ . '/ErrorHandler.php';
 
 abstract class Response extends Sanitizer
 {
     private readonly int $status;
     private readonly string $message;
     private readonly array $content;
-    private array $validationErrors;
-    private readonly string $integrityErrors;
+    protected readonly ErrorHandler $errors;
     private readonly array $response;
 
     protected function __construct()
     {
         parent::__construct();
+        $this->errors = new ErrorHandler();
     }
 
     // MARK: GETTERS
@@ -32,18 +33,18 @@ abstract class Response extends Sanitizer
 
     private function setResponse(): void
     {
-        if (property_exists($this, 'validationErrors')) {
+        if (!empty($this->errors->getValidationErrors())) {
             $this->response = [
                 'message' => $this->message,
-                'validationErrors' => $this->validationErrors
+                'validationErrors' => $this->errors->getValidationErrors()
             ];
             return;
         }
 
-        if (property_exists($this, 'integrityErrors')) {
+        if (!empty($this->errors->getIntegrityErrors())) {
             $this->response = [
                 'message' => $this->message,
-                'integrityErrors' => $this->integrityErrors
+                'integrityErrors' => $this->errors->getIntegrityErrors()
             ];
             return;
         }
@@ -78,31 +79,22 @@ abstract class Response extends Sanitizer
         $this->content = $content;
     }
 
-    protected function setValidationError(string $validationError): void
-    {
-        $this->validationErrors[] = $validationError;
-    }
-
-    protected function setIntegrityError(string $integrityError): void
-    {
-        $this->integrityErrors = $integrityError;
-        $this->checkIntegrityErrors();
-    }
-
     // MARK: CHECKERS
 
     protected function checkValidationErrors(): void
     {
-        if (!empty($this->validationErrors)) {
+        if (!empty($this->errors->getValidationErrors())) {
             $this->setStatus(400);
             $this->setMessage("Hay errores de validación");
             $this->getResponse();
         }
     }
 
-    private function checkIntegrityErrors(): void
+    protected function checkIntegrityErrors(): void
     {
-        $this->setMessage("Hay errores de integridad");
-        $this->getResponse();
+        if (!empty($this->errors->getIntegrityErrors())) {
+            $this->setMessage("Hay errores de integridad");
+            $this->getResponse();
+        }
     }
 }
