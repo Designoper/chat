@@ -7,7 +7,6 @@ export default class Mensaje extends Usuario {
 
 	constructor() {
 		super();
-		this.sessionCheck();
 	}
 
 	streamMensajes() {
