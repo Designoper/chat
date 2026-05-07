@@ -1,10 +1,6 @@
 <?php
-define('NO_SESSION', true);
 
-// if (session_status() === PHP_SESSION_NONE) {
-//     session_start();
-// }
-// session_write_close();
+define('NO_SESSION', true);
 
 require_once __DIR__ . "/../models/Mensaje.php";
 
@@ -16,7 +12,9 @@ header("Connection: keep-alive");
 
 while (true) {
 
-    $mensajes = new Mensaje()->getNuevosMensajesPublicos($ultimo_id);
+    $mensaje = new Mensaje();
+    $mensajes = $mensaje->getNuevosMensajesPublicos($ultimo_id);
+    // $mensaje->setUltimaConexionPublica();
 
     if (!empty($mensajes)) {
         foreach ($mensajes as $m) {
