@@ -236,7 +236,7 @@ final readonly class Mensaje extends MysqliConnect
 			AND mensajes.fecha_envio > COALESCE((
 				SELECT ultima_conexion
 				FROM conexion
-				WHERE id_usuario != ?
+				WHERE id_usuario = ?
 				AND id_receptor IS NULL
 				AND id_grupo = ?
 			), '1970-01-01 00:00:01')";
