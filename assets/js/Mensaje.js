@@ -6,11 +6,12 @@ export default class Mensaje extends Usuario {
 
 	constructor() {
 		super();
-		this.sessionCheck();
+		// this.sessionCheck();
 		this.ultimoId = 0; // ← AHORA ES PARTE DE LA CLASE
 	}
 
 	async initialize() {
+		await this.sessionCheck();
 		await this.getMensajes();
 		this.streamMensajes();
 	}
@@ -22,6 +23,7 @@ export default class Mensaje extends Usuario {
 		const mensajes = response.content;
 		if (mensajes.length > 0) {
 			this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
+			console.log("Último ID actualizado a:", this.ultimoId);
 		}
 	}
 
@@ -37,6 +39,7 @@ export default class Mensaje extends Usuario {
 			this.formHandler();
 
 			this.ultimoId = mensaje.id_mensaje; // ← AHORA SÍ SE ACTUALIZA
+			// console.log("Nuevo mensaje recibido. Último ID actualizado a:", this.ultimoId);
 			// Auto-scroll
 			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
 		});

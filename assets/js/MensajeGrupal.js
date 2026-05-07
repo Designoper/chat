@@ -9,10 +9,11 @@ export default class MensajeGrupal extends Usuario {
 
 	constructor() {
 		super();
-		this.sessionCheck();
 	}
 
 	async initialize() {
+		await this.sessionCheck();
+
 		this.writeChat();
 		await this.getMensajesGrupales();
 

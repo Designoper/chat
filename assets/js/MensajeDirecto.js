@@ -9,10 +9,11 @@ export default class MensajeDirecto extends Usuario {
 
 	constructor() {
 		super();
-		this.sessionCheck();
 	}
 
 	async initialize() {
+		await this.sessionCheck();
+
 		this.writeChat();
 		await this.getMensajesDirectos();
 
