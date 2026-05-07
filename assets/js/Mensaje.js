@@ -28,9 +28,7 @@ export default class Mensaje extends Usuario {
 	}
 
 	streamMensajes() {
-		const evtSource = new EventSource(
-			`${location.origin}/api/stream-mensajes.php?ultimo_id=${this.ultimoId}`
-		);
+		const evtSource = new EventSource(`${this.ENDPOINTS.STREAM_MENSAJES}?ultimo_id=${this.ultimoId}`);
 
 		evtSource.addEventListener("mensaje", (event) => {
 			const mensaje = JSON.parse(event.data);
