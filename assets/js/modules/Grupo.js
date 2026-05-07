@@ -41,6 +41,16 @@ export default class Grupo extends Endpoint {
 					`${this.ENDPOINTS.GET_GRUPOS_NO_MIEMBRO}?id_grupo=${grupo.id_grupo}`
 				);
 
+				const mensajesNoLeidos = await this.simpleFetch(
+					`${this.ENDPOINTS.GET_MENSAJES_GRUPALES_NO_LEIDOS}?id_grupo=${grupo.id_grupo}`
+				);
+
+				const num = mensajesNoLeidos.content.num_mensajes;
+
+				const badge = num > 0
+					? `(${num})`
+					: '';
+
 				const opciones = invitables.content
 					.map(user => `<option value="${user.id_usuario}">${user.nombre_usuario}</option>`)
 					.join('');
@@ -48,20 +58,21 @@ export default class Grupo extends Endpoint {
 				const formInvitar =
 					`<article>
 
-					<h3>${grupo.nombre_grupo}</h3>
+						<h3>${grupo.nombre_grupo}</h3>
 
-					<form name="invitar">
-						<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
-						<select name="id_usuario" required>
-							<option value="">Invitar a...</option>
-							${opciones}
-						</select>
-						<button>Mandar invitación</button>
-					</form>
+						<form name="invitar">
+							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
+							<select name="id_usuario" required>
+								<option value="">Invitar a...</option>
+								${opciones}
+							</select>
+							<button>Mandar invitación</button>
+						</form>
 
-					<a href="./chat-grupal.php?id-grupo=${grupo.id_grupo}&nombre-grupo=${grupo.nombre_grupo}">Entrar</a>
+						<a href="./chat-grupal.php?id-grupo=${grupo.id_grupo}&nombre-grupo=${grupo.nombre_grupo}">Entrar</a>
+						<span>${badge}</span>
 
-				</article>`
+					</article>`
 
 				return formInvitar;
 

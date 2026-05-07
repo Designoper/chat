@@ -231,11 +231,12 @@ final readonly class Mensaje extends MysqliConnect
 			"SELECT COUNT(*) AS num_mensajes
 			FROM mensajes
 			WHERE mensajes.id_grupo = ?
-			AND mensajes.id_emisor = ?
+			AND mensajes.id_receptor IS NULL
+			AND mensajes.id_emisor != ?
 			AND mensajes.fecha_envio > COALESCE((
 				SELECT ultima_conexion
 				FROM conexion
-				WHERE id_usuario = ?
+				WHERE id_usuario != ?
 				AND id_receptor IS NULL
 				AND id_grupo = ?
 			), '1970-01-01 00:00:01')";
@@ -244,8 +245,8 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->bind_param(
 			"iiii",
-			$id_emisor,
 			$id_grupo,
+			$id_emisor,
 			$id_emisor,
 			$id_grupo
 		);

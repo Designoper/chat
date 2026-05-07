@@ -15,6 +15,7 @@ export default class Endpoint extends Fetch {
 		GET_MENSAJES_DIRECTOS_NO_LEIDOS: `${this.ROOT}mensajes-directos/no-leidos`,
 		GET_MENSAJES_GRUPALES: `${this.ROOT}mensajes-grupales`,
 		STREAM_MENSAJES_GRUPALES: `${this.ROOT}stream-mensajes-grupales.php`,
+		GET_MENSAJES_GRUPALES_NO_LEIDOS: `${this.ROOT}mensajes-grupales/no-leidos`,
 		GET_USUARIOS: `${this.ROOT}usuarios`,
 		GET_GRUPOS: `${this.ROOT}grupos`,
 		GET_GRUPOS_MIEMBRO: `${this.ROOT}grupos/miembro`,

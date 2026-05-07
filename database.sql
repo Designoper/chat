@@ -60,9 +60,11 @@ CREATE TABLE conexion (
     ultima_conexion TIMESTAMP NOT NULL
         DEFAULT CURRENT_TIMESTAMP,
 
-    UNIQUE KEY ux_privada (id_usuario, id_receptor),
-    UNIQUE KEY ux_grupo (id_usuario, id_grupo),
-    UNIQUE KEY ux_publica (id_usuario),
+    -- UNIQUE KEY ux_privada (id_usuario, id_receptor),
+    -- UNIQUE KEY ux_grupo (id_usuario, id_grupo),
+    -- UNIQUE KEY ux_publica (id_usuario),
+
+    UNIQUE KEY (id_usuario, id_receptor, id_grupo),
 
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
