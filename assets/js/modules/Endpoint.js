@@ -14,6 +14,7 @@ export default class Endpoint extends Fetch {
 		STREAM_MENSAJES_DIRECTOS: `${this.ROOT}stream-mensajes-directos.php`,
 		GET_MENSAJES_DIRECTOS_NO_LEIDOS: `${this.ROOT}mensajes-directos/no-leidos`,
 		GET_MENSAJES_GRUPALES: `${this.ROOT}mensajes-grupales`,
+		STREAM_MENSAJES_GRUPALES: `${this.ROOT}stream-mensajes-grupales.php`,
 		GET_USUARIOS: `${this.ROOT}usuarios`,
 		GET_GRUPOS: `${this.ROOT}grupos`,
 		GET_GRUPOS_MIEMBRO: `${this.ROOT}grupos/miembro`,
@@ -24,6 +25,7 @@ export default class Endpoint extends Fetch {
 
 		ULTIMA_CONEXION_PUBLICA: `${this.ROOT}usuarios/ultima-conexion-publica`,
 		ULTIMA_CONEXION_DIRECTA: `${this.ROOT}usuarios/ultima-conexion-directa`,
+		ULTIMA_CONEXION_GRUPAL: `${this.ROOT}usuarios/ultima-conexion-grupal`,
 		CREAR_USUARIOS: `${this.ROOT}usuarios/crear`,
 		LOGIN_USUARIOS: `${this.ROOT}usuarios/login`,
 		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,

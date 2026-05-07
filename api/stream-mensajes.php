@@ -29,8 +29,6 @@ while (true) {
 
         echo "event: ping\n";
         echo "data: 1\n\n"; // ← OBLIGATORIO
-        ob_flush();
-        flush();
     }
 
     ob_flush();

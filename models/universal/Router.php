@@ -113,11 +113,20 @@ final class Router
                 new Mensaje()->setUltimaConexionPublica();
             }
         );
+
         $this->setRoute(
             'POST',
             'usuarios/ultima-conexion-directa',
             function (): void {
                 new Mensaje()->setUltimaConexionDirecta();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'usuarios/ultima-conexion-grupal',
+            function (): void {
+                new Mensaje()->setUltimaConexionGrupal();
             }
         );
 

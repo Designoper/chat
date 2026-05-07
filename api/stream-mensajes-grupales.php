@@ -11,7 +11,7 @@ session_write_close();
 require_once __DIR__ . "/../models/Mensaje.php";
 
 $ultimo_id = (int) $_GET["ultimo_id"] ?? 0;
-$id_receptor = (int) $_GET["id_receptor"] ?? null;
+$id_grupo = (int) $_GET["id_grupo"] ?? null;
 
 header("Content-Type: text/event-stream");
 header("Cache-Control: no-cache");
@@ -20,7 +20,7 @@ header("Connection: keep-alive");
 while (true) {
 
     $mensaje = new Mensaje();
-    $mensajes = $mensaje->getNuevosMensajesDirectos($ultimo_id, $id_usuario, $id_receptor);
+    $mensajes = $mensaje->getNuevosMensajesGrupales($ultimo_id, $id_grupo);
 
     if (!empty($mensajes)) {
         foreach ($mensajes as $m) {

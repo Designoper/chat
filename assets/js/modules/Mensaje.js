@@ -1,55 +1,38 @@
 import Usuario from "./Usuario.js";
-import formatearFecha from "./utils/fecha.js";
+import formatearFecha from "../utils/fecha.js";
 
-export default class MensajeDirecto extends Usuario {
+export default class Mensaje extends Usuario {
 	MENSAJES_OUTPUT = document.querySelector('output');
-	h1 = document.querySelector('h1');
-	input = document.querySelector('input[type="hidden"]');
-	id_receptor = new URL(location.href).searchParams.get('id-receptor');
-	nombre_receptor = new URL(location.href).searchParams.get('nombre-receptor');
+	ultimoId = 0;
 
 	constructor() {
 		super();
-		this.ultimoId = 0; // ← AHORA ES PARTE DE LA CLASE
+		this.sessionCheck();
 	}
 
-	async initialize() {
-		await this.sessionCheck();
+	streamMensajes() {
+		const evtSource = new EventSource(`${this.ENDPOINTS.STREAM_MENSAJES}?ultimo_id=${this.ultimoId}`);
 
-		this.writeChat();
-		this.streamMensajesDirectos();
-	}
-
-	streamMensajesDirectos() {
-		const evtSource = new EventSource(`${this.ENDPOINTS.STREAM_MENSAJES_DIRECTOS}?ultimo_id=${this.ultimoId}&id_receptor=${this.id_receptor}`);
-
-		evtSource.addEventListener("mensaje", async (event) => {
+		evtSource.addEventListener("mensaje", (event) => {
 			const mensaje = JSON.parse(event.data);
-			const content = this.mensajesDirectosTemplate([mensaje]);
+			const content = this.mensajesTemplate([mensaje]);
 			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
 			this.formHandler();
 
 			this.ultimoId = mensaje.id_mensaje;
+
+			// Auto-scroll
+			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
 		});
 
 		evtSource.addEventListener("ping", async (event) => {
-			const form = new FormData();
-			form.append("id_receptor", this.id_receptor);
-
-			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_DIRECTA, {
+			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
 				method: "POST",
-				body: form
 			});
 		});
-
 	}
 
-	writeChat() {
-		this.h1.innerHTML = `Chat privado con ${this.nombre_receptor}`;
-		this.input.setAttribute('value', `${this.id_receptor}`);
-	}
-
-	mensajesDirectosTemplate(fetchedMensajes) {
+	mensajesTemplate(fetchedMensajes) {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
@@ -65,8 +48,7 @@ export default class MensajeDirecto extends Usuario {
 					hour: "numeric",
 					minute: "numeric"
 				}
-			)}
-				</p>
+			)}</p>
 				${mensaje.id_emisor == this.id_usuario
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.ELIMINAR_MENSAJES}/${mensaje.id_mensaje}">
 						<button>
@@ -75,7 +57,8 @@ export default class MensajeDirecto extends Usuario {
 							</svg>
 						</button>
 					</form>`
-				: ''}
+				: ''
+			}
 			</article>
 			`
 		).join('');
@@ -83,7 +66,7 @@ export default class MensajeDirecto extends Usuario {
 		return mensajes;
 	}
 
-	async writeMensajeDirecto(form, method, action) {
+	async writeMensaje(form, method, action) {
 		await this.fetchData(form, method, action);
 	}
 
@@ -94,5 +77,3 @@ export default class MensajeDirecto extends Usuario {
 		}
 	}
 }
-
-new MensajeDirecto().initialize();

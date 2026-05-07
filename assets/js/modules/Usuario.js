@@ -8,10 +8,6 @@ export default class Usuario extends Endpoint {
 		super();
 	}
 
-	async initialize() {
-		this.formHandler();
-	}
-
 	async getUsuarios() {
 		const response = await this.simpleFetch(this.ENDPOINTS.GET_USUARIOS);
 		this.printUsuarios(response);
@@ -92,12 +88,4 @@ export default class Usuario extends Endpoint {
 			span.textContent = `(${response.content.num_mensajes})`;
 		}
 	}
-}
-
-const usuario = new Usuario();
-usuario.initialize();
-
-if (location.pathname === '/sala-principal.php') {
-	usuario.getUsuarios();
-	usuario.getMensajesNoLeidos();
 }

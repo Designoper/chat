@@ -34,7 +34,7 @@ new Usuario()->authBrowser();
 	<link href="./assets/css/common/layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/sala-principal.css" rel="preload stylesheet" as="style">
 
-	<script src="./assets/js/Usuario.js" type="module" async></script>
+	<script src="./assets/js/pages/sala-principal.js" type="module"></script>
 
 	<script src="./sw-register.js" defer></script>
 

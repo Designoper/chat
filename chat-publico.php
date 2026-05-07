@@ -34,7 +34,7 @@ new Usuario()->authBrowser();
 	<link href="./assets/css/common/layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/chat.css" rel="preload stylesheet" as="style">
 
-	<script src="./assets/js/Mensaje.js" type="module" async></script>
+	<script src="./assets/js/pages/chat-publico.js" type="module"></script>
 
 	<script src="./sw-register.js" defer></script>
 

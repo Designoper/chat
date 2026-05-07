@@ -6,9 +6,6 @@ export default class Grupo extends Endpoint {
 
 	constructor() {
 		super();
-	}
-
-	async initialize() {
 		this.getGruposMiembro();
 		this.getGruposPendiente();
 	}
@@ -112,5 +109,3 @@ export default class Grupo extends Endpoint {
 		}
 	}
 }
-
-new Grupo().initialize();

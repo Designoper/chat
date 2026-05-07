@@ -11,7 +11,6 @@ final readonly class Mensaje extends MysqliConnect
 	private ?int $id_emisor;
 	private int $id_receptor;
 	private int $id_grupo;
-	private int $ultimo_id;
 
 	public function __construct()
 	{
@@ -81,20 +80,6 @@ final readonly class Mensaje extends MysqliConnect
 			: $this->errors->setValidationError($error_message);
 	}
 
-	// private function setUltimoId(): void
-	// {
-	// 	$name = 'ultimo_id';
-	// 	$value = $_GET[$name] ?? null;
-	// 	$min_range = 1;
-	// 	$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
-
-	// 	filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
-	// 		? $this->ultimo_id = (int) $value
-	// 		//NO FUNCIONA
-	// 		// : $this->errors->setValidationError($error_message);
-	// 		: null;
-	// }
-
 	// MARK: ULTIMA CONEXION PUBLICA
 
 	public function setUltimaConexionPublica(): void
@@ -127,6 +112,7 @@ final readonly class Mensaje extends MysqliConnect
 	public function setUltimaConexionDirecta(): void
 	{
 		$this->setIdReceptor();
+
 		$id_usuario = $this->id_emisor;
 		$id_receptor = $this->id_receptor;
 
@@ -152,11 +138,41 @@ final readonly class Mensaje extends MysqliConnect
 		$this->sendResponse();
 	}
 
+	// MARK: ULTIMA CONEXION GRUPAL
+
+	public function setUltimaConexionGrupal(): void
+	{
+		$this->setIdGrupo();
+		$id_usuario = $this->id_emisor;
+		$id_grupo = $this->id_grupo;
+
+		$statement =
+			"INSERT INTO conexion (id_usuario, id_grupo, ultima_conexion)
+			VALUES (?, ?, CURRENT_TIMESTAMP)
+			ON DUPLICATE KEY
+			UPDATE ultima_conexion = CURRENT_TIMESTAMP";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"ii",
+			$id_usuario,
+			$id_grupo,
+		);
+
+		$query->execute();
+		$query->close();
+
+		$this->status = 201;
+		$this->message = 'Última conexión grupal actualizada con éxito';
+		$this->sendResponse();
+	}
+
 	// MARK: COUNT UNREAD DIRECT MESSAGES
 
 	public function countUnreadDirectMessages(): void
 	{
-		$this->authEndpoint();
+		// $this->authEndpoint();
 
 		$this->setIdReceptor();
 
@@ -194,6 +210,52 @@ final readonly class Mensaje extends MysqliConnect
 
 		$this->status = 200;
 		$this->message = 'Número de mensajes directos no leídos obtenido con éxito';
+		$this->content = ['num_mensajes' => $result['num_mensajes']];
+		$this->sendResponse();
+	}
+
+	// MARK: COUNT UNREAD GROUP MESSAGES
+
+	public function countUnreadGroupMessages(): void
+	{
+		// $this->authEndpoint();
+
+		$this->setIdGrupo();
+
+		$this->checkValidationErrors();
+
+		$id_emisor = $this->id_emisor;
+		$id_grupo = $this->id_grupo;
+
+		$statement =
+			"SELECT COUNT(*) AS num_mensajes
+			FROM mensajes
+			WHERE mensajes.id_grupo = ?
+			AND mensajes.id_emisor = ?
+			AND mensajes.fecha_envio > COALESCE((
+				SELECT ultima_conexion
+				FROM conexion
+				WHERE id_usuario = ?
+				AND id_receptor IS NULL
+				AND id_grupo = ?
+			), '1970-01-01 00:00:01')";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"iiii",
+			$id_emisor,
+			$id_grupo,
+			$id_emisor,
+			$id_grupo
+		);
+
+		$query->execute();
+		$result = $query->get_result()->fetch_assoc();
+		$query->close();
+
+		$this->status = 200;
+		$this->message = 'Número de mensajes grupales no leídos obtenido con éxito';
 		$this->content = ['num_mensajes' => $result['num_mensajes']];
 		$this->sendResponse();
 	}
@@ -615,6 +677,40 @@ final readonly class Mensaje extends MysqliConnect
 			$id_receptor,
 			$id_receptor,
 			$id_emisor
+		);
+
+		$query->execute();
+		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$query->close();
+
+		return $mensajes;
+	}
+
+	// MARK: GET NUEVOS MENSAJES GRUPALES
+
+	public function getNuevosMensajesGrupales(int $ultimo_id, int $id_grupo)
+	{
+		// $id_emisor = $_SESSION['id_usuario'];
+
+		$statement =
+			"SELECT mensajes.id_mensaje,
+				mensajes.contenido,
+				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+				mensajes.id_emisor,
+				usuarios.nombre_usuario
+			FROM mensajes
+			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+            WHERE mensajes.id_mensaje > ?
+            AND mensajes.id_receptor IS NULL
+			AND mensajes.id_grupo = ?
+            ORDER BY mensajes.id_mensaje ASC";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"ii",
+			$ultimo_id,
+			$id_grupo
 		);
 
 		$query->execute();
