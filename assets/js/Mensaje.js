@@ -10,10 +10,9 @@ export default class Mensaje extends Usuario {
 		this.ultimoId = 0; // ← AHORA ES PARTE DE LA CLASE
 	}
 
-
 	async initialize() {
 		await this.getMensajes();
-		this.test();
+		this.streamMensajes();
 	}
 
 	async getMensajes() {
@@ -26,49 +25,26 @@ export default class Mensaje extends Usuario {
 		}
 	}
 
-
-	appendMensaje(mensaje) {
-		const html = `
-        <article ${mensaje.id_emisor == this.id_usuario ? 'class="mensaje-propio"' : ''}>
-            <p>${mensaje.nombre_usuario}</p>
-            <p>${mensaje.contenido}</p>
-            <p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
-			{
-				weekday: "long",
-				year: "numeric",
-				month: "numeric",
-				day: "numeric",
-				hour: "numeric",
-				minute: "numeric"
-			})}</p>
-        </article>
-    `;
-
-		this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", html);
-
-		// Auto-scroll
-		// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
-	}
-
-	test() {
+	streamMensajes() {
 		const evtSource = new EventSource(
 			`${location.origin}/api/stream-mensajes.php?ultimo_id=${this.ultimoId}`
 		);
 
-		evtSource.addEventListener("mensaje", (e) => {
-			const mensaje = JSON.parse(e.data);
-			// console.log(mensaje);
-			this.appendMensaje(mensaje);
+		evtSource.addEventListener("mensaje", (event) => {
+			const mensaje = JSON.parse(event.data);
+			const content = this.mensajesTemplate([mensaje]);
+			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
+			this.formHandler();
+
 			this.ultimoId = mensaje.id_mensaje; // ← AHORA SÍ SE ACTUALIZA
+			// Auto-scroll
+			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
 		});
 
-
-
-		evtSource.addEventListener("ping", () => {
+		// evtSource.addEventListener("ping", () => {
 			// console.log("keepalive");
-		});
+		// });
 	}
-
 
 	mensajesTemplate(fetchedMensajes) {
 
@@ -117,7 +93,10 @@ export default class Mensaje extends Usuario {
 	}
 
 	async deleteMensaje(form, method) {
-		await this.fetchData(form, method);
+		const response = await this.fetchData(form, method);
+		if (response.status === 204) {
+			form.closest("article").remove();
+		}
 	}
 }
 
