@@ -108,6 +108,14 @@ final class Router
 
         $this->setRoute(
             'POST',
+            'usuarios/ultima-conexion-publica',
+            function (): void {
+                new Mensaje()->setUltimaConexionPublica();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
             'usuarios/crear',
             function (): void {
                 new Usuario()->createUsuario();

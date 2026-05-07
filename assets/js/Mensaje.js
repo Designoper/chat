@@ -29,20 +29,31 @@ export default class Mensaje extends Usuario {
 	streamMensajes() {
 		const evtSource = new EventSource(`${this.ENDPOINTS.STREAM_MENSAJES}?ultimo_id=${this.ultimoId}`);
 
-		evtSource.addEventListener("mensaje", (event) => {
+		evtSource.addEventListener("mensaje", async (event) => {
 			const mensaje = JSON.parse(event.data);
 			const content = this.mensajesTemplate([mensaje]);
 			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
 			this.formHandler();
 
 			this.ultimoId = mensaje.id_mensaje; // ← AHORA SÍ SE ACTUALIZA
+			// this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
+
+			// await this.simpleFetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
+			// 	method: "POST",
+			// });
+
+			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
+				method: "POST",
+				// body: JSON.stringify({ id_mensaje: this.ultimoId })
+			});
+
 			// console.log("Nuevo mensaje recibido. Último ID actualizado a:", this.ultimoId);
 			// Auto-scroll
 			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
 		});
 
 		// evtSource.addEventListener("ping", () => {
-			// console.log("keepalive");
+		// console.log("keepalive");
 		// });
 	}
 

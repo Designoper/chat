@@ -82,7 +82,7 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: ULTIMA CONEXION PUBLICA
 
-	private function setUltimaConexionPublica(): void
+	public function setUltimaConexionPublica(): void
 	{
 		$id_usuario = $this->id_emisor;
 
@@ -101,6 +101,10 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->execute();
 		$query->close();
+
+		$this->status = 201;
+		$this->message = 'Última conexión pública actualizada con éxito';
+		$this->sendResponse();
 	}
 
 	// MARK: ULTIMA CONEXION DIRECTA
@@ -246,7 +250,7 @@ final readonly class Mensaje extends MysqliConnect
 		$this->status = 200;
 		$this->message = $message;
 		$this->content = $mensajes;
-		$this->setUltimaConexionPublica();
+		// $this->setUltimaConexionPublica();
 		$this->sendResponse();
 	}
 
