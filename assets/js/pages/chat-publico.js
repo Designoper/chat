@@ -2,6 +2,6 @@ import Mensaje from '../modules/Mensaje.js';
 
 const mensaje = new Mensaje();
 
-mensaje.sessionCheck();
+await mensaje.sessionCheck();
 mensaje.streamMensajes();
 mensaje.formHandler();
