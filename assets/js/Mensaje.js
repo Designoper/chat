@@ -38,10 +38,6 @@ export default class Mensaje extends Usuario {
 			this.ultimoId = mensaje.id_mensaje; // ← AHORA SÍ SE ACTUALIZA
 			// this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
 
-			// await this.simpleFetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
-			// 	method: "POST",
-			// });
-
 			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
 				method: "POST",
 				// body: JSON.stringify({ id_mensaje: this.ultimoId })
@@ -51,10 +47,6 @@ export default class Mensaje extends Usuario {
 			// Auto-scroll
 			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
 		});
-
-		// evtSource.addEventListener("ping", () => {
-		// console.log("keepalive");
-		// });
 	}
 
 	mensajesTemplate(fetchedMensajes) {

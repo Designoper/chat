@@ -2,6 +2,7 @@ import Usuario from "./Usuario.js";
 import formatearFecha from "./utils/fecha.js";
 
 export default class MensajeDirecto extends Usuario {
+	MENSAJES_OUTPUT = document.querySelector('output');
 	h1 = document.querySelector('h1');
 	input = document.querySelector('input[type="hidden"]');
 	id_receptor = new URL(location.href).searchParams.get('id-receptor');
@@ -9,6 +10,7 @@ export default class MensajeDirecto extends Usuario {
 
 	constructor() {
 		super();
+		this.ultimoId = 0; // ← AHORA ES PARTE DE LA CLASE
 	}
 
 	async initialize() {
@@ -16,10 +18,27 @@ export default class MensajeDirecto extends Usuario {
 
 		this.writeChat();
 		await this.getMensajesDirectos();
+		this.streamMensajesDirectos();
+	}
 
-		setInterval(async () => {
-			await this.getMensajesDirectos();
-		}, 2000);
+	streamMensajesDirectos() {
+		const evtSource = new EventSource(`${this.ENDPOINTS.STREAM_MENSAJES_DIRECTOS}?ultimo_id=${this.ultimoId}&id_receptor=${this.id_receptor}`);
+
+		evtSource.addEventListener("mensaje", async (event) => {
+			const mensaje = JSON.parse(event.data);
+			const content = this.mensajesDirectosTemplate([mensaje]);
+			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
+			this.formHandler();
+
+			this.ultimoId = mensaje.id_mensaje;
+
+			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
+				method: "POST",
+				body: JSON.stringify(
+					{ [this.id_receptor]: this.id_receptor }
+				)
+			});
+		});
 	}
 
 	writeChat() {
@@ -30,6 +49,12 @@ export default class MensajeDirecto extends Usuario {
 	async getMensajesDirectos() {
 		const response = await this.simpleFetch(`${this.ENDPOINTS.GET_MENSAJES_DIRECTOS}?id_receptor=${this.id_receptor}`);
 		this.printMensajesDirectos(response);
+
+		const mensajes = response.content;
+		if (mensajes.length > 0) {
+			this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
+			console.log("Último ID actualizado a:", this.ultimoId);
+		}
 	}
 
 	mensajesDirectosTemplate(fetchedMensajes) {
@@ -79,7 +104,10 @@ export default class MensajeDirecto extends Usuario {
 	}
 
 	async deleteMensaje(form, method) {
-		await this.fetchData(form, method);
+		const response = await this.fetchData(form, method);
+		if (response.status === 204) {
+			form.closest("article").remove();
+		}
 	}
 }
 

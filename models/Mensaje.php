@@ -532,6 +532,8 @@ final readonly class Mensaje extends MysqliConnect
 		$this->sendResponse();
 	}
 
+	// MARK: GET NUEVOS MENSAJES PUBLICOS
+
 	public function getNuevosMensajesPublicos(int $ultimo_id)
 	{
 		$statement =
@@ -560,4 +562,47 @@ final readonly class Mensaje extends MysqliConnect
 
 		return $mensajes;
 	}
+
+	// MARK: GET NUEVOS MENSAJES DIRECTOS
+
+	public function getNuevosMensajesDirectos(int $ultimo_id, int $id_emisor, int $id_receptor)
+	{
+		// $id_emisor = $_SESSION['id_usuario'];
+
+		$statement =
+			"SELECT mensajes.id_mensaje,
+				mensajes.contenido,
+				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+				mensajes.id_emisor,
+				usuarios.nombre_usuario
+			FROM mensajes
+			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+            WHERE mensajes.id_mensaje > ?
+            AND mensajes.id_receptor IS NOT NULL
+			AND (
+				(id_emisor = ? AND id_receptor = ?)
+				OR (id_emisor = ? AND id_receptor = ?)
+			)
+			AND mensajes.id_grupo IS NULL
+            ORDER BY mensajes.id_mensaje ASC";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"iiiii",
+			$ultimo_id,
+			$id_emisor,
+			$id_receptor,
+			$id_receptor,
+			$id_emisor
+		);
+
+		$query->execute();
+		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$query->close();
+
+		return $mensajes;
+	}
+
+
 }
