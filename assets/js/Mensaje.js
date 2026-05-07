@@ -6,7 +6,6 @@ export default class Mensaje extends Usuario {
 
 	constructor() {
 		super();
-		// this.sessionCheck();
 		this.ultimoId = 0; // ← AHORA ES PARTE DE LA CLASE
 	}
 
