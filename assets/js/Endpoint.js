@@ -23,6 +23,7 @@ export default class Endpoint extends Fetch {
 		// POST
 
 		ULTIMA_CONEXION_PUBLICA: `${this.ROOT}usuarios/ultima-conexion-publica`,
+		ULTIMA_CONEXION_DIRECTA: `${this.ROOT}usuarios/ultima-conexion-directa`,
 		CREAR_USUARIOS: `${this.ROOT}usuarios/crear`,
 		LOGIN_USUARIOS: `${this.ROOT}usuarios/login`,
 		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,

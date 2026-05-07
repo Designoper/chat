@@ -124,8 +124,9 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: ULTIMA CONEXION DIRECTA
 
-	private function setUltimaConexionDirecta(): void
+	public function setUltimaConexionDirecta(): void
 	{
+		$this->setIdReceptor();
 		$id_usuario = $this->id_emisor;
 		$id_receptor = $this->id_receptor;
 
@@ -145,6 +146,10 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->execute();
 		$query->close();
+
+		$this->status = 201;
+		$this->message = 'Última conexión directa actualizada con éxito';
+		$this->sendResponse();
 	}
 
 	// MARK: COUNT UNREAD DIRECT MESSAGES
@@ -618,6 +623,4 @@ final readonly class Mensaje extends MysqliConnect
 
 		return $mensajes;
 	}
-
-
 }

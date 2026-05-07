@@ -17,7 +17,6 @@ export default class MensajeDirecto extends Usuario {
 		await this.sessionCheck();
 
 		this.writeChat();
-		await this.getMensajesDirectos();
 		this.streamMensajesDirectos();
 	}
 
@@ -31,30 +30,23 @@ export default class MensajeDirecto extends Usuario {
 			this.formHandler();
 
 			this.ultimoId = mensaje.id_mensaje;
+		});
 
-			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
+		evtSource.addEventListener("ping", async (event) => {
+			const form = new FormData();
+			form.append("id_receptor", this.id_receptor);
+
+			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_DIRECTA, {
 				method: "POST",
-				body: JSON.stringify(
-					{ [this.id_receptor]: this.id_receptor }
-				)
+				body: form
 			});
 		});
+
 	}
 
 	writeChat() {
 		this.h1.innerHTML = `Chat privado con ${this.nombre_receptor}`;
 		this.input.setAttribute('value', `${this.id_receptor}`);
-	}
-
-	async getMensajesDirectos() {
-		const response = await this.simpleFetch(`${this.ENDPOINTS.GET_MENSAJES_DIRECTOS}?id_receptor=${this.id_receptor}`);
-		this.printMensajesDirectos(response);
-
-		const mensajes = response.content;
-		if (mensajes.length > 0) {
-			this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
-			console.log("Último ID actualizado a:", this.ultimoId);
-		}
 	}
 
 	mensajesDirectosTemplate(fetchedMensajes) {
@@ -89,14 +81,6 @@ export default class MensajeDirecto extends Usuario {
 		).join('');
 
 		return mensajes;
-	}
-
-	printMensajesDirectos(mensajes) {
-		const output = document.querySelector('output');
-		const content = this.mensajesDirectosTemplate(mensajes.content);
-		output.innerHTML = content;
-
-		this.formHandler();
 	}
 
 	async writeMensajeDirecto(form, method, action) {

@@ -29,6 +29,9 @@ while (true) {
             echo "event: mensaje\n";
             echo "data: " . json_encode($m) . "\n\n";
         }
+
+        echo "event: ping\n";
+        echo "data: 1\n\n"; // ← OBLIGATORIO
         ob_flush();
         flush();
     }

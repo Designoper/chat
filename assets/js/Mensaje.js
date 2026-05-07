@@ -6,25 +6,13 @@ export default class Mensaje extends Usuario {
 
 	constructor() {
 		super();
-		this.ultimoId = 0; // ← AHORA ES PARTE DE LA CLASE
+		this.ultimoId = 0;
 	}
 
 	async initialize() {
 		await this.sessionCheck();
-		// await this.getMensajes();
 		this.streamMensajes();
 	}
-
-	// async getMensajes() {
-	// 	const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
-	// 	this.printMensajes(response);
-
-	// 	const mensajes = response.content;
-	// 	if (mensajes.length > 0) {
-	// 		this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
-	// 		console.log("Último ID actualizado a:", this.ultimoId);
-	// 	}
-	// }
 
 	streamMensajes() {
 		const evtSource = new EventSource(`${this.ENDPOINTS.STREAM_MENSAJES}?ultimo_id=${this.ultimoId}`);
@@ -35,8 +23,7 @@ export default class Mensaje extends Usuario {
 			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
 			this.formHandler();
 
-			this.ultimoId = mensaje.id_mensaje; // ← AHORA SÍ SE ACTUALIZA
-			// this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
+			this.ultimoId = mensaje.id_mensaje;
 
 			// Auto-scroll
 			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
@@ -82,14 +69,6 @@ export default class Mensaje extends Usuario {
 
 		return mensajes;
 	}
-
-	// printMensajes(mensajes) {
-
-	// 	const content = this.mensajesTemplate(mensajes.content);
-	// 	this.MENSAJES_OUTPUT.innerHTML = content;
-
-	// 	this.formHandler();
-	// }
 
 	async writeMensaje(form, method, action) {
 		await this.fetchData(form, method, action);
