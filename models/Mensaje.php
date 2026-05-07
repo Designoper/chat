@@ -11,6 +11,7 @@ final readonly class Mensaje extends MysqliConnect
 	private ?int $id_emisor;
 	private int $id_receptor;
 	private int $id_grupo;
+	private int $ultimo_id;
 
 	public function __construct()
 	{
@@ -79,6 +80,20 @@ final readonly class Mensaje extends MysqliConnect
 			? $this->id_grupo = (int) $value
 			: $this->errors->setValidationError($error_message);
 	}
+
+	// private function setUltimoId(): void
+	// {
+	// 	$name = 'ultimo_id';
+	// 	$value = $_GET[$name] ?? null;
+	// 	$min_range = 1;
+	// 	$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
+
+	// 	filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
+	// 		? $this->ultimo_id = (int) $value
+	// 		//NO FUNCIONA
+	// 		// : $this->errors->setValidationError($error_message);
+	// 		: null;
+	// }
 
 	// MARK: ULTIMA CONEXION PUBLICA
 

@@ -1,5 +1,7 @@
 <?php
 
+set_time_limit(0);
+
 define('NO_SESSION', true);
 
 session_start();

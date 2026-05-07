@@ -1,5 +1,9 @@
 <?php
 
+set_time_limit(0);
+
+// ignore_user_abort(true);
+
 define('NO_SESSION', true);
 
 require_once __DIR__ . "/../models/Mensaje.php";
@@ -14,7 +18,6 @@ while (true) {
 
     $mensaje = new Mensaje();
     $mensajes = $mensaje->getNuevosMensajesPublicos($ultimo_id);
-    // $mensaje->setUltimaConexionPublica();
 
     if (!empty($mensajes)) {
         foreach ($mensajes as $m) {
@@ -23,12 +26,13 @@ while (true) {
             echo "event: mensaje\n";
             echo "data: " . json_encode($m) . "\n\n";
         }
+
+        echo "event: ping\n";
+        echo "data: 1\n\n"; // ← OBLIGATORIO
         ob_flush();
         flush();
     }
 
-    // echo "event: ping\n";
-    // echo "data: keepalive\n\n";
     ob_flush();
     flush();
 

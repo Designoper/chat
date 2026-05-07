@@ -11,25 +11,25 @@ export default class Mensaje extends Usuario {
 
 	async initialize() {
 		await this.sessionCheck();
-		await this.getMensajes();
+		// await this.getMensajes();
 		this.streamMensajes();
 	}
 
-	async getMensajes() {
-		const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
-		this.printMensajes(response);
+	// async getMensajes() {
+	// 	const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
+	// 	this.printMensajes(response);
 
-		const mensajes = response.content;
-		if (mensajes.length > 0) {
-			this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
-			console.log("Último ID actualizado a:", this.ultimoId);
-		}
-	}
+	// 	const mensajes = response.content;
+	// 	if (mensajes.length > 0) {
+	// 		this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
+	// 		console.log("Último ID actualizado a:", this.ultimoId);
+	// 	}
+	// }
 
 	streamMensajes() {
 		const evtSource = new EventSource(`${this.ENDPOINTS.STREAM_MENSAJES}?ultimo_id=${this.ultimoId}`);
 
-		evtSource.addEventListener("mensaje", async (event) => {
+		evtSource.addEventListener("mensaje", (event) => {
 			const mensaje = JSON.parse(event.data);
 			const content = this.mensajesTemplate([mensaje]);
 			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
@@ -38,14 +38,14 @@ export default class Mensaje extends Usuario {
 			this.ultimoId = mensaje.id_mensaje; // ← AHORA SÍ SE ACTUALIZA
 			// this.ultimoId = mensajes[mensajes.length - 1].id_mensaje;
 
-			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
-				method: "POST",
-				// body: JSON.stringify({ id_mensaje: this.ultimoId })
-			});
-
-			// console.log("Nuevo mensaje recibido. Último ID actualizado a:", this.ultimoId);
 			// Auto-scroll
 			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
+		});
+
+		evtSource.addEventListener("ping", async (event) => {
+			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
+				method: "POST",
+			});
 		});
 	}
 
@@ -83,13 +83,13 @@ export default class Mensaje extends Usuario {
 		return mensajes;
 	}
 
-	printMensajes(mensajes) {
+	// printMensajes(mensajes) {
 
-		const content = this.mensajesTemplate(mensajes.content);
-		this.MENSAJES_OUTPUT.innerHTML = content;
+	// 	const content = this.mensajesTemplate(mensajes.content);
+	// 	this.MENSAJES_OUTPUT.innerHTML = content;
 
-		this.formHandler();
-	}
+	// 	this.formHandler();
+	// }
 
 	async writeMensaje(form, method, action) {
 		await this.fetchData(form, method, action);
