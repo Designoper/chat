@@ -1,4 +1,4 @@
-import MensajeDirecto from "../modules/MensajeDirecto";
+import MensajeDirecto from "../modules/MensajeDirecto.js";
 
 const mensajeDirecto = new MensajeDirecto();
 await mensajeDirecto.sessionCheck();
