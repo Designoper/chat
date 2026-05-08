@@ -13,7 +13,11 @@ export default class Mensaje extends Usuario {
 		const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
 		const mensajes = this.mensajesTemplate(response.content);
 		this.MENSAJES_OUTPUT.innerHTML = mensajes;
-		this.ultimoId = response.content[response.content.length - 1].id_mensaje;
+		this.ultimoId = response.content[response.content.length - 1]?.id_mensaje;
+		console.log(this.ultimoId)
+		if (this.ultimoId === undefined){
+			this.ultimoId = 0;
+		}
 		console.log(this.ultimoId);
 
 		const form = new FormData();

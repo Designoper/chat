@@ -59,7 +59,9 @@ CREATE TABLE ultimos_mensajes_leidos (
     id_grupo INT NULL,
     id_mensaje INT NULL,
 
-    UNIQUE KEY (id_usuario, id_receptor, id_grupo),
+    UNIQUE KEY unico_privado (id_usuario, id_receptor),
+    UNIQUE KEY unico_grupo (id_usuario, id_grupo),
+    UNIQUE KEY unico_publico (id_usuario),
 
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
@@ -77,6 +79,7 @@ CREATE TABLE ultimos_mensajes_leidos (
         REFERENCES mensajes(id_mensaje)
         ON DELETE SET NULL
 );
+
 
 
 

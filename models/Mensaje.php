@@ -90,7 +90,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$name = 'ultimo_id';
 		$value = $method[$name] ?? null;
-		$min_range = 1;
+		$min_range = 0;
 		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
