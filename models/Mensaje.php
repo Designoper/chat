@@ -94,18 +94,18 @@ final readonly class Mensaje extends MysqliConnect
 		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
-			? $this->id_grupo = (int) $value
+			? $this->ultimo_id = (int) $value
 			: $this->errors->setValidationError($error_message);
 	}
 
 	// MARK: SET ULTIMO ID PUBLICO
 
-	public function setUltimoIdPublico(int $id): void
+	public function setUltimoIdPublico(): void
 	{
-		// $this->setultimoId();
+		$this->setultimoId();
 
 		$id_usuario = $this->id_emisor;
-		$ultimo_id = $id;
+		$ultimo_id = $this->ultimo_id;
 
 		$statement =
 			$statement =
@@ -126,9 +126,9 @@ final readonly class Mensaje extends MysqliConnect
 		$query->execute();
 		$query->close();
 
-		// $this->status = 201;
-		// $this->message = 'Última conexión pública actualizada con éxito';
-		// $this->sendResponse();
+		$this->status = 201;
+		$this->message = 'Última conexión pública actualizada con éxito';
+		$this->sendResponse();
 	}
 
 	// MARK: SET ULTIMO ID DIRECTO
@@ -301,7 +301,7 @@ final readonly class Mensaje extends MysqliConnect
 
 	public function countUnreadPublicMessages(): void
 	{
-		$this->authEndpoint();
+		// $this->authEndpoint();
 
 		$id_emisor = $this->id_emisor;
 

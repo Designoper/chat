@@ -114,13 +114,13 @@ final class Router
 
         // MARK: POST ROUTES
 
-        // $this->setRoute(
-        //     'POST',
-        //     'usuarios/ultima-conexion-publica',
-        //     function (): void {
-        //         new Mensaje()->setUltimoIdPublico();
-        //     }
-        // );
+        $this->setRoute(
+            'POST',
+            'usuarios/ultima-conexion-publica',
+            function (): void {
+                new Mensaje()->setUltimoIdPublico();
+            }
+        );
 
         $this->setRoute(
             'POST',

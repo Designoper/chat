@@ -21,27 +21,27 @@ header("Connection: keep-alive");
 while (true) {
 
     $mensaje = new Mensaje();
-    // $id = $mensaje->getUltimoIdPublico($id_usuario);
     $mensajes = $mensaje->getNuevosMensajesPublicos($ultimo_id);
-    $ultimo_id_2;
 
     if (!empty($mensajes)) {
+        // $ultimo_id_2;
+
         foreach ($mensajes as $m) {
-            $ultimo_id_2 = $m["id_mensaje"];
+            $ultimo_id = $m["id_mensaje"];
 
             echo "event: mensaje\n";
             echo "data: " . json_encode($m) . "\n\n";
         }
 
         echo "event: new mensaje\n";
-        echo "data: " . json_encode($ultimo_id_2) . "\n\n";
+        echo "data: " . json_encode($ultimo_id) . "\n\n";
         // $mensaje->setUltimoIdPublico($ultimo_id_2);
     }
 
     // ACTIVA ULTIMA CONEXION
 
-    echo "event: ping\n";
-    echo "data: 1\n\n"; // ← OBLIGATORIO
+    // echo "event: ping\n";
+    // echo "data: 1\n\n"; // ← OBLIGATORIO
 
     ob_flush();
     flush();

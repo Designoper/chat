@@ -15,6 +15,14 @@ export default class Mensaje extends Usuario {
 		this.MENSAJES_OUTPUT.innerHTML = mensajes;
 		this.ultimoId = response.content[response.content.length - 1].id_mensaje;
 		console.log(this.ultimoId);
+
+		const form = new FormData();
+		form.append("ultimo_id", this.ultimoId);
+
+		await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
+			method: "POST",
+			body: form
+		});
 	}
 
 	streamMensajes() {
@@ -34,10 +42,15 @@ export default class Mensaje extends Usuario {
 		});
 
 		evtSource.addEventListener("new mensaje", async (event) => {
-			const mensaje = JSON.parse(event.data);
-			await fetch(){
-				method: "post",
-			}
+			const id = await JSON.parse(event.data);
+			this.ultimoId = id;
+			const form = new FormData();
+			form.append("ultimo_id", id);
+
+			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
+				method: "POST",
+				body: form
+			});
 
 			// Auto-scroll
 			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
