@@ -14,10 +14,13 @@ export default class Mensaje extends Usuario {
 		const mensajes = this.mensajesTemplate(response.content);
 		this.MENSAJES_OUTPUT.innerHTML = mensajes;
 		this.ultimoId = response.content[response.content.length - 1]?.id_mensaje;
+
 		console.log(this.ultimoId)
+
 		if (this.ultimoId === undefined){
-			this.ultimoId = 0;
+			this.ultimoId = "";
 		}
+
 		console.log(this.ultimoId);
 
 		const form = new FormData();
