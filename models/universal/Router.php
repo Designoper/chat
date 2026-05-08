@@ -114,19 +114,19 @@ final class Router
 
         // MARK: POST ROUTES
 
-        $this->setRoute(
-            'POST',
-            'usuarios/ultima-conexion-publica',
-            function (): void {
-                new Mensaje()->setUltimaConexionPublica();
-            }
-        );
+        // $this->setRoute(
+        //     'POST',
+        //     'usuarios/ultima-conexion-publica',
+        //     function (): void {
+        //         new Mensaje()->setUltimoIdPublico();
+        //     }
+        // );
 
         $this->setRoute(
             'POST',
             'usuarios/ultima-conexion-directa',
             function (): void {
-                new Mensaje()->setUltimaConexionDirecta();
+                new Mensaje()->setUltimoIdDirecto();
             }
         );
 
@@ -134,7 +134,7 @@ final class Router
             'POST',
             'usuarios/ultima-conexion-grupal',
             function (): void {
-                new Mensaje()->setUltimaConexionGrupal();
+                new Mensaje()->setUltimoIdGrupal();
             }
         );
 

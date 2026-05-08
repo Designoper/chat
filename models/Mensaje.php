@@ -11,6 +11,7 @@ final readonly class Mensaje extends MysqliConnect
 	private ?int $id_emisor;
 	private int $id_receptor;
 	private int $id_grupo;
+	private int $ultimo_id;
 
 	public function __construct()
 	{
@@ -80,54 +81,81 @@ final readonly class Mensaje extends MysqliConnect
 			: $this->errors->setValidationError($error_message);
 	}
 
-	// MARK: ULTIMA CONEXION PUBLICA
-
-	public function setUltimaConexionPublica(): void
+	private function setultimoId(): void
 	{
+		$method = match ($_SERVER['REQUEST_METHOD']) {
+			'GET' => $_GET,
+			'POST' => $_POST,
+		};
+
+		$name = 'ultimo_id';
+		$value = $method[$name] ?? null;
+		$min_range = 1;
+		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
+
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
+			? $this->id_grupo = (int) $value
+			: $this->errors->setValidationError($error_message);
+	}
+
+	// MARK: SET ULTIMO ID PUBLICO
+
+	public function setUltimoIdPublico(int $id): void
+	{
+		// $this->setultimoId();
+
 		$id_usuario = $this->id_emisor;
+		$ultimo_id = $id;
 
 		$statement =
-			"INSERT INTO conexion (id_usuario, ultima_conexion)
-			VALUES (?, CURRENT_TIMESTAMP)
+			$statement =
+			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_mensaje)
+			VALUES (?, ?)
 			ON DUPLICATE KEY
-			UPDATE ultima_conexion = CURRENT_TIMESTAMP";
+			UPDATE id_mensaje = ?";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"i",
+			"iii",
 			$id_usuario,
+			$ultimo_id,
+			$ultimo_id
 		);
 
 		$query->execute();
 		$query->close();
 
-		$this->status = 201;
-		$this->message = 'Última conexión pública actualizada con éxito';
-		$this->sendResponse();
+		// $this->status = 201;
+		// $this->message = 'Última conexión pública actualizada con éxito';
+		// $this->sendResponse();
 	}
 
-	// MARK: ULTIMA CONEXION DIRECTA
+	// MARK: SET ULTIMO ID DIRECTO
 
-	public function setUltimaConexionDirecta(): void
+	public function setUltimoIdDirecto(): void
 	{
+		$this->setultimoId();
 		$this->setIdReceptor();
 
 		$id_usuario = $this->id_emisor;
 		$id_receptor = $this->id_receptor;
+		$ultimo_id = $this->ultimo_id;
 
 		$statement =
-			"INSERT INTO conexion (id_usuario, id_receptor, ultima_conexion)
-			VALUES (?, ?, CURRENT_TIMESTAMP)
+			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_receptor, id_mensaje)
+			VALUES (?, ?, ?)
 			ON DUPLICATE KEY
-			UPDATE ultima_conexion = CURRENT_TIMESTAMP";
+			UPDATE id_mensaje = ?";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"ii",
+			"iiii",
 			$id_usuario,
 			$id_receptor,
+			$ultimo_id,
+			$ultimo_id
 		);
 
 		$query->execute();
@@ -138,26 +166,30 @@ final readonly class Mensaje extends MysqliConnect
 		$this->sendResponse();
 	}
 
-	// MARK: ULTIMA CONEXION GRUPAL
+	// MARK: SET ULTIMO ID GRUPAL
 
-	public function setUltimaConexionGrupal(): void
+	public function setUltimoIdGrupal(): void
 	{
+		$this->setultimoId();
 		$this->setIdGrupo();
 		$id_usuario = $this->id_emisor;
 		$id_grupo = $this->id_grupo;
+		$ultimo_id = $this->ultimo_id;
 
 		$statement =
-			"INSERT INTO conexion (id_usuario, id_grupo, ultima_conexion)
-			VALUES (?, ?, CURRENT_TIMESTAMP)
+			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_grupo, id_mensaje)
+			VALUES (?, ?, ?)
 			ON DUPLICATE KEY
-			UPDATE ultima_conexion = CURRENT_TIMESTAMP";
+			UPDATE id_mensaje = ?";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"ii",
+			"iiii",
 			$id_usuario,
 			$id_grupo,
+			$ultimo_id,
+			$ultimo_id
 		);
 
 		$query->execute();
@@ -186,15 +218,15 @@ final readonly class Mensaje extends MysqliConnect
 			FROM mensajes
 			WHERE mensajes.id_receptor = ?
 			AND mensajes.id_emisor = ?
-			AND mensajes.fecha_envio > COALESCE((
-				SELECT ultima_conexion
-				FROM conexion
+			AND mensajes.id_mensaje > COALESCE((
+				SELECT id_mensaje
+				FROM ultimos_mensajes_leidos
 				WHERE id_usuario = ?
 				AND id_receptor = ?
 				AND id_grupo IS NULL
-				ORDER BY id_ultima_conexion DESC
+				ORDER BY id_mensaje DESC
 				LIMIT 1
-			), '1970-01-01 00:00:01')";
+			), 0)";
 
 		$query = $this->connection->prepare($statement);
 
@@ -232,18 +264,18 @@ final readonly class Mensaje extends MysqliConnect
 		$statement =
 			"SELECT COUNT(*) AS num_mensajes
 			FROM mensajes
-			WHERE mensajes.id_grupo = ?
-			AND mensajes.id_receptor IS NULL
-			AND mensajes.id_emisor != ?
-			AND mensajes.fecha_envio > COALESCE((
-				SELECT ultima_conexion
-				FROM conexion
+			WHERE mensajes.id_receptor IS NULL
+			AND mensajes.id_grupo = ?
+			AND mensajes.id_emisor = ?
+			AND mensajes.id_mensaje > COALESCE((
+				SELECT id_mensaje
+				FROM ultimos_mensajes_leidos
 				WHERE id_usuario = ?
 				AND id_receptor IS NULL
 				AND id_grupo = ?
-				ORDER BY id_ultima_conexion DESC
+				ORDER BY id_mensaje DESC
 				LIMIT 1
-			), '1970-01-01 00:00:01')";
+			), 0)";
 
 		$query = $this->connection->prepare($statement);
 
@@ -279,15 +311,15 @@ final readonly class Mensaje extends MysqliConnect
 			WHERE mensajes.id_receptor IS NULL
 			AND mensajes.id_grupo IS NULL
 			AND mensajes.id_emisor != ?
-			AND mensajes.fecha_envio > COALESCE((
-				SELECT ultima_conexion
-				FROM conexion
+			AND mensajes.id_mensaje > COALESCE((
+				SELECT id_mensaje
+				FROM ultimos_mensajes_leidos
 				WHERE id_usuario = ?
 				AND id_receptor IS NULL
 				AND id_grupo IS NULL
-				ORDER BY id_ultima_conexion DESC
+				ORDER BY id_mensaje DESC
 				LIMIT 1
-			), '1970-01-01 00:00:01')";
+			), 0)";
 
 		$query = $this->connection->prepare($statement);
 
@@ -393,7 +425,7 @@ final readonly class Mensaje extends MysqliConnect
 		$this->status = 200;
 		$this->message = $message;
 		$this->content = $mensajes;
-		$this->setUltimaConexionDirecta();
+		// $this->setUltimaConexionDirecta();
 		$this->sendResponse();
 	}
 
@@ -725,5 +757,45 @@ final readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		return $mensajes;
+	}
+
+	public function getUltimoIdPublico(int $id_usuario)
+	{
+		// $id_emisor = $_SESSION['id_usuario'];
+		// $id_usuario = 1;
+
+		$statement =
+			"SELECT COALESCE((
+				SELECT id_mensaje
+				FROM ultimos_mensajes_leidos
+				WHERE id_usuario = ?
+				AND id_receptor IS NULL
+				AND id_grupo IS NULL
+				ORDER BY id DESC
+				LIMIT 1
+			), 1) AS id_mensaje";
+
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"i",
+			$id_usuario
+		);
+
+		$query->execute();
+
+		$result = $query->get_result();
+
+		if ($result === false) {
+			return 1;
+		}
+
+		$row = $result->fetch_assoc();
+
+		$id = $row['id_mensaje'];
+		$query->close();
+
+		return $id;
 	}
 }

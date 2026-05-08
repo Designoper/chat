@@ -6,6 +6,10 @@ set_time_limit(0);
 
 define('NO_SESSION', true);
 
+session_start();
+$id_usuario = (int) $_SESSION['id_usuario'] ?? null;
+session_write_close();
+
 require_once __DIR__ . "/../models/Mensaje.php";
 
 $ultimo_id = (int) $_GET["ultimo_id"] ?? 0;
@@ -17,15 +21,21 @@ header("Connection: keep-alive");
 while (true) {
 
     $mensaje = new Mensaje();
+    // $id = $mensaje->getUltimoIdPublico($id_usuario);
     $mensajes = $mensaje->getNuevosMensajesPublicos($ultimo_id);
+    $ultimo_id_2;
 
     if (!empty($mensajes)) {
         foreach ($mensajes as $m) {
-            $ultimo_id = $m["id_mensaje"];
+            $ultimo_id_2 = $m["id_mensaje"];
 
             echo "event: mensaje\n";
             echo "data: " . json_encode($m) . "\n\n";
         }
+
+        echo "event: new mensaje\n";
+        echo "data: " . json_encode($ultimo_id_2) . "\n\n";
+        // $mensaje->setUltimoIdPublico($ultimo_id_2);
     }
 
     // ACTIVA ULTIMA CONEXION

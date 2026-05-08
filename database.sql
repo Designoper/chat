@@ -1,6 +1,6 @@
--- DROP DATABASE IF EXISTS chat;
--- CREATE DATABASE chat CHARACTER SET utf8mb4;
--- USE chat;
+DROP DATABASE IF EXISTS chat;
+CREATE DATABASE chat CHARACTER SET utf8mb4;
+USE chat;
 
 SET default_storage_engine=InnoDB;
 
@@ -52,17 +52,12 @@ CREATE TABLE mensajes (
         ON DELETE SET NULL
 );
 
-CREATE TABLE conexion (
-    id_ultima_conexion INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE ultimos_mensajes_leidos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
     id_receptor INT NULL,
     id_grupo INT NULL,
-    ultima_conexion TIMESTAMP NOT NULL
-        DEFAULT CURRENT_TIMESTAMP,
-
-    -- UNIQUE KEY ux_privada (id_usuario, id_receptor),
-    -- UNIQUE KEY ux_grupo (id_usuario, id_grupo),
-    -- UNIQUE KEY ux_publica (id_usuario),
+    id_mensaje INT NULL,
 
     UNIQUE KEY (id_usuario, id_receptor, id_grupo),
 
@@ -76,8 +71,14 @@ CREATE TABLE conexion (
 
     FOREIGN KEY (id_grupo)
         REFERENCES grupos(id_grupo)
+        ON DELETE SET NULL,
+
+    FOREIGN KEY (id_mensaje)
+        REFERENCES mensajes(id_mensaje)
         ON DELETE SET NULL
 );
+
+
 
 -- CREATE INDEX idx_mensajes_emisor ON mensajes(id_emisor);
 -- CREATE INDEX idx_mensajes_receptor ON mensajes(id_receptor);

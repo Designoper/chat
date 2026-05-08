@@ -3,10 +3,18 @@ import formatearFecha from "../utils/fecha.js";
 
 export default class Mensaje extends Usuario {
 	MENSAJES_OUTPUT = document.querySelector('output');
-	ultimoId = 0;
+	ultimoId;
 
 	constructor() {
 		super();
+	}
+
+	async getMensajes() {
+		const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
+		const mensajes = this.mensajesTemplate(response.content);
+		this.MENSAJES_OUTPUT.innerHTML = mensajes;
+		this.ultimoId = response.content[response.content.length - 1].id_mensaje;
+		console.log(this.ultimoId);
 	}
 
 	streamMensajes() {
@@ -19,15 +27,20 @@ export default class Mensaje extends Usuario {
 			this.formHandler();
 
 			this.ultimoId = mensaje.id_mensaje;
+			console.log(this.ultimoId)
 
 			// Auto-scroll
 			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
 		});
 
-		evtSource.addEventListener("ping", async (event) => {
-			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
-				method: "POST",
-			});
+		evtSource.addEventListener("new mensaje", async (event) => {
+			const mensaje = JSON.parse(event.data);
+			await fetch(){
+				method: "post",
+			}
+
+			// Auto-scroll
+			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
 		});
 	}
 
