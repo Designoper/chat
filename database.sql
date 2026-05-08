@@ -53,7 +53,7 @@ CREATE TABLE mensajes (
 );
 
 CREATE TABLE ultimos_mensajes_leidos (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    -- id INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
     id_receptor INT NULL,
     id_grupo INT NULL,
