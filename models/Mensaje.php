@@ -192,6 +192,8 @@ final readonly class Mensaje extends MysqliConnect
 				WHERE id_usuario = ?
 				AND id_receptor = ?
 				AND id_grupo IS NULL
+				ORDER BY id_ultima_conexion DESC
+				LIMIT 1
 			), '1970-01-01 00:00:01')";
 
 		$query = $this->connection->prepare($statement);
@@ -239,6 +241,8 @@ final readonly class Mensaje extends MysqliConnect
 				WHERE id_usuario = ?
 				AND id_receptor IS NULL
 				AND id_grupo = ?
+				ORDER BY id_ultima_conexion DESC
+				LIMIT 1
 			), '1970-01-01 00:00:01')";
 
 		$query = $this->connection->prepare($statement);
@@ -281,6 +285,8 @@ final readonly class Mensaje extends MysqliConnect
 				WHERE id_usuario = ?
 				AND id_receptor IS NULL
 				AND id_grupo IS NULL
+				ORDER BY id_ultima_conexion DESC
+				LIMIT 1
 			), '1970-01-01 00:00:01')";
 
 		$query = $this->connection->prepare($statement);

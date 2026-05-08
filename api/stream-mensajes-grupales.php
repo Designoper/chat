@@ -5,7 +5,7 @@ set_time_limit(0);
 define('NO_SESSION', true);
 
 session_start();
-$id_usuario = $_SESSION['id_usuario'] ?? null;
+$id_usuario = (int) $_SESSION['id_usuario'] ?? null;
 session_write_close();
 
 require_once __DIR__ . "/../models/Mensaje.php";
@@ -29,10 +29,12 @@ while (true) {
             echo "event: mensaje\n";
             echo "data: " . json_encode($m) . "\n\n";
         }
-
-        echo "event: ping\n";
-        echo "data: 1\n\n"; // ← OBLIGATORIO
     }
+
+    // ACTIVA ULTIMA CONEXION
+
+    echo "event: ping\n";
+    echo "data: 1\n\n"; // ← OBLIGATORIO
 
     ob_flush();
     flush();
