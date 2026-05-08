@@ -6,8 +6,6 @@ export default class Grupo extends Endpoint {
 
 	constructor() {
 		super();
-		this.getGruposMiembro();
-		this.getGruposPendiente();
 	}
 
 	async getGruposMiembro() {
@@ -100,23 +98,24 @@ export default class Grupo extends Endpoint {
 	async createGrupo(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 201) {
-			this.getGruposMiembro();
+			await this.getGruposMiembro();
+			await this.getGruposPendiente();
 		}
 	}
 
 	async aceptarInvitacion(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
-			this.getGruposMiembro();
-			this.getGruposPendiente();
+			await this.getGruposMiembro();
+			await this.getGruposPendiente();
 		}
 	}
 
 	async invitar(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 201) {
-			this.getGruposMiembro();
-			this.getGruposPendiente();
+			await this.getGruposMiembro();
+			await this.getGruposPendiente();
 		}
 	}
 }
