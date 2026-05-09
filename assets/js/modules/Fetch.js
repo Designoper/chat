@@ -8,6 +8,23 @@ export default class Fetch {
 		return json;
 	}
 
+	async fetchPostNoForm(url, obj) {
+		const form = new FormData();
+
+		for (const [key, value] of Object.entries(obj)) {
+			form.append(key, value);
+		}
+
+		const response = await fetch(url, {
+			method: "POST",
+			body: form
+		});
+
+		const json = await response.json();
+		json.status = response.status;
+		return json;
+	}
+
 	async fetchData(form, method, action = form.action) {
 
 		const init = {};
