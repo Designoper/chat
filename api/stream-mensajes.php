@@ -24,7 +24,6 @@ while (true) {
     $mensajes = $mensaje->getNuevosMensajesPublicos($ultimo_id);
 
     if (!empty($mensajes)) {
-        // $ultimo_id_2;
 
         foreach ($mensajes as $m) {
             $ultimo_id = $m["id_mensaje"];
@@ -35,10 +34,7 @@ while (true) {
 
         echo "event: new mensaje\n";
         echo "data: " . json_encode($ultimo_id) . "\n\n";
-        // $mensaje->setUltimoIdPublico($ultimo_id_2);
     }
-
-    // ACTIVA ULTIMA CONEXION
 
     // echo "event: ping\n";
     // echo "data: 1\n\n"; // ← OBLIGATORIO
