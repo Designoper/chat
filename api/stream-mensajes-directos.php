@@ -34,11 +34,6 @@ while (true) {
         echo "data: " . json_encode($ultimo_id) . "\n\n";
     }
 
-    // ACTIVA ULTIMA CONEXION
-
-    // echo "event: ping\n";
-    // echo "data: 1\n\n"; // ← OBLIGATORIO
-
     ob_flush();
     flush();
 

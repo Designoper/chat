@@ -174,6 +174,7 @@ final readonly class Mensaje extends MysqliConnect
 	{
 		$this->setultimoId();
 		$this->setIdGrupo();
+
 		$id_usuario = $this->id_emisor;
 		$id_grupo = $this->id_grupo;
 		$ultimo_id = $this->ultimo_id;
@@ -265,7 +266,7 @@ final readonly class Mensaje extends MysqliConnect
 			"SELECT COUNT(*) AS num_mensajes
 			FROM mensajes
 			WHERE mensajes.id_grupo = ?
-			AND mensajes.id_emisor = ?
+			AND mensajes.id_emisor != ?
 			AND mensajes.id_receptor IS NULL
 			AND mensajes.id_mensaje > COALESCE((
 				SELECT id_mensaje
@@ -681,8 +682,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	public function getNuevosMensajesDirectos(int $ultimo_id, int $id_emisor, int $id_receptor)
 	{
-		// $id_emisor = $_SESSION['id_usuario'];
-
 		$statement =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
@@ -692,7 +691,7 @@ final readonly class Mensaje extends MysqliConnect
 			FROM mensajes
 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
             WHERE mensajes.id_mensaje > ?
-            AND mensajes.id_receptor IS NOT NULL
+            -- AND mensajes.id_receptor IS NOT NULL
 			AND (
 				(id_emisor = ? AND id_receptor = ?)
 				OR (id_emisor = ? AND id_receptor = ?)
@@ -722,8 +721,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	public function getNuevosMensajesGrupales(int $ultimo_id, int $id_grupo)
 	{
-		// $id_emisor = $_SESSION['id_usuario'];
-
 		$statement =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
@@ -752,43 +749,43 @@ final readonly class Mensaje extends MysqliConnect
 		return $mensajes;
 	}
 
-	public function getUltimoIdPublico(int $id_usuario)
-	{
-		// $id_emisor = $_SESSION['id_usuario'];
-		// $id_usuario = 1;
+	// public function getUltimoIdPublico(int $id_usuario)
+	// {
+	// 	// $id_emisor = $_SESSION['id_usuario'];
+	// 	// $id_usuario = 1;
 
-		$statement =
-			"SELECT COALESCE((
-				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos
-				WHERE id_usuario = ?
-				AND id_receptor IS NULL
-				AND id_grupo IS NULL
-				ORDER BY id DESC
-				LIMIT 1
-			), 1) AS id_mensaje";
+	// 	$statement =
+	// 		"SELECT COALESCE((
+	// 			SELECT id_mensaje
+	// 			FROM ultimos_mensajes_leidos
+	// 			WHERE id_usuario = ?
+	// 			AND id_receptor IS NULL
+	// 			AND id_grupo IS NULL
+	// 			ORDER BY id DESC
+	// 			LIMIT 1
+	// 		), 1) AS id_mensaje";
 
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"i",
-			$id_usuario
-		);
+	// 	$query->bind_param(
+	// 		"i",
+	// 		$id_usuario
+	// 	);
 
-		$query->execute();
+	// 	$query->execute();
 
-		$result = $query->get_result();
+	// 	$result = $query->get_result();
 
-		if ($result === false) {
-			return 1;
-		}
+	// 	if ($result === false) {
+	// 		return 1;
+	// 	}
 
-		$row = $result->fetch_assoc();
+	// 	$row = $result->fetch_assoc();
 
-		$id = $row['id_mensaje'];
-		$query->close();
+	// 	$id = $row['id_mensaje'];
+	// 	$query->close();
 
-		return $id;
-	}
+	// 	return $id;
+	// }
 }

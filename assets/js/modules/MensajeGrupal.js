@@ -11,6 +11,26 @@ export default class MensajeGrupal extends Mensaje {
 		super();
 	}
 
+	async getMensajesGrupales() {
+		const response = await this.simpleFetch(`${this.ENDPOINTS.GET_MENSAJES_GRUPALES}?id_grupo=${this.id_grupo}`);
+		const mensajes = this.mensajesTemplate(response.content);
+		this.MENSAJES_OUTPUT.innerHTML = mensajes;
+		this.ultimoId = response.content[response.content.length - 1]?.id_mensaje;
+
+		if (this.ultimoId === undefined) {
+			this.ultimoId = "";
+		}
+
+		const form = new FormData();
+		form.append("ultimo_id", this.ultimoId);
+		form.append("id_grupo", this.id_grupo);
+
+		await fetch(this.ENDPOINTS.ULTIMO_ID_GRUPAL, {
+			method: "POST",
+			body: form
+		});
+	}
+
 	streamMensajesGrupales() {
 		const evtSource = new EventSource(`${this.ENDPOINTS.STREAM_MENSAJES_GRUPALES}?ultimo_id=${this.ultimoId}&id_grupo=${this.id_grupo}`);
 
@@ -23,14 +43,20 @@ export default class MensajeGrupal extends Mensaje {
 			this.ultimoId = mensaje.id_mensaje;
 		});
 
-		evtSource.addEventListener("ping", async (event) => {
+		evtSource.addEventListener("new mensaje", async (event) => {
+			const id = JSON.parse(event.data);
+			this.ultimoId = id;
 			const form = new FormData();
+			form.append("ultimo_id", id);
 			form.append("id_grupo", this.id_grupo);
 
-			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_GRUPAL, {
+			await fetch(this.ENDPOINTS.ULTIMO_ID_GRUPAL, {
 				method: "POST",
 				body: form
 			});
+
+			// Auto-scroll
+			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
 		});
 	}
 

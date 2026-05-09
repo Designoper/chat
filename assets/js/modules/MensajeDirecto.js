@@ -17,13 +17,9 @@ export default class MensajeDirecto extends Mensaje {
 		this.MENSAJES_OUTPUT.innerHTML = mensajes;
 		this.ultimoId = response.content[response.content.length - 1]?.id_mensaje;
 
-		// console.log(this.ultimoId)
-
 		if (this.ultimoId === undefined) {
 			this.ultimoId = "";
 		}
-
-		// console.log(this.ultimoId);
 
 		const form = new FormData();
 		form.append("ultimo_id", this.ultimoId);
