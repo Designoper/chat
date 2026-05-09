@@ -52,15 +52,23 @@ CREATE TABLE mensajes (
         ON DELETE SET NULL
 );
 
-CREATE TABLE ultimos_mensajes_leidos (
+CREATE TABLE ultimos_mensajes_leidos_publicos (
     id_usuario INT NOT NULL,
-    id_receptor INT NULL,
-    id_grupo INT NULL,
+    id_mensaje INT NULL,
+
+    UNIQUE KEY unico_publico (id_usuario),
+
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE ultimos_mensajes_leidos_directos (
+    id_usuario INT NOT NULL,
+    id_receptor INT NOT NULL,
     id_mensaje INT NULL,
 
     UNIQUE KEY unico_privado (id_usuario, id_receptor),
-    UNIQUE KEY unico_grupo (id_usuario, id_grupo),
-    UNIQUE KEY unico_publico (id_usuario),
 
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
@@ -68,11 +76,23 @@ CREATE TABLE ultimos_mensajes_leidos (
 
     FOREIGN KEY (id_receptor)
         REFERENCES usuarios(id_usuario)
-        ON DELETE SET NULL,
+        -- ON DELETE SET NULL,
+);
+
+CREATE TABLE ultimos_mensajes_leidos_grupales (
+    id_usuario INT NOT NULL,
+    id_grupo INT NOT NULL,
+    id_mensaje INT NULL,
+
+    UNIQUE KEY unico_grupo (id_usuario, id_grupo),
+
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE,
 
     FOREIGN KEY (id_grupo)
         REFERENCES grupos(id_grupo)
-        ON DELETE SET NULL
+        -- ON DELETE SET NULL
 );
 
 -- CREATE INDEX idx_mensajes_emisor ON mensajes(id_emisor);

@@ -111,8 +111,8 @@ final readonly class Mensaje extends MysqliConnect
 
 		$statement =
 			$statement =
-			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_receptor, id_grupo, id_mensaje)
-			VALUES (?, NULL, NULL, ?)
+			"INSERT INTO ultimos_mensajes_leidos_publicos (id_usuario, id_mensaje)
+			VALUES (?, ?)
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
@@ -145,8 +145,8 @@ final readonly class Mensaje extends MysqliConnect
 		$ultimo_id = $this->ultimo_id;
 
 		$statement =
-			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_receptor, id_grupo, id_mensaje)
-			VALUES (?, ?, NULL, ?)
+			"INSERT INTO ultimos_mensajes_leidos_directos (id_usuario, id_receptor, id_mensaje)
+			VALUES (?, ?, ?)
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
@@ -179,8 +179,8 @@ final readonly class Mensaje extends MysqliConnect
 		$ultimo_id = $this->ultimo_id;
 
 		$statement =
-			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_receptor, id_grupo, id_mensaje)
-			VALUES (?, NULL, ?, ?)
+			"INSERT INTO ultimos_mensajes_leidos_grupales (id_usuario, id_grupo, id_mensaje)
+			VALUES (?, ?, ?)
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
@@ -220,14 +220,12 @@ final readonly class Mensaje extends MysqliConnect
 			FROM mensajes
 			WHERE mensajes.id_receptor = ?
 			AND mensajes.id_emisor = ?
+			AND mensajes.id_grupo IS NULL
 			AND mensajes.id_mensaje > COALESCE((
 				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos
+				FROM ultimos_mensajes_leidos_directos
 				WHERE id_usuario = ?
 				AND id_receptor = ?
-				AND id_grupo IS NULL
-				ORDER BY id_mensaje DESC
-				LIMIT 1
 			), 0)";
 
 		$query = $this->connection->prepare($statement);
@@ -266,17 +264,14 @@ final readonly class Mensaje extends MysqliConnect
 		$statement =
 			"SELECT COUNT(*) AS num_mensajes
 			FROM mensajes
-			WHERE mensajes.id_receptor IS NULL
-			AND mensajes.id_grupo = ?
+			WHERE mensajes.id_grupo = ?
 			AND mensajes.id_emisor = ?
+			AND mensajes.id_receptor IS NULL
 			AND mensajes.id_mensaje > COALESCE((
 				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos
+				FROM ultimos_mensajes_leidos_grupales
 				WHERE id_usuario = ?
-				AND id_receptor IS NULL
 				AND id_grupo = ?
-				ORDER BY id_mensaje DESC
-				LIMIT 1
 			), 0)";
 
 		$query = $this->connection->prepare($statement);
@@ -315,12 +310,8 @@ final readonly class Mensaje extends MysqliConnect
 			AND mensajes.id_emisor != ?
 			AND mensajes.id_mensaje > COALESCE((
 				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos
+				FROM ultimos_mensajes_leidos_publicos
 				WHERE id_usuario = ?
-				AND id_receptor IS NULL
-				AND id_grupo IS NULL
-				ORDER BY id_mensaje DESC
-				LIMIT 1
 			), 0)";
 
 		$query = $this->connection->prepare($statement);
