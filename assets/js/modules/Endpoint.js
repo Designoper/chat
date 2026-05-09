@@ -24,9 +24,9 @@ export default class Endpoint extends Fetch {
 
 		// POST
 
-		ULTIMA_CONEXION_PUBLICA: `${this.ROOT}usuarios/ultima-conexion-publica`,
-		ULTIMA_CONEXION_DIRECTA: `${this.ROOT}usuarios/ultima-conexion-directa`,
-		ULTIMA_CONEXION_GRUPAL: `${this.ROOT}usuarios/ultima-conexion-grupal`,
+		ULTIMO_ID_PUBLICO: `${this.ROOT}mensajes/ultimo-id-publico`,
+		ULTIMO_ID_DIRECTO: `${this.ROOT}mensajes/ultimo-id-directo`,
+		ULTIMO_ID_GRUPAL: `${this.ROOT}mensajes/ultimo-id-grupal`,
 		CREAR_USUARIOS: `${this.ROOT}usuarios/crear`,
 		LOGIN_USUARIOS: `${this.ROOT}usuarios/login`,
 		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,

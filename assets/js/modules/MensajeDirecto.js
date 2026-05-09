@@ -11,6 +11,30 @@ export default class MensajeDirecto extends Mensaje {
 		super();
 	}
 
+	async getMensajesDirectos() {
+		const response = await this.simpleFetch(`${this.ENDPOINTS.GET_MENSAJES_DIRECTOS}?id_receptor=${this.id_receptor}`);
+		const mensajes = this.mensajesTemplate(response.content);
+		this.MENSAJES_OUTPUT.innerHTML = mensajes;
+		this.ultimoId = response.content[response.content.length - 1]?.id_mensaje;
+
+		// console.log(this.ultimoId)
+
+		if (this.ultimoId === undefined) {
+			this.ultimoId = "";
+		}
+
+		// console.log(this.ultimoId);
+
+		const form = new FormData();
+		form.append("ultimo_id", this.ultimoId);
+		form.append("id_receptor", this.id_receptor);
+
+		await fetch(this.ENDPOINTS.ULTIMO_ID_DIRECTO, {
+			method: "POST",
+			body: form
+		});
+	}
+
 	streamMensajesDirectos() {
 		const evtSource = new EventSource(`${this.ENDPOINTS.STREAM_MENSAJES_DIRECTOS}?ultimo_id=${this.ultimoId}&id_receptor=${this.id_receptor}`);
 
@@ -23,14 +47,20 @@ export default class MensajeDirecto extends Mensaje {
 			this.ultimoId = mensaje.id_mensaje;
 		});
 
-		evtSource.addEventListener("ping", async (event) => {
+		evtSource.addEventListener("new mensaje", async (event) => {
+			const id = JSON.parse(event.data);
+			this.ultimoId = id;
 			const form = new FormData();
+			form.append("ultimo_id", id);
 			form.append("id_receptor", this.id_receptor);
 
-			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_DIRECTA, {
+			await fetch(this.ENDPOINTS.ULTIMO_ID_DIRECTO, {
 				method: "POST",
 				body: form
 			});
+
+			// Auto-scroll
+			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
 		});
 	}
 

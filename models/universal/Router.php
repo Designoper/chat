@@ -116,7 +116,7 @@ final class Router
 
         $this->setRoute(
             'POST',
-            'usuarios/ultima-conexion-publica',
+            'mensajes/ultimo-id-publico',
             function (): void {
                 new Mensaje()->setUltimoIdPublico();
             }
@@ -124,7 +124,7 @@ final class Router
 
         $this->setRoute(
             'POST',
-            'usuarios/ultima-conexion-directa',
+            'mensajes/ultimo-id-directo',
             function (): void {
                 new Mensaje()->setUltimoIdDirecto();
             }
@@ -132,7 +132,7 @@ final class Router
 
         $this->setRoute(
             'POST',
-            'usuarios/ultima-conexion-grupal',
+            'mensajes/ultimo-id-grupal',
             function (): void {
                 new Mensaje()->setUltimoIdGrupal();
             }

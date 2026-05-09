@@ -53,7 +53,6 @@ CREATE TABLE mensajes (
 );
 
 CREATE TABLE ultimos_mensajes_leidos (
-    -- id INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
     id_receptor INT NULL,
     id_grupo INT NULL,
@@ -73,15 +72,8 @@ CREATE TABLE ultimos_mensajes_leidos (
 
     FOREIGN KEY (id_grupo)
         REFERENCES grupos(id_grupo)
-        ON DELETE SET NULL,
-
-    FOREIGN KEY (id_mensaje)
-        REFERENCES mensajes(id_mensaje)
         ON DELETE SET NULL
 );
-
-
-
 
 -- CREATE INDEX idx_mensajes_emisor ON mensajes(id_emisor);
 -- CREATE INDEX idx_mensajes_receptor ON mensajes(id_receptor);

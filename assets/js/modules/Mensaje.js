@@ -15,18 +15,18 @@ export default class Mensaje extends Usuario {
 		this.MENSAJES_OUTPUT.innerHTML = mensajes;
 		this.ultimoId = response.content[response.content.length - 1]?.id_mensaje;
 
-		console.log(this.ultimoId)
+		// console.log(this.ultimoId)
 
 		if (this.ultimoId === undefined){
 			this.ultimoId = "";
 		}
 
-		console.log(this.ultimoId);
+		// console.log(this.ultimoId);
 
 		const form = new FormData();
 		form.append("ultimo_id", this.ultimoId);
 
-		await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
+		await fetch(this.ENDPOINTS.ULTIMO_ID_PUBLICO, {
 			method: "POST",
 			body: form
 		});
@@ -42,19 +42,19 @@ export default class Mensaje extends Usuario {
 			this.formHandler();
 
 			this.ultimoId = mensaje.id_mensaje;
-			console.log(this.ultimoId)
+			// console.log(this.ultimoId)
 
 			// Auto-scroll
 			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
 		});
 
 		evtSource.addEventListener("new mensaje", async (event) => {
-			const id = await JSON.parse(event.data);
+			const id = JSON.parse(event.data);
 			this.ultimoId = id;
 			const form = new FormData();
 			form.append("ultimo_id", id);
 
-			await fetch(this.ENDPOINTS.ULTIMA_CONEXION_PUBLICA, {
+			await fetch(this.ENDPOINTS.ULTIMO_ID_PUBLICO, {
 				method: "POST",
 				body: form
 			});

@@ -91,7 +91,6 @@ final readonly class Mensaje extends MysqliConnect
 		}
 
 		$value = $_POST[$name] ?? null;
-
 		$min_range = 1;
 		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
@@ -112,8 +111,8 @@ final readonly class Mensaje extends MysqliConnect
 
 		$statement =
 			$statement =
-			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_mensaje)
-			VALUES (?, ?)
+			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_receptor, id_grupo, id_mensaje)
+			VALUES (?, NULL, NULL, ?)
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
@@ -146,8 +145,8 @@ final readonly class Mensaje extends MysqliConnect
 		$ultimo_id = $this->ultimo_id;
 
 		$statement =
-			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_receptor, id_mensaje)
-			VALUES (?, ?, ?)
+			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_receptor, id_grupo, id_mensaje)
+			VALUES (?, ?, NULL, ?)
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
@@ -180,8 +179,8 @@ final readonly class Mensaje extends MysqliConnect
 		$ultimo_id = $this->ultimo_id;
 
 		$statement =
-			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_grupo, id_mensaje)
-			VALUES (?, ?, ?)
+			"INSERT INTO ultimos_mensajes_leidos (id_usuario, id_receptor, id_grupo, id_mensaje)
+			VALUES (?, NULL, ?, ?)
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 

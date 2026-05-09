@@ -29,12 +29,15 @@ while (true) {
             echo "event: mensaje\n";
             echo "data: " . json_encode($m) . "\n\n";
         }
+
+        echo "event: new mensaje\n";
+        echo "data: " . json_encode($ultimo_id) . "\n\n";
     }
 
     // ACTIVA ULTIMA CONEXION
 
-    echo "event: ping\n";
-    echo "data: 1\n\n"; // ← OBLIGATORIO
+    // echo "event: ping\n";
+    // echo "data: 1\n\n"; // ← OBLIGATORIO
 
     ob_flush();
     flush();
