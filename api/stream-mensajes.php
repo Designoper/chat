@@ -59,7 +59,7 @@ while (true) {
             echo "data: " . json_encode($m) . "\n\n";
         }
 
-        echo "event: ultimo_id\n";
+        echo "event: new mensaje\n";
         echo "data: " . json_encode($ultimo_id) . "\n\n";
     } else {
         // Heartbeat cada 15 segundos
