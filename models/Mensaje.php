@@ -691,7 +691,6 @@ final readonly class Mensaje extends MysqliConnect
 			FROM mensajes
 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
             WHERE mensajes.id_mensaje > ?
-            -- AND mensajes.id_receptor IS NOT NULL
 			AND (
 				(id_emisor = ? AND id_receptor = ?)
 				OR (id_emisor = ? AND id_receptor = ?)
