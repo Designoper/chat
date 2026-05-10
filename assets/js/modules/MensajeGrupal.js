@@ -15,20 +15,17 @@ export default class MensajeGrupal extends Mensaje {
 		const response = await this.simpleFetch(`${this.ENDPOINTS.GET_MENSAJES_GRUPALES}?id_grupo=${this.id_grupo}`);
 		const mensajes = this.mensajesTemplate(response.content);
 		this.MENSAJES_OUTPUT.innerHTML = mensajes;
-		this.ultimoId = response.content[response.content.length - 1]?.id_mensaje;
 
-		if (this.ultimoId === undefined) {
-			this.ultimoId = "";
+		response.content.length > 0
+			? this.ultimoId = response.content[response.content.length - 1].id_mensaje
+			: null;
+
+		const obj = {
+			"ultimo_id": this.ultimoId,
+			"id_grupo": this.id_grupo
 		}
 
-		const form = new FormData();
-		form.append("ultimo_id", this.ultimoId);
-		form.append("id_grupo", this.id_grupo);
-
-		await fetch(this.ENDPOINTS.ULTIMO_ID_GRUPAL, {
-			method: "POST",
-			body: form
-		});
+		await this.fetchPostNoForm(this.ENDPOINTS.ULTIMO_ID_GRUPAL, obj);
 	}
 
 	streamMensajesGrupales() {
@@ -37,26 +34,22 @@ export default class MensajeGrupal extends Mensaje {
 		evtSource.addEventListener("mensaje", (event) => {
 			const mensaje = JSON.parse(event.data);
 			const content = this.mensajesTemplate([mensaje]);
-			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
-			this.formHandler();
 
+			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
 			this.ultimoId = mensaje.id_mensaje;
+			this.formHandler();
 		});
 
 		evtSource.addEventListener("new mensaje", async (event) => {
 			const id = JSON.parse(event.data);
 			this.ultimoId = id;
-			const form = new FormData();
-			form.append("ultimo_id", id);
-			form.append("id_grupo", this.id_grupo);
 
-			await fetch(this.ENDPOINTS.ULTIMO_ID_GRUPAL, {
-				method: "POST",
-				body: form
-			});
+			const obj = {
+				"ultimo_id": this.ultimoId,
+				"id_grupo": this.id_grupo
+			}
 
-			// Auto-scroll
-			// this.MENSAJES_OUTPUT.scrollTop = this.MENSAJES_OUTPUT.scrollHeight;
+			await this.fetchPostNoForm(this.ENDPOINTS.ULTIMO_ID_GRUPAL, obj);
 		});
 	}
 
