@@ -3,49 +3,82 @@ import formatearFecha from "../utils/fecha.js";
 
 export default class Mensaje extends Usuario {
 	MENSAJES_OUTPUT = document.querySelector('output');
-	ultimoId = "";
+	obj = {};
+	urlStream = this.ENDPOINTS.STREAM_MENSAJES;
 
-	constructor() {
+	h1 = document.querySelector('h1');
+	input = document.querySelector('input[type="hidden"]');
+
+	id_receptor = new URL(location.href).searchParams.get('id-receptor');
+	nombre_receptor = new URL(location.href).searchParams.get('nombre-receptor');
+
+	id_grupo = new URL(location.href).searchParams.get('id-grupo');
+	nombre_grupo = new URL(location.href).searchParams.get('nombre-grupo');
+
+	constructor(test) {
 		super();
 	}
 
-	async getMensajes() {
-		const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES);
+	getIdReceptor() {
+		return this.id_receptor;
+	}
+
+	getIdGrupo() {
+		return this.id_grupo;
+	}
+
+	getNombreReceptor() {
+		return this.nombre_receptor;
+	}
+
+	getNombreGrupo() {
+		return this.nombre_grupo;
+	}
+
+	async getMensajes(endpointMensaje) {
+		const response = await this.simpleFetch(endpointMensaje);
 		const mensajes = this.mensajesTemplate(response.content);
 		this.MENSAJES_OUTPUT.innerHTML = mensajes;
 
+		let id;
+
 		response.content.length > 0
-			? this.ultimoId = response.content[response.content.length - 1].id_mensaje
-			: null;
+			? id = response.content[response.content.length - 1].id_mensaje
+			: id = "";
 
-		const obj = {
-			"ultimo_id": this.ultimoId
-		}
-
-		await this.fetchPostNoForm(this.ENDPOINTS.ULTIMO_ID_PUBLICO, obj);
+		return id;
 	}
 
-	streamMensajes() {
-		const evtSource = new EventSource(`${this.ENDPOINTS.STREAM_MENSAJES}?ultimo_id=${this.ultimoId}`);
+	setData(obj) {
+		const params = new URLSearchParams();
+
+		for (const [key, value] of Object.entries(obj)) {
+			this.obj[key] = value;
+			params.append(key, value);
+		}
+
+		this.urlStream += params.toString();
+	}
+
+	streamMensajes(endpointUltimoId) {
+
+		const evtSource = new EventSource(this.urlStream);
 
 		evtSource.addEventListener("mensaje", (event) => {
 			const mensaje = JSON.parse(event.data);
 			const content = this.mensajesTemplate([mensaje]);
 
 			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
-			this.ultimoId = mensaje.id_mensaje;
+			this.obj.ultimo_id = mensaje.id_mensaje;
 			this.formHandler();
 		});
 
 		evtSource.addEventListener("new mensaje", async (event) => {
 			const id = JSON.parse(event.data);
-			this.ultimoId = id;
 
-			const obj = {
-				"ultimo_id": this.ultimoId
-			}
+			this.obj.ultimo_id = id;
 
-			await this.fetchPostNoForm(this.ENDPOINTS.ULTIMO_ID_PUBLICO, obj);
+			await this.fetchPostNoForm(endpointUltimoId, this.obj);
 		});
 	}
 
@@ -87,10 +120,23 @@ export default class Mensaje extends Usuario {
 		await this.fetchData(form, method, action);
 	}
 
+	async writeMensajeDirecto(form, method, action) {
+		await this.fetchData(form, method, action);
+	}
+
+	async writeMensajeGrupal(form, method, action) {
+		await this.fetchData(form, method, action);
+	}
+
 	async deleteMensaje(form, method) {
 		const response = await this.fetchData(form, method);
 		if (response.status === 204) {
 			form.closest("article").remove();
 		}
+	}
+
+	writeChat(nombre, id) {
+		this.h1.innerHTML = `Chat privado con ${nombre}`;
+		this.input.setAttribute('value', `${id}`);
 	}
 }

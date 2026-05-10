@@ -14,6 +14,20 @@ require_once __DIR__ . "/../models/Mensaje.php";
 
 $ultimo_id = (int) $_GET["ultimo_id"] ?? 0;
 
+$id_receptor = $_GET["id_receptor"] ?? null;
+
+if ($id_receptor) {
+    $id_receptor = (int) $id_receptor;
+}
+
+$id_grupo = $_GET["id_grupo"] ?? null;
+
+if ($id_grupo) {
+    $id_grupo = (int) $id_grupo;
+}
+
+$tipo = $_GET["tipo"] ?? null;
+
 header("Content-Type: text/event-stream");
 header("Cache-Control: no-cache");
 header("Connection: keep-alive");
@@ -21,7 +35,18 @@ header("Connection: keep-alive");
 while (true) {
 
     $mensaje = new Mensaje();
-    $mensajes = $mensaje->getNuevosMensajesPublicos($ultimo_id);
+
+    switch ($tipo) {
+        case "publico":
+            $mensajes = $mensaje->getNuevosMensajesPublicos($ultimo_id);
+            break;
+        case "directo":
+            $mensajes = $mensaje->getNuevosMensajesDirectos($ultimo_id, $id_usuario, $id_receptor);
+            break;
+        case "grupal":
+            $mensajes = $mensaje->getNuevosMensajesGrupales($ultimo_id, $id_grupo);
+            break;
+    }
 
     if (!empty($mensajes)) {
 
@@ -35,9 +60,6 @@ while (true) {
         echo "event: new mensaje\n";
         echo "data: " . json_encode($ultimo_id) . "\n\n";
     }
-
-    // echo "event: ping\n";
-    // echo "data: 1\n\n"; // ← OBLIGATORIO
 
     ob_flush();
     flush();

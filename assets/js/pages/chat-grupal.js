@@ -1,9 +1,23 @@
-import MensajeGrupal from "../modules/MensajeGrupal.js";
+import Mensaje from '../modules/Mensaje.js';
 
-const mensajeGrupal = new MensajeGrupal();
+const mensaje = new Mensaje();
+const endpointMensaje = mensaje.ENDPOINTS.GET_MENSAJES_GRUPALES;
+const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_GRUPAL
 
-await mensajeGrupal.sessionCheck();
-await mensajeGrupal.getMensajesGrupales();
-mensajeGrupal.writeChat();
-mensajeGrupal.streamMensajesGrupales();
-mensajeGrupal.formHandler();
+await mensaje.sessionCheck();
+
+const idGrupo = mensaje.getIdGrupo();
+const nombreGrupo = mensaje.getNombreGrupo();
+const lastid = await mensaje.getMensajes(`${endpointMensaje}?id_grupo=${idGrupo}`);
+
+const obj = {
+	"ultimo_id": lastid,
+	"id_grupo": idGrupo,
+	"tipo": "grupal"
+}
+
+await mensaje.fetchPostNoForm(endpointUltimoId, obj);
+mensaje.setData(obj)
+mensaje.writeChat(nombreGrupo, idGrupo);
+mensaje.streamMensajes(endpointUltimoId);
+mensaje.formHandler();
