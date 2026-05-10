@@ -53,7 +53,6 @@ export default class Mensaje extends Usuario {
 			const content = this.mensajesTemplate([mensaje]);
 
 			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
-			this.obj.ultimo_id = mensaje.id_mensaje;
 			this.formHandler();
 		});
 
