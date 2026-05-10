@@ -15,24 +15,8 @@ export default class Mensaje extends Usuario {
 	id_grupo = new URL(location.href).searchParams.get('id-grupo');
 	nombre_grupo = new URL(location.href).searchParams.get('nombre-grupo');
 
-	constructor(test) {
+	constructor() {
 		super();
-	}
-
-	getIdReceptor() {
-		return this.id_receptor;
-	}
-
-	getIdGrupo() {
-		return this.id_grupo;
-	}
-
-	getNombreReceptor() {
-		return this.nombre_receptor;
-	}
-
-	getNombreGrupo() {
-		return this.nombre_grupo;
 	}
 
 	async getMensajes(endpointMensaje) {

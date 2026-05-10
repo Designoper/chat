@@ -6,18 +6,16 @@ const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_DIRECTO
 
 await mensaje.sessionCheck();
 
-const idReceptor = mensaje.getIdReceptor();
-const nombreReceptor = mensaje.getNombreReceptor();
-const lastid = await mensaje.getMensajes(`${endpointMensaje}?id_receptor=${idReceptor}`);
+const lastid = await mensaje.getMensajes(`${endpointMensaje}?id_receptor=${mensaje.id_receptor}`);
 
 const obj = {
 	"ultimo_id": lastid,
-	"id_receptor": idReceptor,
+	"id_receptor": mensaje.id_receptor,
 	"tipo": "directo"
 }
 
 await mensaje.fetchPostNoForm(endpointUltimoId, obj);
 mensaje.setData(obj)
-mensaje.writeChat(nombreReceptor, idReceptor);
+mensaje.writeChat(mensaje.nombre_receptor, mensaje.id_receptor);
 mensaje.streamMensajes(endpointUltimoId);
 mensaje.formHandler();
