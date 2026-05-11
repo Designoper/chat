@@ -76,7 +76,7 @@ CREATE TABLE ultimos_mensajes_leidos_directos (
 
     FOREIGN KEY (id_receptor)
         REFERENCES usuarios(id_usuario)
-        -- ON DELETE SET NULL,
+        ON DELETE CASCADE
 );
 
 CREATE TABLE ultimos_mensajes_leidos_grupales (
@@ -92,7 +92,7 @@ CREATE TABLE ultimos_mensajes_leidos_grupales (
 
     FOREIGN KEY (id_grupo)
         REFERENCES grupos(id_grupo)
-        -- ON DELETE SET NULL
+        ON DELETE CASCADE
 );
 
 -- CREATE INDEX idx_mensajes_emisor ON mensajes(id_emisor);

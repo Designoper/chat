@@ -66,7 +66,7 @@ new Usuario()->sessionRedirect();
 
 			<output></output>
 
-			<p>¿Ya tienes cuenta? <a href="./index.html">Iniciar sesión</a></p>
+			<p>¿Ya tienes cuenta? <a href="./index.php">Iniciar sesión</a></p>
 
 		</form>
 
