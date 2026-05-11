@@ -661,7 +661,7 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET NUEVOS MENSAJES PUBLICOS
 
-	private function getNuevosMensajesPublicos(int $ultimo_id)
+	private function getNuevosMensajesPublicos(int $ultimo_id): array
 	{
 		$statement =
 			"SELECT mensajes.id_mensaje,
@@ -692,7 +692,7 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET NUEVOS MENSAJES DIRECTOS
 
-	private function getNuevosMensajesDirectos(int $ultimo_id, int $id_emisor, int $id_receptor)
+	private function getNuevosMensajesDirectos(int $ultimo_id, int $id_emisor, int $id_receptor): array
 	{
 		$statement =
 			"SELECT mensajes.id_mensaje,
