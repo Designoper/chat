@@ -1,3 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/models/Usuario.php';
+
+new Usuario()->sessionRedirect();
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -34,9 +44,9 @@
 
 	<main id="main">
 
-		<form name="login-usuario">
+		<form name="crear-usuario">
 
-			<h1>Acceso clientes</h1>
+			<h1>Crear cuenta</h1>
 
 			<menu>
 				<li>
@@ -50,13 +60,13 @@
 				</li>
 
 				<li>
-					<button>Iniciar sesión</button>
+					<button>Registrarme</button>
 				</li>
 			</menu>
 
 			<output></output>
 
-			<p>¿No tienes cuenta? <a href="./crear-usuario.html">Regístrate</a></p>
+			<p>¿Ya tienes cuenta? <a href="./index.html">Iniciar sesión</a></p>
 
 		</form>
 

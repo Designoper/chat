@@ -56,7 +56,15 @@ abstract readonly class MysqliConnect extends Response
 	public function authBrowser(): void
 	{
 		if ($this->session_user === null) {
-			header("Location: index.html");
+			header("Location: index.php");
+			exit;
+		}
+	}
+
+	public function sessionRedirect(): void
+	{
+		if ($this->session_user !== null) {
+			header("Location: sala-principal.php");
 			exit;
 		}
 	}
