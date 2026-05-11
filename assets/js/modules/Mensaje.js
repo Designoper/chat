@@ -5,15 +5,16 @@ export default class Mensaje extends Usuario {
 	MENSAJES_OUTPUT = document.querySelector('output');
 	obj = {};
 	urlStream = this.ENDPOINTS.STREAM_MENSAJES;
+	url = new URL(location.href);
 
 	h1 = document.querySelector('h1');
 	input = document.querySelector('input[type="hidden"]');
 
-	id_receptor = new URL(location.href).searchParams.get('id-receptor');
-	nombre_receptor = new URL(location.href).searchParams.get('nombre-receptor');
+	id_receptor = this.url.searchParams.get('id-receptor');
+	nombre_receptor = this.url.searchParams.get('nombre-receptor');
 
-	id_grupo = new URL(location.href).searchParams.get('id-grupo');
-	nombre_grupo = new URL(location.href).searchParams.get('nombre-grupo');
+	id_grupo = this.url.searchParams.get('id-grupo');
+	nombre_grupo = this.url.searchParams.get('nombre-grupo');
 
 	constructor() {
 		super();
