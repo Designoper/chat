@@ -21,6 +21,6 @@ const obj = {
 
 await mensaje.fetchPostNoForm(endpointUltimoId, obj);
 mensaje.setData(obj);
-mensaje.writeChat(mensaje.nombre_receptor, mensaje.id_receptor);
+mensaje.writeChat(`Chat privado con ${mensaje.nombre_receptor}`, mensaje.id_receptor);
 mensaje.streamMensajes(endpointUltimoId);
 mensaje.formHandler();

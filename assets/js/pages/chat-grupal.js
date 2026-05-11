@@ -21,6 +21,6 @@ const obj = {
 
 await mensaje.fetchPostNoForm(endpointUltimoId, obj);
 mensaje.setData(obj);
-mensaje.writeChat(mensaje.nombre_grupo, mensaje.id_grupo);
+mensaje.writeChat(`Chat grupal (${mensaje.nombre_grupo})`, mensaje.id_grupo);
 mensaje.streamMensajes(endpointUltimoId);
 mensaje.formHandler();

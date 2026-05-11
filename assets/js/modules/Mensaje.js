@@ -120,8 +120,8 @@ export default class Mensaje extends Usuario {
 		}
 	}
 
-	writeChat(nombre, id) {
-		this.h1.innerHTML = `Chat privado con ${nombre}`;
+	writeChat(titulo, id) {
+		this.h1.innerHTML = titulo;
 		this.input.setAttribute('value', `${id}`);
 	}
 }
