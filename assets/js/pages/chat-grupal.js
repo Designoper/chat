@@ -14,6 +14,11 @@ const obj = {
 	"tipo": "grupal"
 }
 
+// const obj2 = {
+// 	"ultimo_id": lastid,
+// 	"tipo": "grupal"
+// }
+
 await mensaje.fetchPostNoForm(endpointUltimoId, obj);
 mensaje.setData(obj)
 mensaje.writeChat(mensaje.nombre_grupo, mensaje.id_grupo);
