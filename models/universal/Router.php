@@ -42,23 +42,7 @@ final class Router
 
         $this->setRoute(
             'GET',
-            'mensajes-directos(?:\?id_receptor=[1-9]\d*)?$',
-            function (): void {
-                new Mensaje()->readMensajesDirectos();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'mensajes-grupales(?:\?id_grupo=[1-9]\d*)?$',
-            function (): void {
-                new Mensaje()->readMensajesGrupales();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'mensajes$',
+            'mensajes',
             function (): void {
                 new Mensaje()->readMensajes();
             }

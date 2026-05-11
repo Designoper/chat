@@ -22,6 +22,7 @@ export default class Mensaje extends Usuario {
 
 	async getMensajes(endpointMensaje) {
 		const response = await this.simpleFetch(endpointMensaje);
+		console.log(response)
 		const mensajes = this.mensajesTemplate(response.content);
 		this.MENSAJES_OUTPUT.innerHTML = mensajes;
 

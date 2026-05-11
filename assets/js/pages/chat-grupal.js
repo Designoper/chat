@@ -1,12 +1,17 @@
 import Mensaje from '../modules/Mensaje.js';
 
 const mensaje = new Mensaje();
-const endpointMensaje = mensaje.ENDPOINTS.GET_MENSAJES_GRUPALES;
-const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_GRUPAL
+
+const endpointMensaje = new URL(mensaje.ENDPOINTS.GET_MENSAJES);
+const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_GRUPAL;
+
+const endpointParams = new URLSearchParams();
+endpointParams.append("id_grupo", mensaje.id_grupo);
+endpointMensaje.search = endpointParams;
 
 await mensaje.sessionCheck();
 
-const lastid = await mensaje.getMensajes(`${endpointMensaje}?id_grupo=${mensaje.id_grupo}`);
+const lastid = await mensaje.getMensajes(endpointMensaje);
 
 const obj = {
 	"ultimo_id": lastid,
@@ -14,13 +19,8 @@ const obj = {
 	"tipo": "grupal"
 }
 
-// const obj2 = {
-// 	"ultimo_id": lastid,
-// 	"tipo": "grupal"
-// }
-
 await mensaje.fetchPostNoForm(endpointUltimoId, obj);
-mensaje.setData(obj)
+mensaje.setData(obj);
 mensaje.writeChat(mensaje.nombre_grupo, mensaje.id_grupo);
 mensaje.streamMensajes(endpointUltimoId);
 mensaje.formHandler();

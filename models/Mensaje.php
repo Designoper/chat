@@ -351,6 +351,54 @@ final readonly class Mensaje extends MysqliConnect
 	{
 		$this->authEndpoint();
 
+		// $allowed = ['id_receptor', 'id_grupo'];
+
+		// // Si hay parámetros no permitidos
+		// foreach ($_GET as $key => $value) {
+		// 	if (!in_array($key, $allowed)) {
+		// 		http_response_code(400);
+		// 		echo json_encode(['error' => "Parámetro no permitido: $key"]);
+		// 		return;
+		// 	}
+		// }
+
+		// // Si llegan ambos, error
+		// if (isset($_GET['id_receptor']) && isset($_GET['id_grupo'])) {
+		// 	http_response_code(400);
+		// 	echo json_encode(['error' => 'No puedes usar id_receptor e id_grupo a la vez']);
+		// 	return;
+		// }
+
+		// if (isset($_GET['id_receptor'])) {
+		// 	$this->readMensajesDirectos();
+		// 	return;
+		// }
+
+		// if (isset($_GET['id_grupo'])) {
+		// 	$this->readMensajesGrupales();
+		// 	return;
+		// }
+
+		// // Ningún parámetro → mensajes públicos
+		// $this->readMensajesPublicos();
+
+		if (isset($_GET['id_receptor'])) {
+			$this->readMensajesDirectos();
+		}
+
+		if (isset($_GET['id_grupo'])) {
+			$this->readMensajesGrupales();
+		}
+
+		if (count($_GET) === 0) {
+			$this->readMensajesPublicos();
+		}
+	}
+
+	// MARK: READ MENSAJES PUBLICOS
+
+	private function readMensajesPublicos(): void
+	{
 		$statement =
 			"SELECT
 				mensajes.id_mensaje,
@@ -377,15 +425,13 @@ final readonly class Mensaje extends MysqliConnect
 		$this->status = 200;
 		$this->message = $message;
 		$this->content = $mensajes;
-		// $this->setUltimaConexionPublica();
 		$this->sendResponse();
 	}
 
 	// MARK: READ MENSAJES DIRECTOS
 
-	public function readMensajesDirectos(): void
+	private function readMensajesDirectos(): void
 	{
-		$this->authEndpoint();
 		$this->setIdReceptor();
 
 		$this->checkValidationErrors();
@@ -431,15 +477,13 @@ final readonly class Mensaje extends MysqliConnect
 		$this->status = 200;
 		$this->message = $message;
 		$this->content = $mensajes;
-		// $this->setUltimaConexionDirecta();
 		$this->sendResponse();
 	}
 
 	// MARK: READ MENSAJES GRUPALES
 
-	public function readMensajesGrupales(): void
+	private function readMensajesGrupales(): void
 	{
-		$this->authEndpoint();
 		$this->setIdGrupo();
 
 		$this->checkValidationErrors();

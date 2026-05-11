@@ -1,8 +1,9 @@
 import Mensaje from '../modules/Mensaje.js';
 
 const mensaje = new Mensaje();
+
 const endpointMensaje = mensaje.ENDPOINTS.GET_MENSAJES;
-const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_PUBLICO
+const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_PUBLICO;
 
 await mensaje.sessionCheck();
 
