@@ -4,7 +4,7 @@ import formatearFecha from "../utils/fecha.js";
 export default class Mensaje extends Usuario {
 	MENSAJES_OUTPUT = document.querySelector('output');
 	obj = {};
-	urlStream = this.ENDPOINTS.STREAM_MENSAJES;
+	urlStream = new URL(this.ENDPOINTS.STREAM_MENSAJES);
 	url = new URL(location.href);
 
 	h1 = document.querySelector('h1');
@@ -42,7 +42,7 @@ export default class Mensaje extends Usuario {
 			params.append(key, value);
 		}
 
-		this.urlStream += params.toString();
+		this.urlStream.search = params;
 	}
 
 	streamMensajes(endpointUltimoId) {
