@@ -16,11 +16,7 @@ abstract readonly class MysqliConnect extends Response
 
 	protected function __construct()
 	{
-		if (!defined('NO_SESSION')) {
-			if (session_status() === PHP_SESSION_NONE) {
-				session_start();
-			}
-		}
+		session_start();
 
 		parent::__construct();
 

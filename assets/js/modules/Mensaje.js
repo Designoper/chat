@@ -60,8 +60,10 @@ export default class Mensaje extends Usuario {
 			const id = JSON.parse(event.data);
 
 			this.obj.ultimo_id = id;
+			console.log(this.obj.ultimo_id)
 
-			await this.fetchPostNoForm(endpointUltimoId, this.obj);
+			const response = await this.fetchPostNoForm(endpointUltimoId, this.obj);
+			console.log(response)
 		});
 	}
 

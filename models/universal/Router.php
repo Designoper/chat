@@ -18,6 +18,14 @@ final class Router
 
         $this->setRoute(
             'GET',
+            'stream-mensajes',
+            function (): void {
+                new Mensaje()->streamMensajes();
+            }
+        );
+
+        $this->setRoute(
+            'GET',
             'mensajes-grupales/no-leidos',
             function (): void {
                 new Mensaje()->countUnreadGroupMessages();

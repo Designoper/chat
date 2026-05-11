@@ -12,6 +12,7 @@ final readonly class Mensaje extends MysqliConnect
 	private int $id_receptor;
 	private int $id_grupo;
 	private ?int $ultimo_id;
+	private string $tipo;
 
 	public function __construct()
 	{
@@ -97,6 +98,17 @@ final readonly class Mensaje extends MysqliConnect
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->ultimo_id = (int) $value
 			: $this->errors->setValidationError($error_message);
+	}
+
+	private function setTipo(): void
+	{
+		$name = 'tipo';
+		$value = $_GET[$name] ?? null;
+		$error_message = "El campo $name no puede estar vacío.";
+
+		empty($value)
+			? $this->errors->setValidationError($error_message)
+			: $this->tipo = $value;
 	}
 
 	// MARK: SET ULTIMO ID PUBLICO
@@ -649,7 +661,7 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET NUEVOS MENSAJES PUBLICOS
 
-	public function getNuevosMensajesPublicos(int $ultimo_id)
+	private function getNuevosMensajesPublicos(int $ultimo_id)
 	{
 		$statement =
 			"SELECT mensajes.id_mensaje,
@@ -680,7 +692,7 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET NUEVOS MENSAJES DIRECTOS
 
-	public function getNuevosMensajesDirectos(int $ultimo_id, int $id_emisor, int $id_receptor)
+	private function getNuevosMensajesDirectos(int $ultimo_id, int $id_emisor, int $id_receptor)
 	{
 		$statement =
 			"SELECT mensajes.id_mensaje,
@@ -718,8 +730,14 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET NUEVOS MENSAJES GRUPALES
 
-	public function getNuevosMensajesGrupales(int $ultimo_id, int $id_grupo)
+	private function getNuevosMensajesGrupales(int $ultimo_id, int $id_grupo): array
 	{
+		// $this->setIdGrupo();
+
+		// $this->errors->checkValidationErrors();
+
+		// $id_grupo = $this->id_grupo;
+
 		$statement =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
@@ -748,43 +766,95 @@ final readonly class Mensaje extends MysqliConnect
 		return $mensajes;
 	}
 
-	// public function getUltimoIdPublico(int $id_usuario)
-	// {
-	// 	// $id_emisor = $_SESSION['id_usuario'];
-	// 	// $id_usuario = 1;
+	// MARK: STREAM MENSAJES
 
-	// 	$statement =
-	// 		"SELECT COALESCE((
-	// 			SELECT id_mensaje
-	// 			FROM ultimos_mensajes_leidos
-	// 			WHERE id_usuario = ?
-	// 			AND id_receptor IS NULL
-	// 			AND id_grupo IS NULL
-	// 			ORDER BY id DESC
-	// 			LIMIT 1
-	// 		), 1) AS id_mensaje";
+	public function streamMensajes(): void
+	{
+		if (session_status() === PHP_SESSION_ACTIVE) {
+			session_write_close();
+		}
 
+		$this->setTipo();
 
-	// 	$query = $this->connection->prepare($statement);
+		set_time_limit(0);
+		ignore_user_abort(true);
 
-	// 	$query->bind_param(
-	// 		"i",
-	// 		$id_usuario
-	// 	);
+		// Limpia buffers previos
+		while (ob_get_level() > 0) {
+			ob_end_clean();
+		}
 
-	// 	$query->execute();
+		// Headers SSE
+		header("Content-Type: text/event-stream");
+		header("Cache-Control: no-cache");
+		header("Connection: keep-alive");
+		header("X-Accel-Buffering: no");
 
-	// 	$result = $query->get_result();
+		ini_set('output_buffering', 'off');
+		ini_set('zlib.output_compression', 0);
 
-	// 	if ($result === false) {
-	// 		return 1;
-	// 	}
+		// Forzar flush inicial
+		echo str_pad('', 4096) . "\n";
+		flush();
 
-	// 	$row = $result->fetch_assoc();
+		$ultimo_id   = (int) ($_GET["ultimo_id"] ?? 0);
+		$id_receptor = (int) ($_GET["id_receptor"] ?? 0);
+		$id_grupo    = (int) ($_GET["id_grupo"] ?? 0);
+		$tipo        = $this->tipo;
 
-	// 	$id = $row['id_mensaje'];
-	// 	$query->close();
+		$startTime = time();
+		$lastPing = 0;
 
-	// 	return $id;
-	// }
+		while (true) {
+
+			if (connection_aborted()) {
+				break;
+			}
+
+			switch ($tipo) {
+				case "publico":
+					$mensajes = $this->getNuevosMensajesPublicos($ultimo_id);
+					break;
+
+				case "directo":
+					$mensajes = $this->getNuevosMensajesDirectos($ultimo_id, $this->id_emisor, $id_receptor);
+					break;
+
+				case "grupal":
+					$mensajes = $this->getNuevosMensajesGrupales($ultimo_id, $id_grupo);
+					break;
+
+				default:
+					echo "event: error\n";
+					echo "data: Tipo de stream no válido\n\n";
+					flush();
+					exit;
+			}
+
+			if (!empty($mensajes)) {
+
+				foreach ($mensajes as $m) {
+					$ultimo_id = $m["id_mensaje"];
+
+					echo "event: mensaje\n";
+					echo "data: " . json_encode($m) . "\n\n";
+				}
+
+				echo "event: new mensaje\n";
+				echo "data: " . json_encode($ultimo_id) . "\n\n";
+			} else {
+				// Heartbeat cada 15s
+				$elapsed = time() - $startTime;
+
+				if ($elapsed - $lastPing >= 15) {
+					echo "event: ping\n";
+					echo "data: {}\n\n";
+					$lastPing = $elapsed;
+				}
+			}
+
+			flush();
+			usleep(300000); // 0.3s
+		}
+	}
 }
