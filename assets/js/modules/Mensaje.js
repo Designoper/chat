@@ -4,8 +4,10 @@ import formatearFecha from "../utils/fecha.js";
 export default class Mensaje extends Usuario {
 	MENSAJES_OUTPUT = document.querySelector('output');
 	obj = {};
+
 	urlStream = new URL(this.ENDPOINTS.STREAM_MENSAJES);
 	url = new URL(location.href);
+
 	endpointMensaje = this.ENDPOINTS.GET_MENSAJES;
 	endpointUltimoId = this.ENDPOINTS.ULTIMO_ID_MENSAJE;
 
@@ -33,7 +35,10 @@ export default class Mensaje extends Usuario {
 			? id = response.content[response.content.length - 1].id_mensaje
 			: id = "";
 
-		return id;
+		params.ultimo_id = id;
+		this.setData(params);
+
+		await this.fetchPostNoForm(this.ENDPOINTS.ULTIMO_ID_MENSAJE, this.obj);
 	}
 
 	setData(obj) {

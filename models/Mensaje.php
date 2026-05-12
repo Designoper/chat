@@ -12,7 +12,6 @@ final readonly class Mensaje extends MysqliConnect
 	private int $id_receptor;
 	private int $id_grupo;
 	private ?int $ultimo_id;
-	private string $tipo;
 
 	public function __construct()
 	{
@@ -98,17 +97,6 @@ final readonly class Mensaje extends MysqliConnect
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->ultimo_id = (int) $value
 			: $this->errors->setValidationError($error_message);
-	}
-
-	private function setTipo(): void
-	{
-		$name = 'tipo';
-		$value = $_GET[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío.";
-
-		empty($value)
-			? $this->errors->setValidationError($error_message)
-			: $this->tipo = $value;
 	}
 
 	// MARK: SET ULTIMO ID MENSAJE
@@ -826,6 +814,31 @@ final readonly class Mensaje extends MysqliConnect
 		return $mensajes;
 	}
 
+	// MARK: DECIDE
+
+	private function decide(int $ultimo_id, int $id_receptor, int $id_grupo): array
+	{
+		if (isset($_GET['ultimo_id']) && isset($_GET['id_receptor'])) {
+			$mensajes = $this->getNuevosMensajesDirectos($ultimo_id, $this->id_emisor, $id_receptor);
+			return $mensajes;
+		}
+
+		if (isset($_GET['ultimo_id']) && isset($_GET['id_grupo'])) {
+			$mensajes = $this->getNuevosMensajesGrupales($ultimo_id, $id_grupo);
+			return $mensajes;
+		}
+
+		if (isset($_GET['ultimo_id'])) {
+			$mensajes = $this->getNuevosMensajesPublicos($ultimo_id);
+			return $mensajes;
+		}
+
+		echo "event: error\n";
+		echo "data: Tipo de stream no válido\n\n";
+		flush();
+		exit;
+	}
+
 	// MARK: STREAM MENSAJES
 
 	public function streamMensajes(): void
@@ -833,11 +846,6 @@ final readonly class Mensaje extends MysqliConnect
 		if (session_status() === PHP_SESSION_ACTIVE) {
 			session_write_close();
 		}
-
-		$this->setTipo();
-		// $this->setUltimoId();
-		// $this->setIdGrupo();
-		// $this->setIdReceptor();
 
 		set_time_limit(0);
 		ignore_user_abort(true);
@@ -863,7 +871,6 @@ final readonly class Mensaje extends MysqliConnect
 		$ultimo_id   = (int) ($_GET["ultimo_id"] ?? 0);
 		$id_receptor = (int) ($_GET["id_receptor"] ?? 0);
 		$id_grupo =   (int) ($_GET["id_grupo"] ?? 0);
-		$tipo        = $this->tipo;
 
 		$startTime = time();
 		$lastPing = 0;
@@ -874,25 +881,7 @@ final readonly class Mensaje extends MysqliConnect
 				break;
 			}
 
-			switch ($tipo) {
-				case "publico":
-					$mensajes = $this->getNuevosMensajesPublicos($ultimo_id);
-					break;
-
-				case "directo":
-					$mensajes = $this->getNuevosMensajesDirectos($ultimo_id, $this->id_emisor, $id_receptor);
-					break;
-
-				case "grupal":
-					$mensajes = $this->getNuevosMensajesGrupales($ultimo_id, $id_grupo);
-					break;
-
-				default:
-					echo "event: error\n";
-					echo "data: Tipo de stream no válido\n\n";
-					flush();
-					exit;
-			}
+			$mensajes = $this->decide($ultimo_id, $id_receptor, $id_grupo);
 
 			if (!empty($mensajes)) {
 
