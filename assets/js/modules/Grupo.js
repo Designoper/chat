@@ -35,12 +35,16 @@ export default class Grupo extends Endpoint {
 		const grupos = await Promise.all(
 			fetchedGrupos.map(async grupo => {
 
-				const invitables = await this.simpleFetch(
-					`${this.ENDPOINTS.GET_GRUPOS_NO_MIEMBRO}?id_grupo=${grupo.id_grupo}`
+				const invitables = await this.simpleFetch(this.ENDPOINTS.GET_GRUPOS_NO_MIEMBRO,
+					{
+						"id_grupo": grupo.id_grupo
+					}
 				);
 
-				const mensajesNoLeidos = await this.simpleFetch(
-					`${this.ENDPOINTS.GET_MENSAJES_GRUPALES_NO_LEIDOS}?id_grupo=${grupo.id_grupo}`
+				const mensajesNoLeidos = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES_GRUPALES_NO_LEIDOS,
+					{
+						"id_grupo": grupo.id_grupo
+					}
 				);
 
 				const num = mensajesNoLeidos.content.num_mensajes;

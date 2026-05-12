@@ -2,16 +2,16 @@ import Mensaje from '../modules/Mensaje.js';
 
 const mensaje = new Mensaje();
 
-const endpointMensaje = new URL(mensaje.ENDPOINTS.GET_MENSAJES);
+const endpointMensaje = mensaje.ENDPOINTS.GET_MENSAJES;
 const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_DIRECTO;
 
-const endpointParams = new URLSearchParams();
-endpointParams.append("id_receptor", mensaje.id_receptor);
-endpointMensaje.search = endpointParams;
+const getParams = {
+	"id_receptor": mensaje.id_receptor
+}
 
 await mensaje.sessionCheck();
 
-const lastid = await mensaje.getMensajes(endpointMensaje);
+const lastid = await mensaje.getMensajes(endpointMensaje, getParams);
 
 const obj = {
 	"ultimo_id": lastid,
