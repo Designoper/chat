@@ -42,17 +42,17 @@ final class Router
 
         $this->setRoute(
             'GET',
-            'mensajes',
+            'mensajes/no-leidos$',
             function (): void {
-                new Mensaje()->readMensajes();
+                new Mensaje()->countUnreadPublicMessages();
             }
         );
 
         $this->setRoute(
             'GET',
-            'mensajes/no-leidos$',
+            'mensajes',
             function (): void {
-                new Mensaje()->countUnreadPublicMessages();
+                new Mensaje()->readMensajes();
             }
         );
 
@@ -108,38 +108,6 @@ final class Router
 
         $this->setRoute(
             'POST',
-            'mensajes/ultimo-id',
-            function (): void {
-                new Mensaje()->setUltimoIdMensaje();
-            }
-        );
-
-        // $this->setRoute(
-        //     'POST',
-        //     'mensajes/ultimo-id-publico',
-        //     function (): void {
-        //         new Mensaje()->setUltimoIdPublico();
-        //     }
-        // );
-
-        // $this->setRoute(
-        //     'POST',
-        //     'mensajes/ultimo-id-directo',
-        //     function (): void {
-        //         new Mensaje()->setUltimoIdDirecto();
-        //     }
-        // );
-
-        // $this->setRoute(
-        //     'POST',
-        //     'mensajes/ultimo-id-grupal',
-        //     function (): void {
-        //         new Mensaje()->setUltimoIdGrupal();
-        //     }
-        // );
-
-        $this->setRoute(
-            'POST',
             'usuarios/crear',
             function (): void {
                 new Usuario()->createUsuario();
@@ -167,6 +135,14 @@ final class Router
             'usuarios/delete',
             function (): void {
                 new Usuario()->deleteUsuario();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'mensajes/ultimo-id',
+            function (): void {
+                new Mensaje()->setUltimoIdMensaje();
             }
         );
 
@@ -229,6 +205,8 @@ final class Router
         $this->handleRequest();
     }
 
+    // MARK: SET ROUTE
+
     private function setRoute(string $method, string $path, callable $handler): void
     {
         $this->routes[] = [
@@ -237,6 +215,8 @@ final class Router
             'handler' => $handler
         ];
     }
+
+    // MARK: HANDLE REQUEST
 
     private function handleRequest(): void
     {
