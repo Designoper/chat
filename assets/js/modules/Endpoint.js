@@ -7,10 +7,11 @@ export default class Endpoint extends Fetch {
 
 		// GET
 
+		GET_USUARIOS: `${this.ROOT}usuarios`,
+		CURRENT_USUARIOS: `${this.ROOT}usuarios/current`,
 		GET_MENSAJES: `${this.ROOT}mensajes`,
 		STREAM_MENSAJES: `${this.ROOT}stream-mensajes`,
 		GET_MENSAJES_NO_LEIDOS: `${this.ROOT}mensajes/no-leidos`,
-		GET_USUARIOS: `${this.ROOT}usuarios`,
 		GET_GRUPOS: `${this.ROOT}grupos`,
 		GET_GRUPOS_MIEMBRO: `${this.ROOT}grupos/miembro`,
 		GET_GRUPOS_PENDIENTE: `${this.ROOT}grupos/pendiente`,
@@ -18,16 +19,15 @@ export default class Endpoint extends Fetch {
 
 		// POST
 
-		ULTIMO_ID_MENSAJE: `${this.ROOT}mensajes/ultimo-id`,
 		CREAR_USUARIOS: `${this.ROOT}usuarios/crear`,
 		LOGIN_USUARIOS: `${this.ROOT}usuarios/login`,
 		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,
-		CURRENT_USUARIOS: `${this.ROOT}usuarios/current`,
 		DELETE_USUARIOS: `${this.ROOT}usuarios/delete`,
 		CREAR_MENSAJES: `${this.ROOT}mensajes/crear`,
 		CREAR_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos/crear`,
 		CREAR_MENSAJES_GRUPALES: `${this.ROOT}mensajes-grupales/crear`,
 		ELIMINAR_MENSAJES: `${this.ROOT}mensajes`,
+		ULTIMO_ID_MENSAJE: `${this.ROOT}mensajes/ultimo-id`,
 		CREAR_GRUPOS: `${this.ROOT}grupos/crear`,
 		INVITAR: `${this.ROOT}grupos/invitar`,
 		ACEPTAR_INVITACION: `${this.ROOT}grupos/aceptar`
