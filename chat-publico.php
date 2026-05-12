@@ -58,14 +58,14 @@ new Usuario()->authBrowser();
 
 				<textarea placeholder="Mensaje" name="contenido" autocomplete="off" minlength="1" maxlength="255" required></textarea>
 
-				<label for="soundfile">Audio</label>
+				<!-- <label for="soundfile">Audio</label>
 				<input type="file" id="soundfile" name="audio" capture="user" accept="audio/*">
 
 				<label for="videofile">Video</label>
 				<input type="file" id="videofile" name="video" capture="user" accept="video/*">
 
 				<label for="imagefile">Image</label>
-				<input type="file" id="imagefile" capture="user" accept="image/*" />
+				<input type="file" id="imagefile" capture="user" accept="image/*" /> -->
 
 				<button>
 					<svg viewBox="0 0 512 512">

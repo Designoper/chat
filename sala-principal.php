@@ -57,6 +57,8 @@ new Usuario()->authBrowser();
 			</li>
 		</menu>
 
+		<a href="./videollamada.php">Videollamada</a>
+
 		<form name="logout-usuario">
 			<button>
 				<svg viewBox="0 0 654 752">
