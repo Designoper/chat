@@ -4,33 +4,43 @@ export default class Endpoint extends Fetch {
 	ROOT = `${location.origin}/api/`;
 
 	ENDPOINTS = {
-
-		// GET
-
-		GET_USUARIOS: `${this.ROOT}usuarios`,
-		CURRENT_USUARIOS: `${this.ROOT}usuarios/current`,
-		GET_MENSAJES: `${this.ROOT}mensajes`,
-		STREAM_MENSAJES: `${this.ROOT}stream-mensajes`,
-		GET_MENSAJES_NO_LEIDOS: `${this.ROOT}mensajes/no-leidos`,
-		GET_GRUPOS: `${this.ROOT}grupos`,
-		GET_GRUPOS_MIEMBRO: `${this.ROOT}grupos/miembro`,
-		GET_GRUPOS_PENDIENTE: `${this.ROOT}grupos/pendiente`,
-		GET_GRUPOS_NO_MIEMBRO: `${this.ROOT}grupos/no-miembro`,
-
-		// POST
-
-		CREAR_USUARIOS: `${this.ROOT}usuarios/crear`,
-		LOGIN_USUARIOS: `${this.ROOT}usuarios/login`,
-		LOGOUT_USUARIOS: `${this.ROOT}usuarios/logout`,
-		DELETE_USUARIOS: `${this.ROOT}usuarios/delete`,
-		CREAR_MENSAJES: `${this.ROOT}mensajes/crear`,
-		CREAR_MENSAJES_DIRECTOS: `${this.ROOT}mensajes-directos/crear`,
-		CREAR_MENSAJES_GRUPALES: `${this.ROOT}mensajes-grupales/crear`,
-		ELIMINAR_MENSAJES: `${this.ROOT}mensajes`,
-		ULTIMO_ID_MENSAJE: `${this.ROOT}mensajes/ultimo-id`,
-		CREAR_GRUPOS: `${this.ROOT}grupos/crear`,
-		INVITAR: `${this.ROOT}grupos/invitar`,
-		ACEPTAR_INVITACION: `${this.ROOT}grupos/aceptar`
+		GET: {
+			USUARIOS: {
+				OTROS: `${this.ROOT}usuarios`,
+				CURRENT: `${this.ROOT}usuarios/current`,
+			},
+			MENSAJES: {
+				TODOS: `${this.ROOT}mensajes`,
+				STREAM: `${this.ROOT}stream-mensajes`,
+				NO_LEIDOS: `${this.ROOT}mensajes/no-leidos`,
+			},
+			GRUPOS: {
+				GRUPOS: `${this.ROOT}grupos`,
+				MIEMBRO: `${this.ROOT}grupos/miembro`,
+				PENDIENTE: `${this.ROOT}grupos/pendiente`,
+				NO_MIEMBRO: `${this.ROOT}grupos/no-miembro`,
+			}
+		},
+		POST: {
+			USUARIOS: {
+				CREAR: `${this.ROOT}usuarios/crear`,
+				LOGIN: `${this.ROOT}usuarios/login`,
+				LOGOUT: `${this.ROOT}usuarios/logout`,
+				DELETE: `${this.ROOT}usuarios/delete`,
+			},
+			MENSAJES: {
+				CREAR: `${this.ROOT}mensajes/crear`,
+				CREAR_DIRECTO: `${this.ROOT}mensajes-directos/crear`,
+				CREAR_GRUPAL: `${this.ROOT}mensajes-grupales/crear`,
+				ELIMINAR: `${this.ROOT}mensajes`,
+				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`,
+			},
+			GRUPOS: {
+				CREAR: `${this.ROOT}grupos/crear`,
+				INVITAR: `${this.ROOT}grupos/invitar`,
+				ACEPTAR_INVITACION: `${this.ROOT}grupos/aceptar`
+			}
+		}
 	};
 
 	constructor() {
@@ -47,31 +57,31 @@ export default class Endpoint extends Fetch {
 
 				switch (name) {
 					case 'crear-usuario':
-						this.createUsuario(form, 'post', this.ENDPOINTS.CREAR_USUARIOS);
+						this.createUsuario(form, 'post', this.ENDPOINTS.POST.USUARIOS.CREAR);
 						break;
 
 					case 'login-usuario':
-						this.loginUsuario(form, 'post', this.ENDPOINTS.LOGIN_USUARIOS);
+						this.loginUsuario(form, 'post', this.ENDPOINTS.POST.USUARIOS.LOGIN);
 						break;
 
 					case 'logout-usuario':
-						this.logout(form, 'post', this.ENDPOINTS.LOGOUT_USUARIOS);
+						this.logout(form, 'post', this.ENDPOINTS.POST.USUARIOS.LOGOUT);
 						break;
 
 					case 'delete-usuario':
-						this.deleteUsuario(form, 'post', this.ENDPOINTS.DELETE_USUARIOS);
+						this.deleteUsuario(form, 'post', this.ENDPOINTS.POST.USUARIOS.DELETE);
 						break;
 
 					case 'crear-mensaje':
-						this.writeMensaje(form, 'post', this.ENDPOINTS.CREAR_MENSAJES);
+						this.writeMensaje(form, 'post', this.ENDPOINTS.POST.MENSAJES.CREAR);
 						break;
 
 					case 'crear-mensaje-directo':
-						this.writeMensajeDirecto(form, 'post', this.ENDPOINTS.CREAR_MENSAJES_DIRECTOS);
+						this.writeMensajeDirecto(form, 'post', this.ENDPOINTS.POST.MENSAJES.CREAR_DIRECTO);
 						break;
 
 					case 'crear-mensaje-grupal':
-						this.writeMensajeGrupal(form, 'post', this.ENDPOINTS.CREAR_MENSAJES_GRUPALES);
+						this.writeMensajeGrupal(form, 'post', this.ENDPOINTS.POST.MENSAJES.CREAR_GRUPAL);
 						break;
 
 					case 'eliminar-mensaje':
@@ -79,15 +89,15 @@ export default class Endpoint extends Fetch {
 						break;
 
 					case 'crear-grupo':
-						this.createGrupo(form, 'post', this.ENDPOINTS.CREAR_GRUPOS);
+						this.createGrupo(form, 'post', this.ENDPOINTS.POST.GRUPOS.CREAR);
 						break;
 
 					case 'aceptar-invitacion':
-						this.aceptarInvitacion(form, 'post', this.ENDPOINTS.ACEPTAR_INVITACION);
+						this.aceptarInvitacion(form, 'post', this.ENDPOINTS.POST.GRUPOS.ACEPTAR_INVITACION);
 						break;
 
 					case 'invitar':
-						this.invitar(form, 'post', this.ENDPOINTS.INVITAR);
+						this.invitar(form, 'post', this.ENDPOINTS.POST.GRUPOS.INVITAR);
 						break;
 				}
 			}

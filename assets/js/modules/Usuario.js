@@ -9,7 +9,7 @@ export default class Usuario extends Endpoint {
 	}
 
 	async getUsuarios() {
-		const response = await this.simpleFetch(this.ENDPOINTS.GET_USUARIOS);
+		const response = await this.simpleFetch(this.ENDPOINTS.GET.USUARIOS.OTROS);
 		this.printUsuarios(response);
 	}
 
@@ -22,7 +22,7 @@ export default class Usuario extends Endpoint {
 
 		const usuarios = await Promise.all(
 			fetchedUsuarios.map(async usuario => {
-				const mensajesNoLeidos = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES_NO_LEIDOS,
+				const mensajesNoLeidos = await this.simpleFetch(this.ENDPOINTS.GET.MENSAJES.NO_LEIDOS,
 					{
 						"id_receptor": usuario.id_usuario
 					}
@@ -78,12 +78,12 @@ export default class Usuario extends Endpoint {
 	}
 
 	async sessionCheck() {
-		const response = await this.simpleFetch(this.ENDPOINTS.CURRENT_USUARIOS);
+		const response = await this.simpleFetch(this.ENDPOINTS.GET.USUARIOS.CURRENT);
 		this.id_usuario = response.content.id_usuario;
 	}
 
 	async getMensajesNoLeidos() {
-		const response = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES_NO_LEIDOS);
+		const response = await this.simpleFetch(this.ENDPOINTS.GET.MENSAJES.NO_LEIDOS);
 		const span = document.querySelector('menu li:first-child span');
 
 		if (response.content.num_mensajes > 0) {

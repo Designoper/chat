@@ -9,12 +9,12 @@ export default class Grupo extends Endpoint {
 	}
 
 	async getGruposMiembro() {
-		const response = await this.simpleFetch(this.ENDPOINTS.GET_GRUPOS_MIEMBRO);
+		const response = await this.simpleFetch(this.ENDPOINTS.GET.GRUPOS.MIEMBRO);
 		this.printGruposMiembro(response);
 	}
 
 	async getGruposPendiente() {
-		const response = await this.simpleFetch(this.ENDPOINTS.GET_GRUPOS_PENDIENTE);
+		const response = await this.simpleFetch(this.ENDPOINTS.GET.GRUPOS.PENDIENTE);
 		this.printGruposPendiente(response);
 	}
 
@@ -35,13 +35,13 @@ export default class Grupo extends Endpoint {
 		const grupos = await Promise.all(
 			fetchedGrupos.map(async grupo => {
 
-				const invitables = await this.simpleFetch(this.ENDPOINTS.GET_GRUPOS_NO_MIEMBRO,
+				const invitables = await this.simpleFetch(this.ENDPOINTS.GET.GRUPOS.NO_MIEMBRO,
 					{
 						"id_grupo": grupo.id_grupo
 					}
 				);
 
-				const mensajesNoLeidos = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES_NO_LEIDOS,
+				const mensajesNoLeidos = await this.simpleFetch(this.ENDPOINTS.GET.MENSAJES.NO_LEIDOS,
 					{
 						"id_grupo": grupo.id_grupo
 					}
