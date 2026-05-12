@@ -101,7 +101,10 @@ final readonly class Grupo extends MysqliConnect
 			FROM grupos
 			LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
 			WHERE membresias.id_usuario = ?
-			AND (membresias.rol = ? OR membresias.rol = ?)
+			AND (
+				membresias.rol = ? OR
+				membresias.rol = ?
+			)
 			ORDER BY grupos.nombre_grupo ASC";
 
 		$query = $this->connection->prepare($statement);
