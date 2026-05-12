@@ -48,8 +48,8 @@ new Usuario()->authBrowser();
 		<h1>¿Con quién quieres chatear?</h1>
 
 		<p></p>
-		<video id="yo" autoplay playsinline></video>
-		<video id="otro" autoplay playsinline></video>
+		<video id="yo" autoplay playsinline controls muted></video>
+		<video id="otro" autoplay playsinline controls></video>
 
 		<input id="peerId" placeholder="ID del otro usuario">
 		<button id="llamar">Llamar</button>

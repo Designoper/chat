@@ -25,9 +25,14 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: true })
 		};
 
 		peer.on("call", call => {
-			call.answer(stream);
-			call.on("stream", remote => {
-				document.getElementById("otro").srcObject = remote;
-			});
+			// if (!listaDeIDsPermitidos.includes(call.peer)) return;
+			if (confirm("¿Aceptar llamada entrante?")) {
+				call.answer(stream);
+				call.on("stream", remote => {
+					document.getElementById("otro").srcObject = remote;
+				});
+			}
+			else call.close();
+			// return;
 		});
 	});
