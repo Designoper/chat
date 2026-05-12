@@ -6,6 +6,7 @@ export default class Mensaje extends Usuario {
 	obj = {};
 	urlStream = new URL(this.ENDPOINTS.STREAM_MENSAJES);
 	url = new URL(location.href);
+	endpointMensaje = this.ENDPOINTS.GET_MENSAJES;
 
 	h1 = document.querySelector('h1');
 	input = document.querySelector('input[type="hidden"]');
@@ -20,8 +21,8 @@ export default class Mensaje extends Usuario {
 		super();
 	}
 
-	async getMensajes(endpointMensaje) {
-		const response = await this.simpleFetch(endpointMensaje);
+	async getMensajes(params = {}) {
+		const response = await this.simpleFetch(this.endpointMensaje, params);
 		const mensajes = this.mensajesTemplate(response.content);
 		this.MENSAJES_OUTPUT.innerHTML = mensajes;
 

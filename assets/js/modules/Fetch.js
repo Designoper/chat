@@ -1,18 +1,18 @@
 export default class Fetch {
 	constructor() { }
 
-	async simpleFetch(endpoint, params) {
+	async simpleFetch(endpoint, params = {}) {
 		const url = new URL(endpoint);
 
-		if (params) {
+		// if (params) {
 			const getParams = new URLSearchParams();
 
 			for (const [key, value] of Object.entries(params)) {
 				getParams.append(key, value);
 			}
 
-			url.search = getParams;
-		}
+			url.search = getParams.toString();
+		// }
 
 		const response = await fetch(url);
 		const json = await response.json();

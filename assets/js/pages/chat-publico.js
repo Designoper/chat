@@ -2,12 +2,11 @@ import Mensaje from '../modules/Mensaje.js';
 
 const mensaje = new Mensaje();
 
-const endpointMensaje = mensaje.ENDPOINTS.GET_MENSAJES;
 const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_PUBLICO;
 
 await mensaje.sessionCheck();
 
-const lastid = await mensaje.getMensajes(endpointMensaje);
+const lastid = await mensaje.getMensajes();
 
 const obj = {
 	"ultimo_id": lastid,
