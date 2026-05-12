@@ -18,7 +18,6 @@ final readonly class Mensaje extends MysqliConnect
 		parent::__construct();
 
 		$this->authEndpoint();
-		$this->checkIntegrityErrors();
 		$this->id_emisor = $this->session_user;
 	}
 
@@ -158,6 +157,7 @@ final readonly class Mensaje extends MysqliConnect
 	private function setUltimoIdDirecto(): void
 	{
 		$this->setIdReceptor();
+		$this->checkValidationErrors();
 
 		$id_usuario = $this->id_emisor;
 		$id_receptor = $this->id_receptor;
@@ -192,6 +192,7 @@ final readonly class Mensaje extends MysqliConnect
 	private function setUltimoIdGrupal(): void
 	{
 		$this->setIdGrupo();
+		$this->checkValidationErrors();
 
 		$id_usuario = $this->id_emisor;
 		$id_grupo = $this->id_grupo;
@@ -569,7 +570,7 @@ final readonly class Mensaje extends MysqliConnect
 		if ($autor['id_emisor'] !== $id_usuario) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el autor del mensaje');
-			// $this->checkIntegrityErrors();
+			$this->checkIntegrityErrors();
 		}
 	}
 
@@ -583,8 +584,6 @@ final readonly class Mensaje extends MysqliConnect
 
 		$id_emisor = $this->id_emisor;
 		$contenido = $this->contenido;
-
-		// $this->checkIntegrityErrors();
 
 		$statement =
 			"INSERT INTO mensajes (contenido, id_emisor)
@@ -618,8 +617,6 @@ final readonly class Mensaje extends MysqliConnect
 		$id_receptor = $this->id_receptor;
 		$id_emisor = $this->id_emisor;
 		$contenido = $this->contenido;
-
-		// $this->checkIntegrityErrors();
 
 		$statement =
 			"INSERT INTO mensajes (contenido, id_emisor, id_receptor)
@@ -655,8 +652,6 @@ final readonly class Mensaje extends MysqliConnect
 		$contenido = $this->contenido;
 		$id_grupo = $this->id_grupo;
 
-		// $this->checkIntegrityErrors();
-
 		$statement =
 			"INSERT INTO mensajes (contenido, id_emisor, id_grupo)
 			VALUES (?, ?, ?)";
@@ -686,8 +681,6 @@ final readonly class Mensaje extends MysqliConnect
 
 		$id_mensaje = $this->id_mensaje;
 		$id_emisor = $this->id_emisor;
-
-		// $this->checkIntegrityErrors();
 
 		$statement =
 			"DELETE FROM mensajes

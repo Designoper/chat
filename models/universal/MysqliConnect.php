@@ -74,6 +74,7 @@ abstract readonly class MysqliConnect extends Response
 		if ($this->session_user === null) {
 			$this->status = 401;
 			$this->errors->setIntegrityError('No hay sesión');
+			$this->checkIntegrityErrors();
 		}
 	}
 }

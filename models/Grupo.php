@@ -16,7 +16,6 @@ final readonly class Grupo extends MysqliConnect
 		parent::__construct();
 
 		$this->authEndpoint();
-		$this->checkIntegrityErrors();
 		$this->id_fundador = $this->session_user;
 	}
 
@@ -176,6 +175,8 @@ final readonly class Grupo extends MysqliConnect
 	public function readGruposNoMiembro(): void
 	{
 		$this->setIdGrupo();
+		$this->checkValidationErrors();
+
 		$id_grupo = $this->id_grupo;
 
 		$statement =

@@ -56,6 +56,8 @@ final readonly class Usuario extends MysqliConnect
 
 	public function readUsuarios(): void
 	{
+		$this->authEndpoint();
+
 		$id_usuario = $this->id_usuario;
 
 		$statement =
@@ -168,7 +170,7 @@ final readonly class Usuario extends MysqliConnect
 		if (!$row) {
 			$this->status = 401;
 			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
-			// $this->checkIntegrityErrors();
+			$this->checkIntegrityErrors();
 		}
 
 		$hashGuardado = $row['password'];
@@ -176,7 +178,7 @@ final readonly class Usuario extends MysqliConnect
 		if (!password_verify($passwordIngresada, $hashGuardado)) {
 			$this->status = 401;
 			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
-			// $this->checkIntegrityErrors();
+			$this->checkIntegrityErrors();
 		}
 
 		$_SESSION['id_usuario'] = $row['id_usuario'];
@@ -190,6 +192,8 @@ final readonly class Usuario extends MysqliConnect
 
 	public function logout(): void
 	{
+		$this->authEndpoint();
+
 		// Asegurar que la sesión está iniciada
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
@@ -221,6 +225,8 @@ final readonly class Usuario extends MysqliConnect
 
 	public function currentUsuario(): void
 	{
+		$this->authEndpoint();
+
 		$this->status = 200;
 		$this->message = "Usuario identificado";
 		$this->content = [
