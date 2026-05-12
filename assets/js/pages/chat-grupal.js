@@ -7,7 +7,6 @@ const getParams = {
 }
 
 await mensaje.sessionCheck();
-
 await mensaje.getMensajes(getParams);
 
 mensaje.writeChat(`Chat grupal (${mensaje.nombre_grupo})`, mensaje.id_grupo);
