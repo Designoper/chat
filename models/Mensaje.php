@@ -219,9 +219,28 @@ final readonly class Mensaje extends MysqliConnect
 		$this->sendResponse();
 	}
 
+	// MARK: COUNT UNREAD MESSAGES
+
+	public function countUnreadMessages(): void
+	{
+		$this->authEndpoint();
+
+		if (isset($_GET['id_receptor'])) {
+			$this->countUnreadDirectMessages();
+		}
+
+		if (isset($_GET['id_grupo'])) {
+			$this->countUnreadGroupMessages();
+		}
+
+		if (count($_GET) === 0) {
+			$this->countUnreadPublicMessages();
+		}
+	}
+
 	// MARK: COUNT UNREAD DIRECT MESSAGES
 
-	public function countUnreadDirectMessages(): void
+	private function countUnreadDirectMessages(): void
 	{
 		// $this->authEndpoint();
 
@@ -267,7 +286,7 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: COUNT UNREAD GROUP MESSAGES
 
-	public function countUnreadGroupMessages(): void
+	private function countUnreadGroupMessages(): void
 	{
 		// $this->authEndpoint();
 
@@ -313,7 +332,7 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: COUNT UNREAD PUBLIC MESSAGES
 
-	public function countUnreadPublicMessages(): void
+	private function countUnreadPublicMessages(): void
 	{
 		// $this->authEndpoint();
 

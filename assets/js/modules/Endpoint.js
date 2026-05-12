@@ -10,8 +10,6 @@ export default class Endpoint extends Fetch {
 		GET_MENSAJES: `${this.ROOT}mensajes`,
 		STREAM_MENSAJES: `${this.ROOT}stream-mensajes`,
 		GET_MENSAJES_NO_LEIDOS: `${this.ROOT}mensajes/no-leidos`,
-		GET_MENSAJES_DIRECTOS_NO_LEIDOS: `${this.ROOT}mensajes-directos/no-leidos`,
-		GET_MENSAJES_GRUPALES_NO_LEIDOS: `${this.ROOT}mensajes-grupales/no-leidos`,
 		GET_USUARIOS: `${this.ROOT}usuarios`,
 		GET_GRUPOS: `${this.ROOT}grupos`,
 		GET_GRUPOS_MIEMBRO: `${this.ROOT}grupos/miembro`,

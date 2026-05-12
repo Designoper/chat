@@ -26,25 +26,9 @@ final class Router
 
         $this->setRoute(
             'GET',
-            'mensajes-grupales/no-leidos',
+            'mensajes/no-leidos',
             function (): void {
-                new Mensaje()->countUnreadGroupMessages();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'mensajes-directos/no-leidos',
-            function (): void {
-                new Mensaje()->countUnreadDirectMessages();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'mensajes/no-leidos$',
-            function (): void {
-                new Mensaje()->countUnreadPublicMessages();
+                new Mensaje()->countUnreadMessages();
             }
         );
 

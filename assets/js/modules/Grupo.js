@@ -41,7 +41,7 @@ export default class Grupo extends Endpoint {
 					}
 				);
 
-				const mensajesNoLeidos = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES_GRUPALES_NO_LEIDOS,
+				const mensajesNoLeidos = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES_NO_LEIDOS,
 					{
 						"id_grupo": grupo.id_grupo
 					}

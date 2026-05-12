@@ -22,7 +22,7 @@ export default class Usuario extends Endpoint {
 
 		const usuarios = await Promise.all(
 			fetchedUsuarios.map(async usuario => {
-				const mensajesNoLeidos = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES_DIRECTOS_NO_LEIDOS,
+				const mensajesNoLeidos = await this.simpleFetch(this.ENDPOINTS.GET_MENSAJES_NO_LEIDOS,
 					{
 						"id_receptor": usuario.id_usuario
 					}
