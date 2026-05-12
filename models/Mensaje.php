@@ -17,6 +17,8 @@ final readonly class Mensaje extends MysqliConnect
 	{
 		parent::__construct();
 
+		$this->authEndpoint();
+		$this->checkIntegrityErrors();
 		$this->id_emisor = $this->session_user;
 	}
 
@@ -223,8 +225,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	public function countUnreadMessages(): void
 	{
-		$this->authEndpoint();
-
 		if (isset($_GET['id_receptor'])) {
 			$this->countUnreadDirectMessages();
 		}
@@ -242,8 +242,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	private function countUnreadDirectMessages(): void
 	{
-		// $this->authEndpoint();
-
 		$this->setIdReceptor();
 
 		$this->checkValidationErrors();
@@ -288,8 +286,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	private function countUnreadGroupMessages(): void
 	{
-		// $this->authEndpoint();
-
 		$this->setIdGrupo();
 
 		$this->checkValidationErrors();
@@ -334,8 +330,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	private function countUnreadPublicMessages(): void
 	{
-		// $this->authEndpoint();
-
 		$id_emisor = $this->id_emisor;
 
 		$statement =
@@ -372,8 +366,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	public function readMensajes(): void
 	{
-		$this->authEndpoint();
-
 		// $allowed = ['id_receptor', 'id_grupo'];
 
 		// // Si hay parámetros no permitidos
@@ -585,7 +577,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	public function createMensaje(): void
 	{
-		$this->authEndpoint();
 		$this->setContenido();
 
 		$this->checkValidationErrors();
@@ -619,7 +610,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	public function createMensajeDirecto(): void
 	{
-		$this->authEndpoint();
 		$this->setContenido();
 		$this->setIdReceptor();
 
@@ -656,7 +646,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	public function createMensajeGrupal(): void
 	{
-		$this->authEndpoint();
 		$this->setContenido();
 		$this->setIdGrupo();
 
@@ -799,12 +788,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	private function getNuevosMensajesGrupales(int $ultimo_id, int $id_grupo): array
 	{
-		// $this->setIdGrupo();
-
-		// $this->errors->checkValidationErrors();
-
-		// $id_grupo = $this->id_grupo;
-
 		$statement =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
