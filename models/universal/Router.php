@@ -108,27 +108,35 @@ final class Router
 
         $this->setRoute(
             'POST',
-            'mensajes/ultimo-id-publico',
+            'mensajes/ultimo-id',
             function (): void {
-                new Mensaje()->setUltimoIdPublico();
+                new Mensaje()->setUltimoIdMensaje();
             }
         );
 
-        $this->setRoute(
-            'POST',
-            'mensajes/ultimo-id-directo',
-            function (): void {
-                new Mensaje()->setUltimoIdDirecto();
-            }
-        );
+        // $this->setRoute(
+        //     'POST',
+        //     'mensajes/ultimo-id-publico',
+        //     function (): void {
+        //         new Mensaje()->setUltimoIdPublico();
+        //     }
+        // );
 
-        $this->setRoute(
-            'POST',
-            'mensajes/ultimo-id-grupal',
-            function (): void {
-                new Mensaje()->setUltimoIdGrupal();
-            }
-        );
+        // $this->setRoute(
+        //     'POST',
+        //     'mensajes/ultimo-id-directo',
+        //     function (): void {
+        //         new Mensaje()->setUltimoIdDirecto();
+        //     }
+        // );
+
+        // $this->setRoute(
+        //     'POST',
+        //     'mensajes/ultimo-id-grupal',
+        //     function (): void {
+        //         new Mensaje()->setUltimoIdGrupal();
+        //     }
+        // );
 
         $this->setRoute(
             'POST',

@@ -2,8 +2,6 @@ import Mensaje from '../modules/Mensaje.js';
 
 const mensaje = new Mensaje();
 
-const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_PUBLICO;
-
 await mensaje.sessionCheck();
 
 const lastid = await mensaje.getMensajes();
@@ -13,7 +11,7 @@ const obj = {
 	"tipo": "publico"
 }
 
-await mensaje.fetchPostNoForm(endpointUltimoId, obj);
+await mensaje.fetchPostNoForm(mensaje.ENDPOINTS.ULTIMO_ID_MENSAJE, obj);
 mensaje.setData(obj)
-mensaje.streamMensajes(endpointUltimoId);
+mensaje.streamMensajes(mensaje.ENDPOINTS.ULTIMO_ID_MENSAJE);
 mensaje.formHandler();

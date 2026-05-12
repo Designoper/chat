@@ -111,11 +111,29 @@ final readonly class Mensaje extends MysqliConnect
 			: $this->tipo = $value;
 	}
 
-	// MARK: SET ULTIMO ID PUBLICO
+	// MARK: SET ULTIMO ID MENSAJE
 
-	public function setUltimoIdPublico(): void
+	public function setUltimoIdMensaje(): void
 	{
 		$this->setultimoId();
+
+		if (isset($_POST['ultimo_id']) && isset($_POST['id_receptor'])) {
+			$this->setUltimoIdDirecto();
+		}
+
+		if (isset($_POST['ultimo_id']) && isset($_POST['id_grupo'])) {
+			$this->setUltimoIdGrupal();
+		}
+
+		if (isset($_POST['ultimo_id'])) {
+			$this->setUltimoIdPublico();
+		}
+	}
+
+	// MARK: SET ULTIMO ID PUBLICO
+
+	private function setUltimoIdPublico(): void
+	{
 		$this->checkValidationErrors();
 
 		$id_usuario = $this->id_emisor;
@@ -147,9 +165,8 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: SET ULTIMO ID DIRECTO
 
-	public function setUltimoIdDirecto(): void
+	private function setUltimoIdDirecto(): void
 	{
-		$this->setultimoId();
 		$this->setIdReceptor();
 
 		$id_usuario = $this->id_emisor;
@@ -182,9 +199,8 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: SET ULTIMO ID GRUPAL
 
-	public function setUltimoIdGrupal(): void
+	private function setUltimoIdGrupal(): void
 	{
-		$this->setultimoId();
 		$this->setIdGrupo();
 
 		$id_usuario = $this->id_emisor;

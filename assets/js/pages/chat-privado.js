@@ -2,8 +2,6 @@ import Mensaje from '../modules/Mensaje.js';
 
 const mensaje = new Mensaje();
 
-const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_DIRECTO;
-
 const getParams = {
 	"id_receptor": mensaje.id_receptor
 }
@@ -18,8 +16,8 @@ const obj = {
 	"tipo": "directo"
 }
 
-await mensaje.fetchPostNoForm(endpointUltimoId, obj);
+await mensaje.fetchPostNoForm(mensaje.ENDPOINTS.ULTIMO_ID_MENSAJE, obj);
 mensaje.setData(obj);
 mensaje.writeChat(`Chat privado con ${mensaje.nombre_receptor}`, mensaje.id_receptor);
-mensaje.streamMensajes(endpointUltimoId);
+mensaje.streamMensajes();
 mensaje.formHandler();

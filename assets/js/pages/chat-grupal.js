@@ -2,8 +2,6 @@ import Mensaje from '../modules/Mensaje.js';
 
 const mensaje = new Mensaje();
 
-const endpointUltimoId = mensaje.ENDPOINTS.ULTIMO_ID_GRUPAL;
-
 const getParams = {
 	"id_grupo": mensaje.id_grupo
 }
@@ -18,8 +16,8 @@ const obj = {
 	"tipo": "grupal"
 }
 
-await mensaje.fetchPostNoForm(endpointUltimoId, obj);
+await mensaje.fetchPostNoForm(mensaje.ENDPOINTS.ULTIMO_ID_MENSAJE, obj);
 mensaje.setData(obj);
 mensaje.writeChat(`Chat grupal (${mensaje.nombre_grupo})`, mensaje.id_grupo);
-mensaje.streamMensajes(endpointUltimoId);
+mensaje.streamMensajes();
 mensaje.formHandler();

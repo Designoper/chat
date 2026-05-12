@@ -7,6 +7,7 @@ export default class Mensaje extends Usuario {
 	urlStream = new URL(this.ENDPOINTS.STREAM_MENSAJES);
 	url = new URL(location.href);
 	endpointMensaje = this.ENDPOINTS.GET_MENSAJES;
+	endpointUltimoId = this.ENDPOINTS.ULTIMO_ID_MENSAJE;
 
 	h1 = document.querySelector('h1');
 	input = document.querySelector('input[type="hidden"]');
@@ -46,7 +47,7 @@ export default class Mensaje extends Usuario {
 		this.urlStream.search = params;
 	}
 
-	streamMensajes(endpointUltimoId) {
+	streamMensajes() {
 
 		const evtSource = new EventSource(this.urlStream);
 
@@ -63,7 +64,7 @@ export default class Mensaje extends Usuario {
 
 			this.obj.ultimo_id = id;
 
-			const response = await this.fetchPostNoForm(endpointUltimoId, this.obj);
+			const response = await this.fetchPostNoForm(this.ENDPOINTS.ULTIMO_ID_MENSAJE, this.obj);
 		});
 	}
 
