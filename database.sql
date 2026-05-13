@@ -8,7 +8,6 @@ CREATE TABLE usuarios (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
     nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
-    -- estado ENUM ('conectado','desconectado') NOT NULL
 );
 
 CREATE TABLE grupos (
@@ -53,9 +52,10 @@ CREATE TABLE mensajes (
         ON DELETE SET NULL
 );
 
+-- 🔥 PRESENCIA PÚBLICA (solo last_seen)
 CREATE TABLE conexion_publica (
     id_usuario INT NOT NULL,
-    conectado BOOLEAN,
+    last_seen INT UNSIGNED NOT NULL DEFAULT 0,
 
     UNIQUE KEY conect_publico (id_usuario),
 
@@ -64,10 +64,11 @@ CREATE TABLE conexion_publica (
         ON DELETE CASCADE
 );
 
+-- 🔥 PRESENCIA DIRECTA (usuario ↔ receptor)
 CREATE TABLE conexion_directa (
     id_usuario INT NOT NULL,
     id_receptor INT NOT NULL,
-    conectado BOOLEAN,
+    last_seen INT UNSIGNED NOT NULL DEFAULT 0,
 
     UNIQUE KEY conect_directo (id_usuario, id_receptor),
 
@@ -80,10 +81,11 @@ CREATE TABLE conexion_directa (
         ON DELETE CASCADE
 );
 
+-- 🔥 PRESENCIA GRUPAL
 CREATE TABLE conexion_grupal (
     id_usuario INT NOT NULL,
     id_grupo INT NOT NULL,
-    conectado BOOLEAN,
+    last_seen INT UNSIGNED NOT NULL DEFAULT 0,
 
     UNIQUE KEY conect_grupal (id_usuario, id_grupo),
 
@@ -96,6 +98,7 @@ CREATE TABLE conexion_grupal (
         ON DELETE CASCADE
 );
 
+-- Últimos mensajes leídos
 CREATE TABLE ultimos_mensajes_leidos_publicos (
     id_usuario INT NOT NULL,
     id_mensaje INT NULL,
@@ -138,6 +141,3 @@ CREATE TABLE ultimos_mensajes_leidos_grupales (
         REFERENCES grupos(id_grupo)
         ON DELETE CASCADE
 );
-
--- CREATE INDEX idx_mensajes_emisor ON mensajes(id_emisor);
--- CREATE INDEX idx_mensajes_receptor ON mensajes(id_receptor);

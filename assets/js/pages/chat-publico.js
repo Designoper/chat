@@ -10,4 +10,5 @@ mensaje.streamMensajes();
 
 const conexion = new Conexion();
 
-conexion.setConexion();
+// conexion.setConexion();
+conexion.streamConexion();

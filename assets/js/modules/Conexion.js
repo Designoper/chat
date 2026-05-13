@@ -2,54 +2,53 @@ import Usuario from "./Usuario.js";
 
 export default class Conexion extends Usuario {
 
-	urlStream = new URL(this.ENDPOINTS.GET.CONEXION.STREAM);
-	url = new URL(location.href);
+    constructor() {
+        super();
 
-	endpointConexion = this.ENDPOINTS.POST.CONEXION.ESTADO;
+        // Inicializaciones
+        this.urlStream = new URL(this.ENDPOINTS.GET.CONEXION.STREAM);
+        this.endpointConexion = new URL(this.ENDPOINTS.POST.CONEXION.ESTADO);
+        this.url = new URL(location.href);
 
-	// h1 = document.querySelector('h1');
-	input = document.querySelector('input[type="hidden"]');
+        this.id_receptor = this.url.searchParams.get('id-receptor');
+        this.nombre_receptor = this.url.searchParams.get('nombre-receptor');
+        this.id_grupo = this.url.searchParams.get('id-grupo');
+        this.nombre_grupo = this.url.searchParams.get('nombre-grupo');
 
-	id_receptor = this.url.searchParams.get('id-receptor');
-	nombre_receptor = this.url.searchParams.get('nombre-receptor');
+        this.input = document.querySelector('input[type="hidden"]');
 
-	id_grupo = this.url.searchParams.get('id-grupo');
-	nombre_grupo = this.url.searchParams.get('nombre-grupo');
+        // Iniciar SSE + presencia
+        // this.iniciarStream();
+    }
 
-	constructor() {
-		super();
+    // async setConexion() {
+    //     await this.fetchWithoutForm(this.endpointConexion, 'post');
+    // }
 
-		window.addEventListener("pagehide", () => {
-			const data = new FormData();
-			data.append("estado", "0");
-			navigator.sendBeacon(this.endpointConexion, data);
-		});
-	}
+    streamConexion() {
+        const evtSource = new EventSource(this.urlStream);
 
-	async setConexion() {
-		const response = await this.fetchWithoutForm(this.endpointConexion, 'post', {
-			"estado": "1"
-		});
-	}
+        // El servidor envía "ping" cada 15s → actualizamos last_seen
+        evtSource.addEventListener("ping", async () => {
+            await this.enviarHeartbeat();
+        });
 
-	// streamConexion() {
+        // Cuando se abre la conexión SSE → marcar conectado
+        evtSource.onopen = async () => {
+            await this.enviarHeartbeat();
+        };
 
-	// const evtSource = new EventSource(this.urlStream);
+        // Si la conexión SSE se cae → marcar desconectado
+        // evtSource.onerror = async () => {
+        //    await this.enviarDesconexion();
+        // };
+    }
 
-	// evtSource.addEventListener("mensaje", (event) => {
-	// const mensaje = JSON.parse(event.data);
-	// const content = this.mensajesTemplate([mensaje]);
+    async enviarHeartbeat() {
+        await this.fetchWithoutForm(this.endpointConexion, 'post');
+    }
 
-	// this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
-	// this.formHandler();
-	// });
-
-	// evtSource.addEventListener("new mensaje", async (event) => {
-	// 	const id = JSON.parse(event.data);
-
-	// 	this.obj.ultimo_id = id;
-
-	// 	const response = await this.fetchPostNoForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, this.obj);
-	// });
-	// }
+    // async enviarDesconexion() {
+    //     await this.fetchWithoutForm(this.endpointConexion, 'post');
+    // }
 }

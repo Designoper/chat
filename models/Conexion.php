@@ -72,36 +72,34 @@ final readonly class Conexion extends MysqliConnect
 
 	public function setConexion(): void
 	{
-		if (isset($_POST['id_receptor'])) {
-			$this->setConexionDirecta();
-		}
+		// if (isset($_POST['id_receptor'])) {
+		// 	$this->setConexionDirecta();
+		// }
 
-		if (isset($_POST['id_grupo'])) {
-			$this->setConexionGrupal();
-		}
+		// if (isset($_POST['id_grupo'])) {
+		// 	$this->setConexionGrupal();
+		// }
 
 		$this->setConexionPublica();
 	}
 
 	private function setConexionPublica(): void
 	{
-		$this->setEstado();
-		$estado = $this->estado;
+		// $this->setEstado();
+		// $estado = $this->estado;
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"INSERT INTO conexion_publica (conectado, id_usuario)
-			VALUES (?, ?)
-			ON DUPLICATE KEY
-			UPDATE conectado = ?";
+			"INSERT INTO conexion_publica (id_usuario, last_seen)
+			VALUES (?, UNIX_TIMESTAMP())
+			ON DUPLICATE KEY UPDATE
+				last_seen = UNIX_TIMESTAMP();";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"iii",
-			$estado,
+			"i",
 			$id_usuario,
-			$estado
 		);
 
 		$query->execute();
@@ -265,68 +263,54 @@ final readonly class Conexion extends MysqliConnect
 	// MARK: STREAM CONEXION
 
 	public function streamConexion(): void
-	{
-		if (session_status() === PHP_SESSION_ACTIVE) {
-			session_write_close();
-		}
+{
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
 
-		set_time_limit(0);
-		ignore_user_abort(false);
+    set_time_limit(0);
+    ignore_user_abort(false);
 
-		// Limpia buffers previos
-		while (ob_get_level() > 0) {
-			ob_end_clean();
-		}
+    // Limpia buffers previos
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
 
-		// Headers SSE
-		header("Content-Type: text/event-stream");
-		header("Cache-Control: no-cache");
-		header("Connection: keep-alive");
-		header("X-Accel-Buffering: no");
+    // Headers SSE
+    header("Content-Type: text/event-stream");
+    header("Cache-Control: no-cache");
+    header("Connection: keep-alive");
+    header("X-Accel-Buffering: no");
 
-		ini_set('output_buffering', 'off');
-		ini_set('zlib.output_compression', 0);
+    ini_set('output_buffering', 'off');
+    ini_set('zlib.output_compression', 0);
 
-		// Forzar flush inicial
-		echo str_pad('', 4096) . "\n";
-		flush();
+    // Forzar flush inicial
+    echo str_pad('', 4096) . "\n";
+    flush();
 
-		$id_receptor = (int) ($_GET["id_receptor"] ?? 0);
-		$id_grupo =   (int) ($_GET["id_grupo"] ?? 0);
-		$estado_conexion = false;
+    $startTime = time();
+    $lastPing = 0;
 
-		$startTime = time();
-		$lastPing = 0;
+    while (true) {
 
-		while (true) {
+        if (connection_aborted()) {
+            break;
+        }
 
-			if (connection_aborted()) {
-				break;
-			}
+        // Heartbeat cada 15s
+        $elapsed = time() - $startTime;
 
-			// $mensajes = $this->decide($ultimo_id, $id_receptor, $id_grupo);
+        if ($elapsed - $lastPing >= 15) {
+            echo "event: ping\n";
+            echo "data: {}\n\n";
+            $lastPing = $elapsed;
+        }
 
-			$estado_conexion_2 = $this->getConexionPublica();
+        @ob_flush();
+        @flush();
+        usleep(1000000); // 1s
+    }
+}
 
-			if ($estado_conexion_2 !== $estado_conexion) {
-
-				echo "event: nuevo estado\n";
-				echo "data: {}" . "\n\n";
-				$estado_conexion = $estado_conexion_2;
-			} else {
-				// Heartbeat cada 15s
-				$elapsed = time() - $startTime;
-
-				if ($elapsed - $lastPing >= 15) {
-					echo "event: ping\n";
-					echo "data: {}\n\n";
-					$lastPing = $elapsed;
-				}
-
-				@ob_flush();
-				@flush();
-				usleep(1000000); // 1s
-			}
-		}
-	}
 }
