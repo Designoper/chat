@@ -6,16 +6,16 @@ export default class Conexion extends Usuario {
 		super();
 
 		// Inicializaciones
-		this.urlStream = new URL(this.ENDPOINTS.GET.CONEXION.STREAM);
-		this.endpointConexion = new URL(this.ENDPOINTS.POST.CONEXION.ESTADO);
-		this.url = new URL(location.href);
+		// this.urlStream = new URL(this.ENDPOINTS.GET.CONEXION.STREAM);
+		// this.endpointConexion = new URL(this.ENDPOINTS.POST.CONEXION.ESTADO);
+		// this.url = new URL(location.href);
 
-		this.id_receptor = this.url.searchParams.get('id-receptor');
-		this.nombre_receptor = this.url.searchParams.get('nombre-receptor');
-		this.id_grupo = this.url.searchParams.get('id-grupo');
-		this.nombre_grupo = this.url.searchParams.get('nombre-grupo');
+		// this.id_receptor = this.url.searchParams.get('id-receptor');
+		// this.nombre_receptor = this.url.searchParams.get('nombre-receptor');
+		// this.id_grupo = this.url.searchParams.get('id-grupo');
+		// this.nombre_grupo = this.url.searchParams.get('nombre-grupo');
 
-		this.input = document.querySelector('input[type="hidden"]');
+		// this.input = document.querySelector('input[type="hidden"]');
 	}
 
 	streamConexion() {
@@ -35,8 +35,4 @@ export default class Conexion extends Usuario {
 	async enviarHeartbeat() {
 		await this.fetchWithoutForm(this.endpointConexion, 'post');
 	}
-
-	// async enviarDesconexion() {
-	//     await this.fetchWithoutForm(this.endpointConexion, 'post');
-	// }
 }
