@@ -72,21 +72,19 @@ final readonly class Conexion extends MysqliConnect
 
 	public function setConexion(): void
 	{
-		// if (isset($_POST['id_receptor'])) {
-		// 	$this->setConexionDirecta();
-		// }
+		if (isset($_POST['id_receptor'])) {
+			$this->setConexionDirecta();
+		}
 
-		// if (isset($_POST['id_grupo'])) {
-		// 	$this->setConexionGrupal();
-		// }
+		if (isset($_POST['id_grupo'])) {
+			$this->setConexionGrupal();
+		}
 
 		$this->setConexionPublica();
 	}
 
 	private function setConexionPublica(): void
 	{
-		// $this->setEstado();
-		// $estado = $this->estado;
 		$id_usuario = $this->id_usuario;
 
 		$statement =
@@ -105,69 +103,61 @@ final readonly class Conexion extends MysqliConnect
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Conexion actualizada";
+		$this->message = "Conexion pública actualizada";
 		$this->sendResponse();
 	}
 
 	private function setConexionDirecta(): void
 	{
-		$this->setEstado();
 		$this->setIdReceptor();
-		$estado = $this->estado;
 		$id_usuario = $this->id_usuario;
 		$id_receptor = $this->id_receptor;
 
 		$statement =
-			"INSERT INTO conexion_directa (conectado, id_usuario, id_receptor)
-			VALUES (?, ?, ?)
-			ON DUPLICATE KEY
-			UPDATE conectado = ?";
+			"INSERT INTO conexion_directa (id_usuario, id_receptor, last_seen)
+			VALUES (?, ?, UNIX_TIMESTAMP())
+			ON DUPLICATE KEY UPDATE
+				last_seen = UNIX_TIMESTAMP();";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"iiii",
-			$estado,
+			"ii",
 			$id_usuario,
 			$id_receptor,
-			$estado
 		);
 
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Conexion actualizada";
+		$this->message = "Conexion directa actualizada";
 		$this->sendResponse();
 	}
 
 	private function setConexionGrupal(): void
 	{
-		$this->setEstado();
 		$this->setIdGrupo();
-		$estado = $this->estado;
 		$id_usuario = $this->id_usuario;
 		$id_grupo = $this->id_grupo;
 
 		$statement =
-			"INSERT INTO conexion_grupal (conectado, id_usuario, id_grupo)
-			VALUES (?, ?, ?)
-			ON DUPLICATE KEY
-			UPDATE conectado = ?";
+			"INSERT INTO conexion_grupal (id_usuario, id_grupo, last_seen)
+			VALUES (?, ?, UNIX_TIMESTAMP())
+			ON DUPLICATE KEY UPDATE
+				last_seen = UNIX_TIMESTAMP();";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"iiii",
-			$estado,
+			"ii",
 			$id_usuario,
 			$id_grupo,
-			$estado
 		);
 
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Conexion actualizada";
+		$this->message = "Conexion grupal actualizada";
 		$this->sendResponse();
 	}
 
