@@ -199,7 +199,7 @@ final class Router
             'POST',
             'conexion/estado',
             function (): void {
-                new Conexion()->setConexionPublica();
+                new Conexion()->setConexion();
             }
         );
 

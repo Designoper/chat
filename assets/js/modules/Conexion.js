@@ -19,7 +19,6 @@ export default class Conexion extends Usuario {
 	constructor() {
 		super();
 
-		// Cuando la pestaña se cierra o navega → desconectado
 		window.addEventListener("pagehide", () => {
 			const data = new FormData();
 			data.append("estado", "0");
@@ -28,28 +27,10 @@ export default class Conexion extends Usuario {
 	}
 
 	async setConexion() {
-		const response = await this.fetchPostNoForm(this.endpointConexion, {
+		const response = await this.fetchWithoutForm(this.endpointConexion, 'post', {
 			"estado": "1"
 		});
 	}
-
-	// async getMensajes(params = {}) {
-	// 	const response = await this.simpleFetch(this.endpointMensaje, params);
-	// 	const mensajes = this.mensajesTemplate(response.content);
-	// 	this.MENSAJES_OUTPUT.innerHTML = mensajes;
-	// 	this.formHandler();
-
-	// 	let id;
-
-	// 	response.content.length > 0
-	// 		? id = response.content[response.content.length - 1].id_mensaje
-	// 		: id = "";
-
-	// 	params.ultimo_id = id;
-	// 	this.setData(params);
-
-	// 	await this.fetchPostNoForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, this.obj);
-	// }
 
 	// streamConexion() {
 

@@ -44,6 +44,8 @@ new Usuario()->authBrowser();
 
 	<main id="main">
 
+		<h1></h1>
+
 		<output></output>
 
 		<section>

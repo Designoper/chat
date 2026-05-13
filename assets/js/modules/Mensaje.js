@@ -25,7 +25,7 @@ export default class Mensaje extends Usuario {
 	}
 
 	async getMensajes(params = {}) {
-		const response = await this.simpleFetch(this.endpointMensaje, params);
+		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', params);
 		const mensajes = this.mensajesTemplate(response.content);
 		this.MENSAJES_OUTPUT.innerHTML = mensajes;
 		this.formHandler();
@@ -39,7 +39,7 @@ export default class Mensaje extends Usuario {
 		params.ultimo_id = id;
 		this.setData(params);
 
-		await this.fetchPostNoForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, this.obj);
+		await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.obj);
 	}
 
 	setData(obj) {
@@ -70,7 +70,7 @@ export default class Mensaje extends Usuario {
 
 			this.obj.ultimo_id = id;
 
-			const response = await this.fetchPostNoForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, this.obj);
+			const response = await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.obj);
 		});
 	}
 

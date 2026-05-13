@@ -1,39 +1,36 @@
 export default class Fetch {
 	constructor() { }
 
-	async simpleFetch(endpoint, params = {}) {
+	async fetchWithoutForm(endpoint, method, data = {}) {
+		const init = {};
+		init.method = method;
 		const url = new URL(endpoint);
-
-		const getParams = new URLSearchParams();
-
-		for (const [key, value] of Object.entries(params)) {
-			getParams.append(key, value);
-		}
-
-		url.search = getParams.toString();
-
-		const response = await fetch(url);
-		const json = await response.json();
-		json.status = response.status;
-		return json;
-	}
-
-	async fetchPostNoForm(endpoint, data) {
-		const url = new URL(endpoint);
-		const form = new FormData();
+		const userInputs = new FormData();
 
 		for (const [key, value] of Object.entries(data)) {
-			form.append(key, value);
+			userInputs.append(key, value);
 		}
 
-		const response = await fetch(url, {
-			method: "POST",
-			body: form
-		});
+		switch (method) {
+			case 'get':
+				url.search = new URLSearchParams(userInputs);
+				break;
+			case 'post':
+				init.body = userInputs;
+				break;
+		}
 
-		const json = await response.json();
-		json.status = response.status;
-		return json;
+		try {
+			const response = await fetch(url, init);
+			const json = await response.json();
+
+			json.status = response.status;
+			return json;
+		}
+
+		catch (error) {
+			console.log(error);
+		}
 	}
 
 	async fetchData(form, method, action = form.action) {

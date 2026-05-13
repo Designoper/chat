@@ -10,8 +10,6 @@ final readonly class Conexion extends MysqliConnect
 	private int $id_receptor;
 	private int $id_grupo;
 	private int $estado;
-	// private string $nombre_usuario;
-	// private string $password;
 
 	public function __construct()
 	{
@@ -27,14 +25,65 @@ final readonly class Conexion extends MysqliConnect
 	{
 		$name = 'estado';
 		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío.";
+		$min_range = 0;
+		$max_range = 1;
+		$error_message = "El campo $name debe ser $min_range o $max_range.";
 
-		$this->estado = (int) $value;
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range, "max_range" => $max_range)))
+			? $this->estado = (int) $value
+			: $this->errors->setValidationError($error_message);
 	}
 
-	// MARK: READ
+	private function setIdReceptor(): void
+	{
+		$method = match ($_SERVER['REQUEST_METHOD']) {
+			'GET' => $_GET,
+			'POST' => $_POST,
+		};
 
-	public function setConexionPublica(): void
+		$name = 'id_receptor';
+		$value = $method[$name] ?? null;
+		$min_range = 1;
+		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
+
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
+			? $this->id_receptor = (int) $value
+			: $this->errors->setValidationError($error_message);
+	}
+
+	private function setIdGrupo(): void
+	{
+		$method = match ($_SERVER['REQUEST_METHOD']) {
+			'GET' => $_GET,
+			'POST' => $_POST,
+		};
+
+		$name = 'id_grupo';
+		$value = $method[$name] ?? null;
+		$min_range = 1;
+		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
+
+		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
+			? $this->id_grupo = (int) $value
+			: $this->errors->setValidationError($error_message);
+	}
+
+	// MARK: SET CONEXION
+
+	public function setConexion(): void
+	{
+		if (isset($_POST['id_receptor'])) {
+			$this->setConexionDirecta();
+		}
+
+		if (isset($_POST['id_grupo'])) {
+			$this->setConexionGrupal();
+		}
+
+		$this->setConexionPublica();
+	}
+
+	private function setConexionPublica(): void
 	{
 		$this->setEstado();
 		$estado = $this->estado;
@@ -52,6 +101,68 @@ final readonly class Conexion extends MysqliConnect
 			"iii",
 			$estado,
 			$id_usuario,
+			$estado
+		);
+
+		$query->execute();
+
+		$this->status = 201;
+		$this->message = "Conexion actualizada";
+		$this->sendResponse();
+	}
+
+	private function setConexionDirecta(): void
+	{
+		$this->setEstado();
+		$this->setIdReceptor();
+		$estado = $this->estado;
+		$id_usuario = $this->id_usuario;
+		$id_receptor = $this->id_receptor;
+
+		$statement =
+			"INSERT INTO conexion_directa (conectado, id_usuario, id_receptor)
+			VALUES (?, ?, ?)
+			ON DUPLICATE KEY
+			UPDATE conectado = ?";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"iiii",
+			$estado,
+			$id_usuario,
+			$id_receptor,
+			$estado
+		);
+
+		$query->execute();
+
+		$this->status = 201;
+		$this->message = "Conexion actualizada";
+		$this->sendResponse();
+	}
+
+	private function setConexionGrupal(): void
+	{
+		$this->setEstado();
+		$this->setIdGrupo();
+		$estado = $this->estado;
+		$id_usuario = $this->id_usuario;
+		$id_grupo = $this->id_grupo;
+
+		$statement =
+			"INSERT INTO conexion_grupal (conectado, id_usuario, id_grupo)
+			VALUES (?, ?, ?)
+			ON DUPLICATE KEY
+			UPDATE conectado = ?";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"iiii",
+			$estado,
+			$id_usuario,
+			$id_grupo,
 			$estado
 		);
 
@@ -91,7 +202,7 @@ final readonly class Conexion extends MysqliConnect
 
 	private function getConexionDirecta(): bool
 	{
-		// $this->setIdReceptor();
+		$this->setIdReceptor();
 		$id_usuario = $this->id_usuario;
 		$id_receptor = $this->id_receptor;
 
@@ -122,7 +233,7 @@ final readonly class Conexion extends MysqliConnect
 
 	private function getConexionGrupal(): bool
 	{
-		// $this->setIdGrupo();
+		$this->setIdGrupo();
 		$id_usuario = $this->id_usuario;
 		$id_grupo = $this->id_grupo;
 
@@ -187,12 +298,9 @@ final readonly class Conexion extends MysqliConnect
 		$startTime = time();
 		$lastPing = 0;
 
-		// $this->setConexionPublica(1);
-
 		while (true) {
 
 			if (connection_aborted()) {
-				// $this->setConexionPublica(0);
 				break;
 			}
 
@@ -209,7 +317,7 @@ final readonly class Conexion extends MysqliConnect
 				// Heartbeat cada 15s
 				$elapsed = time() - $startTime;
 
-				if ($elapsed - $lastPing >= 5) {
+				if ($elapsed - $lastPing >= 15) {
 					echo "event: ping\n";
 					echo "data: {}\n\n";
 					$lastPing = $elapsed;
