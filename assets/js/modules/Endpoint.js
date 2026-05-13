@@ -19,6 +19,9 @@ export default class Endpoint extends Fetch {
 				MIEMBRO: `${this.ROOT}grupos/miembro`,
 				PENDIENTE: `${this.ROOT}grupos/pendiente`,
 				NO_MIEMBRO: `${this.ROOT}grupos/no-miembro`,
+			},
+			CONEXION: {
+				STREAM: `${this.ROOT}stream-conexion`,
 			}
 		},
 		POST: {
@@ -39,6 +42,9 @@ export default class Endpoint extends Fetch {
 				CREAR: `${this.ROOT}grupos/crear`,
 				INVITAR: `${this.ROOT}grupos/invitar`,
 				ACEPTAR_INVITACION: `${this.ROOT}grupos/aceptar`
+			},
+			CONEXION: {
+				ESTADO: `${this.ROOT}conexion/estado`,
 			}
 		}
 	};

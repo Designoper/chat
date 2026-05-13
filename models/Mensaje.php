@@ -900,7 +900,9 @@ final readonly class Mensaje extends MysqliConnect
 				}
 			}
 
-			flush();
+			@ob_flush();
+			@flush();
+
 			usleep(300000); // 0.3s
 		}
 	}

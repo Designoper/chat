@@ -15,60 +15,62 @@ RewriteRule ^(.*)$ ./controller.php [QSA,L]
     Require all denied
 </FilesMatch>
 
+
+
 # This file must be placed at the root folder of the server, like "html". Name must be ".htaccess", and only works on apache servers
 
 # Cache configuration to improve page loading speed
-<IfModule mod_expires.c>
+# <IfModule mod_expires.c>
 
-    ExpiresActive on
+#     ExpiresActive on
 
-    # Add additional content types
-    AddType text/css .css
-    AddType text/javascript .js
-    AddType image/png .png
-    AddType font/woff2 .woff2
+#     # Add additional content types
+#     AddType text/css .css
+#     AddType text/javascript .js
+#     AddType image/png .png
+#     AddType font/woff2 .woff2
 
-    # Set expiry times for cache. Despite lighthouse advises to set a very high time (1 year), I think a shorter cache (5-10 min) gives almost the same benefit to the user and avoids having to resort to cache busting if content changes
-    ExpiresDefault "access plus 5 minutes"
-    ExpiresByType text/css "access plus 5 minutes"
-    ExpiresByType text/javascript "access plus 5 minutes"
-    ExpiresByType image/png "access plus 5 minutes"
-    ExpiresByType font/woff2 "access plus 5 minutes"
+#     # Set expiry times for cache. Despite lighthouse advises to set a very high time (1 year), I think a shorter cache (5-10 min) gives almost the same benefit to the user and avoids having to resort to cache busting if content changes
+#     ExpiresDefault "access plus 5 minutes"
+#     ExpiresByType text/css "access plus 5 minutes"
+#     ExpiresByType text/javascript "access plus 5 minutes"
+#     ExpiresByType image/png "access plus 5 minutes"
+#     ExpiresByType font/woff2 "access plus 5 minutes"
 
-</IfModule>
+# </IfModule>
 
-# Mainly settings involving security and privacy
-<IfModule mod_headers.c>
+# # Mainly settings involving security and privacy
+# <IfModule mod_headers.c>
 
-    # Rules for importing content into the website. For maximum security, the default-src is "none" and elements that will be on the website are on "self", like css, js, img...This prevents Cross Site Scripting (XSS) attacks and blocks inline styles and scripts
-    Header set Content-Security-Policy "default-src 'none'; script-src 'self'; manifest-src 'self'; frame-ancestors 'none'; connect-src 'self' wss://0.peerjs.com/peerjs; img-src 'self'; style-src 'self'; base-uri 'self'; font-src 'self'; media-src 'self'"
-    # This header was meant to protect form XSS, but now is deprecated and replaced by CSP, so "0" deactivates it
-    Header set X-XSS-Protection "0"
-    # Denies anyone to embbed the website into an <iframe>, <embed>, <object>...to prevent click-jacking
-    Header set X-Frame-Options "Deny"
-    # Prevents MIME type sniffing
-    Header set X-Content-Type-Options: nosniff
-    # Force HTTP into HTTPS to avoid man in the middle attacks. Max-age written here is 2 years
-    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains"
-    # Privacy friendly setting; will only give origin in referer, without path, query string...
-    Header set Referrer-Policy "strict-origin-when-cross-origin"
+#     # Rules for importing content into the website. For maximum security, the default-src is "none" and elements that will be on the website are on "self", like css, js, img...This prevents Cross Site Scripting (XSS) attacks and blocks inline styles and scripts
+#     Header set Content-Security-Policy "default-src 'none'; script-src 'self'; manifest-src 'self'; frame-ancestors 'none'; connect-src 'self' wss://0.peerjs.com/peerjs; img-src 'self'; style-src 'self'; base-uri 'self'; font-src 'self'; media-src 'self'"
+#     # This header was meant to protect form XSS, but now is deprecated and replaced by CSP, so "0" deactivates it
+#     Header set X-XSS-Protection "0"
+#     # Denies anyone to embbed the website into an <iframe>, <embed>, <object>...to prevent click-jacking
+#     Header set X-Frame-Options "Deny"
+#     # Prevents MIME type sniffing
+#     Header set X-Content-Type-Options: nosniff
+#     # Force HTTP into HTTPS to avoid man in the middle attacks. Max-age written here is 2 years
+#     Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains"
+#     # Privacy friendly setting; will only give origin in referer, without path, query string...
+#     Header set Referrer-Policy "strict-origin-when-cross-origin"
 
-    # Header set Cache-Control "public, max-age=31536000, must-revalidate"
+#     # Header set Cache-Control "public, max-age=31536000, must-revalidate"
 
-    #Enables compression for files that match
-    <FilesMatch ".(html|css|js|png|svg|xml|gz)$">
-        Header append Vary: Accept-Encoding
-    </FilesMatch>
+#     #Enables compression for files that match
+#     <FilesMatch ".(html|css|js|png|svg|xml|gz)$">
+#         Header append Vary: Accept-Encoding
+#     </FilesMatch>
 
-</IfModule>
+# </IfModule>
 
-# Gzip compression
-<IfModule mod_deflate.c>
+# # Gzip compression
+# <IfModule mod_deflate.c>
 
-    AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/css
-    AddOutputFilterByType DEFLATE text/javascript
-    AddOutputFilterByType DEFLATE image/svg+xml
-    AddOutputFilterByType DEFLATE font/woff2
+#     AddOutputFilterByType DEFLATE text/html
+#     AddOutputFilterByType DEFLATE text/css
+#     AddOutputFilterByType DEFLATE text/javascript
+#     AddOutputFilterByType DEFLATE image/svg+xml
+#     AddOutputFilterByType DEFLATE font/woff2
 
-</IfModule>
+# </IfModule>

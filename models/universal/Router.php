@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../models/Usuario.php';
 require_once __DIR__ . '/../../models/Mensaje.php';
 require_once __DIR__ . '/../../models/Grupo.php';
+require_once __DIR__ . '/../../models/Conexion.php';
 
 final class Router
 {
@@ -15,6 +16,14 @@ final class Router
     {
 
         // MARK: GET ROUTES
+
+        $this->setRoute(
+            'GET',
+            'stream-conexion',
+            function (): void {
+                new Conexion()->streamConexion();
+            }
+        );
 
         $this->setRoute(
             'GET',
@@ -183,6 +192,14 @@ final class Router
             'grupos/aceptar',
             function (): void {
                 new Grupo()->aceptarInvitacion();
+            }
+        );
+
+        $this->setRoute(
+            'POST',
+            'conexion/estado',
+            function (): void {
+                new Conexion()->setConexionPublica();
             }
         );
 
