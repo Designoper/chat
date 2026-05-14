@@ -44,7 +44,7 @@ new Usuario()->authBrowser();
 
 	<main id="main">
 
-		<h1></h1>
+		<h1>Chat público</h1>
 
 		<output></output>
 

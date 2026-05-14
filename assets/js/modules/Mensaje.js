@@ -2,11 +2,11 @@ import Usuario from "./Usuario.js";
 import formatearFecha from "../utils/fecha.js";
 
 export default class Mensaje extends Usuario {
-	MENSAJES_OUTPUT = document.querySelector('output');
-	obj = {};
+	mensajesOutput = document.querySelector('output');
+	mensajeData = {};
 
-	urlStream = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
-	url = new URL(location.href);
+	urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
+	urlConstructor = new URL(location.href);
 
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
 	endpointUltimoId = this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID;
@@ -14,11 +14,11 @@ export default class Mensaje extends Usuario {
 	h1 = document.querySelector('h1');
 	input = document.querySelector('input[type="hidden"]');
 
-	id_receptor = this.url.searchParams.get('id-receptor');
-	nombre_receptor = this.url.searchParams.get('nombre-receptor');
+	id_receptor = this.urlConstructor.searchParams.get('id-receptor');
+	nombre_receptor = this.urlConstructor.searchParams.get('nombre-receptor');
 
-	id_grupo = this.url.searchParams.get('id-grupo');
-	nombre_grupo = this.url.searchParams.get('nombre-grupo');
+	id_grupo = this.urlConstructor.searchParams.get('id-grupo');
+	nombre_grupo = this.urlConstructor.searchParams.get('nombre-grupo');
 
 	constructor() {
 		super();
@@ -27,7 +27,7 @@ export default class Mensaje extends Usuario {
 	async getMensajes(params = {}) {
 		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', params);
 		const mensajes = this.mensajesTemplate(response.content);
-		this.MENSAJES_OUTPUT.innerHTML = mensajes;
+		this.mensajesOutput.innerHTML = mensajes;
 		this.formHandler();
 
 		let id;
@@ -37,40 +37,38 @@ export default class Mensaje extends Usuario {
 			: id = "";
 
 		params.ultimo_id = id;
-		this.setData(params);
-
-		await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.obj);
+		return params;
 	}
 
-	setData(obj) {
+	setData(objData, obj, streamUrl) {
 		const params = new URLSearchParams();
 
-		for (const [key, value] of Object.entries(obj)) {
-			this.obj[key] = value;
+		for (const [key, value] of Object.entries(objData)) {
+			obj[key] = value;
 			params.append(key, value);
 		}
 
-		this.urlStream.search = params;
+		streamUrl.search = params;
 	}
 
-	streamMensajes() {
+	streamMensajes(streamUrl) {
 
-		const evtSource = new EventSource(this.urlStream);
+		const evtSource = new EventSource(streamUrl);
 
 		evtSource.addEventListener("mensaje", (event) => {
 			const mensaje = JSON.parse(event.data);
 			const content = this.mensajesTemplate([mensaje]);
 
-			this.MENSAJES_OUTPUT.insertAdjacentHTML("beforeend", content);
+			this.mensajesOutput.insertAdjacentHTML("beforeend", content);
 			this.formHandler();
 		});
 
 		evtSource.addEventListener("new mensaje", async (event) => {
 			const id = JSON.parse(event.data);
 
-			this.obj.ultimo_id = id;
+			this.mensajeData.ultimo_id = id;
 
-			const response = await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.obj);
+			const response = await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.mensajeData);
 		});
 	}
 
@@ -78,7 +76,7 @@ export default class Mensaje extends Usuario {
 
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
-			<article ${mensaje.id_emisor == this.id_usuario ? 'class="mensaje-propio"' : ''}>
+			<article ${mensaje.id_emisor === this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				<p>${mensaje.nombre_usuario}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
@@ -91,7 +89,7 @@ export default class Mensaje extends Usuario {
 					minute: "numeric"
 				}
 			)}</p>
-				${mensaje.id_emisor == this.id_usuario
+				${mensaje.id_emisor === this.id_usuario
 				? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.POST.MENSAJES.ELIMINAR}/${mensaje.id_mensaje}">
 						<button>
 							<svg viewBox="0 0 928 983">

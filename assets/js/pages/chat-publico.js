@@ -1,14 +1,15 @@
-import Mensaje from '../modules/Mensaje.js';
 import Conexion from '../modules/Conexion.js';
-
-const mensaje = new Mensaje();
-
-await mensaje.sessionCheck();
-await mensaje.getMensajes();
-
-mensaje.streamMensajes();
 
 const conexion = new Conexion();
 
-// conexion.setConexion();
-conexion.streamConexion();
+await conexion.sessionCheck();
+
+const data = await conexion.getMensajes();
+
+conexion.setData(data, conexion.mensajeData, conexion.urlStreamMensajes);
+
+await conexion.fetchWithoutForm(conexion.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', conexion.mensajeData);
+
+conexion.streamMensajes(conexion.urlStreamMensajes);
+
+conexion.streamConexion(conexion.urlStreamConexion);
