@@ -161,12 +161,12 @@ final readonly class Conexion extends MysqliConnect
 		$this->sendResponse();
 	}
 
-	private function getConexionPublica(): bool
+	private function getConexionPublica(): int
 	{
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"SELECT conectado
+			"SELECT last_seen
 			 FROM conexion_publica
 			 WHERE id_usuario = ?";
 
@@ -181,21 +181,21 @@ final readonly class Conexion extends MysqliConnect
 
 		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 
-		$conexion = $conexion['conectado'];
+		$conexion = $conexion['last_seen'];
 
 		$query->close();
 
 		return $conexion;
 	}
 
-	private function getConexionDirecta(): bool
+	private function getConexionDirecta(): int
 	{
 		$this->setIdReceptor();
 		$id_usuario = $this->id_usuario;
 		$id_receptor = $this->id_receptor;
 
 		$statement =
-			"SELECT conectado
+			"SELECT last_seen
 			 FROM conexion_directa
 			 WHERE id_usuario = ?
 			 AND id_receptor = ?";
@@ -204,29 +204,29 @@ final readonly class Conexion extends MysqliConnect
 
 		$query->bind_param(
 			"ii",
-			$id_usuario,
-			$id_receptor
+			$id_receptor,
+			$id_usuario
 		);
 
 		$query->execute();
 
 		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 
-		$conexion = $conexion['conectado'];
+		$conexion = $conexion['last_seen'];
 
 		$query->close();
 
 		return $conexion;
 	}
 
-	private function getConexionGrupal(): bool
+	private function getConexionGrupal(): int
 	{
 		$this->setIdGrupo();
 		$id_usuario = $this->id_usuario;
 		$id_grupo = $this->id_grupo;
 
 		$statement =
-			"SELECT conectado
+			"SELECT last_seen
 			 FROM conexion_grupal
 			 WHERE id_usuario = ?
 			 AND id_grupo = ?";
@@ -243,64 +243,101 @@ final readonly class Conexion extends MysqliConnect
 
 		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 
-		$conexion = $conexion['conectado'];
+		$conexion = $conexion['last_seen'];
 
 		$query->close();
 
 		return $conexion;
 	}
 
+	// MARK: DECIDE
+
+	private function decide(): int
+	{
+		if (isset($_GET['id_receptor'])) {
+			$conexion = $this->getConexionDirecta();
+			return $conexion;
+		}
+
+		if (isset($_GET['id_grupo'])) {
+			$conexion = $this->getConexionGrupal();
+			return $conexion;
+		}
+
+		$conexion = $this->getConexionPublica();
+		return $conexion;
+
+		// echo "event: error\n";
+		// echo "data: Tipo de stream no válido\n\n";
+		// flush();
+		// exit;
+	}
+
 	// MARK: STREAM CONEXION
 
 	public function streamConexion(): void
-{
-    if (session_status() === PHP_SESSION_ACTIVE) {
-        session_write_close();
-    }
+	{
+		if (session_status() === PHP_SESSION_ACTIVE) {
+			session_write_close();
+		}
 
-    set_time_limit(0);
-    ignore_user_abort(false);
+		set_time_limit(0);
+		ignore_user_abort(false);
 
-    // Limpia buffers previos
-    while (ob_get_level() > 0) {
-        ob_end_clean();
-    }
+		// Limpia buffers previos
+		while (ob_get_level() > 0) {
+			ob_end_clean();
+		}
 
-    // Headers SSE
-    header("Content-Type: text/event-stream");
-    header("Cache-Control: no-cache");
-    header("Connection: keep-alive");
-    header("X-Accel-Buffering: no");
+		// Headers SSE
+		header("Content-Type: text/event-stream");
+		header("Cache-Control: no-cache");
+		header("Connection: keep-alive");
+		header("X-Accel-Buffering: no");
 
-    ini_set('output_buffering', 'off');
-    ini_set('zlib.output_compression', 0);
+		ini_set('output_buffering', 'off');
+		ini_set('zlib.output_compression', 0);
 
-    // Forzar flush inicial
-    echo str_pad('', 4096) . "\n";
-    flush();
+		// Forzar flush inicial
+		echo str_pad('', 4096) . "\n";
+		flush();
 
-    $startTime = time();
-    $lastPing = 0;
+		$startTime = time();
+		$lastPing = 0;
 
-    while (true) {
+		$actualTime = time();
+		$conexion = $this->decide();
+		$estado = 0;
 
-        if (connection_aborted()) {
-            break;
-        }
+		if ($actualTime - $conexion > 20) {
+			$estado = 'offline';
+		} else $estado = 'online';
 
-        // Heartbeat cada 15s
-        $elapsed = time() - $startTime;
+		echo "event: initial state\n";
+		echo "data: $estado\n\n";
 
-        if ($elapsed - $lastPing >= 15) {
-            echo "event: ping\n";
-            echo "data: {}\n\n";
-            $lastPing = $elapsed;
-        }
+		while (true) {
 
-        @ob_flush();
-        @flush();
-        usleep(1000000); // 1s
-    }
-}
+			if (connection_aborted()) {
+				break;
+			}
 
+			if ($actualTime - $conexion > 20) {
+				$estadoInicial = 'offline';
+			}
+
+			// Heartbeat cada 15s
+			$elapsed = time() - $startTime;
+
+			if ($elapsed - $lastPing >= 15) {
+				echo "event: ping\n";
+				echo "data: {}\n\n";
+				$lastPing = $elapsed;
+			}
+
+			@ob_flush();
+			@flush();
+			usleep(1000000); // 1s
+		}
+	}
 }

@@ -16,7 +16,6 @@ export default class Conexion extends Mensaje {
 
 		// Cuando se abre la conexión SSE → marcar conectado
 		evtSource.onopen = async () => {
-			console.log(this.endpointConexion);
 			await this.fetchWithoutForm(this.endpointConexion, 'post', this.conexionData);
 		};
 
