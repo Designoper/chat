@@ -166,9 +166,11 @@ final readonly class Conexion extends MysqliConnect
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"SELECT last_seen
-			 FROM conexion_publica
-			 WHERE id_usuario = ?";
+			"SELECT COALESCE((
+				SELECT last_seen
+				FROM conexion_publica
+				WHERE id_usuario = ?
+			), 0) AS last_seen";
 
 		$query = $this->connection->prepare($statement);
 
@@ -188,17 +190,17 @@ final readonly class Conexion extends MysqliConnect
 		return $conexion;
 	}
 
-	private function getConexionDirecta(): int
+	private function getConexionDirecta(int $id_receptor): int
 	{
-		$this->setIdReceptor();
 		$id_usuario = $this->id_usuario;
-		$id_receptor = $this->id_receptor;
 
 		$statement =
-			"SELECT last_seen
-			 FROM conexion_directa
-			 WHERE id_usuario = ?
-			 AND id_receptor = ?";
+			"SELECT COALESCE((
+				SELECT last_seen
+				FROM conexion_directa
+				WHERE id_usuario = ?
+				AND id_receptor = ?
+			), 0) AS last_seen";
 
 		$query = $this->connection->prepare($statement);
 
@@ -210,7 +212,7 @@ final readonly class Conexion extends MysqliConnect
 
 		$query->execute();
 
-		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$conexion = $query->get_result()->fetch_assoc();
 
 		$conexion = $conexion['last_seen'];
 
@@ -219,11 +221,9 @@ final readonly class Conexion extends MysqliConnect
 		return $conexion;
 	}
 
-	private function getConexionGrupal(): int
+	private function getConexionGrupal(int $id_grupo): int
 	{
-		$this->setIdGrupo();
 		$id_usuario = $this->id_usuario;
-		$id_grupo = $this->id_grupo;
 
 		$statement =
 			"SELECT last_seen
@@ -252,15 +252,15 @@ final readonly class Conexion extends MysqliConnect
 
 	// MARK: DECIDE
 
-	private function decide(): int
+	private function decide(int $id_receptor, int $id_grupo): int
 	{
 		if (isset($_GET['id_receptor'])) {
-			$conexion = $this->getConexionDirecta();
+			$conexion = $this->getConexionDirecta($id_receptor);
 			return $conexion;
 		}
 
 		if (isset($_GET['id_grupo'])) {
-			$conexion = $this->getConexionGrupal();
+			$conexion = $this->getConexionGrupal($id_grupo);
 			return $conexion;
 		}
 
@@ -298,15 +298,24 @@ final readonly class Conexion extends MysqliConnect
 		ini_set('output_buffering', 'off');
 		ini_set('zlib.output_compression', 0);
 
-		// Forzar flush inicial
+		// Enviar evento real inmediatamente
+		// echo "event: open\n";
+		// echo "data: ok\n\n";
+		// @ob_flush();
+		// @flush();
+
+
+		// // Forzar flush inicial
 		echo str_pad('', 4096) . "\n";
 		flush();
 
-		$startTime = time();
+		$id_receptor = (int) ($_GET["id_receptor"] ?? 0);
+		$id_grupo =   (int) ($_GET["id_grupo"] ?? 0);
+
 		$lastPing = 0;
 
 		$actualTime = time();
-		$conexion = $this->decide();
+		$conexion = $this->decide($id_receptor, $id_grupo);
 		$estado = 0;
 
 		if ($actualTime - $conexion > 20) {
@@ -322,22 +331,30 @@ final readonly class Conexion extends MysqliConnect
 				break;
 			}
 
-			if ($actualTime - $conexion > 20) {
-				$estadoInicial = 'offline';
+			$conexion = $this->decide($id_receptor, $id_grupo);
+			$newTime = time();
+
+			$nuevoEstado = ($newTime - $conexion > 20) ? 'offline' : 'online';
+
+			if ($nuevoEstado !== $estado) {
+				$estado = $nuevoEstado;
+				echo "event: cambio\n";
+				echo "data: $estado\n\n";
 			}
 
-			// Heartbeat cada 15s
-			$elapsed = time() - $startTime;
-
-			if ($elapsed - $lastPing >= 15) {
+			if (time() - $lastPing >= 15) {
 				echo "event: ping\n";
 				echo "data: {}\n\n";
-				$lastPing = $elapsed;
+				$lastPing = time();
 			}
 
+			// 🔥 Mantener viva la conexión en Hostinger
+			// echo ": keepalive\n\n";
+
 			@ob_flush();
-			@flush();
-			usleep(1000000); // 1s
+			flush();
+
+			usleep(300000); // 0.3s como el otro stream
 		}
 	}
 }

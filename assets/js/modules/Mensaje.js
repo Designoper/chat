@@ -126,7 +126,7 @@ export default class Mensaje extends Usuario {
 	}
 
 	writeChat(titulo, id) {
-		this.h1.innerHTML = titulo;
+		this.h1.insertAdjacentHTML("afterbegin", titulo);
 		this.input.setAttribute('value', `${id}`);
 	}
 }

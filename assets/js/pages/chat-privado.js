@@ -18,7 +18,7 @@ conexion.setData(data, conexion.mensajeData, conexion.urlStreamMensajes);
 
 await conexion.fetchWithoutForm(conexion.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', conexion.mensajeData);
 
-conexion.writeChat(`Chat privado con ${conexion.nombre_receptor}`, conexion.id_receptor);
+conexion.writeChat(`${conexion.nombre_receptor}`, conexion.id_receptor);
 conexion.streamMensajes(conexion.urlStreamMensajes);
 
 conexion.setData(test, conexion.conexionData, conexion.urlStreamConexion);
