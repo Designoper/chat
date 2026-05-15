@@ -196,29 +196,30 @@ final readonly class Conexion extends MysqliConnect
 
 		$statement =
 			"SELECT COALESCE((
-				SELECT last_seen
-				FROM conexion_directa
-				WHERE id_usuario = ?
-				AND id_receptor = ?
-			), 0) AS last_seen";
+            SELECT last_seen
+            FROM conexion_directa
+            WHERE id_usuario = ?
+            AND id_receptor = ?
+        ), 0) AS last_seen";
 
 		$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"ii",
-			$id_receptor,
-			$id_usuario
-		);
+		$query->bind_param("ii", $id_receptor, $id_usuario);
 
 		$query->execute();
 
-		$conexion = $query->get_result()->fetch_assoc();
+		// 🔥 NO usar get_result() en Hostinger
+		$query->bind_result($last_seen);
+		$query->fetch();
 
-		$conexion = $conexion['last_seen'];
+		// Si no hay fila, $last_seen será null → lo convertimos a 0
+		// if (!$query->fetch()) {
+		// 	$last_seen = 0;
+		// }
 
 		$query->close();
 
-		return $conexion;
+		return (int)$last_seen;
 	}
 
 	private function getConexionGrupal(int $id_grupo): int
