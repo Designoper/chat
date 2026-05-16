@@ -11,25 +11,25 @@ RewriteRule ^(.*)$ ./controller.php [QSA,L]
 
 # This file must be placed at the root folder of the server, like "html". Name must be ".htaccess", and only works on apache servers
 
-# Cache configuration to improve page loading speed
-<IfModule mod_expires.c>
+# # Cache configuration to improve page loading speed
+# <IfModule mod_expires.c>
 
-    ExpiresActive on
+#     ExpiresActive on
 
-    # Add additional content types
-    AddType text/css .css
-    AddType text/javascript .js
-    AddType image/png .png
-    AddType font/woff2 .woff2
+#     # Add additional content types
+#     AddType text/css .css
+#     AddType text/javascript .js
+#     AddType image/png .png
+#     AddType font/woff2 .woff2
 
-    # Set expiry times for cache. Despite lighthouse advises to set a very high time (1 year), I think a shorter cache (5-10 min) gives almost the same benefit to the user and avoids having to resort to cache busting if content changes
-    ExpiresDefault "access plus 5 minutes"
-    ExpiresByType text/css "access plus 5 minutes"
-    ExpiresByType text/javascript "access plus 5 minutes"
-    ExpiresByType image/png "access plus 5 minutes"
-    ExpiresByType font/woff2 "access plus 5 minutes"
+#     # Set expiry times for cache. Despite lighthouse advises to set a very high time (1 year), I think a shorter cache (5-10 min) gives almost the same benefit to the user and avoids having to resort to cache busting if content changes
+#     ExpiresDefault "access plus 5 minutes"
+#     ExpiresByType text/css "access plus 5 minutes"
+#     ExpiresByType text/javascript "access plus 5 minutes"
+#     ExpiresByType image/png "access plus 5 minutes"
+#     ExpiresByType font/woff2 "access plus 5 minutes"
 
-</IfModule>
+# </IfModule>
 
 # Mainly settings involving security and privacy
 <IfModule mod_headers.c>

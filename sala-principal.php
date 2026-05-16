@@ -44,7 +44,7 @@ new Usuario()->authBrowser();
 
 	<main id="main">
 
-		<h1>¿Con quién quieres chatear?</h1>
+		<h1>Whatschat</h1>
 
 		<menu>
 			<li>

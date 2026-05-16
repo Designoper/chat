@@ -37,9 +37,8 @@ export default class Usuario extends Endpoint {
 				return `
                 <li>
                     <a href="chat-privado.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">
-                        ${usuario.nombre_usuario}
+                        ${usuario.nombre_usuario} ${badge}
                     </a>
-                    <span>${badge}</span>
                 </li>
             `;
 			})
