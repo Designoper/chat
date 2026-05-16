@@ -219,7 +219,7 @@ final readonly class Conexion extends MysqliConnect
 
 		$query->close();
 
-		return (int)$last_seen;
+		return (int) $last_seen;
 	}
 
 	private function getConexionGrupal(int $id_grupo): int
@@ -328,7 +328,9 @@ final readonly class Conexion extends MysqliConnect
 			$conexion = $this->decide($id_receptor, $id_grupo);
 			$newTime = time();
 
-			$nuevoEstado = ($newTime - $conexion > 20) ? 'offline' : 'online';
+			$nuevoEstado = ($newTime - $conexion > 20)
+				? 'offline'
+				: 'online';
 
 			if ($nuevoEstado !== $estado) {
 				$estado = $nuevoEstado;
@@ -342,13 +344,10 @@ final readonly class Conexion extends MysqliConnect
 				$lastPing = time();
 			}
 
-			// 🔥 Mantener viva la conexión en Hostinger
-			// echo ": keepalive\n\n";
-
 			@ob_flush();
 			flush();
 
-			usleep(300000); // 0.3s como el otro stream
+			usleep(300000);
 		}
 	}
 }

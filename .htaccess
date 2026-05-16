@@ -4,15 +4,6 @@
     Header set Expires "0"
 </IfModule>
 
-<IfModule mod_headers.c>
-    Header set Cache-Control "no-cache"
-    Header set X-Accel-Buffering "no"
-</IfModule>
-
-SetEnv no-gzip 1
-SetEnv dont-vary 1
-
-
 Options -MultiViews
 
 RewriteEngine On
