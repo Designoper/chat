@@ -148,7 +148,7 @@ final readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = 'Última conexión pública actualizada con éxito';
+		$this->message = 'Último id mensaje público actualizado con éxito';
 		$this->sendResponse();
 	}
 
@@ -183,7 +183,7 @@ final readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = 'Última conexión directa actualizada con éxito';
+		$this->message = 'Último id mensaje directo actualizado con éxito';
 		$this->sendResponse();
 	}
 
@@ -218,7 +218,7 @@ final readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = 'Última conexión grupal actualizada con éxito';
+		$this->message = 'Último id mensaje grupal actualizado con éxito';
 		$this->sendResponse();
 	}
 
@@ -895,11 +895,11 @@ final readonly class Mensaje extends MysqliConnect
 				echo "data: keepalive\n\n";
 				$lastPing = time();
 			}
+
+			@ob_flush();
+			@flush();
+
+			usleep(300000); // 0.3s
 		}
-
-		@ob_flush();
-		@flush();
-
-		usleep(300000); // 0.3s
 	}
 }
