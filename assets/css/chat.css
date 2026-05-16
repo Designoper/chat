@@ -1,8 +1,31 @@
 main {
+	padding: 0;
+
+	header {
+		position: sticky;
+		top: 0;
+		display: flex;
+		padding: 0.75em 10vw;
+		background-color: var(--terciary-bg);
+		align-items: center;
+		gap: 1em;
+
+		a {
+			align-self: center;
+			padding: 0.5em;
+			/* background-color: var(--white); */
+			border-radius: 0.25rem;
+
+			svg {
+				height: 2em;
+				fill: var(--white);
+			}
+		}
+	}
+
 	>section {
 		display: grid;
 		gap: 1.25em;
-		grid-template-columns: auto 1fr;
 		align-content: center;
 		width: 100%;
 		position: fixed;
@@ -18,17 +41,7 @@ main {
 			grid-template-columns: 1fr auto;
 		}
 
-		a {
-			align-self: center;
-			padding: 0.5em;
-			background-color: var(--white);
-			border-radius: 0.25rem;
 
-			svg {
-				height: 1em;
-				fill: var(--quartery-bg);
-			}
-		}
 
 		textarea {
 			border-radius: 0.25rem;
