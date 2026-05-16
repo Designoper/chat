@@ -196,11 +196,11 @@ final readonly class Conexion extends MysqliConnect
 
 		$statement =
 			"SELECT COALESCE((
-            SELECT last_seen
-            FROM conexion_directa
-            WHERE id_usuario = ?
-            AND id_receptor = ?
-        ), 0) AS last_seen";
+				SELECT last_seen
+				FROM conexion_directa
+				WHERE id_usuario = ?
+				AND id_receptor = ?
+			), 0) AS last_seen";
 
 		$query = $this->connection->prepare($statement);
 
