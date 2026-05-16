@@ -89,7 +89,7 @@ final readonly class Conexion extends MysqliConnect
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Conexion pública actualizada";
+		$this->message = "Conexión pública actualizada";
 		$this->sendResponse();
 	}
 
@@ -116,7 +116,7 @@ final readonly class Conexion extends MysqliConnect
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Conexion directa actualizada";
+		$this->message = "Conexión directa actualizada";
 		$this->sendResponse();
 	}
 
@@ -143,7 +143,7 @@ final readonly class Conexion extends MysqliConnect
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Conexion grupal actualizada";
+		$this->message = "Conexión grupal actualizada";
 		$this->sendResponse();
 	}
 
