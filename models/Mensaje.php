@@ -865,7 +865,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$ultimo_id   = (int) ($_GET["ultimo_id"] ?? 0);
 		$id_receptor = (int) ($_GET["id_receptor"] ?? 0);
-		$id_grupo =   (int) ($_GET["id_grupo"] ?? 0);
+		$id_grupo =    (int) ($_GET["id_grupo"] ?? 0);
 
 		$lastPing = 0;
 
