@@ -9,7 +9,6 @@ final readonly class Conexion extends MysqliConnect
 	private int $id_usuario;
 	private int $id_receptor;
 	private int $id_grupo;
-	private int $estado;
 
 	public function __construct()
 	{
@@ -20,19 +19,6 @@ final readonly class Conexion extends MysqliConnect
 	}
 
 	// MARK: SETTERS
-
-	private function setEstado(): void
-	{
-		$name = 'estado';
-		$value = $_POST[$name] ?? null;
-		$min_range = 0;
-		$max_range = 1;
-		$error_message = "El campo $name debe ser $min_range o $max_range.";
-
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range, "max_range" => $max_range)))
-			? $this->estado = (int) $value
-			: $this->errors->setValidationError($error_message);
-	}
 
 	private function setIdReceptor(): void
 	{
