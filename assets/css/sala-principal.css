@@ -1,9 +1,6 @@
 main {
-	/* padding-inline: 10vw; */
-
 	menu {
 		display: grid;
-		/* gap: 2em; */
 		background-color: var(--terciary-bg);
 		row-rule: 1px solid saddlebrown;
 
@@ -13,12 +10,9 @@ main {
 
 		a {
 			display: list-item;
-			/* width: inherit; */
 			padding: 1em 1.5em;
 			border-radius: 0.5em;
-			/* background-color: var(--terciary-bg); */
-			/* display: block;
-			width: fit-content; */
+
 		}
 	}
 

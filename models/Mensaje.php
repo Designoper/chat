@@ -867,7 +867,6 @@ final readonly class Mensaje extends MysqliConnect
 		$id_receptor = (int) ($_GET["id_receptor"] ?? 0);
 		$id_grupo =   (int) ($_GET["id_grupo"] ?? 0);
 
-		$startTime = time();
 		$lastPing = 0;
 
 		while (true) {
@@ -889,21 +888,18 @@ final readonly class Mensaje extends MysqliConnect
 
 				echo "event: new mensaje\n";
 				echo "data: " . json_encode($ultimo_id) . "\n\n";
-			} else {
-				// Heartbeat cada 15s
-				$elapsed = time() - $startTime;
-
-				if ($elapsed - $lastPing >= 15) {
-					echo "event: ping\n";
-					echo "data: {}\n\n";
-					$lastPing = $elapsed;
-				}
 			}
 
-			@ob_flush();
-			@flush();
-
-			usleep(300000); // 0.3s
+			if (time() - $lastPing > 10) {
+				echo "event: ping\n";
+				echo "data: keepalive\n\n";
+				$lastPing = time();
+			}
 		}
+
+		@ob_flush();
+		@flush();
+
+		usleep(300000); // 0.3s
 	}
 }

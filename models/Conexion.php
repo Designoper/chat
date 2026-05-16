@@ -294,13 +294,11 @@ final readonly class Conexion extends MysqliConnect
 
 		$lastPing = 0;
 
-		$actualTime = time();
 		$conexion = $this->decide($id_receptor, $id_grupo);
-		$estado = 0;
 
-		if ($actualTime - $conexion > 20) {
-			$estado = 'offline';
-		} else $estado = 'online';
+		$estado = (time() - $conexion > 10)
+			? 'offline'
+			: 'online';
 
 		echo "event: initial state\n";
 		echo "data: $estado\n\n";
@@ -312,26 +310,25 @@ final readonly class Conexion extends MysqliConnect
 			}
 
 			$conexion = $this->decide($id_receptor, $id_grupo);
-			$newTime = time();
 
-			$nuevoEstado = ($newTime - $conexion > 20)
+			$nuevoEstado = (time() - $conexion > 10)
 				? 'offline'
 				: 'online';
 
 			if ($nuevoEstado !== $estado) {
-				$estado = $nuevoEstado;
 				echo "event: cambio\n";
-				echo "data: $estado\n\n";
+				echo "data: $nuevoEstado\n\n";
+				$estado = $nuevoEstado;
 			}
 
-			if (time() - $lastPing >= 15) {
+			if (time() - $lastPing > 10) {
 				echo "event: ping\n";
-				echo "data: {}\n\n";
+				echo "data: keepalive\n\n";
 				$lastPing = time();
 			}
 
 			@ob_flush();
-			flush();
+			@flush();
 
 			usleep(300000);
 		}
