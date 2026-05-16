@@ -190,7 +190,11 @@ final readonly class Conexion extends MysqliConnect
 
 		$query = $this->connection->prepare($statement);
 
-		$query->bind_param("ii", $id_receptor, $id_usuario);
+		$query->bind_param(
+			"ii",
+			$id_receptor,
+			$id_usuario
+		);
 
 		$query->execute();
 

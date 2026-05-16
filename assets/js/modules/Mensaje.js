@@ -25,6 +25,7 @@ export default class Mensaje extends Usuario {
 	}
 
 	async getMensajes(params = {}) {
+		const newParams = { ...params };
 		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', params);
 		const mensajes = this.mensajesTemplate(response.content);
 		this.mensajesOutput.innerHTML = mensajes;
@@ -36,8 +37,8 @@ export default class Mensaje extends Usuario {
 			? id = response.content[response.content.length - 1].id_mensaje
 			: id = "";
 
-		params.ultimo_id = id;
-		return params;
+		newParams.ultimo_id = id;
+		return newParams;
 	}
 
 	setData(objData, obj, streamUrl) {

@@ -6,10 +6,6 @@ const getParams = {
 	"id_receptor": conexion.id_receptor
 }
 
-const test = {
-	"id_receptor": conexion.id_receptor
-}
-
 await conexion.sessionCheck();
 
 const data = await conexion.getMensajes(getParams);
@@ -21,6 +17,6 @@ await conexion.fetchWithoutForm(conexion.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'pos
 conexion.writeChat(`${conexion.nombre_receptor}`, conexion.id_receptor);
 conexion.streamMensajes(conexion.urlStreamMensajes);
 
-conexion.setData(test, conexion.conexionData, conexion.urlStreamConexion);
+conexion.setData(getParams, conexion.conexionData, conexion.urlStreamConexion);
 
 conexion.streamConexion(conexion.urlStreamConexion);
