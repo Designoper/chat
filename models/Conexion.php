@@ -299,13 +299,6 @@ final readonly class Conexion extends MysqliConnect
 		ini_set('output_buffering', 'off');
 		ini_set('zlib.output_compression', 0);
 
-		// Enviar evento real inmediatamente
-		// echo "event: open\n";
-		// echo "data: ok\n\n";
-		// @ob_flush();
-		// @flush();
-
-
 		// // Forzar flush inicial
 		echo str_pad('', 4096) . "\n";
 		flush();
