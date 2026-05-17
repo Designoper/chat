@@ -34,19 +34,22 @@ export default class Usuario extends Endpoint {
 					? ` (${num})`
 					: '';
 
-				return `
-                <li>
+				const total =
+				`<li>
 					<p>${usuario.nombre_usuario}</p>
-                    <a href="chat-privado.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">Chatear${badge}</a>
-					<a href="videollamada.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">Videollamada</a>
-                </li>
-            `;
+                    <a href="chat-privado.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">
+						<img src="../../assets/img/chat.svg">${badge}</a>
+					<a href="videollamada.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">
+						Videollamada
+					</a>
+                </li>`;
+
+				return total;
 			})
 		);
 
 		return usuarios.join('');
 	}
-
 
 	async createUsuario(form, method, action) {
 		const response = await this.fetchData(form, method, action);

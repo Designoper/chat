@@ -3,16 +3,24 @@ main {
 		display: grid;
 		background-color: var(--terciary-bg);
 		row-rule: 1px solid saddlebrown;
+		padding: 0 2em;
 
 		li {
 			display: flex;
+			align-items: center;
+			padding: 2em 0;
+			gap: 1em;
+		}
+
+		img {
+			width: 1.5em;
 		}
 
 		a,
 		p {
 			display: list-item;
-			padding: 1em 1.5em;
-			border-radius: 0.5em;
+			/* padding: 1em 1.5em; */
+			/* border-radius: 0.5em; */
 		}
 	}
 
