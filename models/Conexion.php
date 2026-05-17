@@ -331,7 +331,7 @@ final readonly class Conexion extends MysqliConnect
 			@ob_flush();
 			@flush();
 
-			usleep(300000);
+			usleep(2000000);
 		}
 	}
 }
