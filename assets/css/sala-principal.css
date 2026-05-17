@@ -1,7 +1,7 @@
 main {
 	menu {
 		display: grid;
-		background-color: var(--terciary-bg);
+		background-color: var(--secondary-bg);
 		row-rule: 1px solid saddlebrown;
 		padding: 0 2em;
 
@@ -24,7 +24,17 @@ main {
 		}
 	}
 
-	svg {
-		width: 2em;
+	section {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		position: fixed;
+		bottom: 0;
+		background-color: var(--quartery-bg);
+		padding: 2em;
+		width: 100%;
+
+		svg {
+			width: 2em;
+		}
 	}
 }

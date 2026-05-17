@@ -322,7 +322,7 @@ final readonly class Conexion extends MysqliConnect
 				$estado = $nuevoEstado;
 			}
 
-			if (time() - $lastPing > 10) {
+			if (time() - $lastPing > 5) {
 				echo "event: ping\n";
 				echo "data: keepalive\n\n";
 				$lastPing = time();
@@ -331,7 +331,7 @@ final readonly class Conexion extends MysqliConnect
 			@ob_flush();
 			@flush();
 
-			usleep(2000000);
+			usleep(300000);
 		}
 	}
 }

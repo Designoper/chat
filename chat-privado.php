@@ -53,9 +53,11 @@ new Usuario()->authBrowser();
 				</svg>
 			</a>
 
-			<h1>
-				<span></span>
-			</h1>
+			<h1></h1>
+
+			<svg viewBox="0 0 100 100">
+				<circle cx="50" cy="50" r="50" />
+			</svg>
 
 		</header>
 

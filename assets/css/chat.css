@@ -1,6 +1,14 @@
 main {
 	padding: 0;
 
+	.online {
+		fill: green;
+	}
+
+	.offline {
+		fill: red;
+	}
+
 	header {
 		position: sticky;
 		top: 0;
@@ -11,22 +19,21 @@ main {
 		gap: 0.75em;
 
 		h1 {
+			display: flex;
+			gap: 0.5em;
 			font-size: 1.25em;
 		}
 
-		img {
-			width: 1.25em;
+		svg {
+			width: 1em;
 		}
 
 		a {
 			align-self: center;
-			/* padding: 0.5em; */
-			/* background-color: var(--white); */
 			border-radius: 0.25rem;
 
 			svg {
 				height: 1.25em;
-				/* fill: var(--white); */
 			}
 		}
 	}
@@ -117,5 +124,7 @@ main {
 			justify-self: right;
 			/* border-radius: 1em 0 1em 1em; */
 		}
+
+
 	}
 }
