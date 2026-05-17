@@ -206,7 +206,7 @@ final readonly class Conexion extends MysqliConnect
 
 		$query->close();
 
-		return $last_seen;
+		return (int) $last_seen;
 	}
 
 	private function getConexionGrupal(int $id_grupo): int
