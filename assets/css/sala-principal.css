@@ -15,7 +15,7 @@ main {
 		svg {
 			width: 1.5em;
 
-			path{
+			path {
 				fill: var(--quartery-bg);
 			}
 		}
