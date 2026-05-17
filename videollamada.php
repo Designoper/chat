@@ -36,8 +36,8 @@ new Usuario()->authBrowser();
 
 	<script src="./sw-register.js" type="module"></script>
 
-	<script src="./assets/js/realtimevideo/source-code.js"></script>
-	<script src="./assets/js/realtimevideo/test.js" type="module"></script>
+	<script src="./assets/js/realtimevideo/source-code.js" defer></script>
+	<script src="./assets/js/realtimevideo/videollamada.js" type="module"></script>
 
 </head>
 
@@ -45,17 +45,14 @@ new Usuario()->authBrowser();
 
 	<main id="main">
 
-		<h1>¿Con quién quieres chatear?</h1>
+		<h1>Sala de videollamada</h1>
 
-		<p></p>
 		<video id="yo" autoplay playsinline controls muted></video>
 		<video id="otro" autoplay playsinline controls></video>
 
-		<input id="peerId" placeholder="ID del otro usuario">
 		<button id="llamar">Llamar</button>
 
 		<!-- <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script> -->
-
 
 		<a href="./sala-principal.php">Salir</a>
 

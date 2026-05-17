@@ -31,14 +31,14 @@ export default class Usuario extends Endpoint {
 				const num = mensajesNoLeidos.content.num_mensajes;
 
 				const badge = num > 0
-					? `(${num})`
+					? ` (${num})`
 					: '';
 
 				return `
                 <li>
-                    <a href="chat-privado.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">
-                        ${usuario.nombre_usuario} ${badge}
-                    </a>
+					<p>${usuario.nombre_usuario}</p>
+                    <a href="chat-privado.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">Chatear${badge}</a>
+					<a href="videollamada.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">Videollamada</a>
                 </li>
             `;
 			})

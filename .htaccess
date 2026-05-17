@@ -9,6 +9,12 @@ RewriteRule ^(.*)$ ./controller.php [QSA,L]
     Require all denied
 </FilesMatch>
 
+<IfModule mod_headers.c>
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</IfModule>
+
 # This file must be placed at the root folder of the server, like "html". Name must be ".htaccess", and only works on apache servers
 
 # # Cache configuration to improve page loading speed
