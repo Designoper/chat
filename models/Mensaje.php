@@ -129,7 +129,6 @@ final readonly class Mensaje extends MysqliConnect
 		$ultimo_id = $this->ultimo_id;
 
 		$statement =
-			$statement =
 			"INSERT INTO ultimos_mensajes_leidos_publicos (id_usuario, id_mensaje)
 			VALUES (?, ?)
 			ON DUPLICATE KEY

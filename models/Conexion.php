@@ -198,6 +198,8 @@ final readonly class Conexion extends MysqliConnect
 
 		$query->execute();
 
+		// $query->store_result();
+
 		// 🔥 NO usar get_result() en Hostinger
 		$query->bind_result($last_seen);
 		$query->fetch();
