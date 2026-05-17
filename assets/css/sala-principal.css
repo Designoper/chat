@@ -12,8 +12,12 @@ main {
 			gap: 1em;
 		}
 
-		img {
+		svg {
 			width: 1.5em;
+
+			path{
+				fill: var(--quartery-bg);
+			}
 		}
 
 		a,

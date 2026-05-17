@@ -36,8 +36,6 @@ new Usuario()->authBrowser();
 
 	<script src="./assets/js/pages/chat-publico.js" type="module"></script>
 
-	<script src="./sw-register.js" type="module"></script>
-
 </head>
 
 <body>

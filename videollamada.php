@@ -34,8 +34,6 @@ new Usuario()->authBrowser();
 	<link href="./assets/css/common/layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/sala-principal.css" rel="preload stylesheet" as="style">
 
-	<script src="./sw-register.js" type="module"></script>
-
 	<script src="./assets/js/realtimevideo/source-code.js" defer></script>
 	<script src="./assets/js/realtimevideo/videollamada.js" type="module"></script>
 

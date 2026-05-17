@@ -36,8 +36,6 @@ new Usuario()->sessionRedirect();
 
 	<script src="./assets/js/pages/login.js" type="module"></script>
 
-	<script src="./sw-register.js" type="module"></script>
-
 </head>
 
 <body>
