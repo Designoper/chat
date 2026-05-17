@@ -204,14 +204,9 @@ final readonly class Conexion extends MysqliConnect
 		$query->bind_result($last_seen);
 		$query->fetch();
 
-		// Si no hay fila, $last_seen será null → lo convertimos a 0
-		// if (!$query->fetch()) {
-		// 	$last_seen = 0;
-		// }
-
 		$query->close();
 
-		return (int) $last_seen;
+		return $last_seen;
 	}
 
 	private function getConexionGrupal(int $id_grupo): int

@@ -75,6 +75,8 @@ final readonly class Usuario extends MysqliConnect
 
 		$query->execute();
 
+		// $query->bind_result($usuarios);
+
 		$usuarios = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$message =
 			$usuarios
