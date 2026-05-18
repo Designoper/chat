@@ -17,203 +17,46 @@ final class Router
 
         // MARK: GET ROUTES
 
-        $this->setRoute(
-            'GET',
-            'stream-conexion',
-            function (): void {
-                new Conexion()->streamConexion();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'stream-mensajes',
-            function (): void {
-                new Mensaje()->streamMensajes();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'mensajes/no-leidos',
-            function (): void {
-                new Mensaje()->countUnreadMessages();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'mensajes',
-            function (): void {
-                new Mensaje()->readMensajes();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'usuarios/current',
-            function (): void {
-                new Usuario()->currentUsuario();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'usuarios$',
-            function (): void {
-                new Usuario()->readUsuarios();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'grupos$',
-            function (): void {
-                new Grupo()->readGrupos();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'grupos/miembro$',
-            function (): void {
-                new Grupo()->readGruposMiembro();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'grupos/pendiente$',
-            function (): void {
-                new Grupo()->readGruposPendiente();
-            }
-        );
-
-        $this->setRoute(
-            'GET',
-            'grupos/no-miembro',
-            function (): void {
-                new Grupo()->readGruposNoMiembro();
-            }
-        );
+        $this->setRoute('GET', 'stream-mensajes', Mensaje::class, 'streamMensajes');
+        $this->setRoute('GET', 'mensajes/no-leidos', Mensaje::class, 'countUnreadMessages');
+        $this->setRoute('GET', 'mensajes', Mensaje::class, 'readMensajes');
+        $this->setRoute('GET', 'usuarios/current', Usuario::class, 'currentUsuario');
+        $this->setRoute('GET', 'usuarios$', Usuario::class, 'readUsuarios');
+        $this->setRoute('GET', 'grupos$', Grupo::class, 'readGrupos');
+        $this->setRoute('GET', 'grupos/miembro$', Grupo::class, 'readGruposMiembro');
+        $this->setRoute('GET', 'grupos/pendiente$', Grupo::class, 'readGruposPendiente');
+        $this->setRoute('GET', 'grupos/no-miembro', Grupo::class, 'readGruposNoMiembro');
+        $this->setRoute('GET', 'stream-conexion', Conexion::class, 'streamConexion');
 
         // MARK: POST ROUTES
 
-        $this->setRoute(
-            'POST',
-            'usuarios/crear',
-            function (): void {
-                new Usuario()->createUsuario();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'usuarios/login',
-            function (): void {
-                new Usuario()->login();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'usuarios/logout',
-            function (): void {
-                new Usuario()->logout();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'usuarios/delete',
-            function (): void {
-                new Usuario()->deleteUsuario();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'mensajes/ultimo-id',
-            function (): void {
-                new Mensaje()->setUltimoIdMensaje();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'mensajes/crear',
-            function (): void {
-                new Mensaje()->createMensaje();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'mensajes-directos/crear',
-            function (): void {
-                new Mensaje()->createMensajeDirecto();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'mensajes-grupales/crear',
-            function (): void {
-                new Mensaje()->createMensajeGrupal();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'mensajes/[1-9]\d*$',
-            function (): void {
-                new Mensaje()->deleteMensaje();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'grupos/crear',
-            function (): void {
-                new Grupo()->createGrupo();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'grupos/invitar',
-            function (): void {
-                new Grupo()->invitar();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'grupos/aceptar',
-            function (): void {
-                new Grupo()->aceptarInvitacion();
-            }
-        );
-
-        $this->setRoute(
-            'POST',
-            'conexion/estado',
-            function (): void {
-                new Conexion()->setConexion();
-            }
-        );
+        $this->setRoute('POST', 'usuarios/crear', Usuario::class, 'createUsuario');
+        $this->setRoute('POST', 'usuarios/login', Usuario::class, 'login');
+        $this->setRoute('POST', 'usuarios/logout', Usuario::class, 'logout');
+        $this->setRoute('POST', 'usuarios/delete', Usuario::class, 'deleteUsuario');
+        $this->setRoute('POST', 'mensajes/ultimo-id', Mensaje::class, 'setUltimoIdMensaje');
+        $this->setRoute('POST', 'mensajes/crear', Mensaje::class, 'createMensaje');
+        $this->setRoute('POST', 'mensajes-directos/crear', Mensaje::class, 'createMensajeDirecto');
+        $this->setRoute('POST', 'mensajes-grupales/crear', Mensaje::class, 'createMensajeGrupal');
+        $this->setRoute('POST', 'mensajes/[1-9]\d*$', Mensaje::class, 'deleteMensaje');
+        $this->setRoute('POST', 'grupos/crear', Grupo::class, 'createGrupo');
+        $this->setRoute('POST', 'grupos/invitar', Grupo::class, 'invitar');
+        $this->setRoute('POST', 'grupos/aceptar', Grupo::class, 'aceptarInvitacion');
+        $this->setRoute('POST', 'conexion/estado', Conexion::class, 'setConexion');
 
         $this->handleRequest();
     }
 
     // MARK: SET ROUTE
 
-    private function setRoute(string $method, string $path, callable $handler): void
+    private function setRoute(string $method, string $path, string $clase, string $metodo): void
     {
         $this->routes[] = [
             'method' => $method,
             'path' => self::COMMON_PATH . $path,
-            'handler' => $handler
+            'handler' => function () use ($clase, $metodo): void {
+                (new $clase())->$metodo();
+            }
         ];
     }
 
