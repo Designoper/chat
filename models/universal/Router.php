@@ -81,7 +81,7 @@ final class Router
 
                 foreach ($this->routes as $route) {
                     if ($route['method'] === $method && preg_match("#^{$route['path']}#", $requestUri)) {
-                        ($route['handler'])();
+                        $route['handler']();
                         return;
                     }
                 }
