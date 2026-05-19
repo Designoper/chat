@@ -11,7 +11,7 @@ export default class Endpoint extends Fetch {
 			},
 			MENSAJES: {
 				TODOS: `${this.ROOT}mensajes`,
-				STREAM: `${this.ROOT}stream-mensajes`,
+				STREAM: `${this.ROOT}mensajes/stream`,
 				NO_LEIDOS: `${this.ROOT}mensajes/no-leidos`,
 			},
 			GRUPOS: {
@@ -21,7 +21,7 @@ export default class Endpoint extends Fetch {
 				NO_MIEMBRO: `${this.ROOT}grupos/no-miembro`,
 			},
 			CONEXION: {
-				STREAM: `${this.ROOT}stream-conexion`,
+				STREAM: `${this.ROOT}conexion/stream`,
 			}
 		},
 		POST: {
