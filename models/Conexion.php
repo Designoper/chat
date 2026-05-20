@@ -87,17 +87,11 @@ final readonly class Conexion extends MysqliConnect
 		);
 
 		$query->execute();
-
-		$this->status = 201;
-		$this->message = "Conexión pública actualizada";
-		$this->sendResponse();
 	}
 
 	private function setConexionDirecta(int $id_receptor): void
 	{
-		// $this->setIdReceptor();
 		$id_usuario = $this->id_usuario;
-		// $id_receptor = $this->id_receptor;
 
 		$statement =
 			"INSERT INTO conexion_directa (id_usuario, id_receptor, last_seen)
@@ -116,11 +110,9 @@ final readonly class Conexion extends MysqliConnect
 		$query->execute();
 	}
 
-	private function setConexionGrupal(): void
+	private function setConexionGrupal(int $id_grupo): void
 	{
-		$this->setIdGrupo();
 		$id_usuario = $this->id_usuario;
-		$id_grupo = $this->id_grupo;
 
 		$statement =
 			"INSERT INTO conexion_grupal (id_usuario, id_grupo, last_seen)
@@ -137,10 +129,6 @@ final readonly class Conexion extends MysqliConnect
 		);
 
 		$query->execute();
-
-		$this->status = 201;
-		$this->message = "Conexión grupal actualizada";
-		$this->sendResponse();
 	}
 
 	private function getConexionPublica(): array
@@ -205,7 +193,7 @@ final readonly class Conexion extends MysqliConnect
 		return (int) $last_seen;
 	}
 
-	private function getConexionGrupal(int $id_grupo): int
+	private function getConexionGrupal(int $id_grupo): array
 	{
 		$id_usuario = $this->id_usuario;
 
@@ -227,7 +215,7 @@ final readonly class Conexion extends MysqliConnect
 
 		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 
-		$conexion = $conexion['last_seen'];
+		// $conexion = $conexion['last_seen'];
 
 		$query->close();
 
@@ -289,6 +277,14 @@ final readonly class Conexion extends MysqliConnect
 		$id_receptor = isset($_GET["id_receptor"]) ? (int) $_GET["id_receptor"] : null;
 		$id_grupo    = isset($_GET["id_grupo"])    ? (int) $_GET["id_grupo"]    : null;
 
+		if ($id_receptor) {
+			$setConexion = fn() => $this->setConexionDirecta($id_receptor);
+		} else if ($id_grupo) {
+			$setConexion = fn() => $this->setConexionGrupal($id_grupo);
+		} else {
+			$setConexion = fn() => $this->setConexionPublica();
+		}
+
 		$lastPing = 0;
 
 		$conexion = $this->decide($id_receptor, $id_grupo);
@@ -322,7 +318,7 @@ final readonly class Conexion extends MysqliConnect
 				echo "event: ping\n";
 				echo "data: keepalive\n\n";
 				$lastPing = time();
-				$this->setConexion($id_receptor);
+				$setConexion();
 			}
 
 			@ob_flush();
