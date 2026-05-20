@@ -2,21 +2,16 @@ import Conexion from '../modules/Conexion.js';
 
 const conexion = new Conexion();
 
-const getParams = {
-	"id_grupo": conexion.id_grupo
-}
-
 await conexion.sessionCheck();
+conexion.setUrlStream(conexion.urlStreamMensajes)
 
-const data = await conexion.getMensajes(getParams);
+conexion.setForm();
+await conexion.getMensajes();
 
-conexion.setData(data, conexion.mensajeData, conexion.urlStreamMensajes);
+conexion.writeChat(conexion.nombre_grupo);
 
-await conexion.fetchWithoutForm(conexion.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', conexion.mensajeData);
-
-conexion.writeChat(`Chat grupal (${conexion.nombre_grupo})`, conexion.id_grupo);
 conexion.streamMensajes(conexion.urlStreamMensajes);
 
-conexion.setData(getParams, conexion.conexionData, conexion.urlStreamConexion);
+conexion.setUrlStream(conexion.urlStreamConexion);
 
 conexion.streamConexion(conexion.urlStreamConexion);

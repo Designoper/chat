@@ -114,10 +114,6 @@ final readonly class Conexion extends MysqliConnect
 		);
 
 		$query->execute();
-
-		// $this->status = 201;
-		// $this->message = "Conexión directa actualizada";
-		// $this->sendResponse();
 	}
 
 	private function setConexionGrupal(): void
@@ -147,7 +143,7 @@ final readonly class Conexion extends MysqliConnect
 		$this->sendResponse();
 	}
 
-	private function getConexionPublica(): int
+	private function getConexionPublica(): array
 	{
 		$id_usuario = $this->id_usuario;
 
@@ -169,7 +165,7 @@ final readonly class Conexion extends MysqliConnect
 
 		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 
-		$conexion = $conexion['last_seen'];
+		// $conexion = $conexion['last_seen'];
 
 		$query->close();
 
@@ -240,20 +236,20 @@ final readonly class Conexion extends MysqliConnect
 
 	// MARK: DECIDE
 
-	private function decide(int $id_receptor, int $id_grupo): int
+	private function decide(?int $id_receptor, ?int $id_grupo): int|array
 	{
-		// if (isset($_GET['id_receptor'])) {
+		if ($id_receptor) {
 			$conexion = $this->getConexionDirecta($id_receptor);
 			return $conexion;
-		// }
+		}
 
-		// if (isset($_GET['id_grupo'])) {
-		// 	$conexion = $this->getConexionGrupal($id_grupo);
-		// 	return $conexion;
-		// }
+		if ($id_grupo) {
+			$conexion = $this->getConexionGrupal($id_grupo);
+			return $conexion;
+		}
 
-		// $conexion = $this->getConexionPublica();
-		// return $conexion;
+		$conexion = $this->getConexionPublica();
+		return $conexion;
 
 		// echo "event: error\n";
 		// echo "data: Tipo de stream no válido\n\n";
@@ -290,8 +286,8 @@ final readonly class Conexion extends MysqliConnect
 		echo str_pad('', 4096) . "\n";
 		flush();
 
-		$id_receptor = (int) ($_GET["id_receptor"] ?? 0);
-		$id_grupo =   (int) ($_GET["id_grupo"] ?? 0);
+		$id_receptor = isset($_GET["id_receptor"]) ? (int) $_GET["id_receptor"] : null;
+		$id_grupo    = isset($_GET["id_grupo"])    ? (int) $_GET["id_grupo"]    : null;
 
 		$lastPing = 0;
 

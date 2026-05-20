@@ -65,7 +65,6 @@ new Usuario()->authBrowser();
 
 			<form name="crear-mensaje-directo">
 
-				<!-- <input type="hidden" name="id_receptor"> -->
 				<textarea placeholder="Mensaje" name="contenido" autocomplete="off" minlength="1" maxlength="255" required></textarea>
 
 				<button>

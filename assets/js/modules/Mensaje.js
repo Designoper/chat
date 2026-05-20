@@ -12,12 +12,11 @@ export default class Mensaje extends Usuario {
 	endpointUltimoId = this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID;
 
 	h1 = document.querySelector('h1');
-	input = document.querySelector('input[type="hidden"]');
 
-	id_receptor = this.urlConstructor.searchParams.get('id-receptor');
+	// id_receptor = this.urlConstructor.searchParams.get('id-receptor');
 	nombre_receptor = this.urlConstructor.searchParams.get('nombre-receptor');
 
-	id_grupo = this.urlConstructor.searchParams.get('id-grupo');
+	// id_grupo = this.urlConstructor.searchParams.get('id-grupo');
 	nombre_grupo = this.urlConstructor.searchParams.get('nombre-grupo');
 
 	ids = {
@@ -37,10 +36,8 @@ export default class Mensaje extends Usuario {
 
 		for (const [key, value] of Object.entries(this.ids)) {
 			if (value !== null) {
-				// this.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}"></input>`);
 				params.append(key, value);
 				this.mensajeData[key] = value;
-				console.log(this.mensajeData)
 			}
 			streamUrl.search = params;
 		}
@@ -50,51 +47,16 @@ export default class Mensaje extends Usuario {
 		for (const [key, value] of Object.entries(this.ids)) {
 			if (value !== null) {
 				this.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}"></input>`);
-				// params.append(key, value);
 			}
-			// streamUrl.search = params;
 		}
 	}
 
-	setParams() {
-		for (const [key, value] of Object.entries(this.ids)) {
-			if (value !== null) {
-				// this.params;
-
-				// params.append(key, value);
-			}
-			// streamUrl.search = params;
-		}
-	}
-
-	async getMensajes(params = {}) {
-		// const newParams = { ...params };
-
+	async getMensajes() {
 		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.mensajeData);
 		const mensajes = this.mensajesTemplate(response.content);
 		this.mensajesOutput.innerHTML = mensajes;
 		this.formHandler();
-
-		// let id;
-
-		// response.content.length > 0
-		// 	? id = response.content[response.content.length - 1].id_mensaje
-		// 	: id = "";
-
-		// newParams.ultimo_id = id;
-		// return newParams;
 	}
-
-	// setData(objData, obj, streamUrl) {
-	// 	const params = new URLSearchParams();
-
-	// 	for (const [key, value] of Object.entries(objData)) {
-	// 		obj[key] = value;
-	// 		params.append(key, value);
-	// 	}
-
-	// 	streamUrl.search = params;
-	// }
 
 	streamMensajes(streamUrl) {
 
@@ -107,14 +69,6 @@ export default class Mensaje extends Usuario {
 			this.mensajesOutput.insertAdjacentHTML("beforeend", content);
 			this.formHandler();
 		});
-
-		// evtSource.addEventListener("new mensaje", async (event) => {
-		// 	const id = JSON.parse(event.data);
-
-		// 	this.mensajeData.ultimo_id = id;
-		// 	console.log(this.mensajeData)
-		// 	const response = await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.mensajeData);
-		// });
 	}
 
 	mensajesTemplate(fetchedMensajes) {
@@ -170,8 +124,7 @@ export default class Mensaje extends Usuario {
 		}
 	}
 
-	writeChat(titulo, id) {
+	writeChat(titulo) {
 		this.h1.insertAdjacentHTML("afterbegin", titulo);
-		// this.input.setAttribute('value', `${id}`);
 	}
 }
