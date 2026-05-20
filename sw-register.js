@@ -1,5 +1,5 @@
 const PATHNAME = "/";
-const FILENAME = "sw-empty.js";
+const FILENAME = "sw.js";
 
 if (navigator.serviceWorker) {
 	try {
