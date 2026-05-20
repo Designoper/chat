@@ -46,7 +46,7 @@ new Usuario()->authBrowser();
 
 		<menu>
 			<li>
-				<a href="./chat-publico.php">Chat público <span></span></a>
+				<a href="./chat.php">Chat público <span></span></a>
 			</li>
 			<li>
 				<a href="./sala-grupal.php">Chat de grupos</a>

@@ -118,14 +118,17 @@ export default class Mensaje extends Usuario {
 	writeChat() {
 		if (this.nombres.nombre_receptor !== null) {
 			this.h1.insertAdjacentHTML("afterbegin", this.nombres.nombre_receptor);
+			this.a.setAttribute("href", "./sala-principal.php");
 			return;
 		}
 
 		if (this.nombres.nombre_grupo !== null) {
 			this.h1.insertAdjacentHTML("afterbegin", `Grupo: ${this.nombres.nombre_grupo}`);
+			this.a.setAttribute("href", "./sala-grupal.php");
 			return;
 		}
 
 		this.h1.insertAdjacentHTML("afterbegin", "Chat público");
+		this.a.setAttribute("href", "./sala-principal.php");
 	}
 }
