@@ -9,13 +9,13 @@ export default class Mensaje extends Usuario {
 	urlConstructor = new URL(location.href);
 
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
-	endpointUltimoId = this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID;
 
 	h1 = document.querySelector('h1');
 
-	nombre_receptor = this.urlConstructor.searchParams.get('nombre-receptor');
-
-	nombre_grupo = this.urlConstructor.searchParams.get('nombre-grupo');
+	nombres = {
+		nombre_receptor: this.urlConstructor.searchParams.get('nombre-receptor'),
+		nombre_grupo: this.urlConstructor.searchParams.get('nombre-grupo')
+	}
 
 	ids = {
 		id_receptor: this.urlConstructor.searchParams.get('id-receptor'),
@@ -23,6 +23,7 @@ export default class Mensaje extends Usuario {
 	};
 
 	form = document.querySelector('form');
+	a = document.querySelector('a');
 
 	constructor() {
 		super();
@@ -114,7 +115,17 @@ export default class Mensaje extends Usuario {
 		}
 	}
 
-	writeChat(titulo) {
-		this.h1.insertAdjacentHTML("afterbegin", titulo);
+	writeChat() {
+		if (this.nombres.nombre_receptor !== null) {
+			this.h1.insertAdjacentHTML("afterbegin", this.nombres.nombre_receptor);
+			return;
+		}
+
+		if (this.nombres.nombre_grupo !== null) {
+			this.h1.insertAdjacentHTML("afterbegin", `Grupo: ${this.nombres.nombre_grupo}`);
+			return;
+		}
+
+		this.h1.insertAdjacentHTML("afterbegin", "Chat público");
 	}
 }

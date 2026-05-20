@@ -34,7 +34,7 @@ new Usuario()->authBrowser();
 	<link href="./assets/css/common/layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/chat.css" rel="preload stylesheet" as="style">
 
-	<script src="./assets/js/pages/chat-grupal.js" type="module"></script>
+	<script src="./assets/js/pages/chat.js" type="module"></script>
 
 </head>
 
@@ -51,9 +51,7 @@ new Usuario()->authBrowser();
 				</svg>
 			</a>
 
-			<h1>
-				<span></span>
-			</h1>
+			<h1></h1>
 
 		</header>
 
@@ -63,7 +61,6 @@ new Usuario()->authBrowser();
 
 			<form name="crear-mensaje">
 
-				<!-- <input type="hidden" name="id_grupo"> -->
 				<textarea placeholder="Mensaje" name="contenido" autocomplete="off" minlength="1" maxlength="255" required></textarea>
 
 				<button>

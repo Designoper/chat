@@ -8,7 +8,7 @@ conexion.setUrlStream(conexion.urlStreamMensajes)
 conexion.setForm();
 await conexion.getMensajes();
 
-conexion.writeChat(conexion.nombre_grupo);
+conexion.writeChat();
 
 conexion.streamMensajes(conexion.urlStreamMensajes);
 
