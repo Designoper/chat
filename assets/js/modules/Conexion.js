@@ -3,7 +3,6 @@ import Mensaje from "./Mensaje.js";
 export default class Conexion extends Mensaje {
 	urlStreamConexion = new URL(this.ENDPOINTS.GET.CONEXION.STREAM);
 	endpointConexion = this.ENDPOINTS.POST.CONEXION.ESTADO;
-	header = document.querySelector('header');
 
 	conexionData = {};
 
@@ -20,9 +19,6 @@ export default class Conexion extends Mensaje {
 
 		evtSource.addEventListener("initial state", (event) => {
 			const state = event.data;
-			this.header.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 100 100">
-				<circle cx="50" cy="50" r="50" />
-			</svg>`);
 			this.circle = document.querySelector('circle');
 			this.circle.setAttribute('class', state);
 		});

@@ -11,6 +11,7 @@ export default class Mensaje extends Usuario {
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
 
 	h1 = document.querySelector('h1');
+	header = document.querySelector('header');
 
 	nombres = {
 		nombre_receptor: this.urlConstructor.searchParams.get('nombre-receptor'),
@@ -119,6 +120,9 @@ export default class Mensaje extends Usuario {
 		if (this.nombres.nombre_receptor !== null) {
 			this.h1.insertAdjacentHTML("afterbegin", this.nombres.nombre_receptor);
 			this.a.setAttribute("href", "./sala-principal.php");
+			this.header.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 100 100">
+				<circle cx="50" cy="50" r="50" />
+			</svg>`);
 			return;
 		}
 
