@@ -4,11 +4,11 @@ const conexion = new Conexion();
 
 await conexion.sessionCheck();
 
-const data = await conexion.getMensajes();
+await conexion.getMensajes();
 
-conexion.setData(data, conexion.mensajeData, conexion.urlStreamMensajes);
+// conexion.setData(data, conexion.mensajeData, conexion.urlStreamMensajes);
 
-await conexion.fetchWithoutForm(conexion.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', conexion.mensajeData);
+// await conexion.fetchWithoutForm(conexion.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', conexion.mensajeData);
 
 conexion.streamMensajes(conexion.urlStreamMensajes);
 

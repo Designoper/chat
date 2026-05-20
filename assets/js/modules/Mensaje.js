@@ -20,37 +20,81 @@ export default class Mensaje extends Usuario {
 	id_grupo = this.urlConstructor.searchParams.get('id-grupo');
 	nombre_grupo = this.urlConstructor.searchParams.get('nombre-grupo');
 
+	ids = {
+		id_receptor: this.urlConstructor.searchParams.get('id-receptor'),
+		id_grupo: this.urlConstructor.searchParams.get('id-grupo')
+	};
+
+	form = document.querySelector('form');
+
 	constructor() {
 		super();
 	}
 
+	setUrlStream(streamUrl) {
+
+		const params = new URLSearchParams();
+
+		for (const [key, value] of Object.entries(this.ids)) {
+			if (value !== null) {
+				// this.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}"></input>`);
+				params.append(key, value);
+				this.mensajeData[key] = value;
+				console.log(this.mensajeData)
+			}
+			streamUrl.search = params;
+		}
+	}
+
+	setForm() {
+		for (const [key, value] of Object.entries(this.ids)) {
+			if (value !== null) {
+				this.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}"></input>`);
+				// params.append(key, value);
+			}
+			// streamUrl.search = params;
+		}
+	}
+
+	setParams() {
+		for (const [key, value] of Object.entries(this.ids)) {
+			if (value !== null) {
+				// this.params;
+
+				// params.append(key, value);
+			}
+			// streamUrl.search = params;
+		}
+	}
+
 	async getMensajes(params = {}) {
-		const newParams = { ...params };
-		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', params);
+		// const newParams = { ...params };
+
+		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.mensajeData);
 		const mensajes = this.mensajesTemplate(response.content);
 		this.mensajesOutput.innerHTML = mensajes;
 		this.formHandler();
 
-		let id;
+		// let id;
 
-		response.content.length > 0
-			? id = response.content[response.content.length - 1].id_mensaje
-			: id = "";
+		// response.content.length > 0
+		// 	? id = response.content[response.content.length - 1].id_mensaje
+		// 	: id = "";
 
-		newParams.ultimo_id = id;
-		return newParams;
+		// newParams.ultimo_id = id;
+		// return newParams;
 	}
 
-	setData(objData, obj, streamUrl) {
-		const params = new URLSearchParams();
+	// setData(objData, obj, streamUrl) {
+	// 	const params = new URLSearchParams();
 
-		for (const [key, value] of Object.entries(objData)) {
-			obj[key] = value;
-			params.append(key, value);
-		}
+	// 	for (const [key, value] of Object.entries(objData)) {
+	// 		obj[key] = value;
+	// 		params.append(key, value);
+	// 	}
 
-		streamUrl.search = params;
-	}
+	// 	streamUrl.search = params;
+	// }
 
 	streamMensajes(streamUrl) {
 
@@ -64,13 +108,13 @@ export default class Mensaje extends Usuario {
 			this.formHandler();
 		});
 
-		evtSource.addEventListener("new mensaje", async (event) => {
-			const id = JSON.parse(event.data);
+		// evtSource.addEventListener("new mensaje", async (event) => {
+		// 	const id = JSON.parse(event.data);
 
-			this.mensajeData.ultimo_id = id;
-
-			const response = await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.mensajeData);
-		});
+		// 	this.mensajeData.ultimo_id = id;
+		// 	console.log(this.mensajeData)
+		// 	const response = await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.mensajeData);
+		// });
 	}
 
 	mensajesTemplate(fetchedMensajes) {
@@ -128,6 +172,6 @@ export default class Mensaje extends Usuario {
 
 	writeChat(titulo, id) {
 		this.h1.insertAdjacentHTML("afterbegin", titulo);
-		this.input.setAttribute('value', `${id}`);
+		// this.input.setAttribute('value', `${id}`);
 	}
 }

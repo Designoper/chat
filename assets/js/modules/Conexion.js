@@ -14,9 +14,9 @@ export default class Conexion extends Mensaje {
 	streamConexion(urlStream) {
 		const evtSource = new EventSource(urlStream);
 
-		evtSource.addEventListener("ping", async () => {
-			await this.fetchWithoutForm(this.endpointConexion, 'post', this.conexionData);
-		});
+		// evtSource.addEventListener("ping", async () => {
+		// 	await this.fetchWithoutForm(this.endpointConexion, 'post', this.conexionData);
+		// });
 
 		evtSource.addEventListener("initial state", (event) => {
 			const state = event.data;
