@@ -649,6 +649,21 @@ final readonly class Mensaje extends MysqliConnect
 
 	public function createMensaje(): void
 	{
+		if (isset($_POST['id_receptor'])) {
+			$this->createMensajeDirecto();
+		}
+
+		if (isset($_POST['id_grupo'])) {
+			$this->createMensajeGrupal();
+		}
+
+		$this->createMensajePublico();
+	}
+
+	// MARK: CREATE MENSAJE PUBLICO
+
+	public function createMensajePublico(): void
+	{
 		$this->setContenido();
 
 		$this->checkValidationErrors();
@@ -672,7 +687,7 @@ final readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = "Mensaje creado con éxito";
+		$this->message = "Mensaje público creado con éxito";
 		$this->sendResponse();
 	}
 
@@ -706,7 +721,7 @@ final readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = "Mensaje creado con éxito";
+		$this->message = "Mensaje directo creado con éxito";
 		$this->sendResponse();
 	}
 

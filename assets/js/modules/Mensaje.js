@@ -13,10 +13,8 @@ export default class Mensaje extends Usuario {
 
 	h1 = document.querySelector('h1');
 
-	// id_receptor = this.urlConstructor.searchParams.get('id-receptor');
 	nombre_receptor = this.urlConstructor.searchParams.get('nombre-receptor');
 
-	// id_grupo = this.urlConstructor.searchParams.get('id-grupo');
 	nombre_grupo = this.urlConstructor.searchParams.get('nombre-grupo');
 
 	ids = {
@@ -106,14 +104,6 @@ export default class Mensaje extends Usuario {
 	}
 
 	async writeMensaje(form, method, action) {
-		await this.fetchData(form, method, action);
-	}
-
-	async writeMensajeDirecto(form, method, action) {
-		await this.fetchData(form, method, action);
-	}
-
-	async writeMensajeGrupal(form, method, action) {
 		await this.fetchData(form, method, action);
 	}
 

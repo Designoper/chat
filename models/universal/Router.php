@@ -39,17 +39,18 @@ final class Router
         $this->setRoute('POST', 'usuarios/logout', [Usuario::class, 'logout']);
         $this->setRoute('POST', 'usuarios/delete', [Usuario::class, 'deleteUsuario']);
         // Mensajes
-        $this->setRoute('POST', 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdMensaje']);
+        // $this->setRoute('POST', 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdMensaje']);
         $this->setRoute('POST', 'mensajes/crear', [Mensaje::class, 'createMensaje']);
-        $this->setRoute('POST', 'mensajes-directos/crear', [Mensaje::class, 'createMensajeDirecto']);
-        $this->setRoute('POST', 'mensajes-grupales/crear', [Mensaje::class, 'createMensajeGrupal']);
+        // $this->setRoute('POST', 'mensajes/crear', [Mensaje::class, 'createMensajePublico']);
+        // $this->setRoute('POST', 'mensajes-directos/crear', [Mensaje::class, 'createMensajeDirecto']);
+        // $this->setRoute('POST', 'mensajes-grupales/crear', [Mensaje::class, 'createMensajeGrupal']);
         $this->setRoute('POST', 'mensajes/[1-9]\d*$', [Mensaje::class, 'deleteMensaje']);
         // Grupos
         $this->setRoute('POST', 'grupos/crear', [Grupo::class, 'createGrupo']);
         $this->setRoute('POST', 'grupos/invitar', [Grupo::class, 'invitar']);
         $this->setRoute('POST', 'grupos/aceptar', [Grupo::class, 'aceptarInvitacion']);
         // Conexión
-        $this->setRoute('POST', 'conexion/estado', [Conexion::class, 'setConexion']);
+        // $this->setRoute('POST', 'conexion/estado', [Conexion::class, 'setConexion']);
 
         $this->handleRequest();
     }

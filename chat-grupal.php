@@ -61,7 +61,7 @@ new Usuario()->authBrowser();
 
 		<section>
 
-			<form name="crear-mensaje-grupal">
+			<form name="crear-mensaje">
 
 				<!-- <input type="hidden" name="id_grupo"> -->
 				<textarea placeholder="Mensaje" name="contenido" autocomplete="off" minlength="1" maxlength="255" required></textarea>
