@@ -64,10 +64,12 @@ export default class Mensaje extends Usuario {
 		const mensajes = this.mensajesTemplate(response.content);
 		this.mensajesOutput.innerHTML = mensajes;
 		const marcador = this.mensajesOutput.querySelector("#marcador");
-		console.log(marcador);
 
 		if (marcador) {
-			marcador.scrollIntoView({ behavior: "smooth", block: "center" });
+			marcador.scrollIntoView({
+				behavior: "smooth",
+				block: "center"
+			});
 		} else {
 			window.scrollTo({
 				top: document.body.scrollHeight,
@@ -109,15 +111,16 @@ export default class Mensaje extends Usuario {
 				<p translate="no">${mensaje.nombre_usuario}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
-				{
-					weekday: "long",
-					year: "numeric",
-					month: "numeric",
-					day: "numeric",
-					hour: "numeric",
-					minute: "numeric"
-				}
-			)}</p>
+					{
+						weekday: "long",
+						year: "numeric",
+						month: "numeric",
+						day: "numeric",
+						hour: "numeric",
+						minute: "numeric"
+					}
+				)}
+				</p>
 				${mensaje.id_emisor === this.id_usuario
 					? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.POST.MENSAJES.ELIMINAR}/${mensaje.id_mensaje}">
 						<button>
@@ -150,7 +153,8 @@ export default class Mensaje extends Usuario {
 		if (this.nombres.nombre_receptor !== null) {
 			this.h1.insertAdjacentHTML("afterbegin", this.nombres.nombre_receptor);
 			this.a.setAttribute("href", "./sala-principal.php");
-			this.header.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 100 100">
+			this.header.insertAdjacentHTML('beforeend',
+				`<svg viewBox="0 0 100 100">
 				<circle cx="50" cy="50" r="50" />
 			</svg>`);
 			return;
