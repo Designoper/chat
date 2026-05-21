@@ -21,6 +21,7 @@ export default class Mensaje extends Usuario {
 
 	mostrado = false;
 
+	ringtone = document.querySelector('#ringtone');
 
 	mensajesOutput = document.querySelector('output');
 	h1 = document.querySelector('h1');
@@ -35,7 +36,6 @@ export default class Mensaje extends Usuario {
 	async getUltimoId() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID, 'get', this.mensajeData);
 		this.prueba = response.content['id'];
-		// console.log(this.prueba)
 	}
 
 	setUrlStream(streamUrl) {
@@ -66,7 +66,6 @@ export default class Mensaje extends Usuario {
 		const marcador = this.mensajesOutput.querySelector("#marcador");
 		console.log(marcador);
 
-		// Hacer scroll hasta él
 		if (marcador) {
 			marcador.scrollIntoView({ behavior: "smooth", block: "center" });
 		} else {
@@ -88,6 +87,7 @@ export default class Mensaje extends Usuario {
 			const content = this.mensajesTemplate([mensaje]);
 
 			this.mensajesOutput.insertAdjacentHTML("beforeend", content);
+			this.ringtone.play();
 			this.formHandler();
 		});
 	}
