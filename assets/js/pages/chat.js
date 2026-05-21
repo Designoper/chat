@@ -6,6 +6,7 @@ await conexion.sessionCheck();
 conexion.setUrlStream(conexion.urlStreamMensajes)
 
 conexion.setForm();
+await conexion.getUltimoId();
 await conexion.getMensajes();
 
 conexion.writeChat();

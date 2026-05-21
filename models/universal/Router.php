@@ -24,6 +24,7 @@ final class Router
         // Mensajes
         $this->setRoute($GET, 'mensajes/stream', [Mensaje::class, 'streamMensajes']);
         $this->setRoute($GET, 'mensajes/no-leidos', [Mensaje::class, 'countUnreadMessages']);
+        $this->setRoute($GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']);
         $this->setRoute($GET, 'mensajes', [Mensaje::class, 'readMensajes']);
 
         // Grupos

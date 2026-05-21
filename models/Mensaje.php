@@ -102,17 +102,17 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET ULTIMO ID
 
-	public function getUltimoIdMensaje(int $id_receptor, int $id_grupo): int
+	public function getUltimoIdMensaje(): void
 	{
 		if (isset($_GET['id_receptor'])) {
-			return $this->getUltimoIdDirecto($id_receptor);
+			$this->getUltimoIdDirecto();
 		}
 
 		if (isset($_GET['id_grupo'])) {
-			return $this->getUltimoIdGrupal($id_grupo);
+			$this->getUltimoIdGrupal();
 		}
 
-		return $this->getUltimoIdPublico();
+		$this->getUltimoIdPublico();
 	}
 
 	private function getUltimoIdPublico(): ?int
@@ -141,8 +141,10 @@ final readonly class Mensaje extends MysqliConnect
 		return (int) $last_id;
 	}
 
-	private function getUltimoIdDirecto(int $id_receptor): ?int
+	private function getUltimoIdDirecto(): void
 	{
+		$this->setIdReceptor();
+		$id_receptor = $this->id_receptor;
 		$id_usuario = $this->id_emisor;
 
 		$statement =
@@ -166,11 +168,16 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->close();
 
-		return (int) $last_id;
+		$this->status = 200;
+		$this->message = 'Último id directo';
+		$this->content = ['id' => $last_id];
+		$this->sendResponse();
 	}
 
-	private function getUltimoIdGrupal(int $id_grupo): ?int
+	private function getUltimoIdGrupal(): ?int
 	{
+		$this->setIdGrupo();
+		$id_grupo = $this->id_grupo;
 		$id_usuario = $this->id_emisor;
 
 		$statement =
@@ -562,6 +569,8 @@ final readonly class Mensaje extends MysqliConnect
 			$this->setUltimoIdDirecto($id_receptor, $fin);
 		}
 
+		// else $this->setUltimoIdDirecto($id_receptor, 0);
+
 		$message =
 			$mensajes
 			? 'Mensajes obtenidos.'
@@ -802,8 +811,10 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET NUEVOS MENSAJES PUBLICOS
 
-	private function getNuevosMensajesPublicos(int $ultimo_id): array
+	private function getNuevosMensajesPublicos(): array
 	{
+		$id_usuario = $this->id_emisor;
+
 		$statement =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
@@ -812,7 +823,11 @@ final readonly class Mensaje extends MysqliConnect
 				usuarios.nombre_usuario
 			FROM mensajes
 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-            WHERE mensajes.id_mensaje > ?
+            WHERE mensajes.id_mensaje > COALESCE((
+				SELECT id_mensaje
+				FROM ultimos_mensajes_leidos_publicos
+				WHERE id_usuario = ?
+			), 0)
             AND mensajes.id_receptor IS NULL
 			AND mensajes.id_grupo IS NULL
             ORDER BY mensajes.id_mensaje ASC";
@@ -821,7 +836,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->bind_param(
 			"i",
-			$ultimo_id
+			$id_usuario
 		);
 
 		$query->execute();
@@ -833,7 +848,7 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET NUEVOS MENSAJES DIRECTOS
 
-	private function getNuevosMensajesDirectos(int $ultimo_id, int $id_receptor): array
+	private function getNuevosMensajesDirectos(int $id_receptor): array
 	{
 		$id_emisor = $this->id_emisor;
 
@@ -845,19 +860,26 @@ final readonly class Mensaje extends MysqliConnect
 				usuarios.nombre_usuario
 			FROM mensajes
 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-            WHERE mensajes.id_mensaje > ?
+			WHERE mensajes.id_mensaje > COALESCE((
+				SELECT id_mensaje
+				FROM ultimos_mensajes_leidos_directos
+				WHERE id_usuario = ?
+				AND id_receptor = ?
+			), 0)
 			AND (
 				(id_emisor = ? AND id_receptor = ?)
 				OR (id_emisor = ? AND id_receptor = ?)
 			)
 			AND mensajes.id_grupo IS NULL
-            ORDER BY mensajes.id_mensaje ASC";
+			ORDER BY mensajes.id_mensaje ASC";
+
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"iiiii",
-			$ultimo_id,
+			"iiiiii",
+			$id_emisor,
+			$id_receptor,
 			$id_emisor,
 			$id_receptor,
 			$id_receptor,
@@ -873,8 +895,9 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET NUEVOS MENSAJES GRUPALES
 
-	private function getNuevosMensajesGrupales(int $ultimo_id, int $id_grupo): array
+	private function getNuevosMensajesGrupales(int $id_grupo): array
 	{
+		$id_usuario = $this->id_emisor;
 		$statement =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
@@ -883,7 +906,12 @@ final readonly class Mensaje extends MysqliConnect
 				usuarios.nombre_usuario
 			FROM mensajes
 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-            WHERE mensajes.id_mensaje > ?
+            WHERE mensajes.id_mensaje > COALESCE((
+				SELECT id_mensaje
+				FROM ultimos_mensajes_leidos_grupales
+				WHERE id_usuario = ?
+				AND id_grupo = ?
+			), 0)
             AND mensajes.id_receptor IS NULL
 			AND mensajes.id_grupo = ?
             ORDER BY mensajes.id_mensaje ASC";
@@ -891,8 +919,9 @@ final readonly class Mensaje extends MysqliConnect
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"ii",
-			$ultimo_id,
+			"iii",
+			$id_usuario,
+			$id_grupo,
 			$id_grupo
 		);
 
@@ -932,20 +961,23 @@ final readonly class Mensaje extends MysqliConnect
 		echo str_pad('', 4096) . "\n";
 		flush();
 
+		// $this->setIdReceptor();
+		// $id_receptor = $this->id_receptor;
+
 		$id_receptor = isset($_GET["id_receptor"]) ? (int) $_GET["id_receptor"] : null;
 		$id_grupo    = isset($_GET["id_grupo"])    ? (int) $_GET["id_grupo"]    : null;
 
-		if ($id_receptor) {
-			$ultimo_id = $this->getUltimoIdDirecto($id_receptor);
-			$mensajes = fn($test) => $this->getNuevosMensajesDirectos($test, $id_receptor);
+		if (isset($_GET["id_receptor"])) {
+			// $ultimo_id = $this->getUltimoIdDirecto($id_receptor);
+			$mensajes = fn() => $this->getNuevosMensajesDirectos($id_receptor);
 			$setID = fn($test) => $this->setUltimoIdDirecto($id_receptor, $test);
 		} else if ($id_grupo) {
-			$ultimo_id = $this->getUltimoIdGrupal($id_grupo);
-			$mensajes = fn($test) => $this->getNuevosMensajesGrupales($test, $id_grupo);
+			// $ultimo_id = $this->getUltimoIdGrupal($id_grupo);
+			$mensajes = fn() => $this->getNuevosMensajesGrupales($id_grupo);
 			$setID = fn($test) => $this->setUltimoIdGrupal($id_grupo, $test);
 		} else {
-			$ultimo_id = $this->getUltimoIdPublico();
-			$mensajes = fn($test) => $this->getNuevosMensajesPublicos($test);
+			// $ultimo_id = $this->getUltimoIdPublico();
+			$mensajes = fn() => $this->getNuevosMensajesPublicos();
 			$setID = fn($test) => $this->setUltimoIdPublico($test);
 		}
 
@@ -957,7 +989,7 @@ final readonly class Mensaje extends MysqliConnect
 				break;
 			}
 
-			$mensajesObtenidos = $mensajes($ultimo_id);
+			$mensajesObtenidos = $mensajes();
 
 			if (!empty($mensajesObtenidos)) {
 
