@@ -556,6 +556,12 @@ final readonly class Mensaje extends MysqliConnect
 		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
+		if (!empty($mensajes)) {
+			$ultimo = end($mensajes);
+			$fin = $ultimo['id_mensaje'];
+			$this->setUltimoIdDirecto($id_receptor, $fin);
+		}
+
 		$message =
 			$mensajes
 			? 'Mensajes obtenidos.'
