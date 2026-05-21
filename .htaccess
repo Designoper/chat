@@ -1,3 +1,5 @@
+# This file must be placed at the root folder of the server, like "html". Name must be ".htaccess", and only works on apache servers
+
 Options -MultiViews
 
 RewriteEngine On
@@ -5,17 +7,24 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ ./controller.php [QSA,L]
 
-<FilesMatch "^\.(env|gitignore|htaccess)$">
+# Bloquear archivos sensibles por extensión
+<FilesMatch "\.(env|sql|bak|config|ini|log|sh)$">
     Require all denied
 </FilesMatch>
+
+# Bloquear archivos que empiezan por punto
+<FilesMatch "^\..*">
+    Require all denied
+</FilesMatch>
+
+# Bloquear carpetas internas
+RewriteRule ^(\.git|\.svn|config|private|backups|models)(/|$) - [F,L]
 
 <IfModule mod_headers.c>
     Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
     Header set Pragma "no-cache"
     Header set Expires "0"
 </IfModule>
-
-# This file must be placed at the root folder of the server, like "html". Name must be ".htaccess", and only works on apache servers
 
 # # Cache configuration to improve page loading speed
 # <IfModule mod_expires.c>
