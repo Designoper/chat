@@ -2,16 +2,12 @@ import Usuario from "./Usuario.js";
 import formatearFecha from "../utils/fecha.js";
 
 export default class Mensaje extends Usuario {
-	mensajesOutput = document.querySelector('output');
 	mensajeData = {};
 
 	urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
 	urlConstructor = new URL(location.href);
 
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
-
-	h1 = document.querySelector('h1');
-	header = document.querySelector('header');
 
 	nombres = {
 		nombre_receptor: this.urlConstructor.searchParams.get('nombre-receptor'),
@@ -23,6 +19,9 @@ export default class Mensaje extends Usuario {
 		id_grupo: this.urlConstructor.searchParams.get('id-grupo')
 	};
 
+	mensajesOutput = document.querySelector('output');
+	h1 = document.querySelector('h1');
+	header = document.querySelector('header');
 	form = document.querySelector('form');
 	a = document.querySelector('a');
 
@@ -76,7 +75,7 @@ export default class Mensaje extends Usuario {
 		const mensajes = fetchedMensajes.map(mensaje =>
 			`
 			<article ${mensaje.id_emisor === this.id_usuario ? 'class="mensaje-propio"' : ''}>
-				<p>${mensaje.nombre_usuario}</p>
+				<p translate="no">${mensaje.nombre_usuario}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
 				{

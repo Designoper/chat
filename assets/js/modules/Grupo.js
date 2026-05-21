@@ -54,13 +54,13 @@ export default class Grupo extends Endpoint {
 					: '';
 
 				const opciones = invitables.content
-					.map(user => `<option value="${user.id_usuario}">${user.nombre_usuario}</option>`)
+					.map(user => `<option translate="no" value="${user.id_usuario}">${user.nombre_usuario}</option>`)
 					.join('');
 
 				const formInvitar =
 					`<article>
 
-						<h3>${grupo.nombre_grupo}</h3>
+						<h3 translate="no">${grupo.nombre_grupo}</h3>
 
 						<form name="invitar">
 							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
@@ -88,7 +88,7 @@ export default class Grupo extends Endpoint {
 
 		const grupos = fetchedGrupos.map(grupo =>
 			`<article>
-				<h3>${grupo.nombre_grupo}</h3>
+				<h3 translate="no">${grupo.nombre_grupo}</h3>
 				<form name="aceptar-invitacion">
 					<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
 					<button>Aceptar invitación</button>
