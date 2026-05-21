@@ -182,11 +182,12 @@ final readonly class Grupo extends MysqliConnect
 		$statement =
 			"SELECT id_usuario, nombre_usuario
 			FROM usuarios
-			WHERE id_usuario NOT IN (
+			WHERE id_usuario NOT IN
+			(
 				SELECT id_usuario
 				FROM membresias
 				WHERE id_grupo = ?
-			);";
+			)";
 
 		$query = $this->connection->prepare($statement);
 
