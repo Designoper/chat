@@ -5,7 +5,7 @@ Options -MultiViews
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ ./controller.php [QSA,L]
+RewriteRule ^(.*)$ ./Router.php [QSA,L]
 
 # Bloquear archivos sensibles por extensión
 <FilesMatch "\.(env|sql|bak|config|ini|log|sh)$">

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../models/Usuario.php';
-require_once __DIR__ . '/../../models/Mensaje.php';
-require_once __DIR__ . '/../../models/Grupo.php';
-require_once __DIR__ . '/../../models/Conexion.php';
+require_once __DIR__ . '/models/Usuario.php';
+require_once __DIR__ . '/models/Mensaje.php';
+require_once __DIR__ . '/models/Grupo.php';
+require_once __DIR__ . '/models/Conexion.php';
 
 final class Router
 {
@@ -96,3 +96,5 @@ final class Router
         }
     }
 }
+
+new Router();
