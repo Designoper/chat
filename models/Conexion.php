@@ -54,21 +54,6 @@ final readonly class Conexion extends MysqliConnect
 			: $this->errors->setValidationError($error_message);
 	}
 
-	// MARK: SET CONEXION
-
-	public function setConexion(int $id_receptor): void
-	{
-		// if (isset($_GET['id_receptor'])) {
-			$this->setConexionDirecta($id_receptor);
-		// }
-
-		// if (isset($_GET['id_grupo'])) {
-		// 	$this->setConexionGrupal();
-		// }
-
-		// $this->setConexionPublica();
-	}
-
 	private function setConexionPublica(): void
 	{
 		$id_usuario = $this->id_usuario;
@@ -198,10 +183,12 @@ final readonly class Conexion extends MysqliConnect
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"SELECT last_seen
-			 FROM conexion_grupal
-			 WHERE id_usuario = ?
-			 AND id_grupo = ?";
+			"SELECT COALESCE((
+				SELECT last_seen
+				FROM conexion_grupal
+				WHERE id_usuario = ?
+				AND id_grupo = ?
+			), 0) AS last_seen";
 
 		$query = $this->connection->prepare($statement);
 

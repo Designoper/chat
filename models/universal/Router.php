@@ -10,41 +10,42 @@ require_once __DIR__ . '/../../models/Conexion.php';
 final class Router
 {
     private const string COMMON_PATH = '/api/';
-    private string $GET = 'GET';
-    private string $POST = 'POST';
     private array $routes = [];
 
     public function __construct()
     {
+        $GET = 'GET';
+        $POST = 'POST';
+
         // Usuarios
-        $this->setRoute('GET', 'usuarios/current', [Usuario::class, 'currentUsuario']);
-        $this->setRoute('GET', 'usuarios$', [Usuario::class, 'readUsuarios']);
+        $this->setRoute($GET, 'usuarios/current', [Usuario::class, 'currentUsuario']);
+        $this->setRoute($GET, 'usuarios$', [Usuario::class, 'readUsuarios']);
 
         // Mensajes
-        $this->setRoute('GET', 'mensajes/stream', [Mensaje::class, 'streamMensajes']);
-        $this->setRoute('GET', 'mensajes/no-leidos', [Mensaje::class, 'countUnreadMessages']);
-        $this->setRoute('GET', 'mensajes', [Mensaje::class, 'readMensajes']);
+        $this->setRoute($GET, 'mensajes/stream', [Mensaje::class, 'streamMensajes']);
+        $this->setRoute($GET, 'mensajes/no-leidos', [Mensaje::class, 'countUnreadMessages']);
+        $this->setRoute($GET, 'mensajes', [Mensaje::class, 'readMensajes']);
 
         // Grupos
-        $this->setRoute('GET', 'grupos$', [Grupo::class, 'readGrupos']);
-        $this->setRoute('GET', 'grupos/miembro$', [Grupo::class, 'readGruposMiembro']);
-        $this->setRoute('GET', 'grupos/pendiente$', [Grupo::class, 'readGruposPendiente']);
-        $this->setRoute('GET', 'grupos/no-miembro', [Grupo::class, 'readGruposNoMiembro']);
+        $this->setRoute($GET, 'grupos$', [Grupo::class, 'readGrupos']);
+        $this->setRoute($GET, 'grupos/miembro$', [Grupo::class, 'readGruposMiembro']);
+        $this->setRoute($GET, 'grupos/pendiente$', [Grupo::class, 'readGruposPendiente']);
+        $this->setRoute($GET, 'grupos/no-miembro', [Grupo::class, 'readGruposNoMiembro']);
         // Conexión
-        $this->setRoute('GET', 'conexion/stream', [Conexion::class, 'streamConexion']);
+        $this->setRoute($GET, 'conexion/stream', [Conexion::class, 'streamConexion']);
 
         // Usuarios
-        $this->setRoute('POST', 'usuarios/crear', [Usuario::class, 'createUsuario']);
-        $this->setRoute('POST', 'usuarios/login', [Usuario::class, 'login']);
-        $this->setRoute('POST', 'usuarios/logout', [Usuario::class, 'logout']);
-        $this->setRoute('POST', 'usuarios/delete', [Usuario::class, 'deleteUsuario']);
+        $this->setRoute($POST, 'usuarios/crear', [Usuario::class, 'createUsuario']);
+        $this->setRoute($POST, 'usuarios/login', [Usuario::class, 'login']);
+        $this->setRoute($POST, 'usuarios/logout', [Usuario::class, 'logout']);
+        $this->setRoute($POST, 'usuarios/delete', [Usuario::class, 'deleteUsuario']);
         // Mensajes
-        $this->setRoute('POST', 'mensajes/crear', [Mensaje::class, 'createMensaje']);
-        $this->setRoute('POST', 'mensajes/[1-9]\d*$', [Mensaje::class, 'deleteMensaje']);
+        $this->setRoute($POST, 'mensajes/crear', [Mensaje::class, 'createMensaje']);
+        $this->setRoute($POST, 'mensajes/[1-9]\d*$', [Mensaje::class, 'deleteMensaje']);
         // Grupos
-        $this->setRoute('POST', 'grupos/crear', [Grupo::class, 'createGrupo']);
-        $this->setRoute('POST', 'grupos/invitar', [Grupo::class, 'invitar']);
-        $this->setRoute('POST', 'grupos/aceptar', [Grupo::class, 'aceptarInvitacion']);
+        $this->setRoute($POST, 'grupos/crear', [Grupo::class, 'createGrupo']);
+        $this->setRoute($POST, 'grupos/invitar', [Grupo::class, 'invitar']);
+        $this->setRoute($POST, 'grupos/aceptar', [Grupo::class, 'aceptarInvitacion']);
         // Conexión
         // $this->setRoute('POST', 'conexion/estado', [Conexion::class, 'setConexion']);
 
@@ -72,8 +73,6 @@ final class Router
         switch ($method) {
             case 'GET':
             case 'POST':
-            case 'PUT':
-            case 'DELETE':
 
                 foreach ($this->routes as $route) {
                     if ($route['method'] === $method && preg_match("#^{$route['path']}#", $requestUri)) {
@@ -92,7 +91,7 @@ final class Router
 
             default:
                 http_response_code(405);
-                header('Allow: GET, POST, PUT, DELETE');
+                header('Allow: GET, POST');
         }
     }
 }
