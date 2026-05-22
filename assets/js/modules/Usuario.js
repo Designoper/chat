@@ -68,7 +68,7 @@ export default class Usuario extends Endpoint {
 		}
 	}
 
-	async loginUsuario(form, method, action) {
+	async login(form, method, action) {
 		const response = await this.fetchData(form, method, action);
 		if (response.status === 200) {
 			location.href = 'sala-principal.php';

@@ -10,6 +10,7 @@ export default class Conexion extends Mensaje {
 		super();
 	}
 
+	// MARK: STREAM CONEXION
 	streamConexion(urlStream) {
 		const evtSource = new EventSource(urlStream);
 

@@ -1,6 +1,7 @@
 export default class Fetch {
 	constructor() { }
 
+	// MARK: FETCH WITHOUT FORM
 	async fetchWithoutForm(endpoint, method, data = {}) {
 		const init = {};
 		init.method = method;
@@ -33,6 +34,7 @@ export default class Fetch {
 		}
 	}
 
+	// MARK: FETCH DATA
 	async fetchData(form, method, action = form.action) {
 
 		const init = {};
@@ -76,6 +78,8 @@ export default class Fetch {
 		}
 	}
 
+	// MARK: ERROR CHECKER
+
 	errorChecker(response, output) {
 		if (response.validationErrors?.length > 0) {
 			output.innerHTML =
@@ -91,6 +95,8 @@ export default class Fetch {
 				</ul>`;
 		}
 	}
+
+	// MARK: RESET FORM
 
 	resetForm(form, method, output, dialog) {
 		form && method !== "get" ? form.reset() : null;

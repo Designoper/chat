@@ -65,7 +65,7 @@ export default class Endpoint extends Fetch {
 						break;
 
 					case 'login-usuario':
-						this.loginUsuario(form, 'post', this.ENDPOINTS.POST.USUARIOS.LOGIN);
+						this.login(form, 'post', this.ENDPOINTS.POST.USUARIOS.LOGIN);
 						break;
 
 					case 'logout-usuario':

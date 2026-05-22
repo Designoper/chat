@@ -40,7 +40,7 @@ new Usuario()->authBrowser();
 
 <body>
 
-	<audio src="./assets/audio/ringtone.mp3" id="ringtone"></audio>
+	<audio src="./assets/audio/ringtone.mp3"></audio>
 
 	<main id="main">
 
