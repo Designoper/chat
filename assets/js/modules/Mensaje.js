@@ -68,7 +68,7 @@ export default class Mensaje extends Usuario {
 				behavior: "smooth",
 				block: "center"
 			})
-			: window.scrollTo({
+			: globalThis.scrollTo({
 				top: document.body.scrollHeight,
 				behavior: "smooth"
 			});
