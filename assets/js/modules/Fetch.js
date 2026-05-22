@@ -81,14 +81,14 @@ export default class Fetch {
 			output.innerHTML =
 				`<ul>
 					${response.validationErrors.map(error => `<li>${error}</li>`).join("")}
-				</ul>`
+				</ul>`;
 		}
 
 		if (response.integrityErrors?.length > 0) {
 			output.innerHTML =
 				`<ul>
 					${response.integrityErrors.map(error => `<li>${error}</li>`).join("")}
-				</ul>`
+				</ul>`;
 		}
 	}
 

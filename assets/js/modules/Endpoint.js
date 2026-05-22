@@ -96,7 +96,7 @@ export default class Endpoint extends Fetch {
 						this.invitar(form, 'post', this.ENDPOINTS.POST.GRUPOS.INVITAR);
 						break;
 				}
-			}
+			};
 		});
 	}
 }

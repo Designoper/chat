@@ -74,7 +74,7 @@ export default class Grupo extends Endpoint {
 						<a href="./chat.php?id-grupo=${grupo.id_grupo}&nombre-grupo=${grupo.nombre_grupo}">Entrar</a>
 						<span>${badge}</span>
 
-					</article>`
+					</article>`;
 
 				return formInvitar;
 

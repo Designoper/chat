@@ -12,7 +12,7 @@ export default class Mensaje extends Usuario {
 	nombres = {
 		nombre_receptor: this.urlConstructor.searchParams.get('nombre-receptor'),
 		nombre_grupo: this.urlConstructor.searchParams.get('nombre-grupo')
-	}
+	};
 
 	ids = {
 		id_receptor: this.urlConstructor.searchParams.get('id-receptor'),
@@ -111,15 +111,15 @@ export default class Mensaje extends Usuario {
 				<p translate="no">${mensaje.nombre_usuario}</p>
 				<p>${mensaje.contenido}</p>
 				<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
-					{
-						weekday: "long",
-						year: "numeric",
-						month: "numeric",
-						day: "numeric",
-						hour: "numeric",
-						minute: "numeric"
-					}
-				)}
+				{
+					weekday: "long",
+					year: "numeric",
+					month: "numeric",
+					day: "numeric",
+					hour: "numeric",
+					minute: "numeric"
+				}
+			)}
 				</p>
 				${mensaje.id_emisor === this.id_usuario
 					? `<form name="eliminar-mensaje" action="${this.ENDPOINTS.POST.MENSAJES.ELIMINAR}/${mensaje.id_mensaje}">
@@ -132,7 +132,7 @@ export default class Mensaje extends Usuario {
 					: ''
 				}
 			</article>
-			`
+			`;
 		}).join('');
 
 		return mensajes;
