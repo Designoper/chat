@@ -1,0 +1,24 @@
+{
+	"name": "Whatschat",
+	"short_name": "Whatschat",
+	"start_url": "/",
+	"scope": "/",
+	"display": "standalone",
+	"version": "1.0",
+	"background_color": "#ffffff",
+	"theme_color": "#0a3d62",
+	"icons": [
+		{
+			"src": "/assets/img/icons/maskable.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "maskable"
+		},
+		{
+			"src": "/assets/img/icons/apple-touch-icon.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any"
+		}
+	]
+}

@@ -210,25 +210,6 @@ final readonly class Mensaje extends MysqliConnect
 		$this->sendResponse();
 	}
 
-	// MARK: SET ULTIMO ID MENSAJE
-
-	// public function setUltimoIdMensaje(): void
-	// {
-	// 	$this->setultimoId();
-
-	// 	if (isset($_POST['ultimo_id']) && isset($_POST['id_receptor'])) {
-	// 		$this->setUltimoIdDirecto();
-	// 	}
-
-	// 	if (isset($_POST['ultimo_id']) && isset($_POST['id_grupo'])) {
-	// 		$this->setUltimoIdGrupal();
-	// 	}
-
-	// 	if (isset($_POST['ultimo_id'])) {
-	// 		$this->setUltimoIdPublico();
-	// 	}
-	// }
-
 	// MARK: SET ULTIMO ID PUBLICO
 
 	private function setUltimoIdPublico(int $ultimo_id): void

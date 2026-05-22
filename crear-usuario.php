@@ -19,12 +19,12 @@ new Usuario()->sessionRedirect();
 
 	<title>Chat</title>
 	<meta name="description" content="description">
+	<meta name="apple-mobile-web-app-title" content="Whatschat">
 
-	<link href="./manifest.jsonc" rel="manifest">
+	<link href="./manifest.json" rel="manifest">
 
 	<link href="./assets/img/icons/favicon.svg" rel="icon" type="image/svg+xml">
-	<link href="./assets/img/icons/icon-512.png" rel="icon" type="image/png">
-	<link href="./assets/img/icons/icon-512.png" rel="apple-touch-icon" type="image/png">
+	<link href="./assets/img/icons/apple-touch-icon.png" rel="apple-touch-icon" type="image/png">
 
 	<link href="./assets/fonts/rubik/rubik.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
 

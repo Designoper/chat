@@ -21,13 +21,14 @@ export default class Mensaje extends Usuario {
 
 	mostrado = false;
 
-	ringtone = document.querySelector('#ringtone');
-
-	mensajesOutput = document.querySelector('output');
-	h1 = document.querySelector('h1');
-	header = document.querySelector('header');
-	form = document.querySelector('form');
-	a = document.querySelector('a');
+	dom = {
+		header: document.querySelector('header'),
+		h1: document.querySelector('h1'),
+		output: document.querySelector('output'),
+		form: document.querySelector('form'),
+		a: document.querySelector('a'),
+		audio: document.querySelector('audio')
+	};
 
 	constructor() {
 		super();
@@ -54,28 +55,30 @@ export default class Mensaje extends Usuario {
 	setForm() {
 		for (const [key, value] of Object.entries(this.ids)) {
 			if (value !== null) {
-				this.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}"></input>`);
+				this.dom.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}"></input>`);
 			}
 		}
+	}
+
+	scrollToCurrent() {
+		const marcador = this.dom.output.querySelector("#marcador");
+
+		marcador
+			? marcador.scrollIntoView({
+				behavior: "smooth",
+				block: "center"
+			})
+			: window.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "smooth"
+			});
 	}
 
 	async getMensajes() {
 		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.mensajeData);
 		const mensajes = this.mensajesTemplate(response.content);
-		this.mensajesOutput.innerHTML = mensajes;
-		const marcador = this.mensajesOutput.querySelector("#marcador");
+		this.dom.output.innerHTML = mensajes;
 
-		if (marcador) {
-			marcador.scrollIntoView({
-				behavior: "smooth",
-				block: "center"
-			});
-		} else {
-			window.scrollTo({
-				top: document.body.scrollHeight,
-				behavior: "smooth"
-			});
-		}
 		this.formHandler();
 	}
 
@@ -88,8 +91,8 @@ export default class Mensaje extends Usuario {
 			const mensaje = JSON.parse(event.data);
 			const content = this.mensajesTemplate([mensaje]);
 
-			this.mensajesOutput.insertAdjacentHTML("beforeend", content);
-			this.ringtone.play();
+			this.dom.output.insertAdjacentHTML("beforeend", content);
+			this.dom.audio.play();
 			this.formHandler();
 		});
 	}
@@ -151,22 +154,22 @@ export default class Mensaje extends Usuario {
 
 	writeChat() {
 		if (this.nombres.nombre_receptor !== null) {
-			this.h1.insertAdjacentHTML("afterbegin", this.nombres.nombre_receptor);
-			this.a.setAttribute("href", "./sala-principal.php");
-			this.header.insertAdjacentHTML('beforeend',
+			this.dom.h1.insertAdjacentHTML("afterbegin", this.nombres.nombre_receptor);
+			this.dom.a.setAttribute("href", "./sala-principal.php");
+			this.dom.header.insertAdjacentHTML('beforeend',
 				`<svg viewBox="0 0 100 100">
-				<circle cx="50" cy="50" r="50" />
-			</svg>`);
+					<circle cx="50" cy="50" r="50" />
+				</svg>`);
 			return;
 		}
 
 		if (this.nombres.nombre_grupo !== null) {
-			this.h1.insertAdjacentHTML("afterbegin", `Grupo: ${this.nombres.nombre_grupo}`);
-			this.a.setAttribute("href", "./sala-grupal.php");
+			this.dom.h1.insertAdjacentHTML("afterbegin", `Grupo: ${this.nombres.nombre_grupo}`);
+			this.dom.a.setAttribute("href", "./sala-grupal.php");
 			return;
 		}
 
-		this.h1.insertAdjacentHTML("afterbegin", "Chat público");
-		this.a.setAttribute("href", "./sala-principal.php");
+		this.dom.h1.insertAdjacentHTML("afterbegin", "Chat público");
+		this.dom.a.setAttribute("href", "./sala-principal.php");
 	}
 }

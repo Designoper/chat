@@ -9,6 +9,8 @@ conexion.setForm();
 await conexion.getUltimoId();
 await conexion.getMensajes();
 
+conexion.scrollToCurrent();
+
 conexion.writeChat();
 
 conexion.streamMensajes(conexion.urlStreamMensajes);
