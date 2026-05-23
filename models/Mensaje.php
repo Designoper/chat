@@ -86,10 +86,10 @@ final readonly class Mensaje extends MysqliConnect
 	{
 		$name = 'ultimo_id';
 
-		if (isset($_POST[$name]) && $_POST[$name] === "") {
-			$this->ultimo_id = null;
-			return;
-		}
+		// if (isset($_POST[$name]) && $_POST[$name] === "") {
+		// 	$this->ultimo_id = null;
+		// 	return;
+		// }
 
 		$value = $_POST[$name] ?? null;
 		$min_range = 1;
@@ -210,10 +210,27 @@ final readonly class Mensaje extends MysqliConnect
 		$this->sendResponse();
 	}
 
+	public function setultimoIdLeido(): void
+	{
+		if (isset($_POST['id_receptor'])) {
+			$this->setUltimoIdDirecto();
+		}
+
+		if (isset($_POST['id_grupo'])) {
+			$this->setUltimoIdGrupal();
+		}
+
+		if (count($_POST) === 0) {
+			$this->setUltimoIdPublico();
+		}
+	}
+
 	// MARK: SET ULTIMO ID PUBLICO
 
-	private function setUltimoIdPublico(int $ultimo_id): void
+	private function setUltimoIdPublico(): void
 	{
+		$this->setUltimoId();
+		$ultimo_id = $this->ultimo_id;
 		$id_usuario = $this->id_emisor;
 
 		$statement =
@@ -237,8 +254,12 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: SET ULTIMO ID DIRECTO
 
-	private function setUltimoIdDirecto(int $id_receptor, int $ultimo_id)
+	private function setUltimoIdDirecto(): void
 	{
+		$this->setIdReceptor();
+		$this->setultimoId();
+		$id_receptor = $this->id_receptor;
+		$ultimo_id = $this->ultimo_id;
 		$id_usuario = $this->id_emisor;
 
 		$statement =
@@ -259,12 +280,20 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->execute();
 		$query->close();
+
+		$this->status = 201;
+		$this->message = 'Último id directo actualizado con éxito';
+		$this->sendResponse();
 	}
 
 	// MARK: SET ULTIMO ID GRUPAL
 
-	private function setUltimoIdGrupal(int $id_grupo, int $ultimo_id): void
+	private function setUltimoIdGrupal(): void
 	{
+		$this->setIdGrupo();
+		$this->setultimoId();
+		$id_grupo = $this->id_grupo;
+		$ultimo_id = $this->ultimo_id;
 		$id_usuario = $this->id_emisor;
 
 		$statement =
@@ -550,11 +579,11 @@ final readonly class Mensaje extends MysqliConnect
 		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		if (!empty($mensajes)) {
-			$ultimo = end($mensajes);
-			$fin = $ultimo['id_mensaje'];
-			$this->setUltimoIdDirecto($id_receptor, $fin);
-		}
+		// if (!empty($mensajes)) {
+		// 	$ultimo = end($mensajes);
+		// 	$fin = $ultimo['id_mensaje'];
+		// 	$this->setUltimoIdDirecto($id_receptor, $fin);
+		// }
 
 		// else $this->setUltimoIdDirecto($id_receptor, 0);
 
@@ -957,15 +986,15 @@ final readonly class Mensaje extends MysqliConnect
 		if ($id_receptor) {
 			// $ultimo_id = $this->getUltimoIdDirecto($id_receptor);
 			$mensajes = fn() => $this->getNuevosMensajesDirectos($id_receptor);
-			$setID = fn($test) => $this->setUltimoIdDirecto($id_receptor, $test);
+			// $setID = fn($test) => $this->setUltimoIdDirecto($id_receptor, $test);
 		} else if ($id_grupo) {
 			// $ultimo_id = $this->getUltimoIdGrupal($id_grupo);
 			$mensajes = fn() => $this->getNuevosMensajesGrupales($id_grupo);
-			$setID = fn($test) => $this->setUltimoIdGrupal($id_grupo, $test);
+			// $setID = fn($test) => $this->setUltimoIdGrupal($id_grupo, $test);
 		} else {
 			// $ultimo_id = $this->getUltimoIdPublico();
 			$mensajes = fn() => $this->getNuevosMensajesPublicos();
-			$setID = fn($test) => $this->setUltimoIdPublico($test);
+			// $setID = fn($test) => $this->setUltimoIdPublico($test);
 		}
 
 		$lastPing = 0;
@@ -986,9 +1015,10 @@ final readonly class Mensaje extends MysqliConnect
 					echo "event: mensaje\n";
 					echo "data: " . json_encode($m) . "\n\n";
 				}
-				// echo "event: new mensaje\n";
-				// echo "data: " . json_encode($ultimo_id) . "\n\n";
-				$setID($ultimo_id);
+
+				echo "event: new mensaje\n";
+				echo "data: " . json_encode($ultimo_id) . "\n\n";
+				// $setID($ultimo_id);
 			}
 
 			if (time() - $lastPing > 10) {

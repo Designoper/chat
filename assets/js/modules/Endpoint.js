@@ -35,6 +35,7 @@ export default class Endpoint extends Fetch {
 			MENSAJES: {
 				CREAR: `${this.ROOT}mensajes/crear`,
 				ELIMINAR: `${this.ROOT}mensajes`,
+				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`
 			},
 			GRUPOS: {
 				CREAR: `${this.ROOT}grupos/crear`,

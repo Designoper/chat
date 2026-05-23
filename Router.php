@@ -43,6 +43,7 @@ final class Router
         // Mensajes
         $this->setRoute($POST, 'mensajes/crear', [Mensaje::class, 'createMensaje']);
         $this->setRoute($POST, 'mensajes/[1-9]\d*$', [Mensaje::class, 'deleteMensaje']);
+        $this->setRoute($POST, 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdLeido']);
         // Grupos
         $this->setRoute($POST, 'grupos/crear', [Grupo::class, 'createGrupo']);
         $this->setRoute($POST, 'grupos/invitar', [Grupo::class, 'invitar']);

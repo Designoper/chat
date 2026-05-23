@@ -66,6 +66,11 @@ export default class Mensaje extends Usuario {
 		this.dom.output.innerHTML = mensajes;
 
 		this.formHandler();
+
+		if (response.content.length > 0) {
+			this.paramsObj.ultimo_id = response.content[response.content.length - 1].id_mensaje;
+			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.paramsObj);
+		}
 	}
 
 	streamMensajes() {
@@ -81,6 +86,13 @@ export default class Mensaje extends Usuario {
 			this.dom.output.insertAdjacentHTML("beforeend", content);
 			this.dom.audio.play();
 			this.formHandler();
+		});
+
+		evtSource.addEventListener("new mensaje", async (event) => {
+			const mensaje = JSON.parse(event.data);
+			this.paramsObj.ultimo_id = mensaje;
+
+			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.paramsObj);
 		});
 	}
 
