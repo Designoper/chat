@@ -19,6 +19,10 @@ export default class Mensaje extends Usuario {
 		id_grupo: this.urlConstructor.searchParams.get('id-grupo')
 	};
 
+	test = new URLSearchParams(location.search);
+
+	urlSearchParams = {};
+	params = Object.fromEntries(new URLSearchParams(location.search));
 	mostrado = false;
 
 	dom = {
@@ -32,6 +36,36 @@ export default class Mensaje extends Usuario {
 
 	constructor() {
 		super();
+		this.urlStreamMensajes.search = this.test;
+
+		console.log(this.test);
+		console.log(this.urlStreamMensajes);
+
+		this.test.forEach((value, key) => {
+			if (key.startsWith('id')) {
+
+				console.log(value, key);
+			}
+		});
+	}
+
+	getParams() {
+
+		const params = Object.fromEntries(new URLSearchParams(location.search));
+		// console.log(params);
+
+
+		const url = new URL(location);
+
+		// const params = url.searchParams.entries();
+		// for (const [key, value] of params) {
+		// 	// this.urlSearchParams.append(key, value);
+		// 	this.urlSearchParams[key] = value;
+		// 	console.log(key, value);
+
+		// }
+		// console.log(this.urlSearchParams);
+
 	}
 
 	async getUltimoId() {
