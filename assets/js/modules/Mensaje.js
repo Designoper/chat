@@ -2,27 +2,12 @@ import Usuario from "./Usuario.js";
 import formatearFecha from "../utils/fecha.js";
 
 export default class Mensaje extends Usuario {
-	mensajeData = {};
 
 	urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
-	urlConstructor = new URL(location.href);
-
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
 
-	nombres = {
-		nombre_receptor: this.urlConstructor.searchParams.get('nombre-receptor'),
-		nombre_grupo: this.urlConstructor.searchParams.get('nombre-grupo')
-	};
+	params = new URLSearchParams(location.search);
 
-	ids = {
-		id_receptor: this.urlConstructor.searchParams.get('id-receptor'),
-		id_grupo: this.urlConstructor.searchParams.get('id-grupo')
-	};
-
-	test = new URLSearchParams(location.search);
-
-	urlSearchParams = {};
-	params = Object.fromEntries(new URLSearchParams(location.search));
 	mostrado = false;
 
 	dom = {
@@ -36,61 +21,28 @@ export default class Mensaje extends Usuario {
 
 	constructor() {
 		super();
-		this.urlStreamMensajes.search = this.test;
-
-		console.log(this.test);
-		console.log(this.urlStreamMensajes);
-
-		this.test.forEach((value, key) => {
-			if (key.startsWith('id')) {
-
-				console.log(value, key);
-			}
-		});
-	}
-
-	getParams() {
-
-		const params = Object.fromEntries(new URLSearchParams(location.search));
-		// console.log(params);
-
-
-		const url = new URL(location);
-
-		// const params = url.searchParams.entries();
-		// for (const [key, value] of params) {
-		// 	// this.urlSearchParams.append(key, value);
-		// 	this.urlSearchParams[key] = value;
-		// 	console.log(key, value);
-
-		// }
-		// console.log(this.urlSearchParams);
-
 	}
 
 	async getUltimoId() {
-		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID, 'get', this.mensajeData);
+		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID, 'get', this.paramsObj);
 		this.prueba = response.content['id'];
 	}
 
-	setUrlStream(streamUrl) {
-
-		const params = new URLSearchParams();
-
-		for (const [key, value] of Object.entries(this.ids)) {
-			if (value !== null) {
-				params.append(key, value);
-				this.mensajeData[key] = value;
+	delete() {
+		for (const key of this.params.keys()) {
+			if (!key.startsWith("id")) {
+				this.params.delete(key);
 			}
-			streamUrl.search = params;
 		}
 	}
 
+	setObj() {
+		this.paramsObj = Object.fromEntries(this.params);
+	}
+
 	setForm() {
-		for (const [key, value] of Object.entries(this.ids)) {
-			if (value !== null) {
-				this.dom.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}"></input>`);
-			}
+		for (const [key, value] of this.params.entries()) {
+			this.dom.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}"></input>`);
 		}
 	}
 
@@ -109,16 +61,17 @@ export default class Mensaje extends Usuario {
 	}
 
 	async getMensajes() {
-		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.mensajeData);
+		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.paramsObj);
 		const mensajes = this.mensajesTemplate(response.content);
 		this.dom.output.innerHTML = mensajes;
 
 		this.formHandler();
 	}
 
-	streamMensajes(streamUrl) {
+	streamMensajes() {
 
-		const evtSource = new EventSource(streamUrl);
+		this.urlStreamMensajes.search = this.params;
+		const evtSource = new EventSource(this.urlStreamMensajes);
 		this.mostrado = true;
 
 		evtSource.addEventListener("mensaje", (event) => {
@@ -187,23 +140,33 @@ export default class Mensaje extends Usuario {
 	}
 
 	writeChat() {
-		if (this.nombres.nombre_receptor !== null) {
-			this.dom.h1.insertAdjacentHTML("afterbegin", this.nombres.nombre_receptor);
-			this.dom.a.setAttribute("href", "./sala-principal.php");
-			this.dom.header.insertAdjacentHTML('beforeend',
-				`<svg viewBox="0 0 100 100">
+		if (this.params.size === 2) {
+			// this.params.forEach((value, key) => {
+			if (this.params.has('nombre_receptor')) {
+				this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre_receptor'));
+				this.dom.a.setAttribute("href", "./sala-principal.php");
+				this.dom.header.insertAdjacentHTML('beforeend',
+					`<svg viewBox="0 0 100 100">
 					<circle cx="50" cy="50" r="50" />
 				</svg>`);
-			return;
+				return;
+			}
+			// });
 		}
 
-		if (this.nombres.nombre_grupo !== null) {
-			this.dom.h1.insertAdjacentHTML("afterbegin", `Grupo: ${this.nombres.nombre_grupo}`);
-			this.dom.a.setAttribute("href", "./sala-grupal.php");
-			return;
+		if (this.params.size === 2) {
+			this.params.forEach((value, key) => {
+				if (key.startsWith('nombre_grupo')) {
+					this.dom.h1.insertAdjacentHTML("afterbegin", `Grupo: ${value}`);
+					this.dom.a.setAttribute("href", "./sala-grupal.php");
+					return;
+				}
+			});
 		}
 
-		this.dom.h1.insertAdjacentHTML("afterbegin", "Chat público");
-		this.dom.a.setAttribute("href", "./sala-principal.php");
+		if (this.params.size === 0) {
+			this.dom.h1.insertAdjacentHTML("afterbegin", "Chat público");
+			this.dom.a.setAttribute("href", "./sala-principal.php");
+		}
 	}
 }

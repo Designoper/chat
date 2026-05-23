@@ -500,7 +500,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$message =
 			$mensajes
-			? 'Mensajes obtenidos.'
+			? 'Mensajes públicos obtenidos.'
 			: 'No hay ningún mensaje.';
 
 		$this->status = 200;
@@ -560,7 +560,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$message =
 			$mensajes
-			? 'Mensajes obtenidos.'
+			? 'Mensajes directos obtenidos.'
 			: 'No hay ningún mensaje.';
 
 		$this->status = 200;
@@ -604,7 +604,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$message =
 			$mensajes
-			? 'Mensajes obtenidos.'
+			? 'Mensajes grupales obtenidos.'
 			: 'No hay ningún mensaje.';
 
 		$this->status = 200;

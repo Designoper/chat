@@ -2,7 +2,7 @@ import Mensaje from "./Mensaje.js";
 
 export default class Conexion extends Mensaje {
 	urlStreamConexion = new URL(this.ENDPOINTS.GET.CONEXION.STREAM);
-	endpointConexion = this.ENDPOINTS.POST.CONEXION.ESTADO;
+	// endpointConexion = this.ENDPOINTS.POST.CONEXION.ESTADO;
 
 	conexionData = {};
 
@@ -11,8 +11,10 @@ export default class Conexion extends Mensaje {
 	}
 
 	// MARK: STREAM CONEXION
-	streamConexion(urlStream) {
-		const evtSource = new EventSource(urlStream);
+	streamConexion() {
+
+		this.urlStreamConexion.search = this.params;
+		const evtSource = new EventSource(this.urlStreamConexion);
 
 		// evtSource.addEventListener("ping", async () => {
 		// 	await this.fetchWithoutForm(this.endpointConexion, 'post', this.conexionData);
