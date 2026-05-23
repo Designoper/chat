@@ -85,12 +85,6 @@ final readonly class Mensaje extends MysqliConnect
 	private function setultimoId(): void
 	{
 		$name = 'ultimo_id';
-
-		// if (isset($_POST[$name]) && $_POST[$name] === "") {
-		// 	$this->ultimo_id = null;
-		// 	return;
-		// }
-
 		$value = $_POST[$name] ?? null;
 		$min_range = 1;
 		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
@@ -120,9 +114,11 @@ final readonly class Mensaje extends MysqliConnect
 		$id_usuario = $this->id_emisor;
 
 		$statement =
-			"SELECT id_mensaje
-			FROM ultimos_mensajes_leidos_publicos
-			WHERE id_usuario = ?";
+			"SELECT COALESCE((
+				SELECT id_mensaje
+				FROM ultimos_mensajes_leidos_publicos
+				WHERE id_usuario = ?
+			), 0) AS id_mensaje";
 
 		$query = $this->connection->prepare($statement);
 
@@ -133,14 +129,13 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->execute();
 
-		$query->bind_result($last_id);
-		$query->fetch();
+		$last_id = $query->get_result()->fetch_assoc();
 
 		$query->close();
 
 		$this->status = 200;
-		$this->message = 'Último id público';
-		$this->content = ['id' => $last_id];
+		$this->message = 'Último id público obtenido con éxito';
+		$this->content = $last_id;
 		$this->sendResponse();
 	}
 
@@ -151,10 +146,12 @@ final readonly class Mensaje extends MysqliConnect
 		$id_usuario = $this->id_emisor;
 
 		$statement =
-			"SELECT id_mensaje
-			FROM ultimos_mensajes_leidos_directos
-			WHERE id_usuario = ?
-			AND id_receptor = ?";
+			"SELECT COALESCE((
+				SELECT id_mensaje
+				FROM ultimos_mensajes_leidos_directos
+				WHERE id_usuario = ?
+				AND id_receptor = ?
+			), 0) AS id_mensaje";
 
 		$query = $this->connection->prepare($statement);
 
@@ -166,14 +163,13 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->execute();
 
-		$query->bind_result($last_id);
-		$query->fetch();
+		$last_id = $query->get_result()->fetch_assoc();
 
 		$query->close();
 
 		$this->status = 200;
-		$this->message = 'Último id directo';
-		$this->content = ['id' => $last_id];
+		$this->message = 'Último id directo obtenido con éxito';
+		$this->content = $last_id;
 		$this->sendResponse();
 	}
 
@@ -184,10 +180,12 @@ final readonly class Mensaje extends MysqliConnect
 		$id_usuario = $this->id_emisor;
 
 		$statement =
-			"SELECT id_mensaje
-			FROM ultimos_mensajes_leidos_grupales
-			WHERE id_usuario = ?
-			AND id_grupo = ?";
+			"SELECT COALESCE((
+				SELECT id_mensaje
+				FROM ultimos_mensajes_leidos_grupales
+				WHERE id_usuario = ?
+				AND id_grupo = ?
+			), 0) AS id_mensaje";
 
 		$query = $this->connection->prepare($statement);
 
@@ -199,14 +197,13 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->execute();
 
-		$query->bind_result($last_id);
-		$query->fetch();
+		$last_id = $query->get_result()->fetch_assoc();
 
 		$query->close();
 
 		$this->status = 200;
-		$this->message = 'Último id grupal';
-		$this->content = ['id' => $last_id];
+		$this->message = 'Último id grupal obtenido con éxito';
+		$this->content = $last_id;
 		$this->sendResponse();
 	}
 
@@ -250,6 +247,10 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->execute();
 		$query->close();
+
+		$this->status = 201;
+		$this->message = "Último id público: $ultimo_id";
+		$this->sendResponse();
 	}
 
 	// MARK: SET ULTIMO ID DIRECTO
@@ -282,7 +283,7 @@ final readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = 'Último id directo actualizado con éxito';
+		$this->message = "Último id directo: $ultimo_id";
 		$this->sendResponse();
 	}
 
@@ -314,6 +315,10 @@ final readonly class Mensaje extends MysqliConnect
 
 		$query->execute();
 		$query->close();
+
+		$this->status = 201;
+		$this->message = "Último id grupal: $ultimo_id";
+		$this->sendResponse();
 	}
 
 	// MARK: COUNT UNREAD MESSAGES
@@ -373,7 +378,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$this->status = 200;
 		$this->message = 'Número de mensajes directos no leídos obtenido con éxito';
-		$this->content = ['num_mensajes' => $result['num_mensajes']];
+		$this->content = $result;
 		$this->sendResponse();
 	}
 
@@ -417,7 +422,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$this->status = 200;
 		$this->message = 'Número de mensajes grupales no leídos obtenido con éxito';
-		$this->content = ['num_mensajes' => $result['num_mensajes']];
+		$this->content = $result;
 		$this->sendResponse();
 	}
 
@@ -453,7 +458,7 @@ final readonly class Mensaje extends MysqliConnect
 
 		$this->status = 200;
 		$this->message = 'Número de mensajes públicos no leídos obtenido con éxito';
-		$this->content = ['num_mensajes' => $result['num_mensajes']];
+		$this->content = $result;
 		$this->sendResponse();
 	}
 
@@ -615,9 +620,9 @@ final readonly class Mensaje extends MysqliConnect
 		$id_mensaje = $this->id_mensaje;
 
 		$statement =
-			"SELECT mensajes.id_emisor
+			"SELECT id_emisor
 			FROM mensajes
-			WHERE mensajes.id_mensaje = ?";
+			WHERE id_mensaje = ?";
 
 		$query = $this->connection->prepare($statement);
 
@@ -627,10 +632,11 @@ final readonly class Mensaje extends MysqliConnect
 		);
 
 		$query->execute();
-		$autor = $query->get_result()->fetch_assoc();
+		$query->bind_result($autor);
+		$query->fetch();
 		$query->close();
 
-		if ($autor['id_emisor'] !== $id_usuario) {
+		if ($autor !== $id_usuario) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el autor del mensaje');
 			$this->checkIntegrityErrors();

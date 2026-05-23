@@ -25,7 +25,7 @@ export default class Mensaje extends Usuario {
 
 	async getUltimoId() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID, 'get', this.paramsObj);
-		this.prueba = response.content['id'];
+		this.prueba = response.content.id_mensaje;
 	}
 
 	delete() {
