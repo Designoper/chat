@@ -461,37 +461,6 @@ final readonly class Mensaje extends MysqliConnect
 
 	public function readMensajes(): void
 	{
-		// $allowed = ['id_receptor', 'id_grupo'];
-
-		// // Si hay parámetros no permitidos
-		// foreach ($_GET as $key => $value) {
-		// 	if (!in_array($key, $allowed)) {
-		// 		http_response_code(400);
-		// 		echo json_encode(['error' => "Parámetro no permitido: $key"]);
-		// 		return;
-		// 	}
-		// }
-
-		// // Si llegan ambos, error
-		// if (isset($_GET['id_receptor']) && isset($_GET['id_grupo'])) {
-		// 	http_response_code(400);
-		// 	echo json_encode(['error' => 'No puedes usar id_receptor e id_grupo a la vez']);
-		// 	return;
-		// }
-
-		// if (isset($_GET['id_receptor'])) {
-		// 	$this->readMensajesDirectos();
-		// 	return;
-		// }
-
-		// if (isset($_GET['id_grupo'])) {
-		// 	$this->readMensajesGrupales();
-		// 	return;
-		// }
-
-		// // Ningún parámetro → mensajes públicos
-		// $this->readMensajesPublicos();
-
 		if (isset($_GET['id_receptor'])) {
 			$this->readMensajesDirectos();
 		}
@@ -578,14 +547,6 @@ final readonly class Mensaje extends MysqliConnect
 		$query->execute();
 		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
-
-		// if (!empty($mensajes)) {
-		// 	$ultimo = end($mensajes);
-		// 	$fin = $ultimo['id_mensaje'];
-		// 	$this->setUltimoIdDirecto($id_receptor, $fin);
-		// }
-
-		// else $this->setUltimoIdDirecto($id_receptor, 0);
 
 		$message =
 			$mensajes
@@ -977,24 +938,15 @@ final readonly class Mensaje extends MysqliConnect
 		echo str_pad('', 4096) . "\n";
 		flush();
 
-		// $this->setIdReceptor();
-		// $id_receptor = $this->id_receptor;
-
 		$id_receptor = isset($_GET["id_receptor"]) ? (int) $_GET["id_receptor"] : null;
 		$id_grupo    = isset($_GET["id_grupo"])    ? (int) $_GET["id_grupo"]    : null;
 
 		if ($id_receptor) {
-			// $ultimo_id = $this->getUltimoIdDirecto($id_receptor);
 			$mensajes = fn() => $this->getNuevosMensajesDirectos($id_receptor);
-			// $setID = fn($test) => $this->setUltimoIdDirecto($id_receptor, $test);
 		} else if ($id_grupo) {
-			// $ultimo_id = $this->getUltimoIdGrupal($id_grupo);
 			$mensajes = fn() => $this->getNuevosMensajesGrupales($id_grupo);
-			// $setID = fn($test) => $this->setUltimoIdGrupal($id_grupo, $test);
 		} else {
-			// $ultimo_id = $this->getUltimoIdPublico();
 			$mensajes = fn() => $this->getNuevosMensajesPublicos();
-			// $setID = fn($test) => $this->setUltimoIdPublico($test);
 		}
 
 		$lastPing = 0;
@@ -1018,7 +970,6 @@ final readonly class Mensaje extends MysqliConnect
 
 				echo "event: new mensaje\n";
 				echo "data: " . json_encode($ultimo_id) . "\n\n";
-				// $setID($ultimo_id);
 			}
 
 			if (time() - $lastPing > 10) {
