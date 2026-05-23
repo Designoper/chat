@@ -954,7 +954,7 @@ final readonly class Mensaje extends MysqliConnect
 		$id_receptor = isset($_GET["id_receptor"]) ? (int) $_GET["id_receptor"] : null;
 		$id_grupo    = isset($_GET["id_grupo"])    ? (int) $_GET["id_grupo"]    : null;
 
-		if (isset($_GET["id_receptor"])) {
+		if ($id_receptor) {
 			// $ultimo_id = $this->getUltimoIdDirecto($id_receptor);
 			$mensajes = fn() => $this->getNuevosMensajesDirectos($id_receptor);
 			$setID = fn($test) => $this->setUltimoIdDirecto($id_receptor, $test);

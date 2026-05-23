@@ -2,9 +2,6 @@ import Mensaje from "./Mensaje.js";
 
 export default class Conexion extends Mensaje {
 	urlStreamConexion = new URL(this.ENDPOINTS.GET.CONEXION.STREAM);
-	// endpointConexion = this.ENDPOINTS.POST.CONEXION.ESTADO;
-
-	conexionData = {};
 
 	constructor() {
 		super();
