@@ -147,6 +147,8 @@ final readonly class Conexion extends MysqliConnect
 		$this->sendResponse();
 	}
 
+	// MARK: GET CONEXION PUBLICA
+
 	private function getConexionPublica(): array
 	{
 		$id_usuario = $this->id_usuario;
@@ -269,13 +271,12 @@ final readonly class Conexion extends MysqliConnect
 
 		if (isset($_GET['id_receptor'])) {
 			$this->setIdReceptor();
+			$this->checkValidationErrors();
 			$getConexion = fn() => $this->getConexionDirecta();
-			// $tipo = "directa";
 		} else if (isset($_GET['id_grupo'])) {
 			$this->setIdGrupo();
+			$this->checkValidationErrors();
 			$getConexion = fn() => $this->getConexionGrupal();
-			// $tipo = "grupal";
-
 		} else {
 			$getConexion = fn() => $this->getConexionPublica();
 		}
