@@ -102,6 +102,8 @@ final readonly class Conexion extends MysqliConnect
 	private function setConexionDirecta(): void
 	{
 		$this->setIdReceptor();
+		$this->checkValidationErrors();
+
 		$id_receptor = $this->id_receptor;
 		$id_usuario = $this->id_usuario;
 
@@ -131,6 +133,8 @@ final readonly class Conexion extends MysqliConnect
 	private function setConexionGrupal(): void
 	{
 		$this->setIdGrupo();
+		$this->checkValidationErrors();
+
 		$id_grupo = $this->id_grupo;
 		$id_usuario = $this->id_usuario;
 
