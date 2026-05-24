@@ -11,7 +11,7 @@ final readonly class Mensaje extends MysqliConnect
 	private ?int $id_emisor;
 	private int $id_receptor;
 	private int $id_grupo;
-	private ?int $ultimo_id;
+	private int $ultimo_id;
 
 	public function __construct()
 	{
@@ -881,6 +881,7 @@ final readonly class Mensaje extends MysqliConnect
 	private function getNuevosMensajesGrupales(int $id_grupo): array
 	{
 		$id_usuario = $this->id_emisor;
+
 		$statement =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,

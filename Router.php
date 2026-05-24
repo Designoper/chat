@@ -88,7 +88,7 @@ final class Router
                 echo json_encode([
                     'message' => 'La ruta solicitada no existe',
                     'requested_path' => $requestUri
-                ]);
+                ], JSON_UNESCAPED_UNICODE);
                 return;
 
             default:
