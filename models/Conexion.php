@@ -155,7 +155,7 @@ final readonly class Conexion extends MysqliConnect
 			"SELECT COALESCE((
 				SELECT last_seen
 				FROM conexion_publica
-				WHERE id_usuario = ?
+				WHERE id_usuario = !?
 			), 0) AS last_seen";
 
 		$query = $this->connection->prepare($statement);
@@ -217,7 +217,7 @@ final readonly class Conexion extends MysqliConnect
 			"SELECT COALESCE((
 				SELECT last_seen
 				FROM conexion_grupal
-				WHERE id_usuario = ?
+				WHERE id_usuario != ?
 				AND id_grupo = ?
 			), 0) AS last_seen";
 
@@ -232,8 +232,6 @@ final readonly class Conexion extends MysqliConnect
 		$query->execute();
 
 		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-
-		// $conexion = $conexion['last_seen'];
 
 		$query->close();
 
