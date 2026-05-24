@@ -3,9 +3,19 @@
 Options -MultiViews
 
 RewriteEngine On
+
+# No reescribir audios
+# RewriteRule ^audios/ - [L]
+
+# # No reescribir imágenes
+# RewriteRule ^img/ - [L]
+
+# # No reescribir JS/CSS
+# RewriteRule ^(js|css)/ - [L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ ./Router.php [QSA,L]
+RewriteRule ^(.*)$ /Router.php [QSA,L]
 
 # Bloquear archivos sensibles por extensión
 <FilesMatch "\.(env|sql|bak|config|ini|log|sh)$">

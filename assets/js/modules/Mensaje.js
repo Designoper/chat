@@ -7,6 +7,7 @@ export default class Mensaje extends Usuario {
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
 
 	params = new URLSearchParams(location.search);
+	ringtone = new Audio("../../../assets/audio/ringtone.mp3");
 
 	mostrado = false;
 
@@ -16,7 +17,6 @@ export default class Mensaje extends Usuario {
 		output: document.querySelector('output'),
 		form: document.querySelector('form'),
 		a: document.querySelector('a'),
-		audio: document.querySelector('audio')
 	};
 
 	constructor() {
@@ -84,7 +84,8 @@ export default class Mensaje extends Usuario {
 			const content = this.mensajesTemplate([mensaje]);
 
 			this.dom.output.insertAdjacentHTML("beforeend", content);
-			this.dom.audio.play();
+			this.ringtone.play();
+
 			this.formHandler();
 		});
 
