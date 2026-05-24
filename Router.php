@@ -49,7 +49,7 @@ final class Router
         $this->setRoute($POST, 'grupos/invitar', [Grupo::class, 'invitar']);
         $this->setRoute($POST, 'grupos/aceptar', [Grupo::class, 'aceptarInvitacion']);
         // Conexión
-        // $this->setRoute('POST', 'conexion/estado', [Conexion::class, 'setConexion']);
+        $this->setRoute($POST, 'conexion/estado', [Conexion::class, 'setConexion']);
 
         $this->handleRequest();
     }
