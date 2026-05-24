@@ -831,8 +831,9 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET NUEVOS MENSAJES DIRECTOS
 
-	private function getNuevosMensajesDirectos(int $id_receptor): array
+	private function getNuevosMensajesDirectos(): array
 	{
+		$id_receptor = $this->id_receptor;
 		$id_emisor = $this->id_emisor;
 
 		$statement =
@@ -878,8 +879,9 @@ final readonly class Mensaje extends MysqliConnect
 
 	// MARK: GET NUEVOS MENSAJES GRUPALES
 
-	private function getNuevosMensajesGrupales(int $id_grupo): array
+	private function getNuevosMensajesGrupales(): array
 	{
+		$id_grupo = $this->id_grupo;
 		$id_usuario = $this->id_emisor;
 
 		$statement =
@@ -945,16 +947,15 @@ final readonly class Mensaje extends MysqliConnect
 		echo str_pad('', 4096) . "\n";
 		flush();
 
-		$id_receptor = isset($_GET["id_receptor"]) ? (int) $_GET["id_receptor"] : null;
-		$id_grupo    = isset($_GET["id_grupo"])    ? (int) $_GET["id_grupo"]    : null;
+		if (isset($_GET['id_receptor'])) {
+			$this->setIdReceptor();
+			$mensajes = fn() => $this->getNuevosMensajesDirectos();
+		} else if (isset($_GET['id_grupo'])) {
+			$this->setIdGrupo();
+			$mensajes = fn() => $this->getNuevosMensajesGrupales();
+		} else $mensajes = fn() => $this->getNuevosMensajesPublicos();
 
-		if ($id_receptor) {
-			$mensajes = fn() => $this->getNuevosMensajesDirectos($id_receptor);
-		} else if ($id_grupo) {
-			$mensajes = fn() => $this->getNuevosMensajesGrupales($id_grupo);
-		} else {
-			$mensajes = fn() => $this->getNuevosMensajesPublicos();
-		}
+		$this->checkValidationErrors();
 
 		$lastPing = 0;
 
