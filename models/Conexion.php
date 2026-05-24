@@ -54,6 +54,8 @@ final readonly class Conexion extends MysqliConnect
 			: $this->errors->setValidationError($error_message);
 	}
 
+	// MARK: SET CONEXION
+
 	public function setConexion(): void
 	{
 		if (isset($_POST['id_receptor'])) {
@@ -68,6 +70,8 @@ final readonly class Conexion extends MysqliConnect
 			$this->setConexionPublica();
 		}
 	}
+
+	// MARK: SET CONEXION PUBLICA
 
 	private function setConexionPublica(): void
 	{
@@ -92,6 +96,8 @@ final readonly class Conexion extends MysqliConnect
 		$this->message = "Última conexion pública establecida";
 		$this->sendResponse();
 	}
+
+	// MARK: SET CONEXION DIRECTA
 
 	private function setConexionDirecta(): void
 	{
@@ -119,6 +125,8 @@ final readonly class Conexion extends MysqliConnect
 		$this->message = "Última conexion directa establecida";
 		$this->sendResponse();
 	}
+
+	// MARK: SET CONEXION GRUPAL
 
 	private function setConexionGrupal(): void
 	{
@@ -176,6 +184,8 @@ final readonly class Conexion extends MysqliConnect
 		return $conexion;
 	}
 
+	// MARK: GET CONEXION DIRECTA
+
 	private function getConexionDirecta(): int
 	{
 		$id_receptor = $this->id_receptor;
@@ -209,6 +219,8 @@ final readonly class Conexion extends MysqliConnect
 
 		return (int) $last_seen;
 	}
+
+	// MARK: GET CONEXION GRUPAL
 
 	private function getConexionGrupal(): array
 	{
