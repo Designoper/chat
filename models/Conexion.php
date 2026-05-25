@@ -169,7 +169,7 @@ final readonly class Conexion extends MysqliConnect
 			"SELECT COALESCE((
 				SELECT last_seen
 				FROM conexion_publica
-				WHERE id_usuario = !?
+				WHERE id_usuario != ?
 			), 0) AS last_seen";
 
 		$query = $this->connection->prepare($statement);
