@@ -217,9 +217,9 @@ final readonly class Mensaje extends MysqliConnect
 			$this->setUltimoIdGrupal();
 		}
 
-		if (count($_POST) === 0) {
-			$this->setUltimoIdPublico();
-		}
+		// if (isset($_POST['ultimo_id'])) {
+		$this->setUltimoIdPublico();
+		// }
 	}
 
 	// MARK: SET ULTIMO ID PUBLICO

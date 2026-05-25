@@ -66,9 +66,9 @@ final readonly class Conexion extends MysqliConnect
 			$this->setConexionGrupal();
 		}
 
-		if (count($_POST) === 0) {
-			$this->setConexionPublica();
-		}
+		// if (count($_POST) === 0) {
+		$this->setConexionPublica();
+		// }
 	}
 
 	// MARK: SET CONEXION PUBLICA
@@ -166,11 +166,13 @@ final readonly class Conexion extends MysqliConnect
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"SELECT COALESCE((
-				SELECT last_seen
-				FROM conexion_publica
-				WHERE id_usuario != ?
-			), 0) AS last_seen";
+			"SELECT nombre_usuario, COALESCE((
+				last_seen), 0) AS last_seen
+			FROM usuarios
+			LEFT JOIN conexion_publica
+			ON usuarios.id_usuario = conexion_publica.id_usuario
+			WHERE usuarios.id_usuario != ?
+			ORDER BY nombre_usuario ASC";
 
 		$query = $this->connection->prepare($statement);
 
@@ -190,18 +192,20 @@ final readonly class Conexion extends MysqliConnect
 
 	// MARK: GET CONEXION DIRECTA
 
-	private function getConexionDirecta(): int
+	private function getConexionDirecta(): array
 	{
 		$id_receptor = $this->id_receptor;
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"SELECT COALESCE((
-				SELECT last_seen
-				FROM conexion_directa
-				WHERE id_usuario = ?
-				AND id_receptor = ?
-			), 0) AS last_seen";
+			"SELECT nombre_usuario, COALESCE((
+			last_seen), 0) AS last_seen
+			FROM usuarios
+			LEFT JOIN conexion_directa
+			ON usuarios.id_usuario = conexion_directa.id_usuario
+			WHERE conexion_directa.id_usuario = ?
+		 	AND conexion_directa.id_receptor = ?
+			ORDER BY nombre_usuario ASC";
 
 		$query = $this->connection->prepare($statement);
 
@@ -213,15 +217,11 @@ final readonly class Conexion extends MysqliConnect
 
 		$query->execute();
 
-		// $query->store_result();
-
-		// 🔥 NO usar get_result() en Hostinger
-		$query->bind_result($last_seen);
-		$query->fetch();
+		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 
 		$query->close();
 
-		return (int) $last_seen;
+		return $conexion;
 	}
 
 	// MARK: GET CONEXION GRUPAL
@@ -232,19 +232,26 @@ final readonly class Conexion extends MysqliConnect
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"SELECT COALESCE((
-				SELECT last_seen
-				FROM conexion_grupal
-				WHERE id_usuario != ?
-				AND id_grupo = ?
-			), 0) AS last_seen";
+			"SELECT
+				usuarios.nombre_usuario,
+				COALESCE(conexion_grupal.last_seen, 0) AS last_seen
+			FROM usuarios
+			LEFT JOIN conexion_grupal
+				ON usuarios.id_usuario = conexion_grupal.id_usuario
+			LEFT JOIN membresias
+				ON usuarios.id_usuario = membresias.id_usuario
+			WHERE membresias.id_grupo = ?
+			AND membresias.id_usuario != ?
+			AND (membresias.rol = 'fundador' OR membresias.rol = 'miembro')
+			ORDER BY usuarios.nombre_usuario ASC;
+";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"ii",
-			$id_usuario,
-			$id_grupo
+			$id_grupo,
+			$id_usuario
 		);
 
 		$query->execute();
@@ -289,24 +296,33 @@ final readonly class Conexion extends MysqliConnect
 			$this->setIdReceptor();
 			$this->checkValidationErrors();
 			$getConexion = fn() => $this->getConexionDirecta();
+			$tipo = "directo";
 		} else if (isset($_GET['id_grupo'])) {
 			$this->setIdGrupo();
 			$this->checkValidationErrors();
 			$getConexion = fn() => $this->getConexionGrupal();
+			$tipo = "grupal";
 		} else {
 			$getConexion = fn() => $this->getConexionPublica();
+			$tipo = "publico";
 		}
 
 		$lastPing = 0;
 
 		$conexion = $getConexion();
 
-		$estado = (time() - $conexion > 10)
-			? 'offline'
-			: 'online';
+		$array = [];
+
+		// MARK: CORRECTO
+		foreach ($conexion as $c) {
+			$array[] = [
+				'usuario' => $c['nombre_usuario'],
+				'estado'  => (time() - $c['last_seen'] > 10) ? 'offline' : 'online'
+			];
+		}
 
 		echo "event: initial state\n";
-		echo "data: $estado\n\n";
+		echo "data: " . json_encode($array) . "\n\n";
 
 		while (true) {
 
@@ -316,14 +332,19 @@ final readonly class Conexion extends MysqliConnect
 
 			$conexion = $getConexion();
 
-			$nuevoEstado = (time() - $conexion > 10)
-				? 'offline'
-				: 'online';
+			$newArray = [];
 
-			if ($nuevoEstado !== $estado) {
+			foreach ($conexion as $c) {
+				$newArray[] = [
+					'usuario' => $c['nombre_usuario'],
+					'estado'  => (time() - $c['last_seen'] > 10) ? 'offline' : 'online'
+				];
+			}
+
+			if ($newArray !== $array) {
 				echo "event: cambio\n";
-				echo "data: $nuevoEstado\n\n";
-				$estado = $nuevoEstado;
+				echo "data: " . json_encode($newArray) . "\n\n";
+				$array = $newArray;
 			}
 
 			if (time() - $lastPing > 5) {

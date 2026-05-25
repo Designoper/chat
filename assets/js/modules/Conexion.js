@@ -14,18 +14,20 @@ export default class Conexion extends Mensaje {
 		const evtSource = new EventSource(this.urlStreamConexion);
 
 		evtSource.addEventListener("ping", async () => {
-			await this.fetchWithoutForm(this.ENDPOINTS.POST.CONEXION.ESTADO, 'post', this.params);
+			await this.fetchWithoutForm(this.ENDPOINTS.POST.CONEXION.ESTADO, 'post', this.paramsObj);
+			console.log(this.paramsObj);
 		});
 
 		evtSource.addEventListener("initial state", (event) => {
-			const state = event.data;
+			const state = JSON.parse(event.data);
+			console.log(state);
 			this.circle = document.querySelector('circle');
-			this.circle.setAttribute('class', state);
+			this.circle.setAttribute('class', state.estado);
 		});
 
 		evtSource.addEventListener("cambio", (event) => {
-			const state = event.data;
-			this.circle.setAttribute('class', state);
+			const state = JSON.parse(event.data);
+			document.querySelector('circle').setAttribute('class', state.estado);
 		});
 	}
 }
