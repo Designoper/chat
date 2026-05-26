@@ -81,7 +81,7 @@ final readonly class Conexion extends MysqliConnect
 			"INSERT INTO conexion_publica (id_usuario, last_seen)
 			VALUES (?, UNIX_TIMESTAMP())
 			ON DUPLICATE KEY UPDATE
-				last_seen = UNIX_TIMESTAMP();";
+				last_seen = UNIX_TIMESTAMP()";
 
 		$query = $this->connection->prepare($statement);
 
@@ -93,7 +93,7 @@ final readonly class Conexion extends MysqliConnect
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Última conexion pública establecida";
+		$this->message = "Última conexión pública establecida";
 		$this->sendResponse();
 	}
 
@@ -111,7 +111,7 @@ final readonly class Conexion extends MysqliConnect
 			"INSERT INTO conexion_directa (id_usuario, id_receptor, last_seen)
 			VALUES (?, ?, UNIX_TIMESTAMP())
 			ON DUPLICATE KEY UPDATE
-				last_seen = UNIX_TIMESTAMP();";
+				last_seen = UNIX_TIMESTAMP()";
 
 		$query = $this->connection->prepare($statement);
 
@@ -124,7 +124,7 @@ final readonly class Conexion extends MysqliConnect
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Última conexion directa establecida";
+		$this->message = "Última conexión directa establecida";
 		$this->sendResponse();
 	}
 
@@ -142,7 +142,7 @@ final readonly class Conexion extends MysqliConnect
 			"INSERT INTO conexion_grupal (id_usuario, id_grupo, last_seen)
 			VALUES (?, ?, UNIX_TIMESTAMP())
 			ON DUPLICATE KEY UPDATE
-				last_seen = UNIX_TIMESTAMP();";
+				last_seen = UNIX_TIMESTAMP()";
 
 		$query = $this->connection->prepare($statement);
 
@@ -155,7 +155,7 @@ final readonly class Conexion extends MysqliConnect
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Última conexion grupal establecida";
+		$this->message = "Última conexión grupal establecida";
 		$this->sendResponse();
 	}
 
@@ -243,8 +243,7 @@ final readonly class Conexion extends MysqliConnect
 			WHERE membresias.id_grupo = ?
 			AND membresias.id_usuario != ?
 			AND (membresias.rol = 'fundador' OR membresias.rol = 'miembro')
-			ORDER BY usuarios.nombre_usuario ASC;
-";
+			ORDER BY usuarios.nombre_usuario ASC";
 
 		$query = $this->connection->prepare($statement);
 
