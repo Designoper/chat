@@ -309,20 +309,7 @@ final readonly class Conexion extends MysqliConnect
 
 		$lastPing = 0;
 
-		$conexion = $getConexion();
-
 		$array = [];
-
-		// MARK: CORRECTO
-		foreach ($conexion as $c) {
-			$array[] = [
-				'usuario' => $c['nombre_usuario'],
-				'estado'  => (time() - $c['last_seen'] > 10) ? 'offline' : 'online'
-			];
-		}
-
-		echo "event: initial state\n";
-		echo "data: " . json_encode($array) . "\n\n";
 
 		while (true) {
 
@@ -342,7 +329,7 @@ final readonly class Conexion extends MysqliConnect
 			}
 
 			if ($newArray !== $array) {
-				echo "event: cambio\n";
+				echo "event: conexion $tipo\n";
 				echo "data: " . json_encode($newArray) . "\n\n";
 				$array = $newArray;
 			}
