@@ -63,31 +63,31 @@ final readonly class Grupo extends MysqliConnect
 
 	// MARK: READ GRUPOS
 
-	public function readGrupos(): void
-	{
-		$statement =
-			"SELECT grupos.id_grupo, grupos.nombre_grupo, membresias.id_usuario, membresias.rol, usuarios.nombre_usuario
-			FROM grupos
-			LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
-			LEFT JOIN usuarios on membresias.id_usuario = usuarios.id_usuario
-			ORDER BY grupos.nombre_grupo ASC";
+	// public function readGrupos(): void
+	// {
+	// 	$statement =
+	// 		"SELECT grupos.id_grupo, grupos.nombre_grupo, membresias.id_usuario, membresias.rol, usuarios.nombre_usuario
+	// 		FROM grupos
+	// 		LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
+	// 		LEFT JOIN usuarios on membresias.id_usuario = usuarios.id_usuario
+	// 		ORDER BY grupos.nombre_grupo ASC";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->execute();
-		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
+	// 	$query->execute();
+	// 	$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+	// 	$query->close();
 
-		$message =
-			$grupos
-			? 'Grupos obtenidos.'
-			: 'No hay ningún grupo.';
+	// 	$message =
+	// 		$grupos
+	// 		? 'Grupos obtenidos.'
+	// 		: 'No hay ningún grupo.';
 
-		$this->status = 200;
-		$this->message = $message;
-		$this->content = $grupos;
-		$this->sendResponse();
-	}
+	// 	$this->status = 200;
+	// 	$this->message = $message;
+	// 	$this->content = $grupos;
+	// 	$this->sendResponse();
+	// }
 
 	// MARK: READ GRUPOS MIEMBRO
 

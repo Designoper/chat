@@ -16,7 +16,7 @@ export default class Endpoint extends Fetch {
 				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`,
 			},
 			GRUPOS: {
-				GRUPOS: `${this.ROOT}grupos`,
+				// GRUPOS: `${this.ROOT}grupos`,
 				MIEMBRO: `${this.ROOT}grupos/miembro`,
 				PENDIENTE: `${this.ROOT}grupos/pendiente`,
 				NO_MIEMBRO: `${this.ROOT}grupos/no-miembro`,
