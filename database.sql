@@ -5,19 +5,19 @@ USE chat;
 SET default_storage_engine=InnoDB;
 
 CREATE TABLE usuarios (
-    id_usuario INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
     nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE grupos (
-    id_grupo INT PRIMARY KEY AUTO_INCREMENT,
+    id_grupo INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
     nombre_grupo VARCHAR(150) NOT NULL UNIQUE
 );
 
 CREATE TABLE membresias (
-    id_usuario INT,
-    id_grupo INT,
+    id_usuario INT UNSIGNED,
+    id_grupo INT UNSIGNED,
     rol ENUM ('fundador','miembro','pendiente') NOT NULL,
 
     PRIMARY KEY (id_usuario, id_grupo),
@@ -32,12 +32,12 @@ CREATE TABLE membresias (
 );
 
 CREATE TABLE mensajes (
-    id_mensaje INT PRIMARY KEY AUTO_INCREMENT,
+    id_mensaje INT PRIMARY KEY AUTO_INCREMENT UNSIGNED,
     contenido TEXT NOT NULL,
     fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_emisor INT NOT NULL,
-    id_receptor INT NULL,
-    id_grupo INT NULL,
+    id_emisor INT NOT NULL UNSIGNED,
+    id_receptor INT NULL UNSIGNED,
+    id_grupo INT NULL UNSIGNED,
 
     FOREIGN KEY (id_emisor)
         REFERENCES usuarios(id_usuario)
@@ -52,10 +52,9 @@ CREATE TABLE mensajes (
         ON DELETE SET NULL
 );
 
--- 🔥 PRESENCIA PÚBLICA (solo last_seen)
 CREATE TABLE conexion_publica (
-    id_usuario INT NOT NULL,
-    last_seen INT UNSIGNED NOT NULL DEFAULT 0,
+    id_usuario INT NOT NULL UNSIGNED,
+    last_seen INT NOT NULL UNSIGNED,
 
     UNIQUE KEY conect_publico (id_usuario),
 
@@ -64,11 +63,10 @@ CREATE TABLE conexion_publica (
         ON DELETE CASCADE
 );
 
--- 🔥 PRESENCIA DIRECTA (usuario ↔ receptor)
 CREATE TABLE conexion_directa (
-    id_usuario INT NOT NULL,
-    id_receptor INT NOT NULL,
-    last_seen INT UNSIGNED NOT NULL DEFAULT 0,
+    id_usuario INT NOT NULL UNSIGNED,
+    id_receptor INT NOT NULL UNSIGNED,
+    last_seen INT NOT NULL UNSIGNED,
 
     UNIQUE KEY conect_directo (id_usuario, id_receptor),
 
@@ -81,11 +79,10 @@ CREATE TABLE conexion_directa (
         ON DELETE CASCADE
 );
 
--- 🔥 PRESENCIA GRUPAL
 CREATE TABLE conexion_grupal (
-    id_usuario INT NOT NULL,
-    id_grupo INT NOT NULL,
-    last_seen INT UNSIGNED NOT NULL DEFAULT 0,
+    id_usuario INT NOT NULL UNSIGNED,
+    id_grupo INT NOT NULL UNSIGNED,
+    last_seen INT NOT NULL UNSIGNED,
 
     UNIQUE KEY conect_grupal (id_usuario, id_grupo),
 
@@ -98,9 +95,8 @@ CREATE TABLE conexion_grupal (
         ON DELETE CASCADE
 );
 
--- Últimos mensajes leídos
 CREATE TABLE ultimos_mensajes_leidos_publicos (
-    id_usuario INT NOT NULL,
+    id_usuario INT NOT NULL UNSIGNED,
     id_mensaje INT NULL,
 
     UNIQUE KEY unico_publico (id_usuario),
@@ -111,8 +107,8 @@ CREATE TABLE ultimos_mensajes_leidos_publicos (
 );
 
 CREATE TABLE ultimos_mensajes_leidos_directos (
-    id_usuario INT NOT NULL,
-    id_receptor INT NOT NULL,
+    id_usuario INT NOT NULL UNSIGNED,
+    id_receptor INT NOT NULL UNSIGNED,
     id_mensaje INT NULL,
 
     UNIQUE KEY unico_privado (id_usuario, id_receptor),
@@ -127,8 +123,8 @@ CREATE TABLE ultimos_mensajes_leidos_directos (
 );
 
 CREATE TABLE ultimos_mensajes_leidos_grupales (
-    id_usuario INT NOT NULL,
-    id_grupo INT NOT NULL,
+    id_usuario INT NOT NULL UNSIGNED,
+    id_grupo INT NOT NULL UNSIGNED,
     id_mensaje INT NULL,
 
     UNIQUE KEY unico_grupo (id_usuario, id_grupo),
