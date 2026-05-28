@@ -1,16 +1,23 @@
 export default class Fetch {
 	constructor() { }
 
+	// MARK: OBJECT TO FORMDATA
+	objToFormdata(obj) {
+		const formData = new FormData();
+
+		Object.entries(obj).forEach(([key, value]) => {
+			formData.append(key, value);
+		});
+
+		return formData;
+	}
+
 	// MARK: FETCH WITHOUT FORM
 	async fetchWithoutForm(endpoint, method, data = {}) {
 		const init = {};
 		init.method = method;
 		const url = new URL(endpoint);
-		const userInputs = new FormData();
-
-		for (const [key, value] of Object.entries(data)) {
-			userInputs.append(key, value);
-		}
+		const userInputs = this.objToFormdata(data);
 
 		switch (method) {
 			case 'get':
