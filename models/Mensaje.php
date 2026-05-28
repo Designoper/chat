@@ -109,6 +109,8 @@ final readonly class Mensaje extends MysqliConnect
 		$this->getUltimoIdPublico();
 	}
 
+	// MARK: GET ULTIMO ID PUBLICO
+
 	private function getUltimoIdPublico(): void
 	{
 		$id_usuario = $this->id_emisor;
@@ -138,6 +140,8 @@ final readonly class Mensaje extends MysqliConnect
 		$this->content = $last_id;
 		$this->sendResponse();
 	}
+
+	// MARK: GET ULTIMO ID DIRECTO
 
 	private function getUltimoIdDirecto(): void
 	{
@@ -173,6 +177,8 @@ final readonly class Mensaje extends MysqliConnect
 		$this->sendResponse();
 	}
 
+	// MARK: GET ULTIMO ID GRUPAL
+
 	private function getUltimoIdGrupal(): void
 	{
 		$this->setIdGrupo();
@@ -206,6 +212,8 @@ final readonly class Mensaje extends MysqliConnect
 		$this->content = $last_id;
 		$this->sendResponse();
 	}
+
+	// MARK: SET ULTIMO ID
 
 	public function setultimoIdLeido(): void
 	{
