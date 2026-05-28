@@ -62,7 +62,7 @@ export default class Grupo extends Endpoint {
 
 						<h3 translate="no">${grupo.nombre_grupo}</h3>
 
-						<form name="invitar">
+						<form method="POST" name="invitar">
 							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
 							<select name="id_usuario" required>
 								<option value="">Invitar a...</option>
@@ -89,7 +89,7 @@ export default class Grupo extends Endpoint {
 		const grupos = fetchedGrupos.map(grupo =>
 			`<article>
 				<h3 translate="no">${grupo.nombre_grupo}</h3>
-				<form name="aceptar-invitacion">
+				<form method="POST" name="aceptar-invitacion">
 					<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
 					<button>Aceptar invitación</button>
 				</form>

@@ -44,7 +44,7 @@ new Usuario()->sessionRedirect();
 
 	<main id="main">
 
-		<form name="login">
+		<form method="POST" name="login">
 
 			<h1>Acceso clientes</h1>
 

@@ -42,7 +42,7 @@ new Usuario()->sessionRedirect();
 
 	<main id="main">
 
-		<form name="crear-usuario">
+		<form method="POST" name="crear-usuario">
 
 			<h1>Crear cuenta</h1>
 

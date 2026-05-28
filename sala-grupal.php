@@ -64,7 +64,7 @@ new Usuario()->authBrowser();
 
 			<h2>Crear nuevo grupo</h2>
 
-			<form name="crear-grupo">
+			<form method="POST" name="crear-grupo">
 
 				<label for="nombre_grupo">Nombre del grupo</label>
 				<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
