@@ -935,7 +935,7 @@ final readonly class Mensaje extends MysqliConnect
 		}
 
 		set_time_limit(0);
-		ignore_user_abort(true);
+		ignore_user_abort(false);
 
 		// Limpia buffers previos
 		while (ob_get_level() > 0) {
