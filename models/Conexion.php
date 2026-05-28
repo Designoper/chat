@@ -293,18 +293,18 @@ final readonly class Conexion extends MysqliConnect
 
 		if (isset($_GET['id_receptor'])) {
 			$this->setIdReceptor();
-			$this->checkValidationErrors();
 			$getConexion = fn() => $this->getConexionDirecta();
 			$tipo = "directo";
 		} else if (isset($_GET['id_grupo'])) {
 			$this->setIdGrupo();
-			$this->checkValidationErrors();
 			$getConexion = fn() => $this->getConexionGrupal();
 			$tipo = "grupal";
 		} else {
 			$getConexion = fn() => $this->getConexionPublica();
 			$tipo = "publico";
 		}
+
+		$this->checkValidationErrors();
 
 		$lastPing = 0;
 
