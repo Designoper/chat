@@ -55,7 +55,7 @@ new Usuario()->authBrowser();
 
 		<section>
 
-			<form name="logout-usuario">
+			<form name="logout">
 				<button>
 					<svg viewBox="0 0 654 752">
 						<path
