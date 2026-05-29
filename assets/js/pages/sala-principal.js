@@ -4,4 +4,3 @@ const usuario = new Usuario();
 
 await usuario.getUsuarios();
 await usuario.getMensajesNoLeidos();
-usuario.formHandler();

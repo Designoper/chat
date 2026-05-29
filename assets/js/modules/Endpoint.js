@@ -49,21 +49,37 @@ export default class Endpoint extends Fetch {
 
 	constructor() {
 		super();
+		this.initFormHandler();
 	}
 
-	formHandler() {
-		const forms = document.querySelectorAll('form');
+	initFormHandler() {
+		document.addEventListener('submit', (e) => {
+			const form = e.target;
+			if (form.tagName !== 'FORM') return;
 
-		forms.forEach(form => {
-			form.onsubmit = (e) => {
-				e.preventDefault();
+			e.preventDefault();
 
-				const name = form.name;
+			const name = form.name;
 
-				typeof this[name] === 'function'
-					? this[name](form)
-					: console.warn(`No existe la función: ${name}`);
-			};
+			typeof this[name] === 'function'
+				? this[name](form)
+				: console.warn(`No existe la función: ${name}`);
 		});
 	}
+
+	// formHandler() {
+	// 	const forms = document.querySelectorAll('form');
+
+	// 	forms.forEach(form => {
+	// 		form.onsubmit = (e) => {
+	// 			e.preventDefault();
+
+	// 			const name = form.name;
+
+	// 			typeof this[name] === 'function'
+	// 				? this[name](form)
+	// 				: console.warn(`No existe la función: ${name}`);
+	// 		};
+	// 	});
+	// }
 }

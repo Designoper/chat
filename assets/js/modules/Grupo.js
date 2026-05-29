@@ -21,13 +21,11 @@ export default class Grupo extends Endpoint {
 	async printGruposMiembro(grupos) {
 		const content = await this.gruposMiembroTemplate(grupos.content);
 		this.outputMiembro.innerHTML = content;
-		this.formHandler();
 	}
 
 	printGruposPendiente(grupos) {
 		const content = this.gruposPendienteTemplate(grupos.content);
 		this.outputPendiente.innerHTML = content;
-		this.formHandler();
 	}
 
 	async gruposMiembroTemplate(fetchedGrupos) {

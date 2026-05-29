@@ -65,8 +65,6 @@ export default class Mensaje extends Usuario {
 		const mensajes = this.mensajesTemplate(response.content);
 		this.dom.output.innerHTML = mensajes;
 
-		this.formHandler();
-
 		if (response.content.length > 0) {
 			this.paramsObj.ultimo_id = response.content[response.content.length - 1].id_mensaje;
 			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.paramsObj);
@@ -86,7 +84,6 @@ export default class Mensaje extends Usuario {
 			this.dom.output.insertAdjacentHTML("beforeend", content);
 			this.ringtone.play();
 
-			this.formHandler();
 		});
 
 		evtSource.addEventListener("new mensaje", async (event) => {
