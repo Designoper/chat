@@ -59,7 +59,7 @@ new Usuario()->authBrowser();
 
 		<section>
 
-			<form method="POST" name="crear-mensaje">
+			<form method="POST" name="createMensaje">
 
 				<textarea placeholder="Mensaje" name="contenido" autocomplete="off" minlength="1" maxlength="255" required></textarea>
 

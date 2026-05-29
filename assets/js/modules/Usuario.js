@@ -61,15 +61,8 @@ export default class Usuario extends Endpoint {
 		}
 	}
 
-	async deleteUsuario(form, method, action) {
-		const response = await this.fetchData(form, method, action);
-		if (response.status === 204) {
-			location.href = 'crear-usuario.php';
-		}
-	}
-
-	async login(form, method, action) {
-		const response = await this.fetchData(form, method, action);
+	async login(form) {
+		const response = await this.fetchData(form, form.method, this.ENDPOINTS.POST.USUARIOS.LOGIN);
 		if (response.status === 200) {
 			location.href = 'sala-principal.php';
 		}
@@ -79,6 +72,13 @@ export default class Usuario extends Endpoint {
 		const response = await this.fetchData(form, form.method, this.ENDPOINTS.POST.USUARIOS.LOGOUT);
 		if (response.status === 204) {
 			location.href = 'index.php';
+		}
+	}
+
+	async deleteUsuario(form) {
+		const response = await this.fetchData(form, form.method, this.ENDPOINTS.POST.USUARIOS.DELETE);
+		if (response.status === 204) {
+			location.href = 'crear-usuario.php';
 		}
 	}
 

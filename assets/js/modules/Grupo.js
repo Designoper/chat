@@ -89,7 +89,7 @@ export default class Grupo extends Endpoint {
 		const grupos = fetchedGrupos.map(grupo =>
 			`<article>
 				<h3 translate="no">${grupo.nombre_grupo}</h3>
-				<form method="POST" name="aceptar-invitacion">
+				<form method="POST" name="aceptarInvitacion">
 					<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
 					<button>Aceptar invitación</button>
 				</form>
@@ -99,25 +99,25 @@ export default class Grupo extends Endpoint {
 		return grupos;
 	}
 
-	async createGrupo(form, method, action) {
-		const response = await this.fetchData(form, method, action);
+	async createGrupo(form) {
+		const response = await this.fetchData(form, form.method, this.ENDPOINTS.POST.GRUPOS.CREAR);
 		if (response.status === 201) {
 			await this.getGruposMiembro();
 			await this.getGruposPendiente();
 		}
 	}
 
-	async aceptarInvitacion(form, method, action) {
-		const response = await this.fetchData(form, method, action);
+	async invitar(form) {
+		const response = await this.fetchData(form, form.method, this.ENDPOINTS.POST.GRUPOS.INVITAR);
+		if (response.status === 201) {
+			await this.getGruposMiembro();
+			await this.getGruposPendiente();
+		}
+	}
+
+	async aceptarInvitacion(form) {
+		const response = await this.fetchData(form, form.method, this.ENDPOINTS.POST.GRUPOS.ACEPTAR_INVITACION);
 		if (response.status === 200) {
-			await this.getGruposMiembro();
-			await this.getGruposPendiente();
-		}
-	}
-
-	async invitar(form, method, action) {
-		const response = await this.fetchData(form, method, action);
-		if (response.status === 201) {
 			await this.getGruposMiembro();
 			await this.getGruposPendiente();
 		}

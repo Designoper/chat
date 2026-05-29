@@ -64,7 +64,7 @@ new Usuario()->authBrowser();
 				</button>
 			</form>
 
-			<form method="POST" name="delete-usuario">
+			<form method="POST" name="deleteUsuario">
 				<button>
 					<svg viewBox="0 0 2481 2481">
 						<path d="M1666.169 2480.309c0-460.107-372.979-833.086-833.086-833.086S-.003 2020.202-.003 2480.309h1666.172z" />
