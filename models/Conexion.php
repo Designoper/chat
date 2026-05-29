@@ -2,56 +2,17 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/MysqliConnect.php';
+require_once __DIR__ . '/Mensaje.php';
 
-final readonly class Conexion extends MysqliConnect
+final readonly class Conexion extends Mensaje
 {
 	private int $id_usuario;
-	private int $id_receptor;
-	private int $id_grupo;
 
 	public function __construct()
 	{
 		parent::__construct();
 
-		$this->authEndpoint();
 		$this->id_usuario = $this->session_user;
-	}
-
-	// MARK: SETTERS
-
-	private function setIdReceptor(): void
-	{
-		$method = match ($_SERVER['REQUEST_METHOD']) {
-			'GET' => $_GET,
-			'POST' => $_POST,
-		};
-
-		$name = 'id_receptor';
-		$value = $method[$name] ?? null;
-		$min_range = 1;
-		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
-
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
-			? $this->id_receptor = (int) $value
-			: $this->errors->setValidationError($error_message);
-	}
-
-	private function setIdGrupo(): void
-	{
-		$method = match ($_SERVER['REQUEST_METHOD']) {
-			'GET' => $_GET,
-			'POST' => $_POST,
-		};
-
-		$name = 'id_grupo';
-		$value = $method[$name] ?? null;
-		$min_range = 1;
-		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
-
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
-			? $this->id_grupo = (int) $value
-			: $this->errors->setValidationError($error_message);
 	}
 
 	// MARK: SET CONEXION

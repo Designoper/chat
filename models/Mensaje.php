@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/universal/MysqliConnect.php';
 
-final readonly class Mensaje extends MysqliConnect
+readonly class Mensaje extends MysqliConnect
 {
 	private int $id_mensaje;
 	private string $contenido;
 	private ?int $id_emisor;
-	private int $id_receptor;
-	private int $id_grupo;
+	protected int $id_receptor;
+	protected int $id_grupo;
 	private int $ultimo_id;
 
 	public function __construct()
@@ -48,7 +48,7 @@ final readonly class Mensaje extends MysqliConnect
 			: $this->contenido = $value;
 	}
 
-	private function setIdReceptor(): void
+	protected function setIdReceptor(): void
 	{
 		$method = match ($_SERVER['REQUEST_METHOD']) {
 			'GET' => $_GET,
@@ -65,7 +65,7 @@ final readonly class Mensaje extends MysqliConnect
 			: $this->errors->setValidationError($error_message);
 	}
 
-	private function setIdGrupo(): void
+	protected function setIdGrupo(): void
 	{
 		$method = match ($_SERVER['REQUEST_METHOD']) {
 			'GET' => $_GET,

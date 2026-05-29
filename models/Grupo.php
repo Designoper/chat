@@ -61,34 +61,6 @@ final readonly class Grupo extends MysqliConnect
 			: $this->errors->setValidationError($error_message);
 	}
 
-	// MARK: READ GRUPOS
-
-	// public function readGrupos(): void
-	// {
-	// 	$statement =
-	// 		"SELECT grupos.id_grupo, grupos.nombre_grupo, membresias.id_usuario, membresias.rol, usuarios.nombre_usuario
-	// 		FROM grupos
-	// 		LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
-	// 		LEFT JOIN usuarios on membresias.id_usuario = usuarios.id_usuario
-	// 		ORDER BY grupos.nombre_grupo ASC";
-
-	// 	$query = $this->connection->prepare($statement);
-
-	// 	$query->execute();
-	// 	$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-	// 	$query->close();
-
-	// 	$message =
-	// 		$grupos
-	// 		? 'Grupos obtenidos.'
-	// 		: 'No hay ningún grupo.';
-
-	// 	$this->status = 200;
-	// 	$this->message = $message;
-	// 	$this->content = $grupos;
-	// 	$this->sendResponse();
-	// }
-
 	// MARK: READ GRUPOS MIEMBRO
 
 	public function readGruposMiembro(): void
@@ -123,8 +95,8 @@ final readonly class Grupo extends MysqliConnect
 
 		$message =
 			$grupos
-			? 'Grupos obtenidos.'
-			: 'No hay ningún grupo.';
+			? 'Grupos con membresía obtenidos.'
+			: 'No perteneces a ningún grupo.';
 
 		$this->status = 200;
 		$this->message = $message;
@@ -161,7 +133,7 @@ final readonly class Grupo extends MysqliConnect
 
 		$message =
 			$grupos
-			? 'Grupos obtenidos.'
+			? 'Grupos con invitación pendiente obtenidos.'
 			: 'No tienes ninguna invitación pendiente.';
 
 		$this->status = 200;
@@ -202,8 +174,8 @@ final readonly class Grupo extends MysqliConnect
 
 		$message =
 			$grupos
-			? 'No miembros obtenidos.'
-			: 'Cambiar.';
+			? 'Usuarios no miembros obtenidos.'
+			: 'Todos los usuarios pertenecen al grupo.';
 
 		$this->status = 200;
 		$this->message = $message;
