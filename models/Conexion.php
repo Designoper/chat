@@ -159,21 +159,20 @@ final readonly class Conexion extends Mensaje
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"SELECT nombre_usuario, COALESCE((
-			last_seen), 0) AS last_seen
+			"SELECT nombre_usuario,
+				COALESCE(conexion_directa.last_seen, 0) AS last_seen
 			FROM usuarios
 			LEFT JOIN conexion_directa
-			ON usuarios.id_usuario = conexion_directa.id_usuario
-			WHERE conexion_directa.id_usuario = ?
-		 	AND conexion_directa.id_receptor = ?
-			ORDER BY nombre_usuario ASC";
+				ON usuarios.id_usuario = conexion_directa.id_usuario
+			AND conexion_directa.id_receptor = ?
+			WHERE usuarios.id_usuario = ?";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"ii",
-			$id_receptor,
-			$id_usuario
+			$id_usuario,
+			$id_receptor
 		);
 
 		$query->execute();

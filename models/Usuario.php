@@ -30,18 +30,7 @@ final readonly class Usuario extends MysqliConnect
 			: $this->nombre_usuario = $value;
 	}
 
-	private function setPasswordHashed(): void
-	{
-		$name = 'password';
-		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío.";
-
-		empty($value)
-			? $this->errors->setValidationError($error_message)
-			: $this->password = password_hash($value, PASSWORD_DEFAULT);
-	}
-
-	private function setPasswordPlain(): void
+	private function setPassword(): void
 	{
 		$name = 'password';
 		$value = $_POST[$name] ?? null;
@@ -94,12 +83,12 @@ final readonly class Usuario extends MysqliConnect
 	public function createUsuario(): void
 	{
 		$this->setNombreUsuario();
-		$this->setPasswordHashed();
+		$this->setPassword();
 
 		$this->checkValidationErrors();
 
 		$nombre_usuario = $this->nombre_usuario;
-		$password = $this->password;
+		$password = password_hash($this->password, PASSWORD_DEFAULT);
 
 		try {
 			$statement =
@@ -141,12 +130,12 @@ final readonly class Usuario extends MysqliConnect
 	public function login(): void
 	{
 		$this->setNombreUsuario();
-		$this->setPasswordPlain();
+		$this->setPassword();
 
 		$this->checkValidationErrors();
 
 		$nombre_usuario = $this->nombre_usuario;
-		$passwordIngresada = $this->password;
+		$password = $this->password;
 
 		$statement =
 			"SELECT id_usuario, password
@@ -175,7 +164,7 @@ final readonly class Usuario extends MysqliConnect
 
 		$hashGuardado = $row['password'];
 
-		if (!password_verify($passwordIngresada, $hashGuardado)) {
+		if (!password_verify($password, $hashGuardado)) {
 			$this->status = 401;
 			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
 			$this->checkIntegrityErrors();

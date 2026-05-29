@@ -160,8 +160,8 @@ export default class Mensaje extends Usuario {
 				this.dom.a.setAttribute("href", "./sala-principal.php");
 				this.dom.header.insertAdjacentHTML('beforeend',
 					`<svg viewBox="0 0 100 100">
-					<circle cx="50" cy="50" r="50" />
-				</svg>`);
+						<circle cx="50" cy="50" r="50" />
+					</svg>`);
 				return;
 			}
 			// });
