@@ -54,25 +54,15 @@ export default class Endpoint extends Fetch {
 	formHandler() {
 		const forms = document.querySelectorAll('form');
 
-		const handlers = {
-			'crear-usuario': (form) => this.createUsuario(form, 'post', this.ENDPOINTS.POST.USUARIOS.CREAR),
-			'login': (form) => this.login(form, 'post', this.ENDPOINTS.POST.USUARIOS.LOGIN),
-			'logout': (form) => this.logout(form, 'post', this.ENDPOINTS.POST.USUARIOS.LOGOUT),
-			'delete-usuario': (form) => this.deleteUsuario(form, 'post', this.ENDPOINTS.POST.USUARIOS.DELETE),
-
-			'crear-mensaje': (form) => this.writeMensaje(form, 'post', this.ENDPOINTS.POST.MENSAJES.CREAR),
-			'eliminar-mensaje': (form) => this.deleteMensaje(form, 'post'),
-
-			'crear-grupo': (form) => this.createGrupo(form, 'post', this.ENDPOINTS.POST.GRUPOS.CREAR),
-			'aceptar-invitacion': (form) => this.aceptarInvitacion(form, 'post', this.ENDPOINTS.POST.GRUPOS.ACEPTAR_INVITACION),
-			'invitar': (form) => this.invitar(form, 'post', this.ENDPOINTS.POST.GRUPOS.INVITAR)
-		};
-
 		forms.forEach(form => {
 			form.onsubmit = (e) => {
 				e.preventDefault();
-				const handler = handlers[form.name];
-				if (handler) handler(form);
+
+				const name = form.name;
+
+				typeof this[name] === 'function'
+					? this[name](form)
+					: console.warn(`No existe la función: ${name}`);
 			};
 		});
 	}
