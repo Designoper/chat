@@ -16,7 +16,6 @@ export default class Endpoint extends Fetch {
 				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`,
 			},
 			GRUPOS: {
-				// GRUPOS: `${this.ROOT}grupos`,
 				MIEMBRO: `${this.ROOT}grupos/miembro`,
 				PENDIENTE: `${this.ROOT}grupos/pendiente`,
 				NO_MIEMBRO: `${this.ROOT}grupos/no-miembro`,
@@ -55,48 +54,25 @@ export default class Endpoint extends Fetch {
 	formHandler() {
 		const forms = document.querySelectorAll('form');
 
+		const handlers = {
+			'crear-usuario': (form) => this.createUsuario(form, 'post', this.ENDPOINTS.POST.USUARIOS.CREAR),
+			'login': (form) => this.login(form, 'post', this.ENDPOINTS.POST.USUARIOS.LOGIN),
+			'logout': (form) => this.logout(form, 'post', this.ENDPOINTS.POST.USUARIOS.LOGOUT),
+			'delete-usuario': (form) => this.deleteUsuario(form, 'post', this.ENDPOINTS.POST.USUARIOS.DELETE),
+
+			'crear-mensaje': (form) => this.writeMensaje(form, 'post', this.ENDPOINTS.POST.MENSAJES.CREAR),
+			'eliminar-mensaje': (form) => this.deleteMensaje(form, 'post'),
+
+			'crear-grupo': (form) => this.createGrupo(form, 'post', this.ENDPOINTS.POST.GRUPOS.CREAR),
+			'aceptar-invitacion': (form) => this.aceptarInvitacion(form, 'post', this.ENDPOINTS.POST.GRUPOS.ACEPTAR_INVITACION),
+			'invitar': (form) => this.invitar(form, 'post', this.ENDPOINTS.POST.GRUPOS.INVITAR)
+		};
+
 		forms.forEach(form => {
-			form.onsubmit = (submitEvent) => {
-				submitEvent.preventDefault();
-				const name = form.name;
-
-				switch (name) {
-					case 'crear-usuario':
-						this.createUsuario(form, 'post', this.ENDPOINTS.POST.USUARIOS.CREAR);
-						break;
-
-					case 'login':
-						this.login(form, 'post', this.ENDPOINTS.POST.USUARIOS.LOGIN);
-						break;
-
-					case 'logout':
-						this.logout(form, 'post', this.ENDPOINTS.POST.USUARIOS.LOGOUT);
-						break;
-
-					case 'delete-usuario':
-						this.deleteUsuario(form, 'post', this.ENDPOINTS.POST.USUARIOS.DELETE);
-						break;
-
-					case 'crear-mensaje':
-						this.writeMensaje(form, 'post', this.ENDPOINTS.POST.MENSAJES.CREAR);
-						break;
-
-					case 'eliminar-mensaje':
-						this.deleteMensaje(form, 'post');
-						break;
-
-					case 'crear-grupo':
-						this.createGrupo(form, 'post', this.ENDPOINTS.POST.GRUPOS.CREAR);
-						break;
-
-					case 'aceptar-invitacion':
-						this.aceptarInvitacion(form, 'post', this.ENDPOINTS.POST.GRUPOS.ACEPTAR_INVITACION);
-						break;
-
-					case 'invitar':
-						this.invitar(form, 'post', this.ENDPOINTS.POST.GRUPOS.INVITAR);
-						break;
-				}
+			form.onsubmit = (e) => {
+				e.preventDefault();
+				const handler = handlers[form.name];
+				if (handler) handler(form);
 			};
 		});
 	}
