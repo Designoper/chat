@@ -42,9 +42,10 @@ export default class Fetch {
 	}
 
 	// MARK: FETCH DATA
-	async fetchData(form, method, action = form.action) {
+	async fetchData(form, action) {
 
 		const init = {};
+		const method = form.method;
 		const userInputs = new FormData(form);
 		const url = new URL(action);
 

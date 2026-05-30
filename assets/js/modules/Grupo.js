@@ -98,7 +98,7 @@ export default class Grupo extends Endpoint {
 	}
 
 	async createGrupo(form) {
-		const response = await this.fetchData(form, form.method, this.ENDPOINTS.POST.GRUPOS.CREAR);
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.CREAR);
 		if (response.status === 201) {
 			await this.getGruposMiembro();
 			await this.getGruposPendiente();
@@ -106,7 +106,7 @@ export default class Grupo extends Endpoint {
 	}
 
 	async invitar(form) {
-		const response = await this.fetchData(form, form.method, this.ENDPOINTS.POST.GRUPOS.INVITAR);
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.INVITAR);
 		if (response.status === 201) {
 			await this.getGruposMiembro();
 			await this.getGruposPendiente();
@@ -114,7 +114,7 @@ export default class Grupo extends Endpoint {
 	}
 
 	async aceptarInvitacion(form) {
-		const response = await this.fetchData(form, form.method, this.ENDPOINTS.POST.GRUPOS.ACEPTAR_INVITACION);
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.ACEPTAR_INVITACION);
 		if (response.status === 200) {
 			await this.getGruposMiembro();
 			await this.getGruposPendiente();

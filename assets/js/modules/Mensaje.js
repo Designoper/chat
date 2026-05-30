@@ -139,11 +139,11 @@ export default class Mensaje extends Usuario {
 	}
 
 	async createMensaje(form) {
-		await this.fetchData(form, form.method, this.ENDPOINTS.POST.MENSAJES.CREAR);
+		await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR);
 	}
 
 	async deleteMensaje(form) {
-		const response = await this.fetchData(form, form.method, this.ENDPOINTS.POST.MENSAJES.ELIMINAR);
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.ELIMINAR);
 		if (response.status === 204) {
 			form.closest("article").remove();
 		}
