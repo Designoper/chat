@@ -25,12 +25,10 @@ readonly class Mensaje extends MysqliConnect
 
 	private function setIdMensaje(): void
 	{
+		$name = 'id_mensaje';
+		$value = $_POST[$name] ?? null;
 		$min_range = 1;
-		$error_message = "El id del recurso debe ser un número entero superior o igual a $min_range y solo contener números.";
-
-		$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-		$segments = explode('/', trim($path, '/'));
-		$value = end($segments);
+		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
 		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
 			? $this->id_mensaje = (int) $value
