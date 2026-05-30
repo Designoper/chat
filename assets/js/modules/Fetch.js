@@ -20,10 +20,10 @@ export default class Fetch {
 		const userInputs = this.objToFormdata(data);
 
 		switch (method) {
-			case 'get':
+			case 'GET':
 				url.search = new URLSearchParams(userInputs);
 				break;
-			case 'post':
+			case 'POST':
 				init.body = userInputs;
 				break;
 		}
