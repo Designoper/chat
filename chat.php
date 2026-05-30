@@ -17,7 +17,7 @@ new Usuario()->authBrowser();
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="text-scale" content="scale">
 
-	<title>Chat</title>
+	<title>Whatschat</title>
 	<meta name="description" content="Habla con todo el mundo">
 	<meta name="apple-mobile-web-app-title" content="Whatschat">
 
