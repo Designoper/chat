@@ -7,7 +7,7 @@ export default class Mensaje extends Usuario {
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
 
 	params = new URLSearchParams(location.search);
-	ringtone = new Audio("../../../assets/audio/ringtone2.mp3");
+	ringtone = new Audio("../../../assets/audio/ringtone.mp3");
 
 	mostrado = false;
 
