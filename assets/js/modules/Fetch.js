@@ -15,11 +15,12 @@ export default class Fetch {
 	// MARK: FETCH WITHOUT FORM
 	async fetchWithoutForm(endpoint, method, data = {}) {
 		const init = {};
-		init.method = method;
+		const methodo = method.toUpperCase();
+		init.method = methodo;
 		const url = new URL(endpoint);
 		const userInputs = this.objToFormdata(data);
 
-		switch (method) {
+		switch (methodo) {
 			case 'GET':
 				url.search = new URLSearchParams(userInputs);
 				break;
