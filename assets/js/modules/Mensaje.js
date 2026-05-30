@@ -83,7 +83,6 @@ export default class Mensaje extends Usuario {
 
 			this.dom.output.insertAdjacentHTML("beforeend", content);
 			this.ringtone.play();
-
 		});
 
 		evtSource.addEventListener("new mensaje", async (event) => {
