@@ -45,7 +45,7 @@ export default class Fetch {
 	async fetchData(form, action) {
 
 		const init = {};
-		const method = form.method;
+		const method = form.method.toUpperCase();
 		const userInputs = new FormData(form);
 		const url = new URL(action);
 
@@ -55,11 +55,11 @@ export default class Fetch {
 		init.method = method;
 
 		switch (method) {
-			case 'post':
+			case 'POST':
 				init.body = userInputs;
 				break;
 
-			default:
+			case 'GET':
 				url.search = new URLSearchParams(userInputs);
 		}
 
