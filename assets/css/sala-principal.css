@@ -1,18 +1,13 @@
 main {
-	&:has(details:last-of-type:open) {
-		output:first-of-type {
-			display: none;
-		}
-
-		output:nth-of-type(2) {
-			display: grid;
-		}
+	summary {
+		background-color: var(--secondary-bg);
 	}
 
-	output {
-		&:nth-of-type(2) {
-			display: none;
-		}
+	li {
+		display: flex;
+		align-items: center;
+		padding: 1.5em 0;
+		gap: 1em;
 	}
 
 	menu {
@@ -20,13 +15,6 @@ main {
 		background-color: var(--secondary-bg);
 		row-rule: 1px solid saddlebrown;
 		padding: 0 2em;
-
-		li {
-			display: flex;
-			align-items: center;
-			padding: 1.5em 0;
-			gap: 1em;
-		}
 
 		svg {
 			width: 1.5em;
@@ -39,8 +27,6 @@ main {
 		a,
 		p {
 			display: list-item;
-			/* padding: 1em 1.5em; */
-			/* border-radius: 0.5em; */
 		}
 	}
 
@@ -55,7 +41,7 @@ main {
 
 	section {
 		display: flex;
-		grid-template-columns: 1fr 1fr;
+		gap: 1em;
 		position: fixed;
 		bottom: 0;
 		background-color: var(--quartery-bg);

@@ -1,8 +1,8 @@
 import Endpoint from "./Endpoint.js";
 
 export default class Grupo extends Endpoint {
-	outputMiembro = document.querySelector('output:nth-of-type(2) menu:nth-of-type(1)');
-	outputPendiente = document.querySelector('output:nth-of-type(2) menu:nth-of-type(2)');
+	outputMiembro = document.querySelector('output>menu>li:nth-of-type(3) menu');
+	outputPendiente = document.querySelector('output>menu>li:nth-of-type(3) menu:nth-of-type(2)');
 
 	constructor() {
 		super();

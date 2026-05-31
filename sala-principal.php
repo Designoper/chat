@@ -48,38 +48,38 @@ new Usuario()->authBrowser();
 		<output>
 
 			<menu>
+
 				<li>
 					<a href="./chat.php">Chat público <span></span></a>
 				</li>
+
+				<li>
+					<details open>
+						<summary>Chat privado</summary>
+						<menu></menu>
+					</details>
+				</li>
+
+				<li>
+					<details open>
+						<summary>Chat grupal</summary>
+						<form method="POST" name="createGrupo">
+
+							<label for="nombre_grupo">Nombre del grupo</label>
+							<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
+							<button>Crear grupo</button>
+
+						</form>
+						<menu></menu>
+						<menu></menu>
+					</details>
+				</li>
+
 			</menu>
 
 		</output>
 
-		<output>
-
-			<form method="POST" name="createGrupo">
-
-				<label for="nombre_grupo">Nombre del grupo</label>
-				<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
-				<button>Crear grupo</button>
-
-			</form>
-
-			<menu></menu>
-
-			<menu></menu>
-
-		</output>
-
 		<section>
-
-			<details name="chat" open>
-				<summary>Individual</summary>
-			</details>
-
-			<details name="chat">
-				<summary>Grupal</summary>
-			</details>
 
 			<form method="POST" name="logout">
 				<button>
