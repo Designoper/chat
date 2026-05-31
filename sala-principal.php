@@ -63,15 +63,18 @@ new Usuario()->authBrowser();
 				<li>
 					<details open>
 						<summary>Chat grupal</summary>
-						<form method="POST" name="createGrupo">
 
+						<form method="POST" name="createGrupo">
 							<label for="nombre_grupo">Nombre del grupo</label>
 							<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
 							<button>Crear grupo</button>
-
 						</form>
+
+						<p>Mis grupos</p>
 						<menu></menu>
+						<p>Invitaciones pendientes</p>
 						<menu></menu>
+
 					</details>
 				</li>
 

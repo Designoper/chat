@@ -70,7 +70,7 @@ button {
 }
 
 :is(input, datalist, select, textarea) {
-	width: 100%;
+	/* width: 100%; */
 	text-box: initial;
 }
 
