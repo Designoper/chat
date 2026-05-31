@@ -48,13 +48,8 @@ readonly class Mensaje extends MysqliConnect
 
 	protected function setIdReceptor(): void
 	{
-		$method = match ($_SERVER['REQUEST_METHOD']) {
-			'GET' => $_GET,
-			'POST' => $_POST,
-		};
-
 		$name = 'id_receptor';
-		$value = $method[$name] ?? null;
+		$value = $_REQUEST[$name] ?? null;
 		$min_range = 1;
 		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
@@ -65,13 +60,8 @@ readonly class Mensaje extends MysqliConnect
 
 	protected function setIdGrupo(): void
 	{
-		$method = match ($_SERVER['REQUEST_METHOD']) {
-			'GET' => $_GET,
-			'POST' => $_POST,
-		};
-
 		$name = 'id_grupo';
-		$value = $method[$name] ?? null;
+		$value = $_REQUEST[$name] ?? null;
 		$min_range = 1;
 		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
