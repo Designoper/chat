@@ -57,6 +57,10 @@ main {
 			}
 		}
 
+		img {
+			width: 1.5em;
+		}
+
 		a,
 		p {
 			display: list-item;

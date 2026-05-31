@@ -43,7 +43,7 @@ export default class Usuario extends TemporalFormat {
 							</svg>
 						</a>
 						<a href="videollamada.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">
-							Videollamada
+							<img src="./assets/img/videollamada.svg">
 						</a>
 					</li>`;
 
