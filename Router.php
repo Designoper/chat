@@ -28,7 +28,6 @@ final class Router
         $this->setRoute($GET, 'mensajes', [Mensaje::class, 'readMensajes']);
 
         // Grupos
-        // $this->setRoute($GET, 'grupos$', [Grupo::class, 'readGrupos']);
         $this->setRoute($GET, 'grupos/miembro$', [Grupo::class, 'readGruposMiembro']);
         $this->setRoute($GET, 'grupos/pendiente$', [Grupo::class, 'readGruposPendiente']);
         $this->setRoute($GET, 'grupos/no-miembro', [Grupo::class, 'readGruposNoMiembro']);
