@@ -1,9 +1,23 @@
 main {
+	&:has(details:last-of-type:open) {
+		menu:first-of-type {
+			display: none;
+		}
+
+		menu:last-of-type {
+			display: grid;
+		}
+	}
+
 	menu {
 		display: grid;
 		background-color: var(--secondary-bg);
 		row-rule: 1px solid saddlebrown;
 		padding: 0 2em;
+
+		&:last-of-type {
+			display: none;
+		}
 
 		li {
 			display: flex;
@@ -29,7 +43,7 @@ main {
 	}
 
 	section {
-		display: grid;
+		display: flex;
 		grid-template-columns: 1fr 1fr;
 		position: fixed;
 		bottom: 0;

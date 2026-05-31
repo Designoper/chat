@@ -146,7 +146,6 @@ export default class Mensaje extends Usuario {
 			// this.params.forEach((value, key) => {
 			if (this.params.has('nombre_receptor')) {
 				this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre_receptor'));
-				this.dom.a.setAttribute("href", "./sala-principal.php");
 				this.dom.header.insertAdjacentHTML('beforeend',
 					`<svg viewBox="0 0 100 100">
 						<circle cx="50" cy="50" r="50" />
@@ -160,7 +159,6 @@ export default class Mensaje extends Usuario {
 			this.params.forEach((value, key) => {
 				if (key.startsWith('nombre_grupo')) {
 					this.dom.h1.insertAdjacentHTML("afterbegin", `Grupo: ${value}`);
-					this.dom.a.setAttribute("href", "./sala-grupal.php");
 					return;
 				}
 			});
@@ -168,7 +166,6 @@ export default class Mensaje extends Usuario {
 
 		if (this.params.size === 0) {
 			this.dom.h1.insertAdjacentHTML("afterbegin", "Chat público");
-			this.dom.a.setAttribute("href", "./sala-principal.php");
 		}
 	}
 }

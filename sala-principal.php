@@ -35,6 +35,7 @@ new Usuario()->authBrowser();
 	<link href="./assets/css/sala-principal.css" rel="preload stylesheet" as="style">
 
 	<script src="./assets/js/pages/sala-principal.js" type="module"></script>
+	<script src="./assets/js/pages/sala-grupal.js" type="module"></script>
 
 </head>
 
@@ -48,12 +49,29 @@ new Usuario()->authBrowser();
 			<li>
 				<a href="./chat.php">Chat público <span></span></a>
 			</li>
+		</menu>
+
+		<menu>
 			<li>
-				<a href="./sala-grupal.php">Chat de grupos</a>
+				<form method="POST" name="createGrupo">
+
+					<label for="nombre_grupo">Nombre del grupo</label>
+					<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
+					<button>Crear grupo</button>
+
+				</form>
 			</li>
 		</menu>
 
 		<section>
+
+			<details name="chat" open>
+				<summary>Individual</summary>
+			</details>
+
+			<details name="chat">
+				<summary>Grupal</summary>
+			</details>
 
 			<form method="POST" name="logout">
 				<button>

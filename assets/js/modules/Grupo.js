@@ -1,7 +1,7 @@
 import Endpoint from "./Endpoint.js";
 
 export default class Grupo extends Endpoint {
-	outputMiembro = document.querySelector('output');
+	outputMiembro = document.querySelector('menu:nth-of-type(2)');
 	outputPendiente = document.querySelector('section:nth-of-type(2) output');
 
 	constructor() {
@@ -56,7 +56,7 @@ export default class Grupo extends Endpoint {
 					.join('');
 
 				const formInvitar =
-					`<article>
+					`<li>
 
 						<h3 translate="no">${grupo.nombre_grupo}</h3>
 
@@ -72,7 +72,7 @@ export default class Grupo extends Endpoint {
 						<a href="./chat.php?id_grupo=${grupo.id_grupo}&nombre_grupo=${grupo.nombre_grupo}">Entrar</a>
 						<span>${badge}</span>
 
-					</article>`;
+					</li>`;
 
 				return formInvitar;
 
