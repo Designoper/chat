@@ -1,11 +1,17 @@
 main {
 	&:has(details:last-of-type:open) {
-		menu:first-of-type {
+		output:first-of-type {
 			display: none;
 		}
 
-		menu:last-of-type {
+		output:nth-of-type(2) {
 			display: grid;
+		}
+	}
+
+	output {
+		&:nth-of-type(2) {
+			display: none;
 		}
 	}
 
@@ -14,10 +20,6 @@ main {
 		background-color: var(--secondary-bg);
 		row-rule: 1px solid saddlebrown;
 		padding: 0 2em;
-
-		&:last-of-type {
-			display: none;
-		}
 
 		li {
 			display: flex;
@@ -39,6 +41,15 @@ main {
 			display: list-item;
 			/* padding: 1em 1.5em; */
 			/* border-radius: 0.5em; */
+		}
+	}
+
+	form {
+		display: flex;
+
+		select {
+			display: flex;
+			width: fit-content;
 		}
 	}
 

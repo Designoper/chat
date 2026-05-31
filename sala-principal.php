@@ -45,23 +45,31 @@ new Usuario()->authBrowser();
 
 		<h1>Whatschat</h1>
 
-		<menu>
-			<li>
-				<a href="./chat.php">Chat público <span></span></a>
-			</li>
-		</menu>
+		<output>
 
-		<menu>
-			<li>
-				<form method="POST" name="createGrupo">
+			<menu>
+				<li>
+					<a href="./chat.php">Chat público <span></span></a>
+				</li>
+			</menu>
 
-					<label for="nombre_grupo">Nombre del grupo</label>
-					<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
-					<button>Crear grupo</button>
+		</output>
 
-				</form>
-			</li>
-		</menu>
+		<output>
+
+			<form method="POST" name="createGrupo">
+
+				<label for="nombre_grupo">Nombre del grupo</label>
+				<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
+				<button>Crear grupo</button>
+
+			</form>
+
+			<menu></menu>
+
+			<menu></menu>
+
+		</output>
 
 		<section>
 

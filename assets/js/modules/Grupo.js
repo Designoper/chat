@@ -1,8 +1,8 @@
 import Endpoint from "./Endpoint.js";
 
 export default class Grupo extends Endpoint {
-	outputMiembro = document.querySelector('menu:nth-of-type(2)');
-	outputPendiente = document.querySelector('section:nth-of-type(2) output');
+	outputMiembro = document.querySelector('output:nth-of-type(2) menu:nth-of-type(1)');
+	outputPendiente = document.querySelector('output:nth-of-type(2) menu:nth-of-type(2)');
 
 	constructor() {
 		super();
@@ -69,7 +69,11 @@ export default class Grupo extends Endpoint {
 							<button>Mandar invitación</button>
 						</form>
 
-						<a href="./chat.php?id_grupo=${grupo.id_grupo}&nombre_grupo=${grupo.nombre_grupo}">Entrar</a>
+						<a href="./chat.php?id_grupo=${grupo.id_grupo}&nombre_grupo=${grupo.nombre_grupo}">
+							<svg viewBox="0 0 2481 2481">
+								<path d="M573.027 1811.925h-407.68c-90.945 0-165.355-85.823-165.355-190.725V190.712C-.008 85.824 74.402-.013 165.347-.013h2149.601c90.953 0 165.357 85.837 165.357 190.725V1621.2c0 104.901-74.403 190.725-165.357 190.725H1310.686l-709.001 649.723c-23.693 21.712-58.535 25.996-86.787 10.696-28.251-15.313-43.669-46.856-38.414-78.56l96.543-581.859zm180.208-905.916c0-115.278-93.509-208.712-208.706-208.712-115.212 0-208.714 93.433-208.714 208.712s93.501 208.712 208.714 208.712c115.198 0 208.706-93.433 208.706-208.712zm695.688 0c0-115.278-93.494-208.712-208.706-208.712s-208.706 93.433-208.706 208.712 93.494 208.712 208.706 208.712 208.706-93.433 208.706-208.712zm695.688 0c0-115.278-93.494-208.712-208.706-208.712-115.198 0-208.706 93.433-208.706 208.712s93.509 208.712 208.706 208.712c115.212 0 208.706-93.433 208.706-208.712z"/>
+							</svg>
+						</a>
 						<span>${badge}</span>
 
 					</li>`;
@@ -85,13 +89,13 @@ export default class Grupo extends Endpoint {
 	gruposPendienteTemplate(fetchedGrupos) {
 
 		const grupos = fetchedGrupos.map(grupo =>
-			`<article>
+			`<li>
 				<h3 translate="no">${grupo.nombre_grupo}</h3>
 				<form method="POST" name="aceptarInvitacion">
 					<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
 					<button>Aceptar invitación</button>
 				</form>
-			</article>`
+			</li>`
 		).join('');
 
 		return grupos;
