@@ -39,16 +39,16 @@ final readonly class Conexion extends Mensaje
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"INSERT INTO conexion_publica (id_usuario, last_seen)
-			VALUES (?, UNIX_TIMESTAMP())
-			ON DUPLICATE KEY UPDATE
-				last_seen = UNIX_TIMESTAMP()";
+			"INSERT INTO conexion_publica (id_usuario)
+			VALUES (?)
+			ON DUPLICATE KEY
+			UPDATE last_seen = CURRENT_TIMESTAMP";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
 			"i",
-			$id_usuario,
+			$id_usuario
 		);
 
 		$query->execute();
@@ -69,10 +69,10 @@ final readonly class Conexion extends Mensaje
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"INSERT INTO conexion_directa (id_usuario, id_receptor, last_seen)
-			VALUES (?, ?, UNIX_TIMESTAMP())
-			ON DUPLICATE KEY UPDATE
-				last_seen = UNIX_TIMESTAMP()";
+			"INSERT INTO conexion_directa (id_usuario, id_receptor)
+			VALUES (?, ?)
+			ON DUPLICATE KEY
+			UPDATE last_seen = CURRENT_TIMESTAMP";
 
 		$query = $this->connection->prepare($statement);
 
@@ -100,10 +100,10 @@ final readonly class Conexion extends Mensaje
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"INSERT INTO conexion_grupal (id_usuario, id_grupo, last_seen)
-			VALUES (?, ?, UNIX_TIMESTAMP())
-			ON DUPLICATE KEY UPDATE
-				last_seen = UNIX_TIMESTAMP()";
+			"INSERT INTO conexion_grupal (id_usuario, id_grupo)
+			VALUES (?, ?)
+			ON DUPLICATE KEY
+			UPDATE last_seen = CURRENT_TIMESTAMP";
 
 		$query = $this->connection->prepare($statement);
 
@@ -127,8 +127,8 @@ final readonly class Conexion extends Mensaje
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"SELECT nombre_usuario, COALESCE((
-				last_seen), 0) AS last_seen
+			"SELECT nombre_usuario,
+			COALESCE(UNIX_TIMESTAMP(last_seen), 0) AS last_seen
 			FROM usuarios
 			LEFT JOIN conexion_publica
 			ON usuarios.id_usuario = conexion_publica.id_usuario
@@ -160,7 +160,7 @@ final readonly class Conexion extends Mensaje
 
 		$statement =
 			"SELECT nombre_usuario,
-				COALESCE(conexion_directa.last_seen, 0) AS last_seen
+				COALESCE(UNIX_TIMESTAMP(conexion_directa.last_seen), 0) AS last_seen
 			FROM usuarios
 			LEFT JOIN conexion_directa
 				ON usuarios.id_usuario = conexion_directa.id_usuario
@@ -192,9 +192,8 @@ final readonly class Conexion extends Mensaje
 		$id_usuario = $this->id_usuario;
 
 		$statement =
-			"SELECT
-				usuarios.nombre_usuario,
-				COALESCE(conexion_grupal.last_seen, 0) AS last_seen
+			"SELECT usuarios.nombre_usuario,
+			COALESCE(UNIX_TIMESTAMP(conexion_grupal.last_seen, 0) AS last_seen
 			FROM usuarios
 			LEFT JOIN conexion_grupal
 				ON usuarios.id_usuario = conexion_grupal.id_usuario

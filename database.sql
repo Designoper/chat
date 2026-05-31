@@ -34,7 +34,7 @@ CREATE TABLE membresias (
 CREATE TABLE mensajes (
     id_mensaje INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     contenido TEXT NOT NULL,
-    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     id_emisor INT UNSIGNED NOT NULL,
     id_receptor INT UNSIGNED NULL,
     id_grupo INT UNSIGNED NULL,
@@ -54,7 +54,7 @@ CREATE TABLE mensajes (
 
 CREATE TABLE conexion_publica (
     id_usuario INT UNSIGNED NOT NULL,
-    last_seen INT UNSIGNED NOT NULL,
+    last_seen TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     UNIQUE KEY conect_publico (id_usuario),
 
@@ -66,7 +66,7 @@ CREATE TABLE conexion_publica (
 CREATE TABLE conexion_directa (
     id_usuario INT UNSIGNED NOT NULL,
     id_receptor INT UNSIGNED NOT NULL,
-    last_seen INT UNSIGNED NOT NULL,
+    last_seen TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     UNIQUE KEY conect_directo (id_usuario, id_receptor),
 
@@ -82,7 +82,7 @@ CREATE TABLE conexion_directa (
 CREATE TABLE conexion_grupal (
     id_usuario INT UNSIGNED NOT NULL,
     id_grupo INT UNSIGNED NOT NULL,
-    last_seen INT UNSIGNED NOT NULL,
+    last_seen TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     UNIQUE KEY conect_grupal (id_usuario, id_grupo),
 
