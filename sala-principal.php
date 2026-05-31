@@ -35,7 +35,6 @@ new Usuario()->authBrowser();
 	<link href="./assets/css/sala-principal.css" rel="preload stylesheet" as="style">
 
 	<script src="./assets/js/pages/sala-principal.js" type="module"></script>
-	<script src="./assets/js/pages/sala-grupal.js" type="module"></script>
 
 </head>
 

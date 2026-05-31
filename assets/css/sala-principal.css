@@ -1,13 +1,19 @@
 main {
 	output {
 		form {
-
 			/* padding: 1em 0; */
 			gap: 1em;
 			align-items: center;
 
 			input {
 				background-color: white;
+			}
+
+			&:has(:invalid) {
+				button {
+					opacity: 50%;
+					cursor: not-allowed;
+				}
 			}
 		}
 
@@ -45,7 +51,7 @@ main {
 	menu {
 		display: grid;
 		background-color: var(--secondary-bg);
-		row-rule: 1px solid saddlebrown;
+		/* row-rule: 1px solid saddlebrown; */
 		/* padding: 0 2em; */
 		gap: 1.5em;
 
@@ -82,7 +88,7 @@ main {
 		position: fixed;
 		bottom: 0;
 		background-color: var(--quartery-bg);
-		padding: 2em;
+		padding: 1em 2em;
 		width: 100%;
 
 		svg {
