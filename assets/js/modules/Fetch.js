@@ -12,57 +12,55 @@ export default class Fetch {
 		return formData;
 	}
 
-	// MARK: FETCH WITHOUT FORM
-	async fetchWithoutForm(endpoint, method, data = {}) {
-		const init = {};
-		const methodo = method.toUpperCase();
-		init.method = methodo;
-		const url = new URL(endpoint);
-		const userInputs = this.objToFormdata(data);
+	buildRequest(method, data) {
+		const upper = method.toUpperCase();
+		const init = { method: upper };
 
-		switch (methodo) {
-			case 'GET':
-				url.search = new URLSearchParams(userInputs);
-				break;
-			case 'POST':
-				init.body = userInputs;
-				break;
+		if (upper === "POST") {
+			init.body = data instanceof FormData ? data : this.objToFormdata(data);
 		}
+
+		return init;
+	}
+
+	buildURL(endpoint, method, data) {
+		const url = new URL(endpoint);
+
+		if (method === "GET") {
+			const params = data instanceof FormData
+				? new URLSearchParams(data)
+				: new URLSearchParams(this.objToFormdata(data));
+
+			url.search = params;
+		}
+
+		return url;
+	}
+
+	async fetchWithoutForm(endpoint, method, data = {}) {
+		const upper = method.toUpperCase();
+		const init = this.buildRequest(upper, data);
+		const url = this.buildURL(endpoint, upper, data);
 
 		try {
 			const response = await fetch(url, init);
 			const json = await response.json();
-
 			json.status = response.status;
 			return json;
-		}
-
-		catch (error) {
-			console.log(error);
+		} catch (error) {
+			console.error("fetchWithoutForm error:", error);
 		}
 	}
 
-	// MARK: FETCH DATA
 	async fetchData(form, action) {
-
-		const init = {};
 		const method = form.method.toUpperCase();
-		const userInputs = new FormData(form);
-		const url = new URL(action);
+		const data = new FormData(form);
 
-		const output = form.querySelector('output');
-		const dialog = form.closest('dialog');
+		const init = this.buildRequest(method, data);
+		const url = this.buildURL(action, method, data);
 
-		init.method = method;
-
-		switch (method) {
-			case 'POST':
-				init.body = userInputs;
-				break;
-
-			case 'GET':
-				url.search = new URLSearchParams(userInputs);
-		}
+		const output = form.querySelector("output");
+		const dialog = form.closest("dialog");
 
 		try {
 			const response = await fetch(url, init);
@@ -75,15 +73,15 @@ export default class Fetch {
 			const json = await response.json();
 			json.status = response.status;
 
-			response.ok
-				? this.resetForm(form, method, output, dialog)
-				: this.errorChecker(json, output);
+			if (response.ok) {
+				this.resetForm(form, method, output, dialog);
+			} else {
+				this.errorChecker(json, output);
+			}
 
 			return json;
-		}
-
-		catch (error) {
-			console.log(error);
+		} catch (error) {
+			console.error("fetchData error:", error);
 		}
 	}
 
