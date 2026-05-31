@@ -1,6 +1,6 @@
-import Endpoint from "./Endpoint.js";
+import TemporalFormat from "./Temporal.js";
 
-export default class Usuario extends Endpoint {
+export default class Usuario extends TemporalFormat {
 	id_usuario;
 	menu = document.querySelector('menu');
 

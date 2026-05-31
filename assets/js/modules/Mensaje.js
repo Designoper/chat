@@ -1,5 +1,4 @@
 import Usuario from "./Usuario.js";
-import formatearFecha from "../utils/fecha.js";
 
 export default class Mensaje extends Usuario {
 
@@ -104,22 +103,15 @@ export default class Mensaje extends Usuario {
 				this.mostrado = true; // ← ya no se vuelve a mostrar
 			}
 
+			const fechaFinal = this.fullDate(mensaje.fecha_envio);
+
 			return `
             ${etiqueta}
 			<article ${mensaje.id_emisor === this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				<p translate="no">${mensaje.nombre_usuario}</p>
 				<p>${mensaje.contenido}</p>
-				<p>${formatearFecha(mensaje.fecha_envio).toLocaleString(undefined,
-				{
-					weekday: "long",
-					year: "numeric",
-					month: "numeric",
-					day: "numeric",
-					hour: "numeric",
-					minute: "numeric"
-				}
-			)}
-				</p>
+
+				<p>${fechaFinal}</p>
 				${mensaje.id_emisor === this.id_usuario
 					? `<form method="POST" name="deleteMensaje">
 						<input type="hidden" name="id_mensaje" value="${mensaje.id_mensaje}">
