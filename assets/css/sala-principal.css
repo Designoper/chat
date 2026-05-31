@@ -38,10 +38,6 @@ main {
 			gap: 1em;
 			width: 100%;
 		}
-
-		details li {
-			/* background-color: rebeccapurple; */
-		}
 	}
 
 	summary {
@@ -82,11 +78,17 @@ main {
 		}
 	}
 
-	section {
+	::picker-icon {
+		/* color: red; */
+		content: '+';
+	}
+
+	header {
 		display: flex;
 		gap: 1em;
-		position: fixed;
-		bottom: 0;
+		align-items: center;
+		position: sticky;
+		top: 0;
 		background-color: var(--quartery-bg);
 		padding: 1em 2em;
 		width: 100%;

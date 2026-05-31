@@ -1,8 +1,8 @@
 import Endpoint from "./Endpoint.js";
 
 export default class Grupo extends Endpoint {
-	outputMiembro = document.querySelector('output>menu>li:nth-of-type(3) menu');
-	outputPendiente = document.querySelector('output>menu>li:nth-of-type(3) menu:nth-of-type(2)');
+	outputMiembro = document.querySelector('output>menu>li:nth-of-type(4) menu');
+	outputPendiente = document.querySelector('output>menu>li:nth-of-type(5) menu');
 
 	constructor() {
 		super();
@@ -70,10 +70,10 @@ export default class Grupo extends Endpoint {
 						<form method="POST" name="invitar">
 							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
 							<select name="id_usuario" required>
-								<option value="">Invitar a...</option>
+								<option value="">Añadir a...</option>
 								${opciones}
 							</select>
-							<button>Mandar invitación</button>
+							<button>Invitar</button>
 						</form>
 
 					</li>`;

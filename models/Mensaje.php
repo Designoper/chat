@@ -489,6 +489,7 @@ readonly class Mensaje extends MysqliConnect
 			FROM mensajes
 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
 			WHERE mensajes.id_receptor IS NULL
+			AND mensajes.id_grupo IS NULL
 			ORDER BY fecha_envio ASC";
 
 		$query = $this->connection->prepare($statement);
@@ -565,8 +566,9 @@ readonly class Mensaje extends MysqliConnect
 	private function readMensajesGrupales(): void
 	{
 		$this->setIdGrupo();
-
 		$this->checkValidationErrors();
+
+		$this->isMiembroGrupo();
 
 		$id_grupo = $this->id_grupo;
 
@@ -637,6 +639,41 @@ readonly class Mensaje extends MysqliConnect
 			$this->errors->setIntegrityError('No eres el autor del mensaje');
 			$this->checkIntegrityErrors();
 		}
+	}
+
+	// MARK: IS MIEMBRO
+
+	private function isMiembroGrupo(): void
+	{
+		$id_usuario = $this->id_emisor;
+		$id_grupo = $this->id_grupo;
+
+		$statement =
+			"SELECT rol
+			FROM membresias
+			WHERE id_usuario = ?
+			AND id_grupo = ?";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"ii",
+			$id_usuario,
+			$id_grupo
+		);
+
+		$query->execute();
+		$query->bind_result($rol);
+		$query->fetch();
+		$query->close();
+
+		if ($rol === 'miembro' || $rol === 'fundador') {
+			return;
+		}
+
+		$this->status = 403;
+		$this->errors->setIntegrityError('No formas parte del grupo');
+		$this->checkIntegrityErrors();
 	}
 
 	// MARK: CREATE MENSAJE
@@ -727,6 +764,8 @@ readonly class Mensaje extends MysqliConnect
 		$this->setIdGrupo();
 
 		$this->checkValidationErrors();
+
+		$this->isMiembroGrupo();
 
 		$id_emisor = $this->id_emisor;
 		$contenido = $this->contenido;

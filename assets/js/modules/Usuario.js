@@ -2,7 +2,7 @@ import TemporalFormat from "./Temporal.js";
 
 export default class Usuario extends TemporalFormat {
 	id_usuario;
-	menu = document.querySelector('details menu');
+	menu = document.querySelector('output>menu>li>menu');
 
 	constructor() {
 		super();

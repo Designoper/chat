@@ -31,7 +31,6 @@ new Usuario()->sessionRedirect();
 	<link href="./assets/css/common/reset.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
-	<link href="./assets/css/common/layout.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/index.css" rel="preload stylesheet" as="style">
 
 	<script src="./assets/js/pages/login.js" type="module"></script>
