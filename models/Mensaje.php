@@ -82,6 +82,21 @@ readonly class Mensaje extends MysqliConnect
 			: $this->errors->setValidationError($error_message);
 	}
 
+	// MARK: GET ULTIMO MENSAJE
+
+	public function getUltimoMensaje(): void
+	{
+		if (isset($_GET['id_receptor'])) {
+			$this->getUltimoMensajeDirecto();
+		}
+
+		if (isset($_GET['id_grupo'])) {
+			$this->getUltimoMensajeGrupal();
+		}
+
+		$this->getUltimoMensajePublico();
+	}
+
 	// MARK: GET ULTIMO MENSAJE PUBLICO
 
 	private function getUltimoMensajePublico(): void
