@@ -34,7 +34,7 @@ header {
 }
 
 main {
-	padding: 0;
+	/* padding: 0; */
 
 	> section {
 		display: grid;
@@ -82,7 +82,7 @@ main {
 	output {
 		display: grid;
 		gap: 1.5em;
-		padding: 0 10vw 8em;
+		padding: 5em 10vw 8em;
 		max-width: 1200px;
 		margin: 0 auto;
 		width: 100%;
