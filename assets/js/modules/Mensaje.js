@@ -158,7 +158,7 @@ export default class Mensaje extends TemporalFormat {
 		if (this.params.size === 2) {
 			this.params.forEach((value, key) => {
 				if (key.startsWith('nombre_grupo')) {
-					this.dom.h1.insertAdjacentHTML("afterbegin", `Grupo: ${value}`);
+					this.dom.h1.insertAdjacentHTML("afterbegin", `${value}`);
 					return;
 				}
 			});

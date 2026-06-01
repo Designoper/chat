@@ -1,5 +1,21 @@
+header {
+	display: flex;
+	gap: 1em;
+	align-items: center;
+	position: sticky;
+	top: 0;
+	background-color: var(--quartery-bg);
+	padding: 1em 2em;
+	width: 100%;
+
+	svg {
+		width: 2em;
+	}
+}
+
 main {
 	output {
+
 		form {
 			/* padding: 1em 0; */
 			gap: 1em;
@@ -19,17 +35,14 @@ main {
 
 		> menu {
 			gap: 1.5em;
+			padding: 2em 0;
+
+			background-color: var(--secondary-bg);
 
 			> li {
 				/* background-color: green; */
 				padding: 0 2em;
 			}
-		}
-
-		::details-content {
-			padding: 1em 2em;
-			display: grid;
-			gap: 1em;
 		}
 
 		li {
@@ -40,13 +53,8 @@ main {
 		}
 	}
 
-	summary {
-		background-color: var(--secondary-bg);
-	}
-
 	menu {
 		display: grid;
-		background-color: var(--secondary-bg);
 		/* row-rule: 1px solid saddlebrown; */
 		/* padding: 0 2em; */
 		gap: 1.5em;
@@ -81,20 +89,5 @@ main {
 	::picker-icon {
 		/* color: red; */
 		content: '+';
-	}
-
-	header {
-		display: flex;
-		gap: 1em;
-		align-items: center;
-		position: sticky;
-		top: 0;
-		background-color: var(--quartery-bg);
-		padding: 1em 2em;
-		width: 100%;
-
-		svg {
-			width: 2em;
-		}
 	}
 }
