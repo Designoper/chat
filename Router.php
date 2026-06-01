@@ -25,12 +25,14 @@ final class Router
         $this->setRoute($GET, 'mensajes/stream', [Mensaje::class, 'streamMensajes']);
         $this->setRoute($GET, 'mensajes/no-leidos', [Mensaje::class, 'countUnreadMessages']);
         $this->setRoute($GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']);
+        $this->setRoute($GET, 'mensajes/ultimo-mensaje', [Mensaje::class, 'getUltimoMensaje']);
         $this->setRoute($GET, 'mensajes', [Mensaje::class, 'readMensajes']);
 
         // Grupos
         $this->setRoute($GET, 'grupos/miembro$', [Grupo::class, 'readGruposMiembro']);
         $this->setRoute($GET, 'grupos/pendiente$', [Grupo::class, 'readGruposPendiente']);
         $this->setRoute($GET, 'grupos/no-miembro', [Grupo::class, 'readGruposNoMiembro']);
+
         // Conexión
         $this->setRoute($GET, 'conexion/stream', [Conexion::class, 'streamConexion']);
 

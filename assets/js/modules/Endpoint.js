@@ -14,6 +14,7 @@ export default class Endpoint extends Fetch {
 				STREAM: `${this.ROOT}mensajes/stream`,
 				NO_LEIDOS: `${this.ROOT}mensajes/no-leidos`,
 				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`,
+				ULTIMO_MENSAJE: `${this.ROOT}mensajes/ultimo-mensaje`
 			},
 			GRUPOS: {
 				MIEMBRO: `${this.ROOT}grupos/miembro`,
