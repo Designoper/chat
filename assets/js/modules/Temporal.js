@@ -36,6 +36,7 @@ export default class TemporalFormat extends Usuario {
 		};
 
 		const temporal = this.formatearFecha(date).toLocaleString(undefined, options);
+
 		return temporal;
 	}
 }
