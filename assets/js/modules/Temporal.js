@@ -15,27 +15,27 @@ export default class TemporalFormat extends Usuario {
 	}
 
 	fullDate(date) {
-		const temporal = this.formatearFecha(date).toLocaleString(undefined,
-			{
-				weekday: "long",
-				year: "numeric",
-				month: "numeric",
-				day: "numeric",
-				hour: "numeric",
-				minute: "numeric"
-			});
+		const options = {
+			weekday: "short",
+			year: "numeric",
+			month: "numeric",
+			day: "numeric",
+			hour: "numeric",
+			minute: "numeric"
+		};
+
+		const temporal = this.formatearFecha(date).toLocaleString(undefined, options);
 
 		return temporal;
 	}
 
 	minutesAndSeconds(date) {
-		const temporal = this.formatearFecha(date);
-		temporal.toLocaleString(undefined,
-			{
-				minute: "numeric",
-				seconds: "numeric"
-			});
+		const options = {
+			hour: "numeric",
+			minute: "numeric"
+		};
 
+		const temporal = this.formatearFecha(date).toLocaleString(undefined, options);
 		return temporal;
 	}
 }
