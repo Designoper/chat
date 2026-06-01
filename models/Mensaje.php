@@ -82,6 +82,35 @@ readonly class Mensaje extends MysqliConnect
 			: $this->errors->setValidationError($error_message);
 	}
 
+	// MARK: GET ULTIMO MENSAJE PUBLICO
+
+	private function getUltimoMensajePublico(): void
+	{
+		$statement =
+			"SELECT contenido,
+				DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+				nombre_usuario
+				FROM mensajes
+				LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+				WHERE id_receptor IS NULL
+				AND id_grupo IS NULL
+				ORDER BY fecha_envio DESC
+				LIMIT 1";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->execute();
+
+		$ultimo_mensaje = $query->get_result()->fetch_assoc();
+
+		$query->close();
+
+		$this->status = 200;
+		$this->message = 'Último mensaje público obtenido con éxito';
+		$this->content = $ultimo_mensaje;
+		$this->sendResponse();
+	}
+
 	// MARK: GET ULTIMO MENSAJE DIRECTO
 
 	private function getUltimoMensajeDirecto(): void
@@ -128,22 +157,33 @@ readonly class Mensaje extends MysqliConnect
 		$this->sendResponse();
 	}
 
-	// MARK: GET ULTIMO MENSAJE PUBLICO
+	// MARK: GET ULTIMO MENSAJE GRUPAL
 
-	private function getUltimoMensajePublico(): void
+	private function getUltimoMensajeGrupal(): void
 	{
+		$this->setIdGrupo();
+		$this->checkValidationErrors();
+
+		$id_grupo = $this->id_grupo;
+
 		$statement =
-			"SELECT contenido,
-				DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
-				nombre_usuario
+			"SELECT
+				nombre_usuario,
+				contenido,
+				DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio
 				FROM mensajes
 				LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-				WHERE id_receptor IS NULL
-				AND id_grupo IS NULL
+				WHERE id_grupo = ?
+				AND id_receptor IS NULL
 				ORDER BY fecha_envio DESC
 				LIMIT 1";
 
 		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"i",
+			$id_grupo,
+		);
 
 		$query->execute();
 
@@ -152,7 +192,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		$this->message = 'Último mensaje público obtenido con éxito';
+		$this->message = 'Último mensaje grupal obtenido con éxito';
 		$this->content = $ultimo_mensaje;
 		$this->sendResponse();
 	}
