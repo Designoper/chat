@@ -17,9 +17,9 @@ export default class TemporalFormat extends Usuario {
 	fullDate(date) {
 		const options = {
 			weekday: "short",
-			year: "2-digit",
-			month: "numeric",
 			day: "numeric",
+			month: "numeric",
+			year: "2-digit",
 			hour: "numeric",
 			minute: "numeric"
 		};
