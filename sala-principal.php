@@ -71,34 +71,11 @@ new Usuario()->authBrowser();
 
 			<menu>
 
-				<li>
-					<p>Chat público <span></span></p>
-					<a href="./chat.php">
-						<svg viewBox="0 0 2481 2481">
-							<path d="M573.027 1811.925h-407.68c-90.945 0-165.355-85.823-165.355-190.725V190.712C-.008 85.824 74.402-.013 165.347-.013h2149.601c90.953 0 165.357 85.837 165.357 190.725V1621.2c0 104.901-74.403 190.725-165.357 190.725H1310.686l-709.001 649.723c-23.693 21.712-58.535 25.996-86.787 10.696-28.251-15.313-43.669-46.856-38.414-78.56l96.543-581.859zm180.208-905.916c0-115.278-93.509-208.712-208.706-208.712-115.212 0-208.714 93.433-208.714 208.712s93.501 208.712 208.714 208.712c115.198 0 208.706-93.433 208.706-208.712zm695.688 0c0-115.278-93.494-208.712-208.706-208.712s-208.706 93.433-208.706 208.712 93.494 208.712 208.706 208.712 208.706-93.433 208.706-208.712zm695.688 0c0-115.278-93.494-208.712-208.706-208.712-115.198 0-208.706 93.433-208.706 208.712s93.509 208.712 208.706 208.712c115.212 0 208.706-93.433 208.706-208.712z" />
-						</svg>
-					</a>
-				</li>
-
-				<li>
-					<menu></menu>
-				</li>
-
-				<li>
-					<form method="POST" name="createGrupo">
-						<label for="nombre_grupo">Nombre del grupo</label>
-						<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
-						<button>Crear</button>
-					</form>
-				</li>
-
-				<li>
-					<menu></menu>
-				</li>
-
-				<li>
-					<menu></menu>
-				</li>
+				<!-- <form method="POST" name="createGrupo">
+					<label for="nombre_grupo">Nombre del grupo</label>
+					<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
+					<button>Crear</button>
+				</form> -->
 
 			</menu>
 

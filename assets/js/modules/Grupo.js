@@ -1,26 +1,39 @@
-import Endpoint from "./Endpoint.js";
+import Usuario from "./Usuario.js";
 
-export default class Grupo extends Endpoint {
-	outputMiembro = document.querySelector('output>menu>li:nth-of-type(4) menu');
-	outputPendiente = document.querySelector('output>menu>li:nth-of-type(5) menu');
+export default class Grupo extends Usuario {
+	output = document.querySelector('output>menu');
 
 	constructor() {
 		super();
 	}
 
+	async finalPrint() {
+		const chatPublico = await this.chatPublicoTemplate();
+		const gruposMiembro = await this.getGruposMiembro();
+		const gruposMiembroPrint = await this.gruposMiembroTemplate(gruposMiembro);
+
+		const gruposPendiente = await this.getGruposPendiente();
+		const gruposPendientePrint = this.gruposPendienteTemplate(gruposPendiente);
+
+		const usuarios = await this.getUsuarios();
+		const usuariosPrint = await this.usuariosTemplate(usuarios);
+
+		this.output.innerHTML = `${chatPublico}${usuariosPrint}${gruposMiembroPrint}${gruposPendientePrint}`;
+	}
+
 	async getGruposMiembro() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.MIEMBRO, 'get');
-		this.printGruposMiembro(response);
+		return response.content;
 	}
 
 	async getGruposPendiente() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.PENDIENTE, 'get');
-		this.printGruposPendiente(response);
+		return response.content;
 	}
 
 	async printGruposMiembro(grupos) {
 		const content = await this.gruposMiembroTemplate(grupos.content);
-		this.outputMiembro.innerHTML = content;
+		return response.content;
 	}
 
 	printGruposPendiente(grupos) {
@@ -52,7 +65,7 @@ export default class Grupo extends Endpoint {
 				);
 
 				const lastMessage = ultimoMensaje?.content?.contenido
-					? `<p class="ultimo-mensaje">${ultimoMensaje.content.nombre_usuario}: ${ultimoMensaje.content.contenido}</p>`
+					? `<p class="ultimo-mensaje">${ultimoMensaje.content.nombre_usuario}: ${ultimoMensaje.content.contenido}</p > `
 					: '';
 
 				const num = mensajesNoLeidos.content.num_mensajes;
@@ -88,7 +101,7 @@ export default class Grupo extends Endpoint {
 
 						${lastMessage}
 
-					</li>`;
+					</li> `;
 
 				return formInvitar;
 
@@ -101,13 +114,15 @@ export default class Grupo extends Endpoint {
 	gruposPendienteTemplate(fetchedGrupos) {
 
 		const grupos = fetchedGrupos.map(grupo =>
-			`<li>
+			`
+			<li>
 				<h3 translate="no">${grupo.nombre_grupo}</h3>
 				<form method="POST" name="aceptarInvitacion">
 					<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
 					<button>Aceptar</button>
 				</form>
-			</li>`
+			</li>
+			`
 		).join('');
 
 		return grupos;
