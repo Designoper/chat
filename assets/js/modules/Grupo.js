@@ -64,8 +64,14 @@ export default class Grupo extends Usuario {
 					}
 				);
 
+				let mensajePropio = "";
+
+				ultimoMensaje?.content?.id_emisor === this.id_usuario
+					? mensajePropio = 'Tú'
+					: mensajePropio = ultimoMensaje.content.nombre_usuario;
+
 				const lastMessage = ultimoMensaje?.content?.contenido
-					? `<p class="ultimo-mensaje">${ultimoMensaje.content.nombre_usuario}: ${ultimoMensaje.content.contenido}</p > `
+					? `<p class="ultimo-mensaje">${mensajePropio}: ${ultimoMensaje.content.contenido}</p > `
 					: '';
 
 				const num = mensajesNoLeidos.content.num_mensajes;
