@@ -19,14 +19,8 @@ header {
 
 main {
 	output {
-		/* max-width: 100%; */
 
 		.ultimo-mensaje {
-			/* color: var(--quartery-bg); */
-			/* width: 100%;
-			max-width: 100%; */
-			/* min-width: 0; */
-			/* display: grid; */
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -36,7 +30,6 @@ main {
 		}
 
 		form {
-			/* padding: 1em 0; */
 			gap: 1em;
 			align-items: center;
 
@@ -55,9 +48,6 @@ main {
 		> menu {
 			gap: 1.5em;
 			padding: 2em 0;
-			/* max-width: 100%; */
-			/* overflow: hidden; */
-
 			background-color: var(--secondary-bg);
 
 			> li {
