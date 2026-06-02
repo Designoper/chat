@@ -28,6 +28,16 @@ export default class Usuario extends Endpoint {
 					}
 				);
 
+				const ultimoMensaje = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_MENSAJE, 'get',
+					{
+						"id_receptor": usuario.id_usuario
+					}
+				);
+
+				const lastMessage = ultimoMensaje?.content?.contenido
+					? `<p class="ultimo-mensaje">${ultimoMensaje.content.nombre_usuario}: ${ultimoMensaje.content.contenido}</p>`
+					: '';
+
 				const num = mensajesNoLeidos.content.num_mensajes;
 
 				const badge = num > 0
@@ -45,6 +55,7 @@ export default class Usuario extends Endpoint {
 						<a href="videollamada.php?id-receptor=${usuario.id_usuario}&nombre-receptor=${usuario.nombre_usuario}">
 							<img src="./assets/img/videollamada.svg">
 						</a>
+						${lastMessage}
 					</li>`;
 
 				return total;

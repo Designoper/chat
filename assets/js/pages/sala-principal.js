@@ -3,6 +3,7 @@ import Grupo from '../modules/Grupo.js';
 
 const usuario = new Usuario();
 
+await usuario.sessionCheck();
 await usuario.getUsuarios();
 await usuario.getMensajesNoLeidos();
 

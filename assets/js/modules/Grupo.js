@@ -45,6 +45,16 @@ export default class Grupo extends Endpoint {
 					}
 				);
 
+				const ultimoMensaje = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_MENSAJE, 'get',
+					{
+						"id_grupo": grupo.id_grupo
+					}
+				);
+
+				const lastMessage = ultimoMensaje?.content?.contenido
+					? `<p class="ultimo-mensaje">${ultimoMensaje.content.nombre_usuario}: ${ultimoMensaje.content.contenido}</p>`
+					: '';
+
 				const num = mensajesNoLeidos.content.num_mensajes;
 
 				const badge = num > 0
@@ -75,6 +85,8 @@ export default class Grupo extends Endpoint {
 							</select>
 							<button>Invitar</button>
 						</form>
+
+						${lastMessage}
 
 					</li>`;
 

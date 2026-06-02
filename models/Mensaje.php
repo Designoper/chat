@@ -138,6 +138,7 @@ readonly class Mensaje extends MysqliConnect
 
 		$statement =
 			"SELECT
+				id_emisor,
 				nombre_usuario,
 				contenido,
 				DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio
@@ -168,7 +169,8 @@ readonly class Mensaje extends MysqliConnect
 
 		$this->status = 200;
 		$this->message = 'Último mensaje directo obtenido con éxito';
-		$this->content = $ultimo_mensaje;
+		$this->content =
+			$ultimo_mensaje ? $ultimo_mensaje : [];
 		$this->sendResponse();
 	}
 
@@ -183,6 +185,7 @@ readonly class Mensaje extends MysqliConnect
 
 		$statement =
 			"SELECT
+				id_emisor,
 				nombre_usuario,
 				contenido,
 				DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio
@@ -208,7 +211,7 @@ readonly class Mensaje extends MysqliConnect
 
 		$this->status = 200;
 		$this->message = 'Último mensaje grupal obtenido con éxito';
-		$this->content = $ultimo_mensaje;
+		$this->content = $ultimo_mensaje ? $ultimo_mensaje : [];
 		$this->sendResponse();
 	}
 
