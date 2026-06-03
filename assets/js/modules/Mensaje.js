@@ -106,14 +106,14 @@ export default class Mensaje extends TemporalFormat {
 			}
 
 			const fechaFinal = this.hoursMinutes(mensaje.fecha_envio);
-			const fecha = this.formatearFecha(mensaje.fecha_envio);
+			const fechaMensajeActual = this.formatearFecha(mensaje.fecha_envio);
 			const fechaMensajeAnterior = this.mensaje.fecha;
 
 			let fechatest;
 
-			if (fechaMensajeAnterior?.day === fecha.day &&
-				fechaMensajeAnterior?.month === fecha.month &&
-				fechaMensajeAnterior?.year === fecha.year) {
+			if (fechaMensajeAnterior?.day === fechaMensajeActual.day &&
+				fechaMensajeAnterior?.month === fechaMensajeActual.month &&
+				fechaMensajeAnterior?.year === fechaMensajeActual.year) {
 				fechatest = "";
 			}
 
