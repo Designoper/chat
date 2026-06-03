@@ -18,6 +18,8 @@ export default class Mensaje extends TemporalFormat {
 		a: document.querySelector('a'),
 	};
 
+	mensaje = {};
+
 	constructor() {
 		super();
 	}
@@ -105,13 +107,18 @@ export default class Mensaje extends TemporalFormat {
 
 			const fechaFinal = this.fullDate(mensaje.fecha_envio);
 
-			return `
+			let autor = `<p translate="no" class="autor">${mensaje.nombre_usuario}</p>`;
+
+			if (mensaje.nombre_usuario === this.mensaje?.autor) {
+				autor = "";
+			}
+
+			const template = `
             ${etiqueta}
 			<article ${mensaje.id_emisor === this.id_usuario ? 'class="mensaje-propio"' : ''}>
-				<p translate="no">${mensaje.nombre_usuario}</p>
-				<p>${mensaje.contenido}</p>
-
-				<p>${fechaFinal}</p>
+				${autor}
+				<p class="contenido">${mensaje.contenido}</p>
+				<p class="fecha">${fechaFinal}</p>
 				${mensaje.id_emisor === this.id_usuario
 					? `<form method="POST" name="deleteMensaje">
 						<input type="hidden" name="id_mensaje" value="${mensaje.id_mensaje}">
@@ -125,9 +132,13 @@ export default class Mensaje extends TemporalFormat {
 				}
 			</article>
 			`;
-		}).join('');
 
-		return mensajes;
+			this.mensaje.autor = mensaje.nombre_usuario;
+
+			return template;
+		});
+
+		return mensajes.join("");
 	}
 
 	async createMensaje(form) {

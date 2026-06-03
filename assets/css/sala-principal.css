@@ -14,13 +14,12 @@ header {
 	}
 
 	h1 {
-		font-size: 1.5em;
+		font-size: 1.25em;
 	}
 }
 
 main {
 	output {
-
 		.ultimo-mensaje {
 			white-space: nowrap;
 			overflow: hidden;
@@ -28,6 +27,7 @@ main {
 			opacity: 70%;
 			font-size: smaller;
 			width: 100%;
+			text-box: trim-both cap text;
 		}
 
 		span {
@@ -35,15 +35,14 @@ main {
 			color: white;
 			border-radius: 50%;
 			padding: 0.4em 0.5em;
-			/* margin-left: 0.5em; */
 			font-size: 0.7em;
 		}
 
 		a {
 			display: flex;
 			width: 100%;
-			gap: 1em 0.5em;
-			padding: 1em 0;
+			gap: 0.75em 0.5em;
+			padding: 1em 2em;
 			align-items: center;
 		}
 
@@ -64,29 +63,16 @@ main {
 		}
 
 		> menu {
-			/* gap: 1.5em; */
-			/* padding: 2em 0; */
 			background-color: var(--secondary-bg);
-
-			> li {
-				padding: 0 2em;
-			}
 		}
 
 		li {
-			display: flex;
-			align-items: center;
-			gap: 1em;
-			width: 100%;
-			white-space: nowrap;
 			overflow: hidden;
-			text-overflow: ellipsis;
 		}
 	}
 
 	menu {
 		display: grid;
-		/* gap: 1.5em; */
 		row-rule: solid 1px var(--primary-bg);
 
 		svg {
