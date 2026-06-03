@@ -14,6 +14,21 @@ export default class TemporalFormat extends Usuario {
 		return fullDate;
 	}
 
+	fullDate(date) {
+		const options = {
+			weekday: "short",
+			day: "2-digit",
+			month: "2-digit",
+			year: "2-digit",
+			hour: "2-digit",
+			minute: "2-digit"
+		};
+
+		const temporal = this.formatearFecha(date).toLocaleString(undefined, options);
+
+		return temporal;
+	}
+
 	yearMonthDay(date) {
 		const options = {
 			day: "2-digit",
@@ -26,14 +41,12 @@ export default class TemporalFormat extends Usuario {
 		return temporal;
 	}
 
-	fullDate(date) {
+	yearMonthDayWeekday(date) {
 		const options = {
-			weekday: "short",
-			day: "numeric",
-			month: "numeric",
-			year: "2-digit",
-			hour: "numeric",
-			minute: "numeric"
+			weekday: "long",
+			day: "2-digit",
+			month: "2-digit",
+			year: "2-digit"
 		};
 
 		const temporal = this.formatearFecha(date).toLocaleString(undefined, options);
@@ -41,7 +54,7 @@ export default class TemporalFormat extends Usuario {
 		return temporal;
 	}
 
-	minutesAndSeconds(date) {
+	hoursMinutes(date) {
 		const options = {
 			hour: "numeric",
 			minute: "numeric"

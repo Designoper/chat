@@ -105,12 +105,11 @@ export default class Mensaje extends TemporalFormat {
 				this.mostrado = true; // ← ya no se vuelve a mostrar
 			}
 
-			const fechaFinal = this.fullDate(mensaje.fecha_envio);
+			const fechaFinal = this.hoursMinutes(mensaje.fecha_envio);
 			const fecha = this.formatearFecha(mensaje.fecha_envio);
 			const fechaMensajeAnterior = this.mensaje.fecha;
 
 			let fechatest;
-
 
 			if (fechaMensajeAnterior?.day === fecha.day &&
 				fechaMensajeAnterior?.month === fecha.month &&
@@ -119,7 +118,7 @@ export default class Mensaje extends TemporalFormat {
 			}
 
 			else {
-				fechatest = `<p class="fecha">${this.yearMonthDay(mensaje.fecha_envio)}</p>`;
+				fechatest = `<p class="fecha">${this.yearMonthDayWeekday(mensaje.fecha_envio)}</p>`;
 			}
 
 			let autor = `<p translate="no" class="autor">${mensaje.nombre_usuario}</p>`;
@@ -151,7 +150,6 @@ export default class Mensaje extends TemporalFormat {
 
 			this.mensaje.autor = mensaje.nombre_usuario;
 			this.mensaje.fecha = this.formatearFecha(mensaje.fecha_envio);
-			// this.monthDay();
 
 			return template;
 		});
