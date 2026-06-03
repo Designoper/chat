@@ -65,7 +65,7 @@ main {
 			border-radius: 0.25rem;
 			transition: transform 0.5s;
 			justify-self: center;
-			align-self: center;
+			align-self: end;
 			background-color: var(--white);
 
 			&:hover {
@@ -120,6 +120,10 @@ main {
 			justify-self: right;
 			/* background-color: rgb(148, 198, 255); */
 			/* border-radius: 1em 0 1em 1em; */
+		}
+
+		.fecha {
+			text-align: center;
 		}
 	}
 }

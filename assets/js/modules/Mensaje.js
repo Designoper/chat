@@ -106,6 +106,21 @@ export default class Mensaje extends TemporalFormat {
 			}
 
 			const fechaFinal = this.fullDate(mensaje.fecha_envio);
+			const fecha = this.formatearFecha(mensaje.fecha_envio);
+			const fechaMensajeAnterior = this.mensaje.fecha;
+
+			let fechatest;
+
+
+			if (fechaMensajeAnterior?.day === fecha.day &&
+				fechaMensajeAnterior?.month === fecha.month &&
+				fechaMensajeAnterior?.year === fecha.year) {
+				fechatest = "";
+			}
+
+			else {
+				fechatest = `<p class="fecha">${this.yearMonthDay(mensaje.fecha_envio)}</p>`;
+			}
 
 			let autor = `<p translate="no" class="autor">${mensaje.nombre_usuario}</p>`;
 
@@ -114,6 +129,7 @@ export default class Mensaje extends TemporalFormat {
 			}
 
 			const template = `
+			${fechatest}
             ${etiqueta}
 			<article ${mensaje.id_emisor === this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				${autor}
@@ -134,6 +150,8 @@ export default class Mensaje extends TemporalFormat {
 			`;
 
 			this.mensaje.autor = mensaje.nombre_usuario;
+			this.mensaje.fecha = this.formatearFecha(mensaje.fecha_envio);
+			// this.monthDay();
 
 			return template;
 		});

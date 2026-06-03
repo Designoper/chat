@@ -14,6 +14,18 @@ export default class TemporalFormat extends Usuario {
 		return fullDate;
 	}
 
+	yearMonthDay(date) {
+		const options = {
+			day: "2-digit",
+			month: "2-digit",
+			year: "2-digit"
+		};
+
+		const temporal = this.formatearFecha(date).toLocaleString(undefined, options);
+
+		return temporal;
+	}
+
 	fullDate(date) {
 		const options = {
 			weekday: "short",
