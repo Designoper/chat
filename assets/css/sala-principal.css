@@ -7,6 +7,7 @@ header {
 	background-color: var(--quartery-bg);
 	padding: 1em 2em;
 	width: 100%;
+	z-index: 1;
 
 	svg {
 		width: 1.5em;
@@ -29,6 +30,23 @@ main {
 			width: 100%;
 		}
 
+		span {
+			background-color: var(--quartery-bg);
+			color: white;
+			border-radius: 50%;
+			padding: 0.4em 0.5em;
+			/* margin-left: 0.5em; */
+			font-size: 0.7em;
+		}
+
+		a {
+			display: flex;
+			width: 100%;
+			gap: 1em 0.5em;
+			padding: 1em 0;
+			align-items: center;
+		}
+
 		form {
 			gap: 1em;
 			align-items: center;
@@ -46,8 +64,8 @@ main {
 		}
 
 		> menu {
-			gap: 1.5em;
-			padding: 2em 0;
+			/* gap: 1.5em; */
+			/* padding: 2em 0; */
 			background-color: var(--secondary-bg);
 
 			> li {
@@ -68,7 +86,8 @@ main {
 
 	menu {
 		display: grid;
-		gap: 1.5em;
+		/* gap: 1.5em; */
+		row-rule: solid 1px var(--primary-bg);
 
 		svg {
 			width: 1.5em;

@@ -102,7 +102,9 @@ readonly class Mensaje extends MysqliConnect
 	private function getUltimoMensajePublico(): void
 	{
 		$statement =
-			"SELECT contenido,
+			"SELECT
+				id_emisor,
+				contenido,
 				DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
 				nombre_usuario
 				FROM mensajes
@@ -122,7 +124,7 @@ readonly class Mensaje extends MysqliConnect
 
 		$this->status = 200;
 		$this->message = 'Último mensaje público obtenido con éxito';
-		$this->content = $ultimo_mensaje;
+		$this->content = $ultimo_mensaje ? $ultimo_mensaje : [];
 		$this->sendResponse();
 	}
 
