@@ -1,3 +1,7 @@
+/* body {
+	background-color: var(--secondary-bg);
+} */
+
 header {
 	display: flex;
 	gap: 1em;
@@ -10,7 +14,7 @@ header {
 	z-index: 1;
 
 	svg {
-		width: 1em;
+		width: 1.25em;
 	}
 
 	h1 {
@@ -19,6 +23,8 @@ header {
 }
 
 main {
+	background-color: var(--secondary-bg);
+
 	output {
 		.ultimo-mensaje {
 			white-space: nowrap;
@@ -28,6 +34,7 @@ main {
 			font-size: smaller;
 			width: 100%;
 			text-box: trim-both cap text;
+			scrollbar-width: none;
 		}
 
 		.fecha {
@@ -69,12 +76,13 @@ main {
 			}
 		}
 
-		> menu {
+		/* > menu {
 			background-color: var(--secondary-bg);
-		}
+		} */
 
 		li {
 			overflow: hidden;
+			scrollbar-width: none;
 		}
 	}
 
