@@ -110,7 +110,7 @@ export default class Mensaje extends Usuario {
 				enlace = "https://" + url;
 			}
 
-			return `<a href="${enlace}" target="_blank">${url}</a>`;
+			return `<a href="${enlace}" target="_blank" rel="noopener noreferrer">${url}</a>`;
 		});
 	}
 
