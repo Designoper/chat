@@ -122,8 +122,9 @@ main {
 			/* border-radius: 1em 0 1em 1em; */
 		}
 
-		.fecha {
+		.cambio-dia {
 			text-align: center;
+			font-size: 0.8em;
 		}
 	}
 }

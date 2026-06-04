@@ -118,7 +118,7 @@ export default class Mensaje extends TemporalFormat {
 			}
 
 			else {
-				fechatest = `<p class="fecha">${this.yearMonthDayWeekday(mensaje.fecha_envio)}</p>`;
+				fechatest = `<p class="cambio-dia">${this.yearMonthDayWeekday(mensaje.fecha_envio)}</p>`;
 			}
 
 			let autor = `<p translate="no" class="autor">${mensaje.nombre_usuario}</p>`;

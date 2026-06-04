@@ -53,12 +53,24 @@ export default class Endpoint extends Fetch {
 		this.initFormHandler();
 	}
 
+	// sanitizeForm(form) {
+
+	// 	const strictSanitizer = new Sanitizer();
+	// 	const campos = form.querySelectorAll("input, textarea");
+
+	// 	campos.forEach(campo => {
+	// 		const valor = campo.value;
+	// 		campo.value = strictSanitizer.sanitize(valor);
+	// 	});
+	// }
+
 	initFormHandler() {
 		document.addEventListener('submit', (e) => {
 			const form = e.target;
 			if (form.tagName !== 'FORM') return;
 
 			e.preventDefault();
+			// this.sanitizeForm(form);
 
 			const name = form.name;
 

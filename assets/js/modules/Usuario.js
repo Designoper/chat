@@ -1,8 +1,7 @@
-import Endpoint from "./Endpoint.js";
+import SanitizerAPI from "./Sanitizer.js";
 
-export default class Usuario extends Endpoint {
+export default class Usuario extends SanitizerAPI {
 	id_usuario;
-	menu = document.querySelector('output>menu>li>menu');
 
 	constructor() {
 		super();
@@ -20,19 +19,16 @@ export default class Usuario extends Endpoint {
 
 	async chatPublicoTemplate() {
 		const mensajesNoLeidos = await this.getMensajesNoLeidos();
-		let badge = '';
 
-		if (mensajesNoLeidos.num_mensajes > 0) {
-			badge = `<span>${mensajesNoLeidos.num_mensajes}</span>`;
-		}
+		const badge = mensajesNoLeidos.num_mensajes > 0
+			? `<span>${mensajesNoLeidos.num_mensajes}</span>`
+			: '';
 
 		const ultimoMensaje = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_MENSAJE, 'get');
 
-		let mensajePropio = "";
-
-		ultimoMensaje?.content?.id_emisor === this.id_usuario
-			? mensajePropio = 'Tú'
-			: mensajePropio = ultimoMensaje.content.nombre_usuario;
+		const mensajePropio = ultimoMensaje?.content?.id_emisor === this.id_usuario
+			? 'Tú'
+			: ultimoMensaje?.content?.nombre_usuario;
 
 		const lastMessage = ultimoMensaje?.content?.contenido
 			? `<p class="ultimo-mensaje">${mensajePropio}: ${ultimoMensaje.content.contenido}</p>`

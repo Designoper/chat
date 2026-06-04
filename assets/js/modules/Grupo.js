@@ -18,7 +18,7 @@ export default class Grupo extends Usuario {
 		const usuarios = await this.getUsuarios();
 		const usuariosPrint = await this.usuariosTemplate(usuarios);
 
-		this.output.innerHTML = `${chatPublico}${usuariosPrint}${gruposMiembroPrint}${gruposPendientePrint}`;
+		this.output.setHTML(`${chatPublico}${usuariosPrint}${gruposMiembroPrint}${gruposPendientePrint}`, { sanitizer: new Sanitizer({}) });
 	}
 
 	async getGruposMiembro() {
