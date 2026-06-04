@@ -1,6 +1,6 @@
-import Usuario from "./Usuario.js";
+import Endpoint from "./Endpoint.js";
 
-export default class TemporalFormat extends Usuario {
+export default class TemporalFormat extends Endpoint {
 	constructor() {
 		super();
 	}

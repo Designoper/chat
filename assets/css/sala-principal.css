@@ -30,6 +30,12 @@ main {
 			text-box: trim-both cap text;
 		}
 
+		.fecha {
+			opacity: 70%;
+			font-size: smaller;
+			margin-left: auto;
+		}
+
 		span {
 			background-color: var(--quartery-bg);
 			color: white;

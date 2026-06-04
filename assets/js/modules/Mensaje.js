@@ -1,6 +1,6 @@
-import TemporalFormat from "./Temporal.js";
+import Usuario from "./Usuario.js";
 
-export default class Mensaje extends TemporalFormat {
+export default class Mensaje extends Usuario {
 
 	urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
