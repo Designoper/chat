@@ -114,7 +114,6 @@ export default class Mensaje extends Usuario {
 		});
 	}
 
-
 	mensajesTemplate(fetchedMensajes) {
 
 		const mensajes = fetchedMensajes.map(mensaje => {
