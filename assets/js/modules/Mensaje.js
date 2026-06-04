@@ -94,6 +94,27 @@ export default class Mensaje extends Usuario {
 		});
 	}
 
+	detectarEnlaces(texto) {
+		const urlRegex = /(https?:\/\/[^\s]+)/g;
+		return texto.replace(urlRegex, url => `<a href="${url}" target="_blank">${url}</a>`);
+	}
+
+	detectarEnlacesAvanzado(texto) {
+		const urlRegex = /((https?:\/\/|www\.)[^\s]+|[a-z0-9.-]+\.[a-z]{2,}(\/[^\s]*)?)/gi;
+
+		return texto.replace(urlRegex, url => {
+			let enlace = url;
+
+			// Si no tiene protocolo, se lo añadimos
+			if (!/^https?:\/\//i.test(url)) {
+				enlace = "https://" + url;
+			}
+
+			return `<a href="${enlace}" target="_blank">${url}</a>`;
+		});
+	}
+
+
 	mensajesTemplate(fetchedMensajes) {
 
 		const mensajes = fetchedMensajes.map(mensaje => {
@@ -133,7 +154,7 @@ export default class Mensaje extends Usuario {
 			<article ${mensaje.id_emisor === this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				${autor}
 				<div>
-					<p class="contenido">${mensaje.contenido}</p>
+					<p class="contenido">${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
 					<p class="fecha">${fechaFinal}</p>
 				</div>
 				${mensaje.id_emisor === this.id_usuario
