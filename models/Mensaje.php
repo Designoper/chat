@@ -593,573 +593,573 @@ readonly class Mensaje extends MysqliConnect
 		$this->sendResponse();
 	}
 
-	// MARK: READ MENSAJES
+	// // MARK: READ MENSAJES
 
-	public function readMensajes(): void
-	{
-		if (isset($_GET['id_receptor'])) {
-			$this->readMensajesDirectos();
-		}
+	// public function readMensajes(): void
+	// {
+	// 	if (isset($_GET['id_receptor'])) {
+	// 		$this->readMensajesDirectos();
+	// 	}
 
-		if (isset($_GET['id_grupo'])) {
-			$this->readMensajesGrupales();
-		}
+	// 	if (isset($_GET['id_grupo'])) {
+	// 		$this->readMensajesGrupales();
+	// 	}
 
-		if (count($_GET) === 0) {
-			$this->readMensajesPublicos();
-		}
-	}
+	// 	if (count($_GET) === 0) {
+	// 		$this->readMensajesPublicos();
+	// 	}
+	// }
 
-	// MARK: READ MENSAJES PUBLICOS
+	// // MARK: READ MENSAJES PUBLICOS
 
-	private function readMensajesPublicos(): void
-	{
-		$statement =
-			"SELECT
-				mensajes.id_mensaje,
-				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
-				mensajes.id_emisor,
-				usuarios.nombre_usuario
-			FROM mensajes
-			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-			WHERE mensajes.id_receptor IS NULL
-			AND mensajes.id_grupo IS NULL
-			ORDER BY fecha_envio ASC";
+	// private function readMensajesPublicos(): void
+	// {
+	// 	$statement =
+	// 		"SELECT
+	// 			mensajes.id_mensaje,
+	// 			mensajes.contenido,
+	// 			DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+	// 			mensajes.id_emisor,
+	// 			usuarios.nombre_usuario
+	// 		FROM mensajes
+	// 		LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+	// 		WHERE mensajes.id_receptor IS NULL
+	// 		AND mensajes.id_grupo IS NULL
+	// 		ORDER BY fecha_envio ASC";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
+	// 	$query->execute();
+	// 	$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+	// 	$query->close();
 
-		$message =
-			$mensajes
-			? 'Mensajes públicos obtenidos.'
-			: 'No hay ningún mensaje.';
+	// 	$message =
+	// 		$mensajes
+	// 		? 'Mensajes públicos obtenidos.'
+	// 		: 'No hay ningún mensaje.';
 
-		$this->status = 200;
-		$this->message = $message;
-		$this->content = $mensajes;
-		$this->sendResponse();
-	}
+	// 	$this->status = 200;
+	// 	$this->message = $message;
+	// 	$this->content = $mensajes;
+	// 	$this->sendResponse();
+	// }
 
-	// MARK: READ MENSAJES DIRECTOS
+	// // MARK: READ MENSAJES DIRECTOS
 
-	private function readMensajesDirectos(): void
-	{
-		$this->setIdReceptor();
+	// private function readMensajesDirectos(): void
+	// {
+	// 	$this->setIdReceptor();
 
-		$this->checkValidationErrors();
+	// 	$this->checkValidationErrors();
 
-		$id_emisor = $this->id_emisor;
-		$id_receptor = $this->id_receptor;
+	// 	$id_emisor = $this->id_emisor;
+	// 	$id_receptor = $this->id_receptor;
 
-		$statement =
-			"SELECT
-				mensajes.id_mensaje,
-				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
-				mensajes.id_emisor,
-				usuarios.nombre_usuario
-			FROM mensajes
-			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-			WHERE mensajes.id_receptor IS NOT NULL
-			AND (
-				(id_emisor = ? AND id_receptor = ?)
-				OR (id_emisor = ? AND id_receptor = ?)
-			)
-			ORDER BY fecha_envio ASC";
+	// 	$statement =
+	// 		"SELECT
+	// 			mensajes.id_mensaje,
+	// 			mensajes.contenido,
+	// 			DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+	// 			mensajes.id_emisor,
+	// 			usuarios.nombre_usuario
+	// 		FROM mensajes
+	// 		LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+	// 		WHERE mensajes.id_receptor IS NOT NULL
+	// 		AND (
+	// 			(id_emisor = ? AND id_receptor = ?)
+	// 			OR (id_emisor = ? AND id_receptor = ?)
+	// 		)
+	// 		ORDER BY fecha_envio ASC";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"iiii",
-			$id_emisor,
-			$id_receptor,
-			$id_receptor,
-			$id_emisor
-		);
+	// 	$query->bind_param(
+	// 		"iiii",
+	// 		$id_emisor,
+	// 		$id_receptor,
+	// 		$id_receptor,
+	// 		$id_emisor
+	// 	);
 
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
+	// 	$query->execute();
+	// 	$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+	// 	$query->close();
 
-		$message =
-			$mensajes
-			? 'Mensajes directos obtenidos.'
-			: 'No hay ningún mensaje.';
+	// 	$message =
+	// 		$mensajes
+	// 		? 'Mensajes directos obtenidos.'
+	// 		: 'No hay ningún mensaje.';
 
-		$this->status = 200;
-		$this->message = $message;
-		$this->content = $mensajes;
-		$this->sendResponse();
-	}
+	// 	$this->status = 200;
+	// 	$this->message = $message;
+	// 	$this->content = $mensajes;
+	// 	$this->sendResponse();
+	// }
 
-	// MARK: READ MENSAJES GRUPALES
+	// // MARK: READ MENSAJES GRUPALES
 
-	private function readMensajesGrupales(): void
-	{
-		$this->setIdGrupo();
-		$this->checkValidationErrors();
+	// private function readMensajesGrupales(): void
+	// {
+	// 	$this->setIdGrupo();
+	// 	$this->checkValidationErrors();
 
-		$this->isMiembroGrupo();
+	// 	$this->isMiembroGrupo();
 
-		$id_grupo = $this->id_grupo;
+	// 	$id_grupo = $this->id_grupo;
 
-		$statement =
-			"SELECT
-				mensajes.id_mensaje,
-				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
-				mensajes.id_emisor,
-				usuarios.nombre_usuario
-			FROM mensajes
-			LEFT JOIN usuarios on mensajes.id_emisor = usuarios.id_usuario
-			WHERE mensajes.id_grupo = ?
-			ORDER BY fecha_envio ASC";
+	// 	$statement =
+	// 		"SELECT
+	// 			mensajes.id_mensaje,
+	// 			mensajes.contenido,
+	// 			DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+	// 			mensajes.id_emisor,
+	// 			usuarios.nombre_usuario
+	// 		FROM mensajes
+	// 		LEFT JOIN usuarios on mensajes.id_emisor = usuarios.id_usuario
+	// 		WHERE mensajes.id_grupo = ?
+	// 		ORDER BY fecha_envio ASC";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"i",
-			$id_grupo
-		);
+	// 	$query->bind_param(
+	// 		"i",
+	// 		$id_grupo
+	// 	);
 
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
+	// 	$query->execute();
+	// 	$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+	// 	$query->close();
 
-		$message =
-			$mensajes
-			? 'Mensajes grupales obtenidos.'
-			: 'No hay ningún mensaje.';
+	// 	$message =
+	// 		$mensajes
+	// 		? 'Mensajes grupales obtenidos.'
+	// 		: 'No hay ningún mensaje.';
 
-		$this->status = 200;
-		$this->message = $message;
-		$this->content = $mensajes;
-		$this->sendResponse();
-	}
+	// 	$this->status = 200;
+	// 	$this->message = $message;
+	// 	$this->content = $mensajes;
+	// 	$this->sendResponse();
+	// }
 
-	// MARK: IS AUTOR MENSAJE
+	// // MARK: IS AUTOR MENSAJE
 
-	private function isAutorMensaje(): void
-	{
-		$this->setIdMensaje();
+	// private function isAutorMensaje(): void
+	// {
+	// 	$this->setIdMensaje();
 
-		$this->checkValidationErrors();
+	// 	$this->checkValidationErrors();
 
-		$id_usuario = $this->id_emisor;
-		$id_mensaje = $this->id_mensaje;
+	// 	$id_usuario = $this->id_emisor;
+	// 	$id_mensaje = $this->id_mensaje;
 
-		$statement =
-			"SELECT id_emisor
-			FROM mensajes
-			WHERE id_mensaje = ?";
+	// 	$statement =
+	// 		"SELECT id_emisor
+	// 		FROM mensajes
+	// 		WHERE id_mensaje = ?";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"i",
-			$id_mensaje
-		);
+	// 	$query->bind_param(
+	// 		"i",
+	// 		$id_mensaje
+	// 	);
 
-		$query->execute();
-		$query->bind_result($autor);
-		$query->fetch();
-		$query->close();
+	// 	$query->execute();
+	// 	$query->bind_result($autor);
+	// 	$query->fetch();
+	// 	$query->close();
 
-		if ($autor !== $id_usuario) {
-			$this->status = 403;
-			$this->errors->setIntegrityError('No eres el autor del mensaje');
-			$this->checkIntegrityErrors();
-		}
-	}
+	// 	if ($autor !== $id_usuario) {
+	// 		$this->status = 403;
+	// 		$this->errors->setIntegrityError('No eres el autor del mensaje');
+	// 		$this->checkIntegrityErrors();
+	// 	}
+	// }
 
-	// MARK: IS MIEMBRO
+	// // MARK: IS MIEMBRO
 
-	private function isMiembroGrupo(): void
-	{
-		$id_usuario = $this->id_emisor;
-		$id_grupo = $this->id_grupo;
+	// private function isMiembroGrupo(): void
+	// {
+	// 	$id_usuario = $this->id_emisor;
+	// 	$id_grupo = $this->id_grupo;
 
-		$statement =
-			"SELECT rol
-			FROM membresias
-			WHERE id_usuario = ?
-			AND id_grupo = ?";
+	// 	$statement =
+	// 		"SELECT rol
+	// 		FROM membresias
+	// 		WHERE id_usuario = ?
+	// 		AND id_grupo = ?";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_grupo
-		);
+	// 	$query->bind_param(
+	// 		"ii",
+	// 		$id_usuario,
+	// 		$id_grupo
+	// 	);
 
-		$query->execute();
-		$query->bind_result($rol);
-		$query->fetch();
-		$query->close();
+	// 	$query->execute();
+	// 	$query->bind_result($rol);
+	// 	$query->fetch();
+	// 	$query->close();
 
-		if ($rol === 'miembro' || $rol === 'fundador') {
-			return;
-		}
+	// 	if ($rol === 'miembro' || $rol === 'fundador') {
+	// 		return;
+	// 	}
 
-		$this->status = 403;
-		$this->errors->setIntegrityError('No formas parte del grupo');
-		$this->checkIntegrityErrors();
-	}
+	// 	$this->status = 403;
+	// 	$this->errors->setIntegrityError('No formas parte del grupo');
+	// 	$this->checkIntegrityErrors();
+	// }
 
 	// MARK: CREATE MENSAJE
 
-	public function createMensaje(): void
-	{
-		if (isset($_POST['id_receptor'])) {
-			$this->createMensajeDirecto();
-		}
+	// public function createMensaje(): void
+	// {
+	// 	if (isset($_POST['id_receptor'])) {
+	// 		$this->createMensajeDirecto();
+	// 	}
 
-		if (isset($_POST['id_grupo'])) {
-			$this->createMensajeGrupal();
-		}
+	// 	if (isset($_POST['id_grupo'])) {
+	// 		$this->createMensajeGrupal();
+	// 	}
 
-		$this->createMensajePublico();
-	}
+	// 	$this->createMensajePublico();
+	// }
 
-	// MARK: CREATE MENSAJE PUBLICO
+	// // MARK: CREATE MENSAJE PUBLICO
 
-	public function createMensajePublico(): void
-	{
-		$this->setContenido();
+	// public function createMensajePublico(): void
+	// {
+	// 	$this->setContenido();
 
-		$this->checkValidationErrors();
+	// 	$this->checkValidationErrors();
 
-		$id_emisor = $this->id_emisor;
-		$contenido = $this->contenido;
+	// 	$id_emisor = $this->id_emisor;
+	// 	$contenido = $this->contenido;
 
-		$statement =
-			"INSERT INTO mensajes (contenido, id_emisor)
-			VALUES (?, ?)";
+	// 	$statement =
+	// 		"INSERT INTO mensajes (contenido, id_emisor)
+	// 		VALUES (?, ?)";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"si",
-			$contenido,
-			$id_emisor
-		);
+	// 	$query->bind_param(
+	// 		"si",
+	// 		$contenido,
+	// 		$id_emisor
+	// 	);
 
-		$query->execute();
-		$query->close();
+	// 	$query->execute();
+	// 	$query->close();
 
-		$this->status = 201;
-		$this->message = "Mensaje público creado con éxito";
-		$this->sendResponse();
-	}
+	// 	$this->status = 201;
+	// 	$this->message = "Mensaje público creado con éxito";
+	// 	$this->sendResponse();
+	// }
 
-	// MARK: CREATE MENSAJE DIRECTO
+	// // MARK: CREATE MENSAJE DIRECTO
 
-	public function createMensajeDirecto(): void
-	{
-		$this->setContenido();
-		$this->setIdReceptor();
+	// public function createMensajeDirecto(): void
+	// {
+	// 	$this->setContenido();
+	// 	$this->setIdReceptor();
 
-		$this->checkValidationErrors();
+	// 	$this->checkValidationErrors();
 
-		$id_receptor = $this->id_receptor;
-		$id_emisor = $this->id_emisor;
-		$contenido = $this->contenido;
+	// 	$id_receptor = $this->id_receptor;
+	// 	$id_emisor = $this->id_emisor;
+	// 	$contenido = $this->contenido;
 
-		$statement =
-			"INSERT INTO mensajes (contenido, id_emisor, id_receptor)
-			VALUES (?, ?, ?)";
+	// 	$statement =
+	// 		"INSERT INTO mensajes (contenido, id_emisor, id_receptor)
+	// 		VALUES (?, ?, ?)";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"sii",
-			$contenido,
-			$id_emisor,
-			$id_receptor
-		);
+	// 	$query->bind_param(
+	// 		"sii",
+	// 		$contenido,
+	// 		$id_emisor,
+	// 		$id_receptor
+	// 	);
 
-		$query->execute();
-		$query->close();
+	// 	$query->execute();
+	// 	$query->close();
 
-		$this->status = 201;
-		$this->message = "Mensaje directo creado con éxito";
-		$this->sendResponse();
-	}
+	// 	$this->status = 201;
+	// 	$this->message = "Mensaje directo creado con éxito";
+	// 	$this->sendResponse();
+	// }
 
-	// MARK: CREATE MENSAJE GRUPAL
+	// // MARK: CREATE MENSAJE GRUPAL
 
-	public function createMensajeGrupal(): void
-	{
-		$this->setContenido();
-		$this->setIdGrupo();
+	// public function createMensajeGrupal(): void
+	// {
+	// 	$this->setContenido();
+	// 	$this->setIdGrupo();
 
-		$this->checkValidationErrors();
+	// 	$this->checkValidationErrors();
 
-		$this->isMiembroGrupo();
+	// 	$this->isMiembroGrupo();
 
-		$id_emisor = $this->id_emisor;
-		$contenido = $this->contenido;
-		$id_grupo = $this->id_grupo;
+	// 	$id_emisor = $this->id_emisor;
+	// 	$contenido = $this->contenido;
+	// 	$id_grupo = $this->id_grupo;
 
-		$statement =
-			"INSERT INTO mensajes (contenido, id_emisor, id_grupo)
-			VALUES (?, ?, ?)";
+	// 	$statement =
+	// 		"INSERT INTO mensajes (contenido, id_emisor, id_grupo)
+	// 		VALUES (?, ?, ?)";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"sii",
-			$contenido,
-			$id_emisor,
-			$id_grupo
-		);
+	// 	$query->bind_param(
+	// 		"sii",
+	// 		$contenido,
+	// 		$id_emisor,
+	// 		$id_grupo
+	// 	);
 
-		$query->execute();
-		$query->close();
+	// 	$query->execute();
+	// 	$query->close();
 
-		$this->status = 201;
-		$this->message = "Mensaje grupal creado con éxito";
-		$this->sendResponse();
-	}
+	// 	$this->status = 201;
+	// 	$this->message = "Mensaje grupal creado con éxito";
+	// 	$this->sendResponse();
+	// }
 
 	// MARK: DELETE MENSAJE
 
-	public function deleteMensaje(): void
-	{
-		$this->isAutorMensaje();
+	// public function deleteMensaje(): void
+	// {
+	// 	$this->isAutorMensaje();
 
-		$id_mensaje = $this->id_mensaje;
-		$id_emisor = $this->id_emisor;
+	// 	$id_mensaje = $this->id_mensaje;
+	// 	$id_emisor = $this->id_emisor;
 
-		$statement =
-			"DELETE FROM mensajes
-			WHERE id_mensaje = ?
-			AND id_emisor = ?";
+	// 	$statement =
+	// 		"DELETE FROM mensajes
+	// 		WHERE id_mensaje = ?
+	// 		AND id_emisor = ?";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"ii",
-			$id_mensaje,
-			$id_emisor
-		);
+	// 	$query->bind_param(
+	// 		"ii",
+	// 		$id_mensaje,
+	// 		$id_emisor
+	// 	);
 
-		$query->execute();
-		$num_filas = $query->affected_rows;
-		$query->close();
+	// 	$query->execute();
+	// 	$num_filas = $query->affected_rows;
+	// 	$query->close();
 
-		if ($num_filas === 1) {
-			$this->status = 204;
-		} else {
-			$this->status = 404;
-			$this->message = '¡El mensaje solicitado no existe!';
-		}
-		$this->sendResponse();
-	}
+	// 	if ($num_filas === 1) {
+	// 		$this->status = 204;
+	// 	} else {
+	// 		$this->status = 404;
+	// 		$this->message = '¡El mensaje solicitado no existe!';
+	// 	}
+	// 	$this->sendResponse();
+	// }
 
 	// MARK: GET NUEVOS MENSAJES PUBLICOS
 
-	private function getNuevosMensajesPublicos(): array
-	{
-		$id_usuario = $this->id_emisor;
+	// private function getNuevosMensajesPublicos(): array
+	// {
+	// 	$id_usuario = $this->id_emisor;
 
-		$statement =
-			"SELECT mensajes.id_mensaje,
-				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
-				mensajes.id_emisor,
-				usuarios.nombre_usuario
-			FROM mensajes
-			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-            WHERE mensajes.id_mensaje > COALESCE((
-				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos_publicos
-				WHERE id_usuario = ?
-			), 0)
-            AND mensajes.id_receptor IS NULL
-			AND mensajes.id_grupo IS NULL
-            ORDER BY mensajes.id_mensaje ASC";
+	// 	$statement =
+	// 		"SELECT mensajes.id_mensaje,
+	// 			mensajes.contenido,
+	// 			DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+	// 			mensajes.id_emisor,
+	// 			usuarios.nombre_usuario
+	// 		FROM mensajes
+	// 		LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+	//         WHERE mensajes.id_mensaje > COALESCE((
+	// 			SELECT id_mensaje
+	// 			FROM ultimos_mensajes_leidos_publicos
+	// 			WHERE id_usuario = ?
+	// 		), 0)
+	//         AND mensajes.id_receptor IS NULL
+	// 		AND mensajes.id_grupo IS NULL
+	//         ORDER BY mensajes.id_mensaje ASC";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"i",
-			$id_usuario
-		);
+	// 	$query->bind_param(
+	// 		"i",
+	// 		$id_usuario
+	// 	);
 
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
+	// 	$query->execute();
+	// 	$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+	// 	$query->close();
 
-		return $mensajes;
-	}
+	// 	return $mensajes;
+	// }
 
-	// MARK: GET NUEVOS MENSAJES DIRECTOS
+	// // MARK: GET NUEVOS MENSAJES DIRECTOS
 
-	private function getNuevosMensajesDirectos(): array
-	{
-		$id_receptor = $this->id_receptor;
-		$id_emisor = $this->id_emisor;
+	// private function getNuevosMensajesDirectos(): array
+	// {
+	// 	$id_receptor = $this->id_receptor;
+	// 	$id_emisor = $this->id_emisor;
 
-		$statement =
-			"SELECT mensajes.id_mensaje,
-				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
-				mensajes.id_emisor,
-				usuarios.nombre_usuario
-			FROM mensajes
-			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-			WHERE mensajes.id_mensaje > COALESCE((
-				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos_directos
-				WHERE id_usuario = ?
-				AND id_receptor = ?
-			), 0)
-			AND (
-				(id_emisor = ? AND id_receptor = ?)
-				OR (id_emisor = ? AND id_receptor = ?)
-			)
-			AND mensajes.id_grupo IS NULL
-			ORDER BY mensajes.id_mensaje ASC";
+	// 	$statement =
+	// 		"SELECT mensajes.id_mensaje,
+	// 			mensajes.contenido,
+	// 			DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+	// 			mensajes.id_emisor,
+	// 			usuarios.nombre_usuario
+	// 		FROM mensajes
+	// 		LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+	// 		WHERE mensajes.id_mensaje > COALESCE((
+	// 			SELECT id_mensaje
+	// 			FROM ultimos_mensajes_leidos_directos
+	// 			WHERE id_usuario = ?
+	// 			AND id_receptor = ?
+	// 		), 0)
+	// 		AND (
+	// 			(id_emisor = ? AND id_receptor = ?)
+	// 			OR (id_emisor = ? AND id_receptor = ?)
+	// 		)
+	// 		AND mensajes.id_grupo IS NULL
+	// 		ORDER BY mensajes.id_mensaje ASC";
 
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"iiiiii",
-			$id_emisor,
-			$id_receptor,
-			$id_emisor,
-			$id_receptor,
-			$id_receptor,
-			$id_emisor
-		);
+	// 	$query->bind_param(
+	// 		"iiiiii",
+	// 		$id_emisor,
+	// 		$id_receptor,
+	// 		$id_emisor,
+	// 		$id_receptor,
+	// 		$id_receptor,
+	// 		$id_emisor
+	// 	);
 
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
+	// 	$query->execute();
+	// 	$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+	// 	$query->close();
 
-		return $mensajes;
-	}
+	// 	return $mensajes;
+	// }
 
-	// MARK: GET NUEVOS MENSAJES GRUPALES
+	// // MARK: GET NUEVOS MENSAJES GRUPALES
 
-	private function getNuevosMensajesGrupales(): array
-	{
-		$id_grupo = $this->id_grupo;
-		$id_usuario = $this->id_emisor;
+	// private function getNuevosMensajesGrupales(): array
+	// {
+	// 	$id_grupo = $this->id_grupo;
+	// 	$id_usuario = $this->id_emisor;
 
-		$statement =
-			"SELECT mensajes.id_mensaje,
-				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
-				mensajes.id_emisor,
-				usuarios.nombre_usuario
-			FROM mensajes
-			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-            WHERE mensajes.id_mensaje > COALESCE((
-				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos_grupales
-				WHERE id_usuario = ?
-				AND id_grupo = ?
-			), 0)
-            AND mensajes.id_receptor IS NULL
-			AND mensajes.id_grupo = ?
-            ORDER BY mensajes.id_mensaje ASC";
+	// 	$statement =
+	// 		"SELECT mensajes.id_mensaje,
+	// 			mensajes.contenido,
+	// 			DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+	// 			mensajes.id_emisor,
+	// 			usuarios.nombre_usuario
+	// 		FROM mensajes
+	// 		LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+	//         WHERE mensajes.id_mensaje > COALESCE((
+	// 			SELECT id_mensaje
+	// 			FROM ultimos_mensajes_leidos_grupales
+	// 			WHERE id_usuario = ?
+	// 			AND id_grupo = ?
+	// 		), 0)
+	//         AND mensajes.id_receptor IS NULL
+	// 		AND mensajes.id_grupo = ?
+	//         ORDER BY mensajes.id_mensaje ASC";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"iii",
-			$id_usuario,
-			$id_grupo,
-			$id_grupo
-		);
+	// 	$query->bind_param(
+	// 		"iii",
+	// 		$id_usuario,
+	// 		$id_grupo,
+	// 		$id_grupo
+	// 	);
 
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
+	// 	$query->execute();
+	// 	$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+	// 	$query->close();
 
-		return $mensajes;
-	}
+	// 	return $mensajes;
+	// }
 
-	// MARK: STREAM MENSAJES
+	// // MARK: STREAM MENSAJES
 
-	public function streamMensajes(): void
-	{
-		if (session_status() === PHP_SESSION_ACTIVE) {
-			session_write_close();
-		}
+	// public function streamMensajes(): void
+	// {
+	// 	if (session_status() === PHP_SESSION_ACTIVE) {
+	// 		session_write_close();
+	// 	}
 
-		set_time_limit(0);
-		ignore_user_abort(false);
+	// 	set_time_limit(0);
+	// 	ignore_user_abort(false);
 
-		// Limpia buffers previos
-		while (ob_get_level() > 0) {
-			ob_end_clean();
-		}
+	// 	// Limpia buffers previos
+	// 	while (ob_get_level() > 0) {
+	// 		ob_end_clean();
+	// 	}
 
-		// Headers SSE
-		header("Content-Type: text/event-stream");
-		header("Cache-Control: no-cache");
-		header("Connection: keep-alive");
-		header("X-Accel-Buffering: no");
+	// 	// Headers SSE
+	// 	header("Content-Type: text/event-stream");
+	// 	header("Cache-Control: no-cache");
+	// 	header("Connection: keep-alive");
+	// 	header("X-Accel-Buffering: no");
 
-		ini_set('output_buffering', 'off');
-		ini_set('zlib.output_compression', 0);
+	// 	ini_set('output_buffering', 'off');
+	// 	ini_set('zlib.output_compression', 0);
 
-		// Forzar flush inicial
-		echo str_pad('', 4096) . "\n";
-		flush();
+	// 	// Forzar flush inicial
+	// 	echo str_pad('', 4096) . "\n";
+	// 	flush();
 
-		if (isset($_GET['id_receptor'])) {
-			$this->setIdReceptor();
-			$mensajes = fn() => $this->getNuevosMensajesDirectos();
-		} else if (isset($_GET['id_grupo'])) {
-			$this->setIdGrupo();
-			$mensajes = fn() => $this->getNuevosMensajesGrupales();
-		} else $mensajes = fn() => $this->getNuevosMensajesPublicos();
+	// 	if (isset($_GET['id_receptor'])) {
+	// 		$this->setIdReceptor();
+	// 		$mensajes = fn() => $this->getNuevosMensajesDirectos();
+	// 	} else if (isset($_GET['id_grupo'])) {
+	// 		$this->setIdGrupo();
+	// 		$mensajes = fn() => $this->getNuevosMensajesGrupales();
+	// 	} else $mensajes = fn() => $this->getNuevosMensajesPublicos();
 
-		$this->checkValidationErrors();
+	// 	$this->checkValidationErrors();
 
-		$lastPing = 0;
+	// 	$lastPing = 0;
 
-		while (true) {
+	// 	while (true) {
 
-			if (connection_aborted()) {
-				break;
-			}
+	// 		if (connection_aborted()) {
+	// 			break;
+	// 		}
 
-			$mensajesObtenidos = $mensajes();
+	// 		$mensajesObtenidos = $mensajes();
 
-			if (!empty($mensajesObtenidos)) {
+	// 		if (!empty($mensajesObtenidos)) {
 
-				foreach ($mensajesObtenidos as $m) {
-					$ultimo_id = $m["id_mensaje"];
+	// 			foreach ($mensajesObtenidos as $m) {
+	// 				$ultimo_id = $m["id_mensaje"];
 
-					echo "event: mensaje\n";
-					echo "data: " . json_encode($m) . "\n\n";
-				}
+	// 				echo "event: mensaje\n";
+	// 				echo "data: " . json_encode($m) . "\n\n";
+	// 			}
 
-				echo "event: new mensaje\n";
-				echo "data: " . json_encode($ultimo_id) . "\n\n";
-			}
+	// 			echo "event: new mensaje\n";
+	// 			echo "data: " . json_encode($ultimo_id) . "\n\n";
+	// 		}
 
-			if (time() - $lastPing > 10) {
-				echo "event: ping\n";
-				echo "data: keepalive\n\n";
-				$lastPing = time();
-			}
+	// 		if (time() - $lastPing > 10) {
+	// 			echo "event: ping\n";
+	// 			echo "data: keepalive\n\n";
+	// 			$lastPing = time();
+	// 		}
 
-			@ob_flush();
-			@flush();
+	// 		@ob_flush();
+	// 		@flush();
 
-			usleep(300000); // 0.3s
-		}
-	}
+	// 		usleep(300000); // 0.3s
+	// 	}
+	// }
 }
