@@ -34,8 +34,6 @@ header {
 }
 
 main {
-	/* padding: 0; */
-
 	> section {
 		display: grid;
 		gap: 1.25em;
@@ -81,8 +79,8 @@ main {
 
 	output {
 		display: grid;
-		gap: 1.5em;
-		padding: 5em 10vw 8em;
+		gap: 0.5em;
+		padding: 2em 10vw 8em;
 		max-width: 1200px;
 		margin: 0 auto;
 		width: 100%;
@@ -103,28 +101,48 @@ main {
 			border-radius: 1em;
 			width: fit-content;
 			max-width: 85%;
-			background-color: var(--secondary-bg);
+			align-items: self-end;
+			/* background-color: var(--secondary-bg); */
+			background-color: rgb(221, 221, 221);
+
+			div {
+				display: flex;
+				gap: 0.5em 1em;
+				align-items: self-end;
+
+			}
 
 			.autor {
 				font-weight: bold;
 				font-size: 1.25rem;
+				width: 100%;
+				/* flex-grow: 1; */
+
 			}
 
 			.fecha {
 				font-size: 0.75rem;
 				text-align: right;
+				flex-grow: 1;
+				opacity: 70%;
 			}
+		}
+
+		#marcador {
+			text-align: center;
+			font-size: 0.8em;
 		}
 
 		.mensaje-propio {
 			justify-self: right;
-			/* background-color: rgb(148, 198, 255); */
+			background-color: var(--secondary-bg);
 			/* border-radius: 1em 0 1em 1em; */
 		}
 
 		.cambio-dia {
 			text-align: center;
 			font-size: 0.8em;
+			margin: 1.5em 0;
 		}
 	}
 }

@@ -132,8 +132,10 @@ export default class Mensaje extends Usuario {
             ${etiqueta}
 			<article ${mensaje.id_emisor === this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				${autor}
-				<p class="contenido">${mensaje.contenido}</p>
-				<p class="fecha">${fechaFinal}</p>
+				<div>
+					<p class="contenido">${mensaje.contenido}</p>
+					<p class="fecha">${fechaFinal}</p>
+				</div>
 				${mensaje.id_emisor === this.id_usuario
 					? `<form method="POST" name="deleteMensaje">
 						<input type="hidden" name="id_mensaje" value="${mensaje.id_mensaje}">
