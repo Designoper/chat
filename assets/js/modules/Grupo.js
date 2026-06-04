@@ -64,20 +64,20 @@ export default class Grupo extends Usuario {
 					}
 				);
 
-				let mensajePropio = "";
+				const mensajePropio = ultimoMensaje?.content?.id_emisor === this.id_usuario
+					? 'Tú'
+					: ultimoMensaje.content.nombre_usuario;
 
-				ultimoMensaje?.content?.id_emisor === this.id_usuario
-					? mensajePropio = 'Tú'
-					: mensajePropio = ultimoMensaje.content.nombre_usuario;
-
-				const lastMessage = ultimoMensaje?.content?.contenido
-					? `<p class="ultimo-mensaje">${mensajePropio}: ${ultimoMensaje.content.contenido}</p > `
+				const fechaMensaje = ultimoMensaje?.content?.fecha_envio
+					? `<p class="fecha">${this.fullDate(ultimoMensaje.content.fecha_envio)}</p>`
 					: '';
 
-				const num = mensajesNoLeidos.content.num_mensajes;
+				const lastMessage = ultimoMensaje?.content?.contenido
+					? `<p class="ultimo-mensaje">${mensajePropio}: ${ultimoMensaje.content.contenido}</p>`
+					: '';
 
-				const badge = num > 0
-					? `(${num})`
+				const badge = mensajesNoLeidos.content.num_mensajes > 0
+					? `<span>${mensajesNoLeidos.content.num_mensajes}</span>`
 					: '';
 
 				const opciones = invitables.content
@@ -87,14 +87,12 @@ export default class Grupo extends Usuario {
 				const formInvitar =
 					`<li>
 
-						<h3 translate="no">${grupo.nombre_grupo}</h3>
-
 						<a href="./chat.php?id_grupo=${grupo.id_grupo}&nombre_grupo=${grupo.nombre_grupo}">
-							<svg viewBox="0 0 2481 2481">
-								<path d="M573.027 1811.925h-407.68c-90.945 0-165.355-85.823-165.355-190.725V190.712C-.008 85.824 74.402-.013 165.347-.013h2149.601c90.953 0 165.357 85.837 165.357 190.725V1621.2c0 104.901-74.403 190.725-165.357 190.725H1310.686l-709.001 649.723c-23.693 21.712-58.535 25.996-86.787 10.696-28.251-15.313-43.669-46.856-38.414-78.56l96.543-581.859zm180.208-905.916c0-115.278-93.509-208.712-208.706-208.712-115.212 0-208.714 93.433-208.714 208.712s93.501 208.712 208.714 208.712c115.198 0 208.706-93.433 208.706-208.712zm695.688 0c0-115.278-93.494-208.712-208.706-208.712s-208.706 93.433-208.706 208.712 93.494 208.712 208.706 208.712 208.706-93.433 208.706-208.712zm695.688 0c0-115.278-93.494-208.712-208.706-208.712-115.198 0-208.706 93.433-208.706 208.712s93.509 208.712 208.706 208.712c115.212 0 208.706-93.433 208.706-208.712z"/>
-							</svg>
+							<p translate="no">${grupo.nombre_grupo}</p>
+							${badge}
+							${fechaMensaje}
+							${lastMessage}
 						</a>
-						<span>${badge}</span>
 
 						<form method="POST" name="invitar">
 							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
@@ -104,8 +102,6 @@ export default class Grupo extends Usuario {
 							</select>
 							<button>Invitar</button>
 						</form>
-
-						${lastMessage}
 
 					</li> `;
 

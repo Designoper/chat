@@ -33,7 +33,8 @@ main {
 		.fecha {
 			opacity: 70%;
 			font-size: smaller;
-			margin-left: auto;
+			flex-grow: 1;
+			text-align: right;
 		}
 
 		span {

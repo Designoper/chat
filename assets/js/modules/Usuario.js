@@ -77,11 +77,9 @@ export default class Usuario extends TemporalFormat {
 					? `<p class="fecha">${this.fullDate(ultimoMensaje.content.fecha_envio)}</p>`
 					: '';
 
-				let mensajePropio = "";
-
-				ultimoMensaje?.content?.id_emisor === this.id_usuario
-					? mensajePropio = 'Tú'
-					: mensajePropio = ultimoMensaje.content.nombre_usuario;
+				const mensajePropio = ultimoMensaje?.content?.id_emisor === this.id_usuario
+					? 'Tú'
+					: ultimoMensaje.content.nombre_usuario;
 
 				const lastMessage = ultimoMensaje?.content?.contenido
 					? `<p class="ultimo-mensaje">${mensajePropio}: ${ultimoMensaje.content.contenido}</p>`
