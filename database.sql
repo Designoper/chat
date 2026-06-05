@@ -52,17 +52,6 @@ CREATE TABLE mensajes (
         ON DELETE SET NULL
 );
 
-CREATE TABLE conexion_publica (
-    id_usuario INT UNSIGNED NOT NULL,
-    last_seen TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    UNIQUE KEY conect_publico (id_usuario),
-
-    FOREIGN KEY (id_usuario)
-        REFERENCES usuarios(id_usuario)
-        ON DELETE CASCADE
-);
-
 CREATE TABLE conexion_directa (
     id_usuario INT UNSIGNED NOT NULL,
     id_receptor INT UNSIGNED NOT NULL,
@@ -92,17 +81,6 @@ CREATE TABLE conexion_grupal (
 
     FOREIGN KEY (id_grupo)
         REFERENCES grupos(id_grupo)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE ultimos_mensajes_leidos_publicos (
-    id_usuario INT UNSIGNED NOT NULL,
-    id_mensaje INT UNSIGNED NULL,
-
-    UNIQUE KEY unico_publico (id_usuario),
-
-    FOREIGN KEY (id_usuario)
-        REFERENCES usuarios(id_usuario)
         ON DELETE CASCADE
 );
 
