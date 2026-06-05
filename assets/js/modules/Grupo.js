@@ -8,7 +8,6 @@ export default class Grupo extends Usuario {
 	}
 
 	async finalPrint() {
-		// const chatPublico = await this.chatPublicoTemplate();
 		const gruposMiembro = await this.getGruposMiembro();
 		const gruposMiembroPrint = await this.gruposMiembroTemplate(gruposMiembro);
 
