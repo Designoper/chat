@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/MensajeRead.php';
 
-readonly class MensajeStream extends MensajeRead
+abstract readonly class MensajeStream extends MensajeRead
 {
 	protected function __construct()
 	{

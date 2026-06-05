@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/MensajePermissions.php';
 
-readonly class MensajeCreate extends MensajePermissions
+abstract readonly class MensajeCreate extends MensajePermissions
 {
 	protected function __construct()
 	{
@@ -28,7 +28,7 @@ readonly class MensajeCreate extends MensajePermissions
 
 	// MARK: CREATE MENSAJE PUBLICO
 
-	public function createMensajePublico(): void
+	private function createMensajePublico(): void
 	{
 		$this->setContenido();
 
@@ -59,7 +59,7 @@ readonly class MensajeCreate extends MensajePermissions
 
 	// MARK: CREATE MENSAJE DIRECTO
 
-	public function createMensajeDirecto(): void
+	private function createMensajeDirecto(): void
 	{
 		$this->setContenido();
 		$this->setId('id_receptor');
@@ -93,7 +93,7 @@ readonly class MensajeCreate extends MensajePermissions
 
 	// MARK: CREATE MENSAJE GRUPAL
 
-	public function createMensajeGrupal(): void
+	private function createMensajeGrupal(): void
 	{
 		$this->setContenido();
 		$this->setId('id_grupo');

@@ -82,516 +82,518 @@ readonly class Mensaje extends MysqliConnect
 			: $this->errors->setValidationError($error_message);
 	}
 
-	// MARK: GET ULTIMO MENSAJE
-
-	public function getUltimoMensaje(): void
-	{
-		if (isset($_GET['id_receptor'])) {
-			$this->getUltimoMensajeDirecto();
-		}
-
-		if (isset($_GET['id_grupo'])) {
-			$this->getUltimoMensajeGrupal();
-		}
-
-		$this->getUltimoMensajePublico();
-	}
-
-	// MARK: GET ULTIMO MENSAJE PUBLICO
-
-	private function getUltimoMensajePublico(): void
-	{
-		$statement =
-			"SELECT
-				id_emisor,
-				contenido,
-				DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
-				nombre_usuario
-				FROM mensajes
-				LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-				WHERE id_receptor IS NULL
-				AND id_grupo IS NULL
-				ORDER BY fecha_envio DESC
-				LIMIT 1";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->execute();
-
-		$ultimo_mensaje = $query->get_result()->fetch_assoc();
-
-		$query->close();
-
-		$this->status = 200;
-		$this->message = 'Último mensaje público obtenido con éxito';
-		$this->content = $ultimo_mensaje ? $ultimo_mensaje : [];
-		$this->sendResponse();
-	}
-
-	// MARK: GET ULTIMO MENSAJE DIRECTO
-
-	private function getUltimoMensajeDirecto(): void
-	{
-		$this->setIdReceptor();
-		$this->checkValidationErrors();
-
-		$id_receptor = $this->id_receptor;
-		$id_usuario = $this->id_emisor;
-
-		$statement =
-			"SELECT
-				id_emisor,
-				nombre_usuario,
-				contenido,
-				DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio
-				FROM mensajes
-				LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-				WHERE
-					(id_emisor = ? AND id_receptor = ?)
-					OR (id_emisor = ? AND id_receptor = ?)
-				AND id_grupo IS NULL
-				ORDER BY fecha_envio DESC
-				LIMIT 1";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"iiii",
-			$id_usuario,
-			$id_receptor,
-			$id_receptor,
-			$id_usuario
-		);
-
-		$query->execute();
-
-		$ultimo_mensaje = $query->get_result()->fetch_assoc();
-
-		$query->close();
-
-		$this->status = 200;
-		$this->message = 'Último mensaje directo obtenido con éxito';
-		$this->content =
-			$ultimo_mensaje ? $ultimo_mensaje : [];
-		$this->sendResponse();
-	}
-
-	// MARK: GET ULTIMO MENSAJE GRUPAL
-
-	private function getUltimoMensajeGrupal(): void
-	{
-		$this->setIdGrupo();
-		$this->checkValidationErrors();
-
-		$id_grupo = $this->id_grupo;
+	// // MARK: GET ULTIMO MENSAJE
+
+	// public function getUltimoMensaje(): void
+	// {
+	// 	if (isset($_GET['id_receptor'])) {
+	// 		$this->getUltimoMensajeDirecto();
+	// 	}
+
+	// 	if (isset($_GET['id_grupo'])) {
+	// 		$this->getUltimoMensajeGrupal();
+	// 	}
+
+	// 	$this->getUltimoMensajePublico();
+	// }
+
+	// // MARK: GET ULTIMO MENSAJE PUBLICO
+
+	// private function getUltimoMensajePublico(): void
+	// {
+	// 	$statement =
+	// 		"SELECT
+	// 			id_emisor,
+	// 			contenido,
+	// 			DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+	// 			nombre_usuario
+	// 			FROM mensajes
+	// 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+	// 			WHERE id_receptor IS NULL
+	// 			AND id_grupo IS NULL
+	// 			ORDER BY fecha_envio DESC
+	// 			LIMIT 1";
+
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->execute();
+
+	// 	$ultimo_mensaje = $query->get_result()->fetch_assoc();
+
+	// 	$query->close();
+
+	// 	$this->status = 200;
+	// 	$this->message = 'Último mensaje público obtenido con éxito';
+	// 	$this->content = $ultimo_mensaje
+	// 		? $ultimo_mensaje
+	// 		: [];
+	// 	$this->sendResponse();
+	// }
+
+	// // MARK: GET ULTIMO MENSAJE DIRECTO
+
+	// private function getUltimoMensajeDirecto(): void
+	// {
+	// 	$this->setIdReceptor();
+	// 	$this->checkValidationErrors();
+
+	// 	$id_receptor = $this->id_receptor;
+	// 	$id_usuario = $this->id_emisor;
+
+	// 	$statement =
+	// 		"SELECT
+	// 			id_emisor,
+	// 			nombre_usuario,
+	// 			contenido,
+	// 			DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio
+	// 			FROM mensajes
+	// 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+	// 			WHERE
+	// 				(id_emisor = ? AND id_receptor = ?)
+	// 				OR (id_emisor = ? AND id_receptor = ?)
+	// 			AND id_grupo IS NULL
+	// 			ORDER BY fecha_envio DESC
+	// 			LIMIT 1";
+
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->bind_param(
+	// 		"iiii",
+	// 		$id_usuario,
+	// 		$id_receptor,
+	// 		$id_receptor,
+	// 		$id_usuario
+	// 	);
+
+	// 	$query->execute();
+
+	// 	$ultimo_mensaje = $query->get_result()->fetch_assoc();
+
+	// 	$query->close();
+
+	// 	$this->status = 200;
+	// 	$this->message = 'Último mensaje directo obtenido con éxito';
+	// 	$this->content =
+	// 		$ultimo_mensaje ? $ultimo_mensaje : [];
+	// 	$this->sendResponse();
+	// }
+
+	// // MARK: GET ULTIMO MENSAJE GRUPAL
+
+	// private function getUltimoMensajeGrupal(): void
+	// {
+	// 	$this->setIdGrupo();
+	// 	$this->checkValidationErrors();
 
-		$statement =
-			"SELECT
-				id_emisor,
-				nombre_usuario,
-				contenido,
-				DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio
-				FROM mensajes
-				LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
-				WHERE id_grupo = ?
-				AND id_receptor IS NULL
-				ORDER BY fecha_envio DESC
-				LIMIT 1";
+	// 	$id_grupo = $this->id_grupo;
 
-		$query = $this->connection->prepare($statement);
+	// 	$statement =
+	// 		"SELECT
+	// 			id_emisor,
+	// 			nombre_usuario,
+	// 			contenido,
+	// 			DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio
+	// 			FROM mensajes
+	// 			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+	// 			WHERE id_grupo = ?
+	// 			AND id_receptor IS NULL
+	// 			ORDER BY fecha_envio DESC
+	// 			LIMIT 1";
 
-		$query->bind_param(
-			"i",
-			$id_grupo,
-		);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->execute();
+	// 	$query->bind_param(
+	// 		"i",
+	// 		$id_grupo,
+	// 	);
 
-		$ultimo_mensaje = $query->get_result()->fetch_assoc();
+	// 	$query->execute();
 
-		$query->close();
+	// 	$ultimo_mensaje = $query->get_result()->fetch_assoc();
 
-		$this->status = 200;
-		$this->message = 'Último mensaje grupal obtenido con éxito';
-		$this->content = $ultimo_mensaje ? $ultimo_mensaje : [];
-		$this->sendResponse();
-	}
+	// 	$query->close();
 
-	// MARK: GET ULTIMO ID
+	// 	$this->status = 200;
+	// 	$this->message = 'Último mensaje grupal obtenido con éxito';
+	// 	$this->content = $ultimo_mensaje ? $ultimo_mensaje : [];
+	// 	$this->sendResponse();
+	// }
 
-	public function getUltimoIdMensaje(): void
-	{
-		if (isset($_GET['id_receptor'])) {
-			$this->getUltimoIdDirecto();
-		}
+	// // MARK: GET ULTIMO ID
 
-		if (isset($_GET['id_grupo'])) {
-			$this->getUltimoIdGrupal();
-		}
+	// public function getUltimoIdMensaje(): void
+	// {
+	// 	if (isset($_GET['id_receptor'])) {
+	// 		$this->getUltimoIdDirecto();
+	// 	}
 
-		$this->getUltimoIdPublico();
-	}
+	// 	if (isset($_GET['id_grupo'])) {
+	// 		$this->getUltimoIdGrupal();
+	// 	}
 
-	// MARK: GET ULTIMO ID PUBLICO
+	// 	$this->getUltimoIdPublico();
+	// }
 
-	private function getUltimoIdPublico(): void
-	{
-		$id_usuario = $this->id_emisor;
+	// // MARK: GET ULTIMO ID PUBLICO
 
-		$statement =
-			"SELECT COALESCE((
-				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos_publicos
-				WHERE id_usuario = ?
-			), 0) AS id_mensaje";
+	// private function getUltimoIdPublico(): void
+	// {
+	// 	$id_usuario = $this->id_emisor;
 
-		$query = $this->connection->prepare($statement);
+	// 	$statement =
+	// 		"SELECT COALESCE((
+	// 			SELECT id_mensaje
+	// 			FROM ultimos_mensajes_leidos_publicos
+	// 			WHERE id_usuario = ?
+	// 		), 0) AS id_mensaje";
 
-		$query->bind_param(
-			"i",
-			$id_usuario,
-		);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->execute();
+	// 	$query->bind_param(
+	// 		"i",
+	// 		$id_usuario,
+	// 	);
 
-		$last_id = $query->get_result()->fetch_assoc();
+	// 	$query->execute();
 
-		$query->close();
+	// 	$last_id = $query->get_result()->fetch_assoc();
 
-		$this->status = 200;
-		$this->message = 'Último id público obtenido con éxito';
-		$this->content = $last_id;
-		$this->sendResponse();
-	}
+	// 	$query->close();
 
-	// MARK: GET ULTIMO ID DIRECTO
+	// 	$this->status = 200;
+	// 	$this->message = 'Último id público obtenido con éxito';
+	// 	$this->content = $last_id;
+	// 	$this->sendResponse();
+	// }
 
-	private function getUltimoIdDirecto(): void
-	{
-		$this->setIdReceptor();
-		$id_receptor = $this->id_receptor;
-		$id_usuario = $this->id_emisor;
+	// // MARK: GET ULTIMO ID DIRECTO
+
+	// private function getUltimoIdDirecto(): void
+	// {
+	// 	$this->setIdReceptor();
+	// 	$id_receptor = $this->id_receptor;
+	// 	$id_usuario = $this->id_emisor;
 
-		$statement =
-			"SELECT COALESCE((
-				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos_directos
-				WHERE id_usuario = ?
-				AND id_receptor = ?
-			), 0) AS id_mensaje";
+	// 	$statement =
+	// 		"SELECT COALESCE((
+	// 			SELECT id_mensaje
+	// 			FROM ultimos_mensajes_leidos_directos
+	// 			WHERE id_usuario = ?
+	// 			AND id_receptor = ?
+	// 		), 0) AS id_mensaje";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->bind_param(
+	// 		"ii",
+	// 		$id_usuario,
+	// 		$id_receptor
+	// 	);
 
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_receptor
-		);
-
-		$query->execute();
-
-		$last_id = $query->get_result()->fetch_assoc();
-
-		$query->close();
-
-		$this->status = 200;
-		$this->message = 'Último id directo obtenido con éxito';
-		$this->content = $last_id;
-		$this->sendResponse();
-	}
-
-	// MARK: GET ULTIMO ID GRUPAL
-
-	private function getUltimoIdGrupal(): void
-	{
-		$this->setIdGrupo();
-		$id_grupo = $this->id_grupo;
-		$id_usuario = $this->id_emisor;
-
-		$statement =
-			"SELECT COALESCE((
-				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos_grupales
-				WHERE id_usuario = ?
-				AND id_grupo = ?
-			), 0) AS id_mensaje";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_grupo
-		);
-
-		$query->execute();
-
-		$last_id = $query->get_result()->fetch_assoc();
-
-		$query->close();
-
-		$this->status = 200;
-		$this->message = 'Último id grupal obtenido con éxito';
-		$this->content = $last_id;
-		$this->sendResponse();
-	}
-
-	// MARK: SET ULTIMO ID
-
-	public function setultimoIdLeido(): void
-	{
-		if (isset($_POST['id_receptor'])) {
-			$this->setUltimoIdDirecto();
-		}
-
-		if (isset($_POST['id_grupo'])) {
-			$this->setUltimoIdGrupal();
-		}
-
-		// if (isset($_POST['ultimo_id'])) {
-		$this->setUltimoIdPublico();
-		// }
-	}
-
-	// MARK: SET ULTIMO ID PUBLICO
-
-	private function setUltimoIdPublico(): void
-	{
-		$this->setUltimoId();
-		$ultimo_id = $this->ultimo_id;
-		$id_usuario = $this->id_emisor;
-
-		$statement =
-			"INSERT INTO ultimos_mensajes_leidos_publicos (id_usuario, id_mensaje)
-			VALUES (?, ?)
-			ON DUPLICATE KEY
-			UPDATE id_mensaje = ?";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"iii",
-			$id_usuario,
-			$ultimo_id,
-			$ultimo_id
-		);
-
-		$query->execute();
-		$query->close();
-
-		$this->status = 201;
-		$this->message = "Último id público: $ultimo_id";
-		$this->sendResponse();
-	}
-
-	// MARK: SET ULTIMO ID DIRECTO
-
-	private function setUltimoIdDirecto(): void
-	{
-		$this->setIdReceptor();
-		$this->setultimoId();
-		$id_receptor = $this->id_receptor;
-		$ultimo_id = $this->ultimo_id;
-		$id_usuario = $this->id_emisor;
-
-		$statement =
-			"INSERT INTO ultimos_mensajes_leidos_directos (id_usuario, id_receptor, id_mensaje)
-			VALUES (?, ?, ?)
-			ON DUPLICATE KEY
-			UPDATE id_mensaje = ?";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"iiii",
-			$id_usuario,
-			$id_receptor,
-			$ultimo_id,
-			$ultimo_id
-		);
-
-		$query->execute();
-		$query->close();
-
-		$this->status = 201;
-		$this->message = "Último id directo: $ultimo_id";
-		$this->sendResponse();
-	}
-
-	// MARK: SET ULTIMO ID GRUPAL
-
-	private function setUltimoIdGrupal(): void
-	{
-		$this->setIdGrupo();
-		$this->setultimoId();
-		$id_grupo = $this->id_grupo;
-		$ultimo_id = $this->ultimo_id;
-		$id_usuario = $this->id_emisor;
-
-		$statement =
-			"INSERT INTO ultimos_mensajes_leidos_grupales (id_usuario, id_grupo, id_mensaje)
-			VALUES (?, ?, ?)
-			ON DUPLICATE KEY
-			UPDATE id_mensaje = ?";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"iiii",
-			$id_usuario,
-			$id_grupo,
-			$ultimo_id,
-			$ultimo_id
-		);
-
-		$query->execute();
-		$query->close();
-
-		$this->status = 201;
-		$this->message = "Último id grupal: $ultimo_id";
-		$this->sendResponse();
-	}
-
-	// MARK: COUNT UNREAD MESSAGES
-
-	public function countUnreadMessages(): void
-	{
-		if (isset($_GET['id_receptor'])) {
-			$this->countUnreadDirectMessages();
-		}
-
-		if (isset($_GET['id_grupo'])) {
-			$this->countUnreadGroupMessages();
-		}
-
-		if (count($_GET) === 0) {
-			$this->countUnreadPublicMessages();
-		}
-	}
-
-	// MARK: COUNT UNREAD DIRECT MESSAGES
-
-	private function countUnreadDirectMessages(): void
-	{
-		$this->setIdReceptor();
-
-		$this->checkValidationErrors();
-
-		$id_emisor = $this->id_emisor;
-		$id_receptor = $this->id_receptor;
-
-		$statement =
-			"SELECT COUNT(*) AS num_mensajes
-			FROM mensajes
-			WHERE mensajes.id_receptor = ?
-			AND mensajes.id_emisor = ?
-			AND mensajes.id_grupo IS NULL
-			AND mensajes.id_mensaje > COALESCE((
-				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos_directos
-				WHERE id_usuario = ?
-				AND id_receptor = ?
-			), 0)";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"iiii",
-			$id_emisor,
-			$id_receptor,
-			$id_emisor,
-			$id_receptor
-		);
-
-		$query->execute();
-		$result = $query->get_result()->fetch_assoc();
-		$query->close();
-
-		$this->status = 200;
-		$this->message = 'Número de mensajes directos no leídos obtenido con éxito';
-		$this->content = $result;
-		$this->sendResponse();
-	}
-
-	// MARK: COUNT UNREAD GROUP MESSAGES
-
-	private function countUnreadGroupMessages(): void
-	{
-		$this->setIdGrupo();
-
-		$this->checkValidationErrors();
-
-		$id_emisor = $this->id_emisor;
-		$id_grupo = $this->id_grupo;
-
-		$statement =
-			"SELECT COUNT(*) AS num_mensajes
-			FROM mensajes
-			WHERE mensajes.id_grupo = ?
-			AND mensajes.id_emisor != ?
-			AND mensajes.id_receptor IS NULL
-			AND mensajes.id_mensaje > COALESCE((
-				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos_grupales
-				WHERE id_usuario = ?
-				AND id_grupo = ?
-			), 0)";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"iiii",
-			$id_grupo,
-			$id_emisor,
-			$id_emisor,
-			$id_grupo
-		);
-
-		$query->execute();
-		$result = $query->get_result()->fetch_assoc();
-		$query->close();
-
-		$this->status = 200;
-		$this->message = 'Número de mensajes grupales no leídos obtenido con éxito';
-		$this->content = $result;
-		$this->sendResponse();
-	}
-
-	// MARK: COUNT UNREAD PUBLIC MESSAGES
-
-	private function countUnreadPublicMessages(): void
-	{
-		$id_emisor = $this->id_emisor;
-
-		$statement =
-			"SELECT COUNT(*) AS num_mensajes
-			FROM mensajes
-			WHERE mensajes.id_receptor IS NULL
-			AND mensajes.id_grupo IS NULL
-			AND mensajes.id_emisor != ?
-			AND mensajes.id_mensaje > COALESCE((
-				SELECT id_mensaje
-				FROM ultimos_mensajes_leidos_publicos
-				WHERE id_usuario = ?
-			), 0)";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_emisor,
-			$id_emisor
-		);
-
-		$query->execute();
-		$result = $query->get_result()->fetch_assoc();
-		$query->close();
-
-		$this->status = 200;
-		$this->message = 'Número de mensajes públicos no leídos obtenido con éxito';
-		$this->content = $result;
-		$this->sendResponse();
-	}
+	// 	$query->execute();
+
+	// 	$last_id = $query->get_result()->fetch_assoc();
+
+	// 	$query->close();
+
+	// 	$this->status = 200;
+	// 	$this->message = 'Último id directo obtenido con éxito';
+	// 	$this->content = $last_id;
+	// 	$this->sendResponse();
+	// }
+
+	// // MARK: GET ULTIMO ID GRUPAL
+
+	// private function getUltimoIdGrupal(): void
+	// {
+	// 	$this->setIdGrupo();
+	// 	$id_grupo = $this->id_grupo;
+	// 	$id_usuario = $this->id_emisor;
+
+	// 	$statement =
+	// 		"SELECT COALESCE((
+	// 			SELECT id_mensaje
+	// 			FROM ultimos_mensajes_leidos_grupales
+	// 			WHERE id_usuario = ?
+	// 			AND id_grupo = ?
+	// 		), 0) AS id_mensaje";
+
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->bind_param(
+	// 		"ii",
+	// 		$id_usuario,
+	// 		$id_grupo
+	// 	);
+
+	// 	$query->execute();
+
+	// 	$last_id = $query->get_result()->fetch_assoc();
+
+	// 	$query->close();
+
+	// 	$this->status = 200;
+	// 	$this->message = 'Último id grupal obtenido con éxito';
+	// 	$this->content = $last_id;
+	// 	$this->sendResponse();
+	// }
+
+	// // MARK: SET ULTIMO ID
+
+	// public function setultimoIdLeido(): void
+	// {
+	// 	if (isset($_POST['id_receptor'])) {
+	// 		$this->setUltimoIdDirecto();
+	// 	}
+
+	// 	if (isset($_POST['id_grupo'])) {
+	// 		$this->setUltimoIdGrupal();
+	// 	}
+
+	// 	// if (isset($_POST['ultimo_id'])) {
+	// 	$this->setUltimoIdPublico();
+	// 	// }
+	// }
+
+	// // MARK: SET ULTIMO ID PUBLICO
+
+	// private function setUltimoIdPublico(): void
+	// {
+	// 	$this->setUltimoId();
+	// 	$ultimo_id = $this->ultimo_id;
+	// 	$id_usuario = $this->id_emisor;
+
+	// 	$statement =
+	// 		"INSERT INTO ultimos_mensajes_leidos_publicos (id_usuario, id_mensaje)
+	// 		VALUES (?, ?)
+	// 		ON DUPLICATE KEY
+	// 		UPDATE id_mensaje = ?";
+
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->bind_param(
+	// 		"iii",
+	// 		$id_usuario,
+	// 		$ultimo_id,
+	// 		$ultimo_id
+	// 	);
+
+	// 	$query->execute();
+	// 	$query->close();
+
+	// 	$this->status = 201;
+	// 	$this->message = "Último id público: $ultimo_id";
+	// 	$this->sendResponse();
+	// }
+
+	// // MARK: SET ULTIMO ID DIRECTO
+
+	// private function setUltimoIdDirecto(): void
+	// {
+	// 	$this->setIdReceptor();
+	// 	$this->setultimoId();
+	// 	$id_receptor = $this->id_receptor;
+	// 	$ultimo_id = $this->ultimo_id;
+	// 	$id_usuario = $this->id_emisor;
+
+	// 	$statement =
+	// 		"INSERT INTO ultimos_mensajes_leidos_directos (id_usuario, id_receptor, id_mensaje)
+	// 		VALUES (?, ?, ?)
+	// 		ON DUPLICATE KEY
+	// 		UPDATE id_mensaje = ?";
+
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->bind_param(
+	// 		"iiii",
+	// 		$id_usuario,
+	// 		$id_receptor,
+	// 		$ultimo_id,
+	// 		$ultimo_id
+	// 	);
+
+	// 	$query->execute();
+	// 	$query->close();
+
+	// 	$this->status = 201;
+	// 	$this->message = "Último id directo: $ultimo_id";
+	// 	$this->sendResponse();
+	// }
+
+	// // MARK: SET ULTIMO ID GRUPAL
+
+	// private function setUltimoIdGrupal(): void
+	// {
+	// 	$this->setIdGrupo();
+	// 	$this->setultimoId();
+	// 	$id_grupo = $this->id_grupo;
+	// 	$ultimo_id = $this->ultimo_id;
+	// 	$id_usuario = $this->id_emisor;
+
+	// 	$statement =
+	// 		"INSERT INTO ultimos_mensajes_leidos_grupales (id_usuario, id_grupo, id_mensaje)
+	// 		VALUES (?, ?, ?)
+	// 		ON DUPLICATE KEY
+	// 		UPDATE id_mensaje = ?";
+
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->bind_param(
+	// 		"iiii",
+	// 		$id_usuario,
+	// 		$id_grupo,
+	// 		$ultimo_id,
+	// 		$ultimo_id
+	// 	);
+
+	// 	$query->execute();
+	// 	$query->close();
+
+	// 	$this->status = 201;
+	// 	$this->message = "Último id grupal: $ultimo_id";
+	// 	$this->sendResponse();
+	// }
+
+	// // MARK: COUNT UNREAD MESSAGES
+
+	// public function countUnreadMessages(): void
+	// {
+	// 	if (isset($_GET['id_receptor'])) {
+	// 		$this->countUnreadDirectMessages();
+	// 	}
+
+	// 	if (isset($_GET['id_grupo'])) {
+	// 		$this->countUnreadGroupMessages();
+	// 	}
+
+	// 	if (count($_GET) === 0) {
+	// 		$this->countUnreadPublicMessages();
+	// 	}
+	// }
+
+	// // MARK: COUNT UNREAD DIRECT MESSAGES
+
+	// private function countUnreadDirectMessages(): void
+	// {
+	// 	$this->setIdReceptor();
+
+	// 	$this->checkValidationErrors();
+
+	// 	$id_emisor = $this->id_emisor;
+	// 	$id_receptor = $this->id_receptor;
+
+	// 	$statement =
+	// 		"SELECT COUNT(*) AS num_mensajes
+	// 		FROM mensajes
+	// 		WHERE mensajes.id_receptor = ?
+	// 		AND mensajes.id_emisor = ?
+	// 		AND mensajes.id_grupo IS NULL
+	// 		AND mensajes.id_mensaje > COALESCE((
+	// 			SELECT id_mensaje
+	// 			FROM ultimos_mensajes_leidos_directos
+	// 			WHERE id_usuario = ?
+	// 			AND id_receptor = ?
+	// 		), 0)";
+
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->bind_param(
+	// 		"iiii",
+	// 		$id_emisor,
+	// 		$id_receptor,
+	// 		$id_emisor,
+	// 		$id_receptor
+	// 	);
+
+	// 	$query->execute();
+	// 	$result = $query->get_result()->fetch_assoc();
+	// 	$query->close();
+
+	// 	$this->status = 200;
+	// 	$this->message = 'Número de mensajes directos no leídos obtenido con éxito';
+	// 	$this->content = $result;
+	// 	$this->sendResponse();
+	// }
+
+	// // MARK: COUNT UNREAD GROUP MESSAGES
+
+	// private function countUnreadGroupMessages(): void
+	// {
+	// 	$this->setIdGrupo();
+
+	// 	$this->checkValidationErrors();
+
+	// 	$id_emisor = $this->id_emisor;
+	// 	$id_grupo = $this->id_grupo;
+
+	// 	$statement =
+	// 		"SELECT COUNT(*) AS num_mensajes
+	// 		FROM mensajes
+	// 		WHERE mensajes.id_grupo = ?
+	// 		AND mensajes.id_emisor != ?
+	// 		AND mensajes.id_receptor IS NULL
+	// 		AND mensajes.id_mensaje > COALESCE((
+	// 			SELECT id_mensaje
+	// 			FROM ultimos_mensajes_leidos_grupales
+	// 			WHERE id_usuario = ?
+	// 			AND id_grupo = ?
+	// 		), 0)";
+
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->bind_param(
+	// 		"iiii",
+	// 		$id_grupo,
+	// 		$id_emisor,
+	// 		$id_emisor,
+	// 		$id_grupo
+	// 	);
+
+	// 	$query->execute();
+	// 	$result = $query->get_result()->fetch_assoc();
+	// 	$query->close();
+
+	// 	$this->status = 200;
+	// 	$this->message = 'Número de mensajes grupales no leídos obtenido con éxito';
+	// 	$this->content = $result;
+	// 	$this->sendResponse();
+	// }
+
+	// // MARK: COUNT UNREAD PUBLIC MESSAGES
+
+	// private function countUnreadPublicMessages(): void
+	// {
+	// 	$id_emisor = $this->id_emisor;
+
+	// 	$statement =
+	// 		"SELECT COUNT(*) AS num_mensajes
+	// 		FROM mensajes
+	// 		WHERE mensajes.id_receptor IS NULL
+	// 		AND mensajes.id_grupo IS NULL
+	// 		AND mensajes.id_emisor != ?
+	// 		AND mensajes.id_mensaje > COALESCE((
+	// 			SELECT id_mensaje
+	// 			FROM ultimos_mensajes_leidos_publicos
+	// 			WHERE id_usuario = ?
+	// 		), 0)";
+
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->bind_param(
+	// 		"ii",
+	// 		$id_emisor,
+	// 		$id_emisor
+	// 	);
+
+	// 	$query->execute();
+	// 	$result = $query->get_result()->fetch_assoc();
+	// 	$query->close();
+
+	// 	$this->status = 200;
+	// 	$this->message = 'Número de mensajes públicos no leídos obtenido con éxito';
+	// 	$this->content = $result;
+	// 	$this->sendResponse();
+	// }
 
 	// // MARK: READ MENSAJES
 
