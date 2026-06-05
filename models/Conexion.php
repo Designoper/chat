@@ -62,7 +62,7 @@ final readonly class Conexion extends Mensaje
 
 	private function setConexionDirecta(): void
 	{
-		$this->setIdReceptor();
+		$this->setId('id_receptor');
 		$this->checkValidationErrors();
 
 		$id_receptor = $this->id_receptor;
@@ -93,7 +93,7 @@ final readonly class Conexion extends Mensaje
 
 	private function setConexionGrupal(): void
 	{
-		$this->setIdGrupo();
+		$this->setId('id_grupo');
 		$this->checkValidationErrors();
 
 		$id_grupo = $this->id_grupo;
@@ -251,11 +251,11 @@ final readonly class Conexion extends Mensaje
 		flush();
 
 		if (isset($_GET['id_receptor'])) {
-			$this->setIdReceptor();
+			$this->setId('id_receptor');
 			$getConexion = fn() => $this->getConexionDirecta();
 			$tipo = "directo";
 		} else if (isset($_GET['id_grupo'])) {
-			$this->setIdGrupo();
+			$this->setId('id_grupo');
 			$getConexion = fn() => $this->getConexionGrupal();
 			$tipo = "grupal";
 		} else {

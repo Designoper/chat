@@ -429,7 +429,7 @@ readonly class Mensaje extends MysqliConnect
 
 	private function readMensajesDirectos(): void
 	{
-		$this->setIdReceptor();
+		$this->setId('id_receptor');
 
 		$this->checkValidationErrors();
 
@@ -481,7 +481,7 @@ readonly class Mensaje extends MysqliConnect
 
 	private function readMensajesGrupales(): void
 	{
-		$this->setIdGrupo();
+		$this->setId('id_grupo');
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
@@ -526,7 +526,7 @@ readonly class Mensaje extends MysqliConnect
 
 	private function isAutorMensaje(): void
 	{
-		$this->setIdMensaje();
+		$this->setId('id_mensaje');
 
 		$this->checkValidationErrors();
 
@@ -561,7 +561,7 @@ readonly class Mensaje extends MysqliConnect
 
 	private function isMiembroGrupo(): void
 	{
-		$id_usuario = $this->id_emisor;
+		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 
 		$statement =
@@ -596,17 +596,15 @@ readonly class Mensaje extends MysqliConnect
 
 	public function createMensaje(): void
 	{
-		// $columna = NULL;
-
 		if (isset($_POST['id_receptor'])) {
-			$this->setIdReceptor();
+			$this->setId('id_receptor');
 			$columna = 'id_receptor';
 			$id_objetivo = $this->id_receptor;
 			$tipo = 'directo';
 		}
 
 		if (isset($_POST['id_grupo'])) {
-			$this->setIdGrupo();
+			$this->setId('id_grupo');
 			$columna = 'id_grupo';
 			$id_objetivo = $this->id_grupo;
 			$tipo = 'grupal';
@@ -794,10 +792,10 @@ readonly class Mensaje extends MysqliConnect
 		flush();
 
 		if (isset($_GET['id_receptor'])) {
-			$this->setIdReceptor();
+			$this->setId('id_receptor');
 			$mensajes = fn() => $this->getNuevosMensajesDirectos();
 		} else if (isset($_GET['id_grupo'])) {
-			$this->setIdGrupo();
+			$this->setId('id_grupo');
 			$mensajes = fn() => $this->getNuevosMensajesGrupales();
 		}
 
