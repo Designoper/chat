@@ -19,7 +19,17 @@ export default class Conexion extends Mensaje {
 
 		evtSource.addEventListener("conexion directo", (event) => {
 			const state = JSON.parse(event.data);
-			document.querySelector('circle').setAttribute('class', state[0].estado);
+			let ultimaConexion = state[0].estado;
+
+			if (ultimaConexion === '0') {
+				ultimaConexion = 'Sin conexión';
+			}
+
+			if (ultimaConexion !== 'Online' && ultimaConexion !== 'Sin conexión') {
+				ultimaConexion = `Última conexión: ${this.fullDate(ultimaConexion)}`;
+			}
+
+			document.querySelector('header p').innerHTML = ultimaConexion;
 		});
 	}
 }

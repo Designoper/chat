@@ -195,10 +195,7 @@ export default class Mensaje extends Usuario {
 			// this.params.forEach((value, key) => {
 			if (this.params.has('nombre_receptor')) {
 				this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre_receptor'));
-				this.dom.header.insertAdjacentHTML('beforeend',
-					`<svg viewBox="0 0 100 100">
-						<circle cx="50" cy="50" r="50" />
-					</svg>`);
+				this.dom.header.insertAdjacentHTML('beforeend', `<p></p>`);
 				return;
 			}
 			// });

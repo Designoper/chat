@@ -95,7 +95,7 @@ final readonly class Conexion extends Mensaje
 
 		$statement =
 			"SELECT nombre_usuario,
-			last_seen,
+			COALESCE(DATE_FORMAT(conexion_directa.last_seen, '%Y-%m-%dT%H:%i:%sZ'),0) AS last_seen,
 				COALESCE(UNIX_TIMESTAMP(conexion_directa.last_seen), 0) AS last_seen_unix
 			FROM usuarios
 			LEFT JOIN conexion_directa
@@ -129,7 +129,7 @@ final readonly class Conexion extends Mensaje
 
 		$statement =
 			"SELECT usuarios.nombre_usuario,
-			last_seen,
+			DATE_FORMAT(conexion_grupal.last_seen, '%Y-%m-%dT%H:%i:%sZ') AS last_seen,
 				COALESCE(UNIX_TIMESTAMP(conexion_directa.last_seen), 0) AS last_seen_unix
 			FROM usuarios
 			LEFT JOIN conexion_grupal
@@ -219,8 +219,8 @@ final readonly class Conexion extends Mensaje
 				$newArray[] = [
 					'usuario' => $c['nombre_usuario'],
 					'estado'  => (time() - $c['last_seen_unix'] > 10)
-						? 'offline'
-						: 'online'
+						? $c['last_seen']
+						: 'Online'
 				];
 			}
 
