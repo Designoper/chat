@@ -17,40 +17,6 @@ export default class Usuario extends TemporalFormat {
 		this.menu.insertAdjacentHTML('beforeend', content);
 	}
 
-	async chatPublicoTemplate() {
-		const mensajesNoLeidos = await this.getMensajesNoLeidos();
-
-		const badge = mensajesNoLeidos.num_mensajes > 0
-			? `<span>${mensajesNoLeidos.num_mensajes}</span>`
-			: '';
-
-		const ultimoMensaje = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_MENSAJE, 'get');
-
-		const mensajePropio = ultimoMensaje?.content?.id_emisor === this.id_usuario
-			? 'Tú'
-			: ultimoMensaje.content.nombre_usuario;
-
-		const fechaMensaje = ultimoMensaje?.content?.fecha_envio
-			? `<p class="fecha">${this.fullDate(ultimoMensaje.content.fecha_envio)}</p>`
-			: '';
-
-		const lastMessage = ultimoMensaje?.content?.contenido
-			? `<p class="ultimo-mensaje">${mensajePropio}: ${ultimoMensaje.content.contenido}</p>`
-			: '';
-
-		const template =
-			`
-			<li>
-				<a href="./chat.php">
-					<p>Chat público</p>${badge}
-					${fechaMensaje}
-					${lastMessage}
-				</a>
-			</li>
-			`;
-		return template;
-	}
-
 	async usuariosTemplate(fetchedUsuarios) {
 
 		const usuarios = await Promise.all(
@@ -64,7 +30,7 @@ export default class Usuario extends TemporalFormat {
 				const num = mensajesNoLeidos.content.num_mensajes;
 
 				const badge = num > 0
-					? `<span>${num}</span>`
+					? `<data value="${num}">${num}</data>`
 					: '';
 
 				const ultimoMensaje = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_MENSAJE, 'get',
@@ -74,21 +40,21 @@ export default class Usuario extends TemporalFormat {
 				);
 
 				const fechaMensaje = ultimoMensaje?.content?.fecha_envio
-					? `<p class="fecha">${this.fullDate(ultimoMensaje.content.fecha_envio)}</p>`
+					? `<date>${this.fullDate(ultimoMensaje.content.fecha_envio)}</date>`
 					: '';
 
 				const mensajePropio = ultimoMensaje?.content?.id_emisor === this.id_usuario
 					? 'Tú'
-					: ultimoMensaje.content.nombre_usuario;
+					: `<span translate="no">${ultimoMensaje.content.nombre_usuario}</span>`;
 
 				const lastMessage = ultimoMensaje?.content?.contenido
-					? `<p class="ultimo-mensaje">${mensajePropio}: ${ultimoMensaje.content.contenido}</p>`
+					? `<p>${mensajePropio}: ${ultimoMensaje.content.contenido}</p>`
 					: '';
 
 				const usuarios =
 					`<li>
 						<a href="chat.php?id_receptor=${usuario.id_usuario}&nombre_receptor=${usuario.nombre_usuario}">
-							<p translate="no">${usuario.nombre_usuario}</p>${badge}
+							<h2 translate="no">${usuario.nombre_usuario}</h2>${badge}
 							${fechaMensaje}
 							${lastMessage}
 						</a>

@@ -153,8 +153,8 @@ export default class Mensaje extends Usuario {
 			<article ${mensaje.id_emisor === this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				${autor}
 				<div>
-					<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
-					<date>${fechaFinal}</date>
+				<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
+				<date>${fechaFinal}</date>
 				</div>
 				${mensaje.id_emisor === this.id_usuario
 					? `<form method="POST" name="deleteMensaje">

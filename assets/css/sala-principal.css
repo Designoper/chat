@@ -26,7 +26,7 @@ main {
 	background-color: var(--secondary-bg);
 
 	output {
-		.ultimo-mensaje {
+		p {
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -37,14 +37,14 @@ main {
 			scrollbar-width: none;
 		}
 
-		.fecha {
+		date {
 			opacity: 70%;
 			font-size: smaller;
 			flex-grow: 1;
 			text-align: right;
 		}
 
-		span {
+		data {
 			background-color: var(--quartery-bg);
 			color: white;
 			border-radius: 50%;
