@@ -212,9 +212,5 @@ export default class Mensaje extends Usuario {
 				}
 			});
 		}
-
-		if (this.params.size === 0) {
-			this.dom.h1.insertAdjacentHTML("afterbegin", "Chat público");
-		}
 	}
 }

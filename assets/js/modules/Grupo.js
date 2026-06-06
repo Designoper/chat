@@ -63,16 +63,13 @@ export default class Grupo extends Usuario {
 					}
 				);
 
-				const mensajePropio = ultimoMensaje?.content?.id_emisor === this.id_usuario
+				const autorMensaje = ultimoMensaje?.content?.id_emisor === this.id_usuario
 					? 'Tú'
 					: `<span translate="no">${ultimoMensaje.content.nombre_usuario}</span>`;
 
-				const fechaMensaje = ultimoMensaje?.content?.fecha_envio
-					? `<date>${this.fullDate(ultimoMensaje.content.fecha_envio)}</date>`
-					: '';
-
 				const lastMessage = ultimoMensaje?.content?.contenido
-					? `<p>${mensajePropio}: ${ultimoMensaje.content.contenido}</p>`
+					? `<date>${this.fullDate(ultimoMensaje.content.fecha_envio)}</date>
+						<p>${autorMensaje}: ${ultimoMensaje.content.contenido}</p>`
 					: '';
 
 				const badge = mensajesNoLeidos.content.num_mensajes > 0
@@ -89,7 +86,6 @@ export default class Grupo extends Usuario {
 						<a href="./chat.php?id_grupo=${grupo.id_grupo}&nombre_grupo=${grupo.nombre_grupo}">
 							<h2 translate="no">${grupo.nombre_grupo}</h2>
 							${badge}
-							${fechaMensaje}
 							${lastMessage}
 						</a>
 
@@ -102,7 +98,7 @@ export default class Grupo extends Usuario {
 							<button>Invitar</button>
 						</form>
 
-					</li> `;
+					</li>`;
 
 				return formInvitar;
 
@@ -116,13 +112,13 @@ export default class Grupo extends Usuario {
 
 		const grupos = fetchedGrupos.map(grupo =>
 			`
-			<li>
+			< li >
 				<h2 translate="no">${grupo.nombre_grupo}</h2>
 				<form method="POST" name="aceptarInvitacion">
 					<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
 					<button>Aceptar</button>
 				</form>
-			</li>
+			</li >
 			`
 		).join('');
 
@@ -152,4 +148,4 @@ export default class Grupo extends Usuario {
 			await this.getGruposPendiente();
 		}
 	}
-}
+};;

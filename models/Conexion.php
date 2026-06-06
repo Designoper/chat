@@ -6,13 +6,9 @@ require_once __DIR__ . '/Mensaje.php';
 
 final readonly class Conexion extends Mensaje
 {
-	private int $id_usuario;
-
 	public function __construct()
 	{
 		parent::__construct();
-
-		$this->id_usuario = $this->session_user;
 	}
 
 	// MARK: SET CONEXION
@@ -26,36 +22,6 @@ final readonly class Conexion extends Mensaje
 		if (isset($_POST['id_grupo'])) {
 			$this->setConexionGrupal();
 		}
-
-		// if (count($_POST) === 0) {
-		$this->setConexionPublica();
-		// }
-	}
-
-	// MARK: SET CONEXION PUBLICA
-
-	private function setConexionPublica(): void
-	{
-		$id_usuario = $this->id_usuario;
-
-		$statement =
-			"INSERT INTO conexion_publica (id_usuario)
-			VALUES (?)
-			ON DUPLICATE KEY
-			UPDATE last_seen = CURRENT_TIMESTAMP";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"i",
-			$id_usuario
-		);
-
-		$query->execute();
-
-		$this->status = 201;
-		$this->message = "Última conexión pública establecida";
-		$this->sendResponse();
 	}
 
 	// MARK: SET CONEXION DIRECTA
@@ -66,7 +32,7 @@ final readonly class Conexion extends Mensaje
 		$this->checkValidationErrors();
 
 		$id_receptor = $this->id_receptor;
-		$id_usuario = $this->id_usuario;
+		$id_usuario = $this->session_user;
 
 		$statement =
 			"INSERT INTO conexion_directa (id_usuario, id_receptor)
@@ -97,7 +63,7 @@ final readonly class Conexion extends Mensaje
 		$this->checkValidationErrors();
 
 		$id_grupo = $this->id_grupo;
-		$id_usuario = $this->id_usuario;
+		$id_usuario = $this->session_user;
 
 		$statement =
 			"INSERT INTO conexion_grupal (id_usuario, id_grupo)
@@ -120,43 +86,12 @@ final readonly class Conexion extends Mensaje
 		$this->sendResponse();
 	}
 
-	// MARK: GET CONEXION PUBLICA
-
-	private function getConexionPublica(): array
-	{
-		$id_usuario = $this->id_usuario;
-
-		$statement =
-			"SELECT nombre_usuario,
-			COALESCE(UNIX_TIMESTAMP(last_seen), 0) AS last_seen
-			FROM usuarios
-			LEFT JOIN conexion_publica
-			ON usuarios.id_usuario = conexion_publica.id_usuario
-			WHERE usuarios.id_usuario != ?
-			ORDER BY nombre_usuario ASC";
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"i",
-			$id_usuario
-		);
-
-		$query->execute();
-
-		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-
-		$query->close();
-
-		return $conexion;
-	}
-
 	// MARK: GET CONEXION DIRECTA
 
 	private function getConexionDirecta(): array
 	{
 		$id_receptor = $this->id_receptor;
-		$id_usuario = $this->id_usuario;
+		$id_usuario = $this->session_user;
 
 		$statement =
 			"SELECT nombre_usuario,
@@ -189,7 +124,7 @@ final readonly class Conexion extends Mensaje
 	private function getConexionGrupal(): array
 	{
 		$id_grupo = $this->id_grupo;
-		$id_usuario = $this->id_usuario;
+		$id_usuario = $this->session_user;
 
 		$statement =
 			"SELECT usuarios.nombre_usuario,
@@ -254,13 +189,12 @@ final readonly class Conexion extends Mensaje
 			$this->setId('id_receptor');
 			$getConexion = fn() => $this->getConexionDirecta();
 			$tipo = "directo";
-		} else if (isset($_GET['id_grupo'])) {
+		}
+
+		if (isset($_GET['id_grupo'])) {
 			$this->setId('id_grupo');
 			$getConexion = fn() => $this->getConexionGrupal();
 			$tipo = "grupal";
-		} else {
-			$getConexion = fn() => $this->getConexionPublica();
-			$tipo = "publico";
 		}
 
 		$this->checkValidationErrors();

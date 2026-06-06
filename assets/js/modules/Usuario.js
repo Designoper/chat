@@ -27,10 +27,8 @@ export default class Usuario extends TemporalFormat {
 					}
 				);
 
-				const num = mensajesNoLeidos.content.num_mensajes;
-
-				const badge = num > 0
-					? `<data value="${num}">${num}</data>`
+				const badge = mensajesNoLeidos.content.num_mensajes > 0
+					? `<data>${mensajesNoLeidos.content.num_mensajes}</data>`
 					: '';
 
 				const ultimoMensaje = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_MENSAJE, 'get',
@@ -39,23 +37,19 @@ export default class Usuario extends TemporalFormat {
 					}
 				);
 
-				const fechaMensaje = ultimoMensaje?.content?.fecha_envio
-					? `<date>${this.fullDate(ultimoMensaje.content.fecha_envio)}</date>`
-					: '';
-
-				const mensajePropio = ultimoMensaje?.content?.id_emisor === this.id_usuario
+				const autorMensaje = ultimoMensaje?.content?.id_emisor === this.id_usuario
 					? 'Tú'
 					: `<span translate="no">${ultimoMensaje.content.nombre_usuario}</span>`;
 
 				const lastMessage = ultimoMensaje?.content?.contenido
-					? `<p>${mensajePropio}: ${ultimoMensaje.content.contenido}</p>`
+					? `<date>${this.fullDate(ultimoMensaje.content.fecha_envio)}</date>
+						<p>${autorMensaje}: ${ultimoMensaje.content.contenido}</p>`
 					: '';
 
 				const usuarios =
 					`<li>
 						<a href="./chat.php?id_receptor=${usuario.id_usuario}&nombre_receptor=${usuario.nombre_usuario}">
 							<h2 translate="no">${usuario.nombre_usuario}</h2>${badge}
-							${fechaMensaje}
 							${lastMessage}
 						</a>
 					</li>`;
