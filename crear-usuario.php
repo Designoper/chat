@@ -48,7 +48,8 @@ new Usuario()->sessionRedirect();
 			<menu>
 				<li>
 					<label for="nombre_usuario">Nombre usuario*</label>
-					<input id="nombre_usuario" name="nombre_usuario" minlength="1" autocomplete="off" required>
+					<!-- <input id="nombre_usuario" name="nombre_usuario" autocomplete="off" pattern="\w{3,20}" required> -->
+					<input id="nombre_usuario" name="nombre_usuario" autocomplete="off" required>
 				</li>
 
 				<li>

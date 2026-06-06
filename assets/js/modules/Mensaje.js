@@ -138,10 +138,10 @@ export default class Mensaje extends Usuario {
 			}
 
 			else {
-				fechatest = `<p class="cambio-dia">${this.yearMonthDayWeekday(mensaje.fecha_envio)}</p>`;
+				fechatest = `<date datetime="${this.yearMonthDay(mensaje.fecha_envio)}">${this.yearMonthDayWeekday(mensaje.fecha_envio)}</date>`;
 			}
 
-			let autor = `<p translate="no" class="autor">${mensaje.nombre_usuario}</p>`;
+			let autor = `<h2 translate="no">${mensaje.nombre_usuario}</h2>`;
 
 			if (mensaje.nombre_usuario === this.mensaje?.autor) {
 				autor = "";
@@ -153,8 +153,8 @@ export default class Mensaje extends Usuario {
 			<article ${mensaje.id_emisor === this.id_usuario ? 'class="mensaje-propio"' : ''}>
 				${autor}
 				<div>
-					<p class="contenido">${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
-					<p class="fecha">${fechaFinal}</p>
+					<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
+					<date>${fechaFinal}</date>
 				</div>
 				${mensaje.id_emisor === this.id_usuario
 					? `<form method="POST" name="deleteMensaje">
