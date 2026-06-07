@@ -17,7 +17,11 @@ export default class Grupo extends Usuario {
 		const usuarios = await this.getUsuarios();
 		const usuariosPrint = this.usuariosTemplate(usuarios);
 
-		this.output.setHTML(`${usuariosPrint}${gruposMiembroPrint}${gruposPendientePrint}`, { sanitizer: new Sanitizer({}) });
+		this.output.setHTML(`${usuariosPrint}${gruposMiembroPrint}${gruposPendientePrint}`, {
+			sanitizer: new Sanitizer({
+				comments: false,
+			})
+		});
 	}
 
 	async getGruposMiembro() {
@@ -112,13 +116,13 @@ export default class Grupo extends Usuario {
 
 		const grupos = fetchedGrupos.map(grupo =>
 			`
-			< li >
+			<li>
 				<h2 translate="no">${grupo.nombre_grupo}</h2>
 				<form method="POST" name="aceptarInvitacion">
 					<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
 					<button>Aceptar</button>
 				</form>
-			</li >
+			</li>
 			`
 		).join('');
 
@@ -148,4 +152,4 @@ export default class Grupo extends Usuario {
 			await this.getGruposPendiente();
 		}
 	}
-};;
+}

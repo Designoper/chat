@@ -12,11 +12,6 @@ export default class Usuario extends TemporalFormat {
 		return response.content;
 	}
 
-	async printUsuarios(usuarios) {
-		const content = await this.usuariosTemplate(usuarios.content);
-		this.menu.insertAdjacentHTML('beforeend', content);
-	}
-
 	usuariosTemplate(fetchedUsuarios) {
 
 		const usuarios = fetchedUsuarios.map(usuario => {
