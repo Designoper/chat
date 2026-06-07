@@ -19,6 +19,7 @@ final class Router
 
         // Usuarios
         $this->setRoute($GET, 'usuarios/current', [Usuario::class, 'currentUsuario']);
+        $this->setRoute($GET, 'usuarios/contactos', [Usuario::class, 'readContactos']);
         $this->setRoute($GET, 'usuarios$', [Usuario::class, 'readUsuarios']);
 
         // Mensajes

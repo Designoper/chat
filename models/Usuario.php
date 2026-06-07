@@ -51,9 +51,9 @@ final readonly class Usuario extends MysqliConnect
 			: $this->password = $value;
 	}
 
-	// MARK: READ CONTACTS
+	// MARK: READ CONTACTOS
 
-	public function readUsuarios(): void
+	public function readContactos(): void
 	{
 		$this->authEndpoint();
 
@@ -120,42 +120,42 @@ final readonly class Usuario extends MysqliConnect
 		$this->sendResponse();
 	}
 
-	// MARK: READ
+	// MARK: READ USUARIOS
 
-	// public function readUsuarios(): void
-	// {
-	// 	$this->authEndpoint();
+	public function readUsuarios(): void
+	{
+		$this->authEndpoint();
 
-	// 	$id_usuario = $this->id_usuario;
+		$id_usuario = $this->id_usuario;
 
-	// 	$statement =
-	// 		"SELECT id_usuario, nombre_usuario
-	// 		 FROM usuarios
-	// 		 WHERE id_usuario != ?
-	// 		 ORDER BY nombre_usuario ASC";
+		$statement =
+			"SELECT id_usuario, nombre_usuario
+			 FROM usuarios
+			 WHERE id_usuario != ?
+			 ORDER BY nombre_usuario ASC";
 
-	// 	$query = $this->connection->prepare($statement);
+		$query = $this->connection->prepare($statement);
 
-	// 	$query->bind_param(
-	// 		"i",
-	// 		$id_usuario
-	// 	);
+		$query->bind_param(
+			"i",
+			$id_usuario
+		);
 
-	// 	$query->execute();
+		$query->execute();
 
-	// 	$usuarios = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-	// 	$message =
-	// 		$usuarios
-	// 		? 'Usuarios obtenidos.'
-	// 		: 'No hay ningún usuario.';
+		$usuarios = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		$message =
+			$usuarios
+			? 'Usuarios obtenidos.'
+			: 'No hay ningún usuario.';
 
-	// 	$query->close();
+		$query->close();
 
-	// 	$this->status = 200;
-	// 	$this->message = $message;
-	// 	$this->content = $usuarios;
-	// 	$this->sendResponse();
-	// }
+		$this->status = 200;
+		$this->message = $message;
+		$this->content = $usuarios;
+		$this->sendResponse();
+	}
 
 	// MARK: CREATE
 

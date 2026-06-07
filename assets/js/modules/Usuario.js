@@ -8,7 +8,7 @@ export default class Usuario extends TemporalFormat {
 	}
 
 	async getUsuarios() {
-		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.USUARIOS.OTROS, 'get');
+		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.USUARIOS.CONTACTOS, 'get');
 		return response.content;
 	}
 
