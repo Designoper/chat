@@ -338,10 +338,10 @@ readonly class Mensaje extends MysqliConnect
 		$statement =
 			"SELECT COUNT(*) AS num_mensajes
 			FROM mensajes
-			WHERE mensajes.id_receptor = ?
-			AND mensajes.id_emisor = ?
-			AND mensajes.id_grupo IS NULL
-			AND mensajes.id_mensaje > COALESCE((
+			WHERE id_receptor = ?
+			AND id_emisor = ?
+			AND id_grupo IS NULL
+			AND id_mensaje > COALESCE((
 				SELECT id_mensaje
 				FROM ultimos_mensajes_leidos_directos
 				WHERE id_usuario = ?
@@ -382,10 +382,10 @@ readonly class Mensaje extends MysqliConnect
 		$statement =
 			"SELECT COUNT(*) AS num_mensajes
 			FROM mensajes
-			WHERE mensajes.id_grupo = ?
-			AND mensajes.id_emisor != ?
-			AND mensajes.id_receptor IS NULL
-			AND mensajes.id_mensaje > COALESCE((
+			WHERE id_grupo = ?
+			AND id_emisor != ?
+			AND id_receptor IS NULL
+			AND id_mensaje > COALESCE((
 				SELECT id_mensaje
 				FROM ultimos_mensajes_leidos_grupales
 				WHERE id_usuario = ?
