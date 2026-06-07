@@ -64,7 +64,7 @@ final readonly class Usuario extends MysqliConnect
 				u.id_usuario,
 				u.nombre_usuario,
 				COUNT(m.id_mensaje) AS num_mensajes,
-				ult.fecha_envio,
+				DATE_FORMAT(ult.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
 				ult.contenido
 			FROM usuarios u
 			LEFT JOIN ultimos_mensajes_leidos_directos uml
@@ -79,22 +79,24 @@ final readonly class Usuario extends MysqliConnect
 				ON ult.id_mensaje = (
 					SELECT MAX(m2.id_mensaje)
 					FROM mensajes m2
-					WHERE m2.id_receptor = ?
-					AND m2.id_emisor = u.id_usuario
-					AND m2.id_grupo IS NULL
-					AND m2.id_mensaje > COALESCE(uml.id_mensaje, 0)
+					WHERE m2.id_grupo IS NULL
+					AND (
+							(m2.id_emisor = ? AND m2.id_receptor = u.id_usuario)
+						OR (m2.id_emisor = u.id_usuario AND m2.id_receptor = ?)
+					)
 				)
 			WHERE u.id_usuario != ?
 			GROUP BY u.id_usuario, u.nombre_usuario, ult.fecha_envio, ult.contenido
 			ORDER BY
-				(m.fecha_envio IS NULL) ASC,
-				m.fecha_envio DESC,
+				(ult.fecha_envio IS NULL) ASC,
+				ult.fecha_envio DESC,
 				u.nombre_usuario ASC";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"iiii",
+			"iiiii",
+			$id_usuario,
 			$id_usuario,
 			$id_usuario,
 			$id_usuario,

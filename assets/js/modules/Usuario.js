@@ -17,46 +17,32 @@ export default class Usuario extends TemporalFormat {
 		this.menu.insertAdjacentHTML('beforeend', content);
 	}
 
-	async usuariosTemplate(fetchedUsuarios) {
+	usuariosTemplate(fetchedUsuarios) {
 
-		const usuarios = await Promise.all(
-			fetchedUsuarios.map(async usuario => {
-				const mensajesNoLeidos = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.NO_LEIDOS, 'get',
-					{
-						"id_receptor": usuario.id_usuario
-					}
-				);
+		const usuarios = fetchedUsuarios.map(usuario => {
+			const badge = usuario.num_mensajes > 0
+				? `<data>${usuario.num_mensajes}</data>`
+				: '';
 
-				const badge = mensajesNoLeidos.content.num_mensajes > 0
-					? `<data>${mensajesNoLeidos.content.num_mensajes}</data>`
-					: '';
+			const autorMensaje = usuario.id_usuario === this.id_usuario
+				? 'Tú'
+				: `<span translate="no">${usuario.nombre_usuario}</span>`;
 
-				const ultimoMensaje = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_MENSAJE, 'get',
-					{
-						"id_receptor": usuario.id_usuario
-					}
-				);
+			const lastMessage = usuario.contenido !== null
+				? `<date>${this.fullDate(usuario.fecha_envio)}</date>
+					<p>${autorMensaje}: ${usuario.contenido}</p>`
+				: '';
 
-				const autorMensaje = ultimoMensaje?.content?.id_emisor === this.id_usuario
-					? 'Tú'
-					: `<span translate="no">${ultimoMensaje.content.nombre_usuario}</span>`;
+			const usuario2 =
+				`<li>
+					<a href="./chat.php?id_receptor=${usuario.id_usuario}&nombre_receptor=${usuario.nombre_usuario}">
+						<h2 translate="no">${usuario.nombre_usuario}</h2>${badge}
+						${lastMessage}
+					</a>
+				</li>`;
 
-				const lastMessage = ultimoMensaje?.content?.contenido
-					? `<date>${this.fullDate(ultimoMensaje.content.fecha_envio)}</date>
-						<p>${autorMensaje}: ${ultimoMensaje.content.contenido}</p>`
-					: '';
-
-				const usuarios =
-					`<li>
-						<a href="./chat.php?id_receptor=${usuario.id_usuario}&nombre_receptor=${usuario.nombre_usuario}">
-							<h2 translate="no">${usuario.nombre_usuario}</h2>${badge}
-							${lastMessage}
-						</a>
-					</li>`;
-
-				return usuarios;
-			})
-		);
+			return usuario2;
+		});
 
 		return usuarios.join('');
 	}
