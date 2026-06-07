@@ -41,6 +41,16 @@ export default class TemporalFormat extends Endpoint {
 		return temporal;
 	}
 
+	yearMonthDayDash(date) {
+		const fecha = this.formatearFecha(date);
+
+		const dia = String(fecha.day).padStart(2, "0");
+		const mes = String(fecha.month).padStart(2, "0");
+		const año = String(fecha.year).slice(-2);
+
+		return `${dia}-${mes}-${año}`;
+	}
+
 	yearMonthDayWeekday(date) {
 		const options = {
 			weekday: "long",
