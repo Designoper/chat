@@ -36,7 +36,8 @@ export default class Usuario extends TemporalFormat {
 			const usuario2 =
 				`<li>
 					<a href="./chat.php?id_receptor=${usuario.id_usuario}&nombre_receptor=${usuario.nombre_usuario}">
-						<h2 translate="no">${usuario.nombre_usuario}</h2>${badge}
+						<h2 translate="no">${usuario.nombre_usuario}</h2>
+						${badge}
 						${lastMessage}
 					</a>
 				</li>`;
