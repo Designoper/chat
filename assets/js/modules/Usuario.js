@@ -20,11 +20,13 @@ export default class Usuario extends TemporalFormat {
 	usuariosTemplate(fetchedUsuarios) {
 
 		const usuarios = fetchedUsuarios.map(usuario => {
+			console.log(usuario.id_usuario);
+			console.log(this.id_usuario);
 			const badge = usuario.num_mensajes > 0
 				? `<data>${usuario.num_mensajes}</data>`
 				: '';
 
-			const autorMensaje = usuario.id_usuario === this.id_usuario
+			const autorMensaje = usuario.id_emisor === this.id_usuario
 				? 'Tú'
 				: `<span translate="no">${usuario.nombre_usuario}</span>`;
 

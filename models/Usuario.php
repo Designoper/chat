@@ -65,7 +65,8 @@ final readonly class Usuario extends MysqliConnect
 				u.nombre_usuario,
 				COUNT(m.id_mensaje) AS num_mensajes,
 				DATE_FORMAT(ult.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
-				ult.contenido
+				ult.contenido,
+				ult.id_emisor
 			FROM usuarios u
 			LEFT JOIN ultimos_mensajes_leidos_directos uml
 				ON uml.id_usuario = ?
