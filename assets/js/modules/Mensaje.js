@@ -199,9 +199,7 @@ export default class Mensaje extends Usuario {
 				return;
 			}
 			// });
-		}
 
-		if (this.params.size === 2) {
 			this.params.forEach((value, key) => {
 				if (key.startsWith('nombre_grupo')) {
 					this.dom.h1.insertAdjacentHTML("afterbegin", `${value}`);

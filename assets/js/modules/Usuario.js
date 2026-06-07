@@ -20,15 +20,15 @@ export default class Usuario extends TemporalFormat {
 				: '';
 
 			const autorMensaje = usuario.id_emisor === this.id_usuario
-				? 'Tú: '
-				: `<span translate="no">${usuario.nombre_usuario}: </span>`;
+				? 'Tú'
+				: `<span translate="no">${usuario.nombre_usuario}</span>`;
 
 			const lastMessage = usuario.contenido !== null
 				? `<date>${this.fullDate(usuario.fecha_envio)}</date>
-					<p>${autorMensaje}${usuario.contenido}</p>`
+					<p>${autorMensaje}: ${usuario.contenido}</p>`
 				: '';
 
-			const usuario2 =
+			const template =
 				`<li>
 					<a href="./chat.php?id_receptor=${usuario.id_usuario}&nombre_receptor=${usuario.nombre_usuario}">
 						<h2 translate="no">${usuario.nombre_usuario}</h2>
@@ -37,7 +37,7 @@ export default class Usuario extends TemporalFormat {
 					</a>
 				</li>`;
 
-			return usuario2;
+			return template;
 		});
 
 		return usuarios.join('');
