@@ -43,7 +43,7 @@ readonly class Mensaje extends MysqliConnect
 			: $this->errors->setValidationError($error_message);
 	}
 
-	// MARK: READ CoNTACTS
+	// MARK: READ CONTACTS
 
 	public function readContacts(): void
 	{
@@ -78,7 +78,10 @@ readonly class Mensaje extends MysqliConnect
 				)
 			WHERE u.id_usuario != ?
 			GROUP BY u.id_usuario, u.nombre_usuario, ult.fecha_envio, ult.contenido
-			ORDER BY u.nombre_usuario ASC";
+			ORDER BY
+				(m.fecha_envio IS NULL) ASC,
+				m.fecha_envio DESC,
+				u.nombre_usuario ASC";
 
 		$query = $this->connection->prepare($statement);
 
