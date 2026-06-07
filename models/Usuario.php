@@ -51,24 +51,53 @@ final readonly class Usuario extends MysqliConnect
 			: $this->password = $value;
 	}
 
-	// MARK: READ
+	// MARK: READ CONTACTS
 
 	public function readUsuarios(): void
 	{
 		$this->authEndpoint();
 
-		$id_usuario = $this->id_usuario;
+		$id_usuario = $this->session_user;
 
 		$statement =
-			"SELECT id_usuario, nombre_usuario
-			 FROM usuarios
-			 WHERE id_usuario != ?
-			 ORDER BY nombre_usuario ASC";
+			"SELECT
+				u.id_usuario,
+				u.nombre_usuario,
+				COUNT(m.id_mensaje) AS num_mensajes,
+				ult.fecha_envio,
+				ult.contenido
+			FROM usuarios u
+			LEFT JOIN ultimos_mensajes_leidos_directos uml
+				ON uml.id_usuario = ?
+				AND uml.id_receptor = u.id_usuario
+			LEFT JOIN mensajes m
+				ON m.id_receptor = ?
+				AND m.id_emisor = u.id_usuario
+				AND m.id_grupo IS NULL
+				AND m.id_mensaje > COALESCE(uml.id_mensaje, 0)
+			LEFT JOIN mensajes ult
+				ON ult.id_mensaje = (
+					SELECT MAX(m2.id_mensaje)
+					FROM mensajes m2
+					WHERE m2.id_receptor = ?
+					AND m2.id_emisor = u.id_usuario
+					AND m2.id_grupo IS NULL
+					AND m2.id_mensaje > COALESCE(uml.id_mensaje, 0)
+				)
+			WHERE u.id_usuario != ?
+			GROUP BY u.id_usuario, u.nombre_usuario, ult.fecha_envio, ult.contenido
+			ORDER BY
+				(m.fecha_envio IS NULL) ASC,
+				m.fecha_envio DESC,
+				u.nombre_usuario ASC";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"i",
+			"iiii",
+			$id_usuario,
+			$id_usuario,
+			$id_usuario,
 			$id_usuario
 		);
 
@@ -87,6 +116,43 @@ final readonly class Usuario extends MysqliConnect
 		$this->content = $usuarios;
 		$this->sendResponse();
 	}
+
+	// MARK: READ
+
+	// public function readUsuarios(): void
+	// {
+	// 	$this->authEndpoint();
+
+	// 	$id_usuario = $this->id_usuario;
+
+	// 	$statement =
+	// 		"SELECT id_usuario, nombre_usuario
+	// 		 FROM usuarios
+	// 		 WHERE id_usuario != ?
+	// 		 ORDER BY nombre_usuario ASC";
+
+	// 	$query = $this->connection->prepare($statement);
+
+	// 	$query->bind_param(
+	// 		"i",
+	// 		$id_usuario
+	// 	);
+
+	// 	$query->execute();
+
+	// 	$usuarios = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+	// 	$message =
+	// 		$usuarios
+	// 		? 'Usuarios obtenidos.'
+	// 		: 'No hay ningún usuario.';
+
+	// 	$query->close();
+
+	// 	$this->status = 200;
+	// 	$this->message = $message;
+	// 	$this->content = $usuarios;
+	// 	$this->sendResponse();
+	// }
 
 	// MARK: CREATE
 
