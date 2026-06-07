@@ -25,12 +25,12 @@ export default class Usuario extends TemporalFormat {
 				: '';
 
 			const autorMensaje = usuario.id_emisor === this.id_usuario
-				? 'Tú'
-				: `<span translate="no">${usuario.nombre_usuario}</span>`;
+				? 'Tú: '
+				: `<span translate="no">${usuario.nombre_usuario}: </span>`;
 
 			const lastMessage = usuario.contenido !== null
 				? `<date>${this.fullDate(usuario.fecha_envio)}</date>
-					<p>${autorMensaje}: ${usuario.contenido}</p>`
+					<p>${autorMensaje}${usuario.contenido}</p>`
 				: '';
 
 			const usuario2 =

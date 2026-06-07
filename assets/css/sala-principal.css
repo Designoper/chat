@@ -35,6 +35,10 @@ main {
 			width: 100%;
 			text-box: trim-both cap text;
 			scrollbar-width: none;
+
+			span {
+				all: unset;
+			}
 		}
 
 		date {
