@@ -53,7 +53,7 @@ new Usuario()->authBrowser();
 
 		<h1>Whatschat</h1>
 
-		<form method="POST" name="deleteUsuario">
+		<!-- <form method="POST" name="deleteUsuario">
 			<button>
 				<svg viewBox="0 0 2481 2481">
 					<path d="M1666.169 2480.309c0-460.107-372.979-833.086-833.086-833.086S-.003 2020.202-.003 2480.309h1666.172z" />
@@ -62,7 +62,7 @@ new Usuario()->authBrowser();
 					<path d="M2351.597 23.215c29.186-29.188 76.579-29.183 105.766-.005 29.187 29.189 29.187 76.583-.001 105.771L1767.88 818.462c-29.188 29.188-76.58 29.183-105.77.005-29.189-29.189-29.182-76.583.006-105.771l689.482-689.482z" />
 				</svg>
 			</button>
-		</form>
+		</form> -->
 
 	</header>
 
@@ -70,17 +70,15 @@ new Usuario()->authBrowser();
 
 		<output>
 
-			<menu>
-
-				<!-- <form method="POST" name="createGrupo">
-					<label for="nombre_grupo">Nombre del grupo</label>
-					<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required>
-					<button>Crear</button>
-				</form> -->
-
-			</menu>
+			<menu></menu>
 
 		</output>
+
+		<!-- <form method="POST" name="createGrupo">
+			<label for="nombre_grupo">Nuevo grupo</label>
+			<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required maxlength="20">
+			<button>Crear</button>
+		</form> -->
 
 	</main>
 

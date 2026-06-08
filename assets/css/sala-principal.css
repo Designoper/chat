@@ -4,7 +4,7 @@
 
 header {
 	display: flex;
-	gap: 1em;
+	gap: 0.75em;
 	align-items: center;
 	position: sticky;
 	top: 0;
@@ -24,6 +24,28 @@ header {
 
 main {
 	background-color: var(--secondary-bg);
+
+	form {
+		width: 100%;
+		gap: 1em;
+		align-items: center;
+		position: absolute;
+		bottom: 0;
+		background-color: var(--terciary-bg);
+		padding: 1em 10vw;
+
+		input {
+			background-color: white;
+			flex-grow: 1;
+		}
+
+		&:has(:invalid) {
+			button:not([type="reset"], [type="button"]) {
+				opacity: 50%;
+				cursor: not-allowed;
+			}
+		}
+	}
 
 	output {
 		p {
@@ -64,21 +86,7 @@ main {
 			align-items: center;
 		}
 
-		form {
-			gap: 1em;
-			align-items: center;
 
-			input {
-				background-color: white;
-			}
-
-			&:has(:invalid) {
-				button:not([type="reset"], [type="button"]) {
-					opacity: 50%;
-					cursor: not-allowed;
-				}
-			}
-		}
 
 		/* > menu {
 			background-color: var(--secondary-bg);
