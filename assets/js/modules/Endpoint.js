@@ -8,6 +8,7 @@ export default class Endpoint extends Fetch {
 			USUARIOS: {
 				OTROS: `${this.ROOT}usuarios`,
 				CONTACTOS: `${this.ROOT}usuarios/contactos`,
+				STREAM: `${this.ROOT}usuarios/stream`,
 				CURRENT: `${this.ROOT}usuarios/current`,
 			},
 			MENSAJES: {

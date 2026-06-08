@@ -55,6 +55,23 @@ final readonly class Usuario extends MysqliConnect
 
 	public function readContactos(): void
 	{
+		$contactos = $this->obtainContactos();
+
+		$message =
+			$contactos
+			? 'Contactos obtenidos.'
+			: 'No hay ningún contacto.';
+
+		$this->status = 200;
+		$this->message = $message;
+		$this->content = $contactos;
+		$this->sendResponse();
+	}
+
+	// MARK: OBTAIN CONTACTOS
+
+	private function obtainContactos(): array
+	{
 		$this->authEndpoint();
 
 		$id_usuario = $this->session_user;
@@ -106,18 +123,11 @@ final readonly class Usuario extends MysqliConnect
 
 		$query->execute();
 
-		$usuarios = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$message =
-			$usuarios
-			? 'Usuarios obtenidos.'
-			: 'No hay ningún usuario.';
+		$contactos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 
 		$query->close();
 
-		$this->status = 200;
-		$this->message = $message;
-		$this->content = $usuarios;
-		$this->sendResponse();
+		return $contactos;
 	}
 
 	// MARK: READ USUARIOS
@@ -327,5 +337,66 @@ final readonly class Usuario extends MysqliConnect
 		$query->close();
 
 		$this->logout();
+	}
+
+	// MARK: STREAM CONTACTOS
+
+	public function streamContactos(): void
+	{
+		if (session_status() === PHP_SESSION_ACTIVE) {
+			session_write_close();
+		}
+
+		set_time_limit(0);
+		ignore_user_abort(false);
+
+		// Limpia buffers previos
+		while (ob_get_level() > 0) {
+			ob_end_clean();
+		}
+
+		// Headers SSE
+		header("Content-Type: text/event-stream");
+		header("Cache-Control: no-cache");
+		header("Connection: keep-alive");
+		header("X-Accel-Buffering: no");
+
+		ini_set('output_buffering', 'off');
+		ini_set('zlib.output_compression', 0);
+
+		// Forzar flush inicial
+		echo str_pad('', 4096) . "\n";
+		flush();
+
+		$lastPing = 0;
+
+		$contactos = $this->obtainContactos();
+
+		while (true) {
+
+			if (connection_aborted()) {
+				break;
+			}
+
+			$contactosUpdate = $this->obtainContactos();
+
+			if ($contactosUpdate !== $contactos) {
+
+				echo "event: new update\n";
+				echo "data: " . json_encode($contactosUpdate) . "\n\n";
+				$contactos = $contactosUpdate;
+			}
+
+			if (time() - $lastPing > 10) {
+				echo "event: ping\n";
+				echo "data: keepalive\n\n";
+				$lastPing = time();
+			}
+
+			@ob_flush();
+			@flush();
+
+			usleep(300000); // 0.3s
+		}
 	}
 }

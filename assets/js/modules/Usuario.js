@@ -2,6 +2,7 @@ import TemporalFormat from "./Temporal.js";
 
 export default class Usuario extends TemporalFormat {
 	id_usuario;
+	output = document.querySelector('output>menu');
 
 	constructor() {
 		super();
@@ -79,5 +80,21 @@ export default class Usuario extends TemporalFormat {
 	async getMensajesNoLeidos() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.NO_LEIDOS, 'get');
 		return response.content;
+	}
+
+	streamContactos() {
+
+		const evtSource = new EventSource(this.ENDPOINTS.GET.USUARIOS.STREAM);
+
+		evtSource.addEventListener("new update", (event) => {
+			const contactos = JSON.parse(event.data);
+			const content = this.usuariosTemplate(contactos);
+
+			this.output.setHTML(`${content}`, {
+				sanitizer: new Sanitizer({
+					comments: false,
+				})
+			});
+		});
 	}
 }

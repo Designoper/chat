@@ -4,3 +4,4 @@ const grupo = new Grupo();
 
 await grupo.sessionCheck();
 await grupo.finalPrint();
+await grupo.streamContactos();
