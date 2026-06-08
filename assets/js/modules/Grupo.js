@@ -137,10 +137,6 @@ export default class Grupo extends Usuario {
 
 	async createGrupo(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.CREAR);
-		if (response.status === 201) {
-			await this.getGruposMiembro();
-			await this.getGruposPendiente();
-		}
 	}
 
 	async invitar(form) {
