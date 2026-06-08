@@ -16,13 +16,24 @@ export default class Usuario extends TemporalFormat {
 	usuariosTemplate(fetchedUsuarios) {
 
 		const usuarios = fetchedUsuarios.map(usuario => {
+
+			let id;
+
+			if (usuario.tipo === 'usuario') {
+				id = 'id_receptor';
+			}
+
+			if (usuario.tipo === 'grupo') {
+				id = 'id_grupo';
+			}
+
 			const badge = usuario.num_mensajes > 0
 				? `<data>${usuario.num_mensajes}</data>`
 				: '';
 
 			const autorMensaje = usuario.id_emisor === this.id_usuario
 				? 'Tú'
-				: `<span translate="no">${usuario.nombre_usuario}</span>`;
+				: `<span translate="no">${usuario.nombre}</span>`;
 
 			const lastMessage = usuario.contenido !== null
 				? `<date>${this.fullDate(usuario.fecha_envio)}</date>
@@ -31,8 +42,8 @@ export default class Usuario extends TemporalFormat {
 
 			const template =
 				`<li>
-					<a href="./chat.php?id_receptor=${usuario.id_usuario}&nombre_receptor=${usuario.nombre_usuario}">
-						<h2 translate="no">${usuario.nombre_usuario}</h2>
+					<a href="./chat.php?${id}=${usuario.id}&nombre_receptor=${usuario.nombre}">
+						<h2 translate="no">${usuario.nombre}</h2>
 						${badge}
 						${lastMessage}
 					</a>
