@@ -26,7 +26,8 @@ new Usuario()->sessionRedirect();
 	<link href="./assets/img/icons/favicon.svg" rel="icon" type="image/svg+xml">
 	<link href="./assets/img/icons/apple-touch-icon.png" rel="apple-touch-icon" type="image/png">
 
-	<link href="./assets/fonts/rubik/rubik.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
+	<link href="./assets/fonts/rubik/static/rubik-regular.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
+	<link href="./assets/fonts/rubik/static/rubik-bold.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
 
 	<link href="./assets/css/common/reset.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">

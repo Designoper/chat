@@ -8,16 +8,22 @@ export default class Grupo extends Usuario {
 	}
 
 	async finalPrint() {
-		const gruposMiembro = await this.getGruposMiembro();
-		const gruposMiembroPrint = await this.gruposMiembroTemplate(gruposMiembro);
+		// const gruposMiembro = await this.getGruposMiembro();
+		// const gruposMiembroPrint = await this.gruposMiembroTemplate(gruposMiembro);
 
-		const gruposPendiente = await this.getGruposPendiente();
-		const gruposPendientePrint = this.gruposPendienteTemplate(gruposPendiente);
+		// const gruposPendiente = await this.getGruposPendiente();
+		// const gruposPendientePrint = this.gruposPendienteTemplate(gruposPendiente);
 
 		const usuarios = await this.getUsuarios();
 		const usuariosPrint = this.usuariosTemplate(usuarios);
 
-		this.output.setHTML(`${usuariosPrint}${gruposMiembroPrint}${gruposPendientePrint}`, {
+		// this.output.setHTML(`${usuariosPrint}${gruposMiembroPrint}${gruposPendientePrint}`, {
+		// 	sanitizer: new Sanitizer({
+		// 		comments: false,
+		// 	})
+		// });
+
+		this.output.setHTML(`${usuariosPrint}`, {
 			sanitizer: new Sanitizer({
 				comments: false,
 			})
