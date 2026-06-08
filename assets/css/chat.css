@@ -118,14 +118,7 @@ main {
 				display: flex;
 				gap: 0.75em 1em;
 				align-items: self-end;
-
 			}
-
-			/* p {
-				display: flex;
-				gap: 1em;
-				align-items: center;
-			} */
 
 			h2 {
 				font-weight: bold;
@@ -134,7 +127,6 @@ main {
 			}
 
 			date {
-				/* display: inline-block; */
 				font-size: 0.75rem;
 				text-align: right;
 				flex-grow: 1;
