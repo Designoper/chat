@@ -219,10 +219,28 @@ final readonly class Usuario extends MysqliConnect
 	{
 		$this->authEndpoint();
 
+		$id_usuario = $this->id_usuario;
+
+		$statement =
+			"SELECT id_usuario, nombre_usuario
+			FROM usuarios
+			WHERE id_usuario = ?";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"i",
+			$id_usuario
+		);
+
+		$query->execute();
+
+		$usuario = $query->get_result()->fetch_assoc();
+
+		$query->close();
+
 		$this->status = 200;
-		$this->content = [
-			"id_usuario" => $this->id_usuario,
-		];
+		$this->content = $usuario;
 		$this->sendResponse();
 	}
 

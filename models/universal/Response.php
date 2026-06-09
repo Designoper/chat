@@ -8,7 +8,6 @@ require_once __DIR__ . '/ErrorHandler.php';
 abstract readonly class Response extends Sanitizer
 {
     protected int $status;
-    // protected string $message;
     protected array $content;
     protected ErrorHandler $errors;
     private array $response;
@@ -34,30 +33,24 @@ abstract readonly class Response extends Sanitizer
     private function buildResponse(): void
     {
         if (!empty($this->errors->getValidationErrors())) {
-            $this->response =
-                // 'message' => $this->message,
-                $this->errors->getValidationErrors();
+            $this->response = $this->errors->getValidationErrors();
             return;
         }
 
         if (!empty($this->errors->getIntegrityErrors())) {
-            $this->response =
-                // 'message' => $this->message,
-                $this->errors->getIntegrityErrors();
+            $this->response = $this->errors->getIntegrityErrors();
             return;
         }
 
         if (isset($this->content)) {
-            $this->response =
-                // 'message' => $this->message,
-                $this->content;
+            $this->response = $this->content;
             return;
         }
 
-        if ($this->status === 204) {
-            $this->response = [];
-            return;
-        }
+        // if ($this->status === 204) {
+        //     $this->response = [];
+        //     return;
+        // }
 
         $this->response = [];
     }
