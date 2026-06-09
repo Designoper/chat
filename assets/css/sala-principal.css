@@ -26,10 +26,11 @@ main {
 	background-color: var(--secondary-bg);
 
 	form {
+		display: flex;
 		width: 100%;
 		gap: 1em;
 		align-items: center;
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		background-color: var(--terciary-bg);
 		padding: 1em 10vw;
@@ -37,6 +38,8 @@ main {
 		input {
 			background-color: white;
 			flex-grow: 1;
+			padding: 0.25em 0.5em;
+			border-radius: 0.15em;
 		}
 
 		&:has(:invalid) {
@@ -86,9 +89,11 @@ main {
 			align-items: center;
 		}
 
-		/* > menu {
-			background-color: var(--secondary-bg);
-		} */
+		> menu {
+			/* background-color: var(--secondary-bg); */
+			padding-bottom: 6em;
+
+		}
 
 		li {
 			overflow: hidden;
@@ -111,10 +116,6 @@ main {
 		img {
 			width: 1.5em;
 		}
-	}
-
-	form {
-		display: flex;
 	}
 
 	::picker-icon {
