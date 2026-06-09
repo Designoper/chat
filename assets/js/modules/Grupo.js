@@ -1,7 +1,7 @@
-import Usuario from "./Usuario.js";
+import Contacto from "./Contacto.js";
 
-export default class Grupo extends Usuario {
-	output = document.querySelector('output>menu');
+export default class Grupo extends Contacto {
+	invitacionesMenu = this.output.querySelector('menu:nth-of-type(1)');
 
 	constructor() {
 		super();
@@ -12,19 +12,20 @@ export default class Grupo extends Usuario {
 		return response;
 	}
 
-	async getGruposPendiente() {
-		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.PENDIENTE, 'get');
-		return response;
-	}
-
 	async printGruposMiembro(grupos) {
-		const content = await this.gruposMiembroTemplate(grupos.content);
+		const content = await this.gruposMiembroTemplate(grupos);
 		return response;
 	}
 
-	printGruposPendiente(grupos) {
-		const content = this.gruposPendienteTemplate(grupos.content);
-		this.outputPendiente.innerHTML = content;
+	async getGruposPendiente() {
+		const { json } = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.PENDIENTE, 'get');
+		return json;
+	}
+
+	async printGruposPendiente() {
+		const response = await this.getGruposPendiente();
+		const content = this.gruposPendienteTemplate(response);
+		this.invitacionesMenu.innerHTML = content;
 	}
 
 	async gruposMiembroTemplate(fetchedGrupos) {
@@ -37,31 +38,6 @@ export default class Grupo extends Usuario {
 						"id_grupo": grupo.id_grupo
 					}
 				);
-
-				const mensajesNoLeidos = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.NO_LEIDOS, 'get',
-					{
-						"id_grupo": grupo.id_grupo
-					}
-				);
-
-				const ultimoMensaje = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_MENSAJE, 'get',
-					{
-						"id_grupo": grupo.id_grupo
-					}
-				);
-
-				const autorMensaje = ultimoMensaje?.content?.id_emisor === this.id_usuario
-					? 'Tú'
-					: `<span translate="no">${ultimoMensaje.content.nombre_usuario}</span>`;
-
-				const lastMessage = ultimoMensaje?.content?.contenido
-					? `<date>${this.fullDate(ultimoMensaje.content.fecha_envio)}</date>
-						<p>${autorMensaje}: ${ultimoMensaje.content.contenido}</p>`
-					: '';
-
-				const badge = mensajesNoLeidos.content.num_mensajes > 0
-					? `<data>${mensajesNoLeidos.content.num_mensajes}</data>`
-					: '';
 
 				const opciones = invitables.content
 					.map(user => `<option translate="no" value="${user.id_usuario}">${user.nombre_usuario}</option>`)
@@ -96,19 +72,29 @@ export default class Grupo extends Usuario {
 
 	gruposPendienteTemplate(fetchedGrupos) {
 
-		const grupos = fetchedGrupos.map(grupo =>
-			`
-			<li>
-				<h2 translate="no">${grupo.nombre_grupo}</h2>
-				<form method="POST" name="aceptarInvitacion">
-					<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
-					<button>Aceptar</button>
-				</form>
-			</li>
-			`
-		).join('');
+		const grupos = fetchedGrupos.map(grupo => {
 
-		return grupos;
+			const template =
+				`
+					<li>
+						<h2 translate="no">${grupo.nombre_grupo}</h2>
+
+						<form method="POST" name="aceptarInvitacion">
+							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
+							<button>Aceptar</button>
+						</form>
+
+						<form method="POST" name="rechazarInvitacion">
+							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
+							<button>Rechazar</button>
+						</form>
+					</li>
+				`;
+
+			return template;
+		});
+
+		return grupos.join('');
 	}
 
 	async createGrupo(form) {
@@ -117,17 +103,17 @@ export default class Grupo extends Usuario {
 
 	async invitar(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.INVITAR);
-		if (response.status === 201) {
-			await this.getGruposMiembro();
-			await this.getGruposPendiente();
-		}
+		// if (response.status === 201) {
+		// 	await this.getGruposMiembro();
+		// 	await this.getGruposPendiente();
+		// }
 	}
 
 	async aceptarInvitacion(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.ACEPTAR_INVITACION);
-		if (response.status === 200) {
-			await this.getGruposMiembro();
-			await this.getGruposPendiente();
-		}
+	}
+
+	async rechazarInvitacion(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.RECHAZAR_INVITACION);
 	}
 }

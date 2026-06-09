@@ -71,6 +71,7 @@ new Usuario()->authBrowser();
 		<output>
 
 			<menu></menu>
+			<menu></menu>
 
 		</output>
 

@@ -1,7 +1,8 @@
 import Usuario from "./Usuario.js";
 
 export default class Contacto extends Usuario {
-	output = document.querySelector('output>menu');
+	output = document.querySelector('output');
+	contactosMenu = this.output.querySelector('menu:nth-of-type(2)');
 
 	constructor() {
 		super();
@@ -23,7 +24,7 @@ export default class Contacto extends Usuario {
 		// 	})
 		// });
 
-		this.output.setHTML(`${usuariosPrint}`, {
+		this.contactosMenu.setHTML(`${usuariosPrint}`, {
 			sanitizer: new Sanitizer({
 				comments: false,
 			})
@@ -85,7 +86,7 @@ export default class Contacto extends Usuario {
 			const contactos = JSON.parse(event.data);
 			const content = this.contactosTemplate(contactos);
 
-			this.output.setHTML(`${content}`, {
+			this.contactosMenu.setHTML(`${content}`, {
 				sanitizer: new Sanitizer({
 					comments: false,
 				})

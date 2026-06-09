@@ -306,4 +306,36 @@ final readonly class Grupo extends MysqliConnect
 		$this->status = 200;
 		$this->sendResponse();
 	}
+
+	// MARK: RECHAZAR INVITACIÓN
+
+	public function rechazarInvitacion(): void
+	{
+		$this->setIdGrupo();
+
+		$this->checkValidationErrors();
+
+		$id_usuario = $this->id_fundador;
+		$id_grupo = $this->id_grupo;
+
+		$statement =
+			"DELETE FROM membresias
+			WHERE id_usuario = ?
+			AND id_grupo = ?
+			AND rol = 'pendiente'";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"ii",
+			$id_usuario,
+			$id_grupo
+		);
+
+		$query->execute();
+		$query->close();
+
+		$this->status = 204;
+		$this->sendResponse();
+	}
 }

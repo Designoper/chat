@@ -25,7 +25,7 @@ header {
 main {
 	background-color: var(--secondary-bg);
 
-	form {
+	> form {
 		display: flex;
 		width: 100%;
 		gap: 1em;
@@ -51,6 +51,49 @@ main {
 	}
 
 	output {
+		display: grid;
+		row-rule: solid 1px var(--primary-bg);
+
+		menu {
+			display: grid;
+			row-rule: solid 1px var(--primary-bg);
+
+			&:nth-of-type(1) {
+				li {
+					display: flex;
+					gap: 1em;
+					justify-content: end;
+					align-items: center;
+					padding: 1em 10vw;
+
+					h2 {
+						margin-right: auto;
+					}
+				}
+
+				button {
+					padding: 0.5em;
+					background-color: white;
+				}
+			}
+
+			&:nth-of-type(2) {
+				padding-bottom: 6em;
+			}
+
+			/* svg {
+				width: 1.5em;
+
+				path {
+					fill: var(--quartery-bg);
+				}
+			}
+
+			img {
+				width: 1.5em;
+			} */
+		}
+
 		p {
 			white-space: nowrap;
 			overflow: hidden;
@@ -89,32 +132,9 @@ main {
 			align-items: center;
 		}
 
-		> menu {
-			/* background-color: var(--secondary-bg); */
-			padding-bottom: 6em;
-
-		}
-
 		li {
 			overflow: hidden;
 			scrollbar-width: none;
-		}
-	}
-
-	menu {
-		display: grid;
-		row-rule: solid 1px var(--primary-bg);
-
-		svg {
-			width: 1.5em;
-
-			path {
-				fill: var(--quartery-bg);
-			}
-		}
-
-		img {
-			width: 1.5em;
 		}
 	}
 
