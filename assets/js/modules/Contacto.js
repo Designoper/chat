@@ -7,7 +7,7 @@ export default class Contacto extends Usuario {
 		super();
 	}
 
-	async finalPrint() {
+	async printContactos() {
 		// const gruposMiembro = await this.getGruposMiembro();
 		// const gruposMiembroPrint = await this.gruposMiembroTemplate(gruposMiembro);
 

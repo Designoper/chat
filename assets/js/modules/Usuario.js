@@ -37,7 +37,6 @@ export default class Usuario extends TemporalFormat {
 
 	async sessionCheck() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.USUARIOS.CURRENT, 'get');
-		console.log(response);
 		this.id_usuario = response.id_usuario;
 	}
 
