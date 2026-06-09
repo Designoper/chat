@@ -130,9 +130,7 @@ export default class Mensaje extends Usuario {
 			const fechaMensajeActual = this.formatearFecha(mensaje.fecha_envio);
 			const fechaMensajeAnterior = this.mensaje.fecha;
 
-			const cambioFecha = fechaMensajeAnterior?.day === fechaMensajeActual.day &&
-				fechaMensajeAnterior?.month === fechaMensajeActual.month &&
-				fechaMensajeAnterior?.year === fechaMensajeActual.year
+			const cambioFecha = fechaMensajeAnterior?.dayOfYear === fechaMensajeActual.dayOfYear
 				? ""
 				: `<date datetime="${this.yearMonthDay(mensaje.fecha_envio)}">${this.yearMonthDayWeekday(mensaje.fecha_envio)}</date>`;
 
@@ -193,20 +191,11 @@ export default class Mensaje extends Usuario {
 
 	writeChat() {
 		if (this.params.size === 2) {
-			// this.params.forEach((value, key) => {
 			if (this.params.has('nombre')) {
 				this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre'));
 				this.dom.header.insertAdjacentHTML('beforeend', `<p></p>`);
 				return;
 			}
-			// });
-
-			this.params.forEach((value, key) => {
-				if (key.startsWith('nombre')) {
-					this.dom.h1.insertAdjacentHTML("afterbegin", `${value}`);
-					return;
-				}
-			});
 		}
 	}
 }
