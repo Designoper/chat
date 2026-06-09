@@ -77,23 +77,35 @@ export default class TemporalFormat extends Endpoint {
 
 	compareTime(date) {
 		const currentTime = Temporal.Now.zonedDateTimeISO();
-		console.log(currentTime);
+		// console.log(currentTime);
 		const fecha = this.formatearFecha(date);
-		console.log(fecha);
+		// console.log(fecha);
 
 		if (currentTime.year === fecha.year &&
 			currentTime.dayOfYear === fecha.dayOfYear) {
 			return this.hoursMinutes(date);
 		}
 
-		if (currentTime.year === fecha.year &&
-			currentTime.dayOfYear === fecha.dayOfYear + 1) {
+		else if (
+			(currentTime.year === fecha.year &&
+				currentTime.dayOfYear === fecha.dayOfYear + 1) ||
+			(currentTime.year === fecha.year - 1 &&
+				currentTime.dayOfYear === 1 && (fecha.dayOfYear === 365 || fecha.dayOfYear === 366)
+			)
+		) {
 			return 'Ayer';
 		}
 
-		if (currentTime.year === fecha.year &&
-			currentTime.dayOfYear === fecha.dayOfYear + 1) {
-			return 'Ayer';
-		}
+		else return this.yearMonthDay(date);
+
+		// if (currentTime.year === fecha.year &&
+		// 	currentTime.dayOfYear - fecha.dayOfYear > 1) {
+		// 	return 'Ayer';
+		// }
+
+		// if (currentTime.year === fecha.year &&
+		// 	currentTime.dayOfYear - fecha.dayOfYear > 1) {
+		// 	return 'Ayer';
+		// }
 	}
 }
