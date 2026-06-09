@@ -41,12 +41,12 @@ export default class Contacto extends Usuario {
 
 			let id;
 
-			if (contacto.tipo === 'usuario') {
-				id = 'id_receptor';
-			}
-
-			if (contacto.tipo === 'grupo') {
-				id = 'id_grupo';
+			switch (contacto.tipo) {
+				case 'usuario':
+					id = 'id_receptor';
+					break;
+				case 'grupo':
+					id = 'id_grupo';
 			}
 
 			const badge = contacto.num_mensajes > 0
