@@ -20,7 +20,6 @@ final class Router
 
         // Usuarios
         $this->setRoute($GET, 'usuarios/current', [Usuario::class, 'currentUsuario']);
-        // $this->setRoute($GET, 'usuarios/stream', [Usuario::class, 'streamUsuarios']);
         $this->setRoute($GET, 'usuarios$', [Usuario::class, 'readUsuarios']);
 
         // Mensajes

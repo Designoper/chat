@@ -39,9 +39,4 @@ export default class Usuario extends TemporalFormat {
 		const { json } = await this.fetchWithoutForm(this.ENDPOINTS.GET.USUARIOS.CURRENT, 'get');
 		this.usuario = json;
 	}
-
-	// async getMensajesNoLeidos() {
-	// 	const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.NO_LEIDOS, 'get');
-	// 	return response.content;
-	// }
 }
