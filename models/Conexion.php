@@ -128,7 +128,7 @@ final readonly class Conexion extends Mensaje
 		$statement =
 			"SELECT usuarios.nombre_usuario,
 			DATE_FORMAT(conexion_grupal.last_seen, '%Y-%m-%dT%H:%i:%sZ') AS last_seen,
-				COALESCE(UNIX_TIMESTAMP(conexion_directa.last_seen), 0) AS last_seen_unix
+				COALESCE(UNIX_TIMESTAMP(conexion_grupal.last_seen), 0) AS last_seen_unix
 			FROM usuarios
 			LEFT JOIN conexion_grupal
 				ON usuarios.id_usuario = conexion_grupal.id_usuario
