@@ -51,7 +51,6 @@ final readonly class Conexion extends Mensaje
 		$query->execute();
 
 		$this->status = 201;
-		// $this->message = "Última conexión directa establecida";
 		$this->sendResponse();
 	}
 
@@ -82,7 +81,6 @@ final readonly class Conexion extends Mensaje
 		$query->execute();
 
 		$this->status = 201;
-		// $this->message = "Última conexión grupal establecida";
 		$this->sendResponse();
 	}
 
@@ -100,7 +98,7 @@ final readonly class Conexion extends Mensaje
 			FROM usuarios
 			LEFT JOIN conexion_directa
 				ON usuarios.id_usuario = conexion_directa.id_usuario
-			AND conexion_directa.id_receptor = ?
+				AND conexion_directa.id_receptor = ?
 			WHERE usuarios.id_usuario = ?";
 
 		$query = $this->connection->prepare($statement);
@@ -138,7 +136,7 @@ final readonly class Conexion extends Mensaje
 				ON usuarios.id_usuario = membresias.id_usuario
 			WHERE membresias.id_grupo = ?
 			AND membresias.id_usuario != ?
-			AND (membresias.rol = 'fundador' OR membresias.rol = 'miembro')
+			AND membresias.rol IN ('fundador','miembro')
 			ORDER BY usuarios.nombre_usuario ASC";
 
 		$query = $this->connection->prepare($statement);

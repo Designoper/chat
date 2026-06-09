@@ -7,7 +7,6 @@ export default class Endpoint extends Fetch {
 		GET: {
 			USUARIOS: {
 				OTROS: `${this.ROOT}usuarios`,
-				CONTACTOS: `${this.ROOT}usuarios/contactos`,
 				STREAM: `${this.ROOT}usuarios/stream`,
 				CURRENT: `${this.ROOT}usuarios/current`,
 			},
@@ -25,6 +24,10 @@ export default class Endpoint extends Fetch {
 			},
 			CONEXION: {
 				STREAM: `${this.ROOT}conexion/stream`,
+			},
+			CONTACTOS: {
+				TODOS: `${this.ROOT}contactos`,
+				STREAM: `${this.ROOT}contactos/stream`,
 			}
 		},
 		POST: {

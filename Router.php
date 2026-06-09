@@ -6,6 +6,7 @@ require_once __DIR__ . '/models/Usuario.php';
 require_once __DIR__ . '/models/Mensaje.php';
 require_once __DIR__ . '/models/Grupo.php';
 require_once __DIR__ . '/models/Conexion.php';
+require_once __DIR__ . '/models/Contacto.php';
 
 final class Router
 {
@@ -19,8 +20,7 @@ final class Router
 
         // Usuarios
         $this->setRoute($GET, 'usuarios/current', [Usuario::class, 'currentUsuario']);
-        $this->setRoute($GET, 'usuarios/contactos', [Usuario::class, 'readContactos']);
-        $this->setRoute($GET, 'usuarios/stream', [Usuario::class, 'streamContactos']);
+        // $this->setRoute($GET, 'usuarios/stream', [Usuario::class, 'streamUsuarios']);
         $this->setRoute($GET, 'usuarios$', [Usuario::class, 'readUsuarios']);
 
         // Mensajes
@@ -37,6 +37,10 @@ final class Router
 
         // Conexión
         $this->setRoute($GET, 'conexion/stream', [Conexion::class, 'streamConexion']);
+
+        // Contactos
+        $this->setRoute($GET, 'contactos/stream', [Contacto::class, 'streamContactos']);
+        $this->setRoute($GET, 'contactos', [Contacto::class, 'readContactos']);
 
         // Usuarios
         $this->setRoute($POST, 'usuarios/crear', [Usuario::class, 'createUsuario']);

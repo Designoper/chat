@@ -7,29 +7,6 @@ export default class Grupo extends Usuario {
 		super();
 	}
 
-	async finalPrint() {
-		// const gruposMiembro = await this.getGruposMiembro();
-		// const gruposMiembroPrint = await this.gruposMiembroTemplate(gruposMiembro);
-
-		// const gruposPendiente = await this.getGruposPendiente();
-		// const gruposPendientePrint = this.gruposPendienteTemplate(gruposPendiente);
-
-		const usuarios = await this.getUsuarios();
-		const usuariosPrint = this.contactosTemplate(usuarios);
-
-		// this.output.setHTML(`${usuariosPrint}${gruposMiembroPrint}${gruposPendientePrint}`, {
-		// 	sanitizer: new Sanitizer({
-		// 		comments: false,
-		// 	})
-		// });
-
-		this.output.setHTML(`${usuariosPrint}`, {
-			sanitizer: new Sanitizer({
-				comments: false,
-			})
-		});
-	}
-
 	async getGruposMiembro() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.MIEMBRO, 'get');
 		return response;

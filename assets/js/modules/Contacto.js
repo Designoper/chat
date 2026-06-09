@@ -1,0 +1,100 @@
+import Usuario from "./Usuario.js";
+
+export default class Contacto extends Usuario {
+	output = document.querySelector('output>menu');
+
+	constructor() {
+		super();
+	}
+
+	async finalPrint() {
+		// const gruposMiembro = await this.getGruposMiembro();
+		// const gruposMiembroPrint = await this.gruposMiembroTemplate(gruposMiembro);
+
+		// const gruposPendiente = await this.getGruposPendiente();
+		// const gruposPendientePrint = this.gruposPendienteTemplate(gruposPendiente);
+
+		const contactos = await this.getContactos();
+		const usuariosPrint = this.contactosTemplate(contactos);
+
+		// this.output.setHTML(`${usuariosPrint}${gruposMiembroPrint}${gruposPendientePrint}`, {
+		// 	sanitizer: new Sanitizer({
+		// 		comments: false,
+		// 	})
+		// });
+
+		this.output.setHTML(`${usuariosPrint}`, {
+			sanitizer: new Sanitizer({
+				comments: false,
+			})
+		});
+	}
+
+	async getContactos() {
+		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.CONTACTOS.TODOS, 'get');
+		return response;
+	}
+
+	contactosTemplate(fetchedContactos) {
+
+		const contactos = fetchedContactos.map(contacto => {
+
+			let id;
+
+			if (contacto.tipo === 'usuario') {
+				id = 'id_receptor';
+			}
+
+			if (contacto.tipo === 'grupo') {
+				id = 'id_grupo';
+			}
+
+			const badge = contacto.num_mensajes > 0
+				? `<data>${contacto.num_mensajes}</data>`
+				: '';
+
+			console.log(contacto.num_mensajes);
+
+			const autorMensaje = contacto.id_emisor === this.id_usuario
+				? 'Tú'
+				: `<span translate="no">${contacto.nombre}</span>`;
+
+			console.log(contacto.id_emisor);
+
+
+			const lastMessage = contacto.contenido !== null
+				? `<date>${this.fullDate(contacto.fecha_envio)}</date>
+					<p>${autorMensaje}: ${contacto.contenido}</p>`
+				: '';
+
+			const template =
+				`<li>
+					<a href="./chat.php?${id}=${contacto.id}&nombre=${contacto.nombre}">
+						<h2 translate="no">${contacto.nombre}</h2>
+						${badge}
+						${lastMessage}
+					</a>
+				</li>`;
+
+			return template;
+		});
+
+		return contactos.join('');
+	}
+
+	streamContactos() {
+
+		const evtSource = new EventSource(this.ENDPOINTS.GET.CONTACTOS.STREAM);
+
+		evtSource.addEventListener("new update", (event) => {
+			const contactos = JSON.parse(event.data);
+			const content = this.contactosTemplate(contactos);
+
+			this.output.setHTML(`${content}`, {
+				sanitizer: new Sanitizer({
+					comments: false,
+				})
+			});
+		});
+	}
+}

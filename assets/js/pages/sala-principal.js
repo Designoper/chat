@@ -1,7 +1,7 @@
-import Grupo from '../modules/Grupo.js';
+import Contacto from '../modules/Contacto.js';
 
-const grupo = new Grupo();
+const contacto = new Contacto();
 
-await grupo.sessionCheck();
-await grupo.finalPrint();
-await grupo.streamContactos();
+await contacto.sessionCheck();
+await contacto.finalPrint();
+await contacto.streamContactos();

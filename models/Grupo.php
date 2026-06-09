@@ -61,40 +61,27 @@ final readonly class Grupo extends MysqliConnect
 	public function readGruposMiembro(): void
 	{
 		$id_usuario = $this->id_fundador;
-		$rolFundador = 'fundador';
-		$rolMiembro = 'miembro';
 
 		$statement =
 			"SELECT grupos.id_grupo, grupos.nombre_grupo
 			FROM grupos
 			LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
 			WHERE membresias.id_usuario = ?
-			AND (
-				membresias.rol = ? OR
-				membresias.rol = ?
-			)
+			AND membresias.rol IN ('fundador','miembro')
 			ORDER BY grupos.nombre_grupo ASC";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"iss",
-			$id_usuario,
-			$rolFundador,
-			$rolMiembro
+			"i",
+			$id_usuario
 		);
 
 		$query->execute();
 		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		// $message =
-		// 	$grupos
-		// 	? 'Grupos con membresía obtenidos.'
-		// 	: 'No perteneces a ningún grupo.';
-
 		$this->status = 200;
-		// $this->message = $message;
 		$this->content = $grupos;
 		$this->sendResponse();
 	}
@@ -126,13 +113,7 @@ final readonly class Grupo extends MysqliConnect
 		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		// $message =
-		// 	$grupos
-		// 	? 'Grupos con invitación pendiente obtenidos.'
-		// 	: 'No tienes ninguna invitación pendiente.';
-
 		$this->status = 200;
-		// $this->message = $message;
 		$this->content = $grupos;
 		$this->sendResponse();
 	}
@@ -167,13 +148,7 @@ final readonly class Grupo extends MysqliConnect
 		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		// $message =
-		// 	$grupos
-		// 	? 'Usuarios no miembros obtenidos.'
-		// 	: 'Todos los usuarios pertenecen al grupo.';
-
 		$this->status = 200;
-		// $this->message = $message;
 		$this->content = $grupos;
 		$this->sendResponse();
 	}
@@ -262,7 +237,6 @@ final readonly class Grupo extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		// $this->message = "Grupo creado con éxito";
 		$this->sendResponse();
 	}
 
@@ -296,7 +270,6 @@ final readonly class Grupo extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		// $this->message = "Invitación creada con éxito";
 		$this->sendResponse();
 	}
 
@@ -331,7 +304,6 @@ final readonly class Grupo extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		// $this->message = "Invitación aceptada con éxito";
 		$this->sendResponse();
 	}
 }
