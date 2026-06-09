@@ -20,6 +20,8 @@ export default class Mensaje extends Usuario {
 
 	mensaje = {};
 
+	ultimoIdLeido;
+
 	constructor() {
 		super();
 	}
@@ -118,46 +120,35 @@ export default class Mensaje extends Usuario {
 
 		const mensajes = fetchedMensajes.map(mensaje => {
 
-			let etiqueta = "";
+			let marcador = "";
 
 			if (!this.mostrado && mensaje.id_mensaje > this.prueba) {
-				etiqueta = "<p id='marcador'>Nuevos mensajes</p>";
+				marcador = "<p id='marcador'>Nuevos mensajes</p>";
 				this.mostrado = true; // ← ya no se vuelve a mostrar
 			}
 
-			const fechaFinal = this.hoursMinutes(mensaje.fecha_envio);
+			const fechaEnvio = this.hoursMinutes(mensaje.fecha_envio);
 			const fechaMensajeActual = this.formatearFecha(mensaje.fecha_envio);
 			const fechaMensajeAnterior = this.mensaje.fecha;
 
-			let fechatest;
-
-			if (fechaMensajeAnterior?.day === fechaMensajeActual.day &&
+			const cambioFecha = fechaMensajeAnterior?.day === fechaMensajeActual.day &&
 				fechaMensajeAnterior?.month === fechaMensajeActual.month &&
-				fechaMensajeAnterior?.year === fechaMensajeActual.year) {
-				fechatest = "";
-			}
+				fechaMensajeAnterior?.year === fechaMensajeActual.year
+				? ""
+				: `<date datetime="${this.yearMonthDay(mensaje.fecha_envio)}">${this.yearMonthDayWeekday(mensaje.fecha_envio)}</date>`;
 
-			else {
-				fechatest = `<date datetime="${this.yearMonthDay(mensaje.fecha_envio)}">${this.yearMonthDayWeekday(mensaje.fecha_envio)}</date>`;
-			}
+			const nombreAutor = mensaje.nombre_usuario === this.mensaje?.autor
+				? ""
+				: `<h2 translate="no">${mensaje.nombre_usuario}</h2>`;
 
-			let autor = `<h2 translate="no">${mensaje.nombre_usuario}</h2>`;
+			const isAutor = mensaje.id_emisor === this.id_usuario;
 
-			if (mensaje.nombre_usuario === this.mensaje?.autor) {
-				autor = "";
-			}
+			const classArticle = isAutor
+				? 'class="mensaje-propio"'
+				: '';
 
-			const template = `
-			${fechatest}
-            ${etiqueta}
-			<article ${mensaje.id_emisor === this.id_usuario ? 'class="mensaje-propio"' : ''}>
-				${autor}
-				<div>
-				<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
-				<date>${fechaFinal}</date>
-				</div>
-				${mensaje.id_emisor === this.id_usuario
-					? `<form method="POST" name="deleteMensaje">
+			const formDelete = isAutor
+				? `<form method="POST" name="deleteMensaje">
 						<input type="hidden" name="id_mensaje" value="${mensaje.id_mensaje}">
 						<button>
 							<svg viewBox="0 0 928 983">
@@ -165,10 +156,21 @@ export default class Mensaje extends Usuario {
 							</svg>
 						</button>
 					</form>`
-					: ''
-				}
-			</article>
-			`;
+				: '';
+
+			const template =
+				`
+					${cambioFecha}
+					${marcador}
+					<article ${classArticle}>
+						${nombreAutor}
+						<div>
+						<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
+						<date>${fechaEnvio}</date>
+						</div>
+						${formDelete}
+					</article>
+				`;
 
 			this.mensaje.autor = mensaje.nombre_usuario;
 			this.mensaje.fecha = this.formatearFecha(mensaje.fecha_envio);
@@ -193,15 +195,15 @@ export default class Mensaje extends Usuario {
 	writeChat() {
 		if (this.params.size === 2) {
 			// this.params.forEach((value, key) => {
-			if (this.params.has('nombre_receptor')) {
-				this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre_receptor'));
+			if (this.params.has('nombre')) {
+				this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre'));
 				this.dom.header.insertAdjacentHTML('beforeend', `<p></p>`);
 				return;
 			}
 			// });
 
 			this.params.forEach((value, key) => {
-				if (key.startsWith('nombre_grupo')) {
+				if (key.startsWith('nombre')) {
 					this.dom.h1.insertAdjacentHTML("afterbegin", `${value}`);
 					return;
 				}

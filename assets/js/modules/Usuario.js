@@ -13,37 +13,37 @@ export default class Usuario extends TemporalFormat {
 		return response.content;
 	}
 
-	usuariosTemplate(fetchedUsuarios) {
+	contactosTemplate(fetchedContactos) {
 
-		const usuarios = fetchedUsuarios.map(usuario => {
+		const usuarios = fetchedContactos.map(contacto => {
 
 			let id;
 
-			if (usuario.tipo === 'usuario') {
+			if (contacto.tipo === 'usuario') {
 				id = 'id_receptor';
 			}
 
-			if (usuario.tipo === 'grupo') {
+			if (contacto.tipo === 'grupo') {
 				id = 'id_grupo';
 			}
 
-			const badge = usuario.num_mensajes > 0
-				? `<data>${usuario.num_mensajes}</data>`
+			const badge = contacto.num_mensajes > 0
+				? `<data>${contacto.num_mensajes}</data>`
 				: '';
 
-			const autorMensaje = usuario.id_emisor === this.id_usuario
+			const autorMensaje = contacto.id_emisor === this.id_usuario
 				? 'Tú'
-				: `<span translate="no">${usuario.nombre}</span>`;
+				: `<span translate="no">${contacto.nombre}</span>`;
 
-			const lastMessage = usuario.contenido !== null
-				? `<date>${this.fullDate(usuario.fecha_envio)}</date>
-					<p>${autorMensaje}: ${usuario.contenido}</p>`
+			const lastMessage = contacto.contenido !== null
+				? `<date>${this.fullDate(contacto.fecha_envio)}</date>
+					<p>${autorMensaje}: ${contacto.contenido}</p>`
 				: '';
 
 			const template =
 				`<li>
-					<a href="./chat.php?${id}=${usuario.id}&nombre_receptor=${usuario.nombre}">
-						<h2 translate="no">${usuario.nombre}</h2>
+					<a href="./chat.php?${id}=${contacto.id}&nombre=${contacto.nombre}">
+						<h2 translate="no">${contacto.nombre}</h2>
 						${badge}
 						${lastMessage}
 					</a>
@@ -99,7 +99,7 @@ export default class Usuario extends TemporalFormat {
 
 		evtSource.addEventListener("new update", (event) => {
 			const contactos = JSON.parse(event.data);
-			const content = this.usuariosTemplate(contactos);
+			const content = this.contactosTemplate(contactos);
 
 			this.output.setHTML(`${content}`, {
 				sanitizer: new Sanitizer({
