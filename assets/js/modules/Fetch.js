@@ -13,11 +13,13 @@ export default class Fetch {
 	}
 
 	buildRequest(method, data) {
-		const upper = method.toUpperCase();
-		const init = { method: upper };
+		const init = {};
+		init.method = method;
 
-		if (upper === "POST") {
-			init.body = data instanceof FormData ? data : this.objToFormdata(data);
+		if (method === "POST") {
+			init.body = data instanceof FormData
+				? data
+				: this.objToFormdata(data);
 		}
 
 		return init;
@@ -73,11 +75,9 @@ export default class Fetch {
 			const json = await response.json();
 			json.status = response.status;
 
-			if (response.ok) {
-				this.resetForm(form, method, output, dialog);
-			} else {
-				this.errorChecker(json, output);
-			}
+			response.ok
+				? this.resetForm(form, method, output, dialog)
+				: this.errorChecker(json, output);
 
 			return json;
 		} catch (error) {
