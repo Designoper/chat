@@ -1,10 +1,7 @@
 import TemporalFormat from "./universal/Temporal.js";
 
 export default class Usuario extends TemporalFormat {
-	usuario = {
-		id_usuario: undefined,
-		nombre_usuario: undefined
-	};
+	usuario = {};
 
 	constructor() {
 		super();
@@ -32,16 +29,15 @@ export default class Usuario extends TemporalFormat {
 	}
 
 	async deleteUsuario(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.DELETE);
-		if (response.status === 204) {
+		const { status, json } = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.DELETE);
+		if (status === 204) {
 			location.href = 'crear-usuario.php';
 		}
 	}
 
 	async sessionCheck() {
-		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.USUARIOS.CURRENT, 'get');
-		console.log(response);
-		this.usuario = response;
+		const { json } = await this.fetchWithoutForm(this.ENDPOINTS.GET.USUARIOS.CURRENT, 'get');
+		this.usuario = json;
 	}
 
 	// async getMensajesNoLeidos() {

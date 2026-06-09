@@ -31,8 +31,8 @@ export default class Contacto extends Usuario {
 	}
 
 	async getContactos() {
-		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.CONTACTOS.TODOS, 'get');
-		return response;
+		const { json } = await this.fetchWithoutForm(this.ENDPOINTS.GET.CONTACTOS.TODOS, 'get');
+		return json;
 	}
 
 	contactosTemplate(fetchedContactos) {

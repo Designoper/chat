@@ -64,12 +64,12 @@ export default class Mensaje extends Usuario {
 	}
 
 	async getMensajes() {
-		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.paramsObj);
-		const mensajes = this.mensajesTemplate(response);
+		const { json } = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.paramsObj);
+		const mensajes = this.mensajesTemplate(json);
 		this.dom.output.innerHTML = mensajes;
 
-		if (response.length > 0) {
-			this.paramsObj.ultimo_id = response[response.length - 1].id_mensaje;
+		if (json.length > 0) {
+			this.paramsObj.ultimo_id = json[json.length - 1].id_mensaje;
 			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.paramsObj);
 		}
 	}
@@ -141,7 +141,7 @@ export default class Mensaje extends Usuario {
 				? ""
 				: `<h2 translate="no">${mensaje.nombre_usuario}</h2>`;
 
-			const isAutor = mensaje.id_emisor === this.id_usuario;
+			const isAutor = mensaje.id_emisor === this.usuario.id_usuario;
 
 			const classArticle = isAutor
 				? 'class="mensaje-propio"'

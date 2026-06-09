@@ -13,6 +13,7 @@ export default class Fetch {
 	}
 
 	buildRequest(method, data) {
+		// const request = new Request;
 		const init = {};
 		init.method = method;
 
@@ -41,19 +42,33 @@ export default class Fetch {
 
 	async fetchWithoutForm(endpoint, method, data = {}) {
 		const upper = method.toUpperCase();
+
+		// /** @type {RequestInit} */
 		const init = this.buildRequest(upper, data);
+
 		const url = this.buildURL(endpoint, upper, data);
 
 		try {
+			// const request = new Request(url, init);
+			// request.method = method;
+			// request.body = data;
+			// request.url = endpoint;
+
 			const response = await fetch(url, init);
-			const json = await response.json();
-			json.status = response.status;
-			return json;
+			const status = response.status;
+			const json = status === 204
+				? null
+				: await response.json();
+
+			return { status, json };
 		} catch (error) {
 			console.error("fetchWithoutForm error:", error);
 		}
 	}
 
+	/**
+	 * @param {HTMLFormElement} form
+	 */
 	async fetchData(form, action) {
 		const method = form.method.toUpperCase();
 		const data = new FormData(form);
@@ -66,20 +81,16 @@ export default class Fetch {
 
 		try {
 			const response = await fetch(url, init);
-
-			if (response.status === 204) {
-				this.resetForm(form, method, output, dialog);
-				return response;
-			}
-
-			const json = await response.json();
-			json.status = response.status;
+			const status = response.status;
+			const json = status === 204
+				? null
+				: await response.json();
 
 			response.ok
 				? this.resetForm(form, method, output, dialog)
 				: this.errorChecker(json, output);
 
-			return json;
+			return { status, json };
 		} catch (error) {
 			console.error("fetchData error:", error);
 		}
@@ -88,13 +99,6 @@ export default class Fetch {
 	// MARK: ERROR CHECKER
 
 	errorChecker(response, output) {
-		if (response.length > 0) {
-			output.innerHTML =
-				`<ul>
-					${response.map(error => `<li>${error}</li>`).join("")}
-				</ul>`;
-		}
-
 		if (response.length > 0) {
 			output.innerHTML =
 				`<ul>
