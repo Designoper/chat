@@ -58,7 +58,7 @@ export default class Contacto extends Usuario {
 				: `<span translate="no">${contacto.nombre}</span>`;
 
 			const lastMessage = contacto.contenido
-				? `<date>${this.fullDate(contacto.fecha_envio)}</date>
+				? `<date>${this.compareTime(contacto.fecha_envio)}</date>
 					<p>${autorMensaje}: ${contacto.contenido}</p>`
 				: '';
 

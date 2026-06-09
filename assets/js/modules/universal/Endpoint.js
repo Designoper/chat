@@ -73,6 +73,7 @@ export default class Endpoint extends Fetch {
 		document.addEventListener('submit', (e) => {
 			const form = e.target;
 			if (form.tagName !== 'FORM') return;
+			// const j = new HTMLFormElement;
 
 			e.preventDefault();
 			// this.sanitizeForm(form);

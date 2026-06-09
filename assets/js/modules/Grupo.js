@@ -88,7 +88,6 @@ export default class Grupo extends Usuario {
 					</li>`;
 
 				return formInvitar;
-
 			})
 		);
 

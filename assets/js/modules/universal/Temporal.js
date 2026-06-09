@@ -74,4 +74,26 @@ export default class TemporalFormat extends Endpoint {
 
 		return temporal;
 	}
+
+	compareTime(date) {
+		const currentTime = Temporal.Now.zonedDateTimeISO();
+		console.log(currentTime);
+		const fecha = this.formatearFecha(date);
+		console.log(fecha);
+
+		if (currentTime.year === fecha.year &&
+			currentTime.dayOfYear === fecha.dayOfYear) {
+			return this.hoursMinutes(date);
+		}
+
+		if (currentTime.year === fecha.year &&
+			currentTime.dayOfYear === fecha.dayOfYear + 1) {
+			return 'Ayer';
+		}
+
+		if (currentTime.year === fecha.year &&
+			currentTime.dayOfYear === fecha.dayOfYear + 1) {
+			return 'Ayer';
+		}
+	}
 }

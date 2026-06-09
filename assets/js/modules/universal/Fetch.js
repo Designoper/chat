@@ -49,12 +49,12 @@ export default class Fetch {
 		const url = this.buildURL(endpoint, upper, data);
 
 		try {
-			// const request = new Request(url, init);
+			const request = new Request(url, init);
 			// request.method = method;
 			// request.body = data;
 			// request.url = endpoint;
 
-			const response = await fetch(url, init);
+			const response = await fetch(request);
 			const status = response.status;
 			const json = status === 204
 				? null
@@ -66,9 +66,10 @@ export default class Fetch {
 		}
 	}
 
-	/**
-	 * @param {HTMLFormElement} form
-	 */
+	// /**
+	//  * @param {HTMLFormElement} form
+	//  * @param {URL} action
+	//  */
 	async fetchData(form, action) {
 		const method = form.method.toUpperCase();
 		const data = new FormData(form);
@@ -94,6 +95,11 @@ export default class Fetch {
 		} catch (error) {
 			console.error("fetchData error:", error);
 		}
+	}
+
+	async responseToJson(response) {
+		const json = await response.json();
+		return json;
 	}
 
 	// MARK: ERROR CHECKER

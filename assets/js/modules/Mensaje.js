@@ -15,7 +15,6 @@ export default class Mensaje extends Usuario {
 		h1: document.querySelector('h1'),
 		output: document.querySelector('output'),
 		form: document.querySelector('form'),
-		a: document.querySelector('a'),
 	};
 
 	mensaje = {};
