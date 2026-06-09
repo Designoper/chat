@@ -53,8 +53,6 @@ export default class Contacto extends Usuario {
 				? `<data>${contacto.num_mensajes}</data>`
 				: '';
 
-			console.log(contacto.num_mensajes);
-
 			const autorMensaje = contacto.id_emisor === this.id_usuario
 				? 'Tú'
 				: `<span translate="no">${contacto.nombre}</span>`;
