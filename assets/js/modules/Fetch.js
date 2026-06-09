@@ -88,17 +88,17 @@ export default class Fetch {
 	// MARK: ERROR CHECKER
 
 	errorChecker(response, output) {
-		if (response.validationErrors?.length > 0) {
+		if (response.length > 0) {
 			output.innerHTML =
 				`<ul>
-					${response.validationErrors.map(error => `<li>${error}</li>`).join("")}
+					${response.map(error => `<li>${error}</li>`).join("")}
 				</ul>`;
 		}
 
-		if (response.integrityErrors?.length > 0) {
+		if (response.length > 0) {
 			output.innerHTML =
 				`<ul>
-					${response.integrityErrors.map(error => `<li>${error}</li>`).join("")}
+					${response.map(error => `<li>${error}</li>`).join("")}
 				</ul>`;
 		}
 	}

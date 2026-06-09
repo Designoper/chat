@@ -28,7 +28,7 @@ export default class Mensaje extends Usuario {
 
 	async getUltimoId() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID, 'get', this.paramsObj);
-		this.prueba = response.content.id_mensaje;
+		this.prueba = response.id_mensaje;
 	}
 
 	delete() {
@@ -65,11 +65,11 @@ export default class Mensaje extends Usuario {
 
 	async getMensajes() {
 		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.paramsObj);
-		const mensajes = this.mensajesTemplate(response.content);
+		const mensajes = this.mensajesTemplate(response);
 		this.dom.output.innerHTML = mensajes;
 
-		if (response.content.length > 0) {
-			this.paramsObj.ultimo_id = response.content[response.content.length - 1].id_mensaje;
+		if (response.length > 0) {
+			this.paramsObj.ultimo_id = response[response.length - 1].id_mensaje;
 			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.paramsObj);
 		}
 	}

@@ -8,7 +8,7 @@ require_once __DIR__ . '/ErrorHandler.php';
 abstract readonly class Response extends Sanitizer
 {
     protected int $status;
-    protected string $message;
+    // protected string $message;
     protected array $content;
     protected ErrorHandler $errors;
     private array $response;
@@ -34,26 +34,23 @@ abstract readonly class Response extends Sanitizer
     private function buildResponse(): void
     {
         if (!empty($this->errors->getValidationErrors())) {
-            $this->response = [
-                'message' => $this->message,
-                'validationErrors' => $this->errors->getValidationErrors()
-            ];
+            $this->response =
+                // 'message' => $this->message,
+                $this->errors->getValidationErrors();
             return;
         }
 
         if (!empty($this->errors->getIntegrityErrors())) {
-            $this->response = [
-                'message' => $this->message,
-                'integrityErrors' => $this->errors->getIntegrityErrors()
-            ];
+            $this->response =
+                // 'message' => $this->message,
+                $this->errors->getIntegrityErrors();
             return;
         }
 
         if (isset($this->content)) {
-            $this->response = [
-                'message' => $this->message,
-                'content' => $this->content
-            ];
+            $this->response =
+                // 'message' => $this->message,
+                $this->content;
             return;
         }
 
@@ -62,7 +59,7 @@ abstract readonly class Response extends Sanitizer
             return;
         }
 
-        $this->response = ['message' => $this->message];
+        $this->response = [];
     }
 
     // MARK: CHECKERS
@@ -71,7 +68,6 @@ abstract readonly class Response extends Sanitizer
     {
         if (!empty($this->errors->getValidationErrors())) {
             $this->status = 400;
-            $this->message = "Hay errores de validación";
             $this->sendResponse();
         }
     }
@@ -79,7 +75,6 @@ abstract readonly class Response extends Sanitizer
     protected function checkIntegrityErrors(): void
     {
         if (!empty($this->errors->getIntegrityErrors())) {
-            $this->message = "Hay errores de integridad";
             $this->sendResponse();
         }
     }

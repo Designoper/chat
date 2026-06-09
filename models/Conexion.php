@@ -51,7 +51,7 @@ final readonly class Conexion extends Mensaje
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Última conexión directa establecida";
+		// $this->message = "Última conexión directa establecida";
 		$this->sendResponse();
 	}
 
@@ -82,7 +82,7 @@ final readonly class Conexion extends Mensaje
 		$query->execute();
 
 		$this->status = 201;
-		$this->message = "Última conexión grupal establecida";
+		// $this->message = "Última conexión grupal establecida";
 		$this->sendResponse();
 	}
 

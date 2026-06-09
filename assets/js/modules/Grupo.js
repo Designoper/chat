@@ -32,17 +32,17 @@ export default class Grupo extends Usuario {
 
 	async getGruposMiembro() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.MIEMBRO, 'get');
-		return response.content;
+		return response;
 	}
 
 	async getGruposPendiente() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.PENDIENTE, 'get');
-		return response.content;
+		return response;
 	}
 
 	async printGruposMiembro(grupos) {
 		const content = await this.gruposMiembroTemplate(grupos.content);
-		return response.content;
+		return response;
 	}
 
 	printGruposPendiente(grupos) {

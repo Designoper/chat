@@ -98,7 +98,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		$this->message = 'Último mensaje directo obtenido con éxito';
+		// $this->message = 'Último mensaje directo obtenido con éxito';
 		$this->content =
 			$ultimo_mensaje ? $ultimo_mensaje : [];
 		$this->sendResponse();
@@ -140,7 +140,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		$this->message = 'Último mensaje grupal obtenido con éxito';
+		// $this->message = 'Último mensaje grupal obtenido con éxito';
 		$this->content = $ultimo_mensaje ? $ultimo_mensaje : [];
 		$this->sendResponse();
 	}
@@ -189,7 +189,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		$this->message = 'Último id directo obtenido con éxito';
+		// $this->message = 'Último id directo obtenido con éxito';
 		$this->content = $last_id;
 		$this->sendResponse();
 	}
@@ -225,7 +225,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		$this->message = 'Último id grupal obtenido con éxito';
+		// $this->message = 'Último id grupal obtenido con éxito';
 		$this->content = $last_id;
 		$this->sendResponse();
 	}
@@ -273,7 +273,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = "Último id directo: $ultimo_id";
+		// $this->message = "Último id directo: $ultimo_id";
 		$this->sendResponse();
 	}
 
@@ -307,7 +307,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = "Último id grupal: $ultimo_id";
+		// $this->message = "Último id grupal: $ultimo_id";
 		$this->sendResponse();
 	}
 
@@ -363,7 +363,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		$this->message = 'Número de mensajes directos no leídos obtenido con éxito';
+		// $this->message = 'Número de mensajes directos no leídos obtenido con éxito';
 		$this->content = $result;
 		$this->sendResponse();
 	}
@@ -407,7 +407,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		$this->message = 'Número de mensajes grupales no leídos obtenido con éxito';
+		// $this->message = 'Número de mensajes grupales no leídos obtenido con éxito';
 		$this->content = $result;
 		$this->sendResponse();
 	}
@@ -466,13 +466,13 @@ readonly class Mensaje extends MysqliConnect
 		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		$message =
-			$mensajes
-			? 'Mensajes directos obtenidos.'
-			: 'No hay ningún mensaje.';
+		// $message =
+		// 	$mensajes
+		// 	? 'Mensajes directos obtenidos.'
+		// 	: 'No hay ningún mensaje.';
 
 		$this->status = 200;
-		$this->message = $message;
+		// $this->message = $message;
 		$this->content = $mensajes;
 		$this->sendResponse();
 	}
@@ -511,13 +511,13 @@ readonly class Mensaje extends MysqliConnect
 		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		$message =
-			$mensajes
-			? 'Mensajes grupales obtenidos.'
-			: 'No hay ningún mensaje.';
+		// $message =
+		// 	$mensajes
+		// 	? 'Mensajes grupales obtenidos.'
+		// 	: 'No hay ningún mensaje.';
 
 		$this->status = 200;
-		$this->message = $message;
+		// $this->message = $message;
 		$this->content = $mensajes;
 		$this->sendResponse();
 	}
@@ -600,14 +600,14 @@ readonly class Mensaje extends MysqliConnect
 			$this->setId('id_receptor');
 			$columna = 'id_receptor';
 			$id_objetivo = $this->id_receptor;
-			$tipo = 'directo';
+			// $tipo = 'directo';
 		}
 
 		if (isset($_POST['id_grupo'])) {
 			$this->setId('id_grupo');
 			$columna = 'id_grupo';
 			$id_objetivo = $this->id_grupo;
-			$tipo = 'grupal';
+			// $tipo = 'grupal';
 		}
 
 		$this->setContenido();
@@ -634,7 +634,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = "Mensaje $tipo creado con éxito";
+		// $this->message = "Mensaje $tipo creado con éxito";
 		$this->sendResponse();
 	}
 
@@ -668,7 +668,7 @@ readonly class Mensaje extends MysqliConnect
 			$this->status = 204;
 		} else {
 			$this->status = 404;
-			$this->message = '¡El mensaje solicitado no existe!';
+			// $this->message = '¡El mensaje solicitado no existe!';
 		}
 		$this->sendResponse();
 	}

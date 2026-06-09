@@ -10,12 +10,12 @@ export default class Usuario extends TemporalFormat {
 
 	async getUsuarios() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.USUARIOS.CONTACTOS, 'get');
-		return response.content;
+		return response;
 	}
 
 	contactosTemplate(fetchedContactos) {
 
-		const usuarios = fetchedContactos.map(contacto => {
+		const contactos = fetchedContactos.map(contacto => {
 
 			let id;
 
@@ -31,9 +31,14 @@ export default class Usuario extends TemporalFormat {
 				? `<data>${contacto.num_mensajes}</data>`
 				: '';
 
+			console.log(contacto.num_mensajes);
+
 			const autorMensaje = contacto.id_emisor === this.id_usuario
 				? 'Tú'
 				: `<span translate="no">${contacto.nombre}</span>`;
+
+			console.log(contacto.id_emisor);
+
 
 			const lastMessage = contacto.contenido !== null
 				? `<date>${this.fullDate(contacto.fecha_envio)}</date>
@@ -52,7 +57,7 @@ export default class Usuario extends TemporalFormat {
 			return template;
 		});
 
-		return usuarios.join('');
+		return contactos.join('');
 	}
 
 	async createUsuario(form) {
@@ -85,7 +90,8 @@ export default class Usuario extends TemporalFormat {
 
 	async sessionCheck() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.USUARIOS.CURRENT, 'get');
-		this.id_usuario = response.content.id_usuario;
+		console.log(response);
+		this.id_usuario = response.id_usuario;
 	}
 
 	async getMensajesNoLeidos() {

@@ -88,13 +88,13 @@ final readonly class Grupo extends MysqliConnect
 		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		$message =
-			$grupos
-			? 'Grupos con membresía obtenidos.'
-			: 'No perteneces a ningún grupo.';
+		// $message =
+		// 	$grupos
+		// 	? 'Grupos con membresía obtenidos.'
+		// 	: 'No perteneces a ningún grupo.';
 
 		$this->status = 200;
-		$this->message = $message;
+		// $this->message = $message;
 		$this->content = $grupos;
 		$this->sendResponse();
 	}
@@ -126,13 +126,13 @@ final readonly class Grupo extends MysqliConnect
 		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		$message =
-			$grupos
-			? 'Grupos con invitación pendiente obtenidos.'
-			: 'No tienes ninguna invitación pendiente.';
+		// $message =
+		// 	$grupos
+		// 	? 'Grupos con invitación pendiente obtenidos.'
+		// 	: 'No tienes ninguna invitación pendiente.';
 
 		$this->status = 200;
-		$this->message = $message;
+		// $this->message = $message;
 		$this->content = $grupos;
 		$this->sendResponse();
 	}
@@ -167,13 +167,13 @@ final readonly class Grupo extends MysqliConnect
 		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		$message =
-			$grupos
-			? 'Usuarios no miembros obtenidos.'
-			: 'Todos los usuarios pertenecen al grupo.';
+		// $message =
+		// 	$grupos
+		// 	? 'Usuarios no miembros obtenidos.'
+		// 	: 'Todos los usuarios pertenecen al grupo.';
 
 		$this->status = 200;
-		$this->message = $message;
+		// $this->message = $message;
 		$this->content = $grupos;
 		$this->sendResponse();
 	}
@@ -262,7 +262,7 @@ final readonly class Grupo extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = "Grupo creado con éxito";
+		// $this->message = "Grupo creado con éxito";
 		$this->sendResponse();
 	}
 
@@ -296,7 +296,7 @@ final readonly class Grupo extends MysqliConnect
 		$query->close();
 
 		$this->status = 201;
-		$this->message = "Invitación creada con éxito";
+		// $this->message = "Invitación creada con éxito";
 		$this->sendResponse();
 	}
 
@@ -331,7 +331,7 @@ final readonly class Grupo extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		$this->message = "Invitación aceptada con éxito";
+		// $this->message = "Invitación aceptada con éxito";
 		$this->sendResponse();
 	}
 }

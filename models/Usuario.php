@@ -57,13 +57,13 @@ final readonly class Usuario extends MysqliConnect
 	{
 		$contactos = $this->obtainContactos();
 
-		$message =
-			$contactos
-			? 'Contactos obtenidos.'
-			: 'No hay ningún contacto.';
+		// $message =
+		// 	$contactos
+		// 	? 'Contactos obtenidos.'
+		// 	: 'No hay ningún contacto.';
 
 		$this->status = 200;
-		$this->message = $message;
+		// $this->message = $message;
 		$this->content = $contactos;
 		$this->sendResponse();
 	}
@@ -192,15 +192,15 @@ final readonly class Usuario extends MysqliConnect
 		$query->execute();
 
 		$usuarios = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$message =
-			$usuarios
-			? 'Usuarios obtenidos.'
-			: 'No hay ningún usuario.';
+		// $message =
+		// 	$usuarios
+		// 	? 'Usuarios obtenidos.'
+		// 	: 'No hay ningún usuario.';
 
 		$query->close();
 
 		$this->status = 200;
-		$this->message = $message;
+		// $this->message = $message;
 		$this->content = $usuarios;
 		$this->sendResponse();
 	}
@@ -249,7 +249,7 @@ final readonly class Usuario extends MysqliConnect
 		$_SESSION['id_usuario'] = $id_usuario;
 
 		$this->status = 201;
-		$this->message = "Usuario creado con éxito";
+		// $this->message = "Usuario creado con éxito";
 		$this->sendResponse();
 	}
 
@@ -301,7 +301,7 @@ final readonly class Usuario extends MysqliConnect
 		$_SESSION['id_usuario'] = $row['id_usuario'];
 
 		$this->status = 200;
-		$this->message = "Login exitoso";
+		// $this->message = "Login exitoso";
 		$this->sendResponse();
 	}
 
@@ -345,7 +345,7 @@ final readonly class Usuario extends MysqliConnect
 		$this->authEndpoint();
 
 		$this->status = 200;
-		$this->message = "Usuario identificado";
+		// $this->message = "Usuario identificado";
 		$this->content = [
 			"id_usuario" => $this->id_usuario,
 		];
