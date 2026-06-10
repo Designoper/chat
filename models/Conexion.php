@@ -200,19 +200,14 @@ final readonly class Conexion extends Mensaje
 			}
 
 			if ($newArray !== $array) {
-				echo "event: conexion $tipo\n";
-				echo "data: " . json_encode($newArray) . "\n\n";
+				$this->sendEvent("conexion $tipo", $newArray);
 				$array = $newArray;
 			}
 
 			if (time() - $lastPing > 5) {
-				echo "event: ping\n";
-				echo "data: keepalive\n\n";
+				$this->keepAlive();
 				$lastPing = time();
 			}
-
-			@ob_flush();
-			@flush();
 
 			usleep(2000000);
 		}

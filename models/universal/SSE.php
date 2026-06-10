@@ -35,8 +35,8 @@ abstract readonly class SSE extends Response
 		ini_set('zlib.output_compression', 0);
 
 		// Flush inicial
-		echo str_pad('', 4096) . "\n";
-		flush();
+		// echo str_pad('', 4096) . "\n";
+		// flush();
 	}
 
 	protected function sendEvent(string $event, mixed $data): void
