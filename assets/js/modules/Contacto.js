@@ -41,13 +41,17 @@ export default class Contacto extends Usuario {
 		const contactos = fetchedContactos.map(contacto => {
 
 			let id;
+			let imgSrc;
 
 			switch (contacto.tipo) {
 				case 'usuario':
 					id = 'id_receptor';
+					imgSrc = "../../assets/img/user.svg";
+
 					break;
 				case 'grupo':
 					id = 'id_grupo';
+					imgSrc = "../../assets/img/group.svg";
 			}
 
 			const badge = contacto.num_mensajes > 0
@@ -66,6 +70,7 @@ export default class Contacto extends Usuario {
 			const template =
 				`<li>
 					<a href="./chat.php?${id}=${contacto.id}&nombre=${contacto.nombre}">
+						<img src="${imgSrc}">
 						<h2 translate="no">${contacto.nombre}</h2>
 						${badge}
 						${lastMessage}
