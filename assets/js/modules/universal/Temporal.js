@@ -88,7 +88,7 @@ export default class TemporalFormat extends Endpoint {
 			}
 
 			if (daysDifference === 1) {
-				return 'Ayer';
+				return `Ayer`;
 			}
 
 			if (daysDifference > 1 && daysDifference < 8) {
