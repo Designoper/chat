@@ -12,21 +12,21 @@ export default class Grupo extends Contacto {
 		return response;
 	}
 
-	async printGruposMiembro(grupos) {
-		const content = await this.gruposMiembroTemplate(grupos);
-		return response;
-	}
+	// async printGruposMiembro(grupos) {
+	// 	const content = await this.gruposMiembroTemplate(grupos);
+	// 	return response;
+	// }
 
-	async getGruposPendiente() {
-		const { json } = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.PENDIENTE, 'get');
-		return json;
-	}
+	// async getGruposPendiente() {
+	// 	const { json } = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.PENDIENTE, 'get');
+	// 	return json;
+	// }
 
-	async printGruposPendiente() {
-		const response = await this.getGruposPendiente();
-		const content = this.gruposPendienteTemplate(response);
-		this.invitacionesMenu.innerHTML = content;
-	}
+	// async printGruposPendiente() {
+	// 	const response = await this.getGruposPendiente();
+	// 	const content = this.gruposPendienteTemplate(response);
+	// 	this.invitacionesMenu.innerHTML = content;
+	// }
 
 	async gruposMiembroTemplate(fetchedGrupos) {
 

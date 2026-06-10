@@ -132,7 +132,7 @@ final readonly class Contacto extends MysqliConnect
 
 		$lastPing = 0;
 
-		$contactos = $this->obtainContactos();
+		$contactos = [];
 
 		while (true) {
 

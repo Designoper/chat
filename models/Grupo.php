@@ -358,7 +358,7 @@ final readonly class Grupo extends MysqliConnect
 
 		$lastPing = 0;
 
-		$gruposPendientes = $this->obtainGruposPendiente();
+		$gruposPendientes = [];
 
 		while (true) {
 
