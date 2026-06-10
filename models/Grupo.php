@@ -87,9 +87,9 @@ final readonly class Grupo extends MysqliConnect
 		$this->sendResponse();
 	}
 
-	// MARK: READ GRUPOS PENDIENTE
+	// MARK: OBTAIN GRUPOS PENDIENTE
 
-	public function readGruposPendiente(): void
+	private function obtainGruposPendiente(): array
 	{
 		$id_usuario = $this->id_fundador;
 		$rolPendiente = 'pendiente';
@@ -114,6 +114,15 @@ final readonly class Grupo extends MysqliConnect
 		$query->execute();
 		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
+
+		return $grupos;
+	}
+
+	// MARK: READ GRUPOS PENDIENTE
+
+	public function readGruposPendiente(): void
+	{
+		$grupos = $this->obtainGruposPendiente();
 
 		$this->status = 200;
 		$this->content = $grupos;
@@ -339,5 +348,37 @@ final readonly class Grupo extends MysqliConnect
 
 		$this->status = 204;
 		$this->sendResponse();
+	}
+
+	// MARK: STREAM GRUPOS
+
+	public function streamGrupos(): void
+	{
+		$this->start();
+
+		$lastPing = 0;
+
+		$gruposPendientes = $this->obtainGruposPendiente();
+
+		while (true) {
+
+			if (connection_aborted()) {
+				break;
+			}
+
+			$gruposPendientesUpdate = $this->obtainGruposPendiente();
+
+			if ($gruposPendientesUpdate !== $gruposPendientes) {
+				$this->sendEvent('grupo', $gruposPendientesUpdate);
+				$gruposPendientes = $gruposPendientesUpdate;
+			}
+
+			if (time() - $lastPing > 10) {
+				$this->keepAlive();
+				$lastPing = time();
+			}
+
+			usleep(300000); // 0.3s
+		}
 	}
 }

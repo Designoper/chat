@@ -103,10 +103,6 @@ export default class Grupo extends Contacto {
 
 	async invitar(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.INVITAR);
-		// if (response.status === 201) {
-		// 	await this.getGruposMiembro();
-		// 	await this.getGruposPendiente();
-		// }
 	}
 
 	async aceptarInvitacion(form) {
@@ -115,5 +111,19 @@ export default class Grupo extends Contacto {
 
 	async rechazarInvitacion(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.RECHAZAR_INVITACION);
+	}
+
+	// MARK: STREAM GRUPOS
+
+	streamGrupos() {
+
+		const evtSource = new EventSource(this.ENDPOINTS.GET.GRUPOS.STREAM);
+
+		evtSource.addEventListener("grupo", (event) => {
+			const state = JSON.parse(event.data);
+
+			const content = this.gruposPendienteTemplate(state);
+			this.invitacionesMenu.innerHTML = content;
+		});
 	}
 }

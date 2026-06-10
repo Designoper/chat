@@ -59,6 +59,8 @@ main {
 			row-rule: solid 1px var(--primary-bg);
 
 			&:nth-of-type(1) {
+				background-color: var(--terciary-bg);
+
 				li {
 					display: flex;
 					gap: 1em;
@@ -74,6 +76,7 @@ main {
 				button {
 					padding: 0.5em;
 					background-color: white;
+					border-radius: 0.25em;
 				}
 			}
 

@@ -21,6 +21,7 @@ export default class Endpoint extends Fetch {
 				MIEMBRO: `${this.ROOT}grupos/miembro`,
 				PENDIENTE: `${this.ROOT}grupos/pendiente`,
 				NO_MIEMBRO: `${this.ROOT}grupos/no-miembro`,
+				STREAM: `${this.ROOT}grupos/stream`,
 			},
 			CONEXION: {
 				STREAM: `${this.ROOT}conexion/stream`,

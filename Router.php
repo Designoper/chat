@@ -33,6 +33,7 @@ final class Router
         $this->setRoute($GET, 'grupos/miembro$', [Grupo::class, 'readGruposMiembro']);
         $this->setRoute($GET, 'grupos/pendiente$', [Grupo::class, 'readGruposPendiente']);
         $this->setRoute($GET, 'grupos/no-miembro', [Grupo::class, 'readGruposNoMiembro']);
+        $this->setRoute($GET, 'grupos/stream', [Grupo::class, 'streamGrupos']);
 
         // Conexión
         $this->setRoute($GET, 'conexion/stream', [Conexion::class, 'streamConexion']);

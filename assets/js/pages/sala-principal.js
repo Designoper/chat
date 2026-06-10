@@ -8,3 +8,4 @@ await contacto.sessionCheck();
 await contacto.printContactos();
 await contacto.streamContactos();
 await grupo.printGruposPendiente();
+await grupo.streamGrupos();
