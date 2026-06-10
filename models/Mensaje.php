@@ -742,30 +742,7 @@ readonly class Mensaje extends MysqliConnect
 
 	public function streamMensajes(): void
 	{
-		if (session_status() === PHP_SESSION_ACTIVE) {
-			session_write_close();
-		}
-
-		set_time_limit(0);
-		ignore_user_abort(false);
-
-		// Limpia buffers previos
-		while (ob_get_level() > 0) {
-			ob_end_clean();
-		}
-
-		// Headers SSE
-		header("Content-Type: text/event-stream");
-		header("Cache-Control: no-cache");
-		header("Connection: keep-alive");
-		header("X-Accel-Buffering: no");
-
-		ini_set('output_buffering', 'off');
-		ini_set('zlib.output_compression', 0);
-
-		// Forzar flush inicial
-		echo str_pad('', 4096) . "\n";
-		flush();
+		$this->start();
 
 		if (isset($_GET['id_receptor'])) {
 			$this->setId('id_receptor');
@@ -791,23 +768,16 @@ readonly class Mensaje extends MysqliConnect
 
 				foreach ($mensajesObtenidos as $m) {
 					$ultimo_id = $m["id_mensaje"];
-
-					echo "event: mensaje\n";
-					echo "data: " . json_encode($m) . "\n\n";
+					$this->sendEvent('mensaje', $m);
 				}
 
-				echo "event: new mensaje\n";
-				echo "data: " . json_encode($ultimo_id) . "\n\n";
+				$this->sendEvent('new mensaje', $ultimo_id);
 			}
 
 			if (time() - $lastPing > 10) {
-				echo "event: ping\n";
-				echo "data: keepalive\n\n";
+				$this->keepAlive();
 				$lastPing = time();
 			}
-
-			@ob_flush();
-			@flush();
 
 			usleep(300000); // 0.3s
 		}

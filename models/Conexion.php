@@ -160,30 +160,7 @@ final readonly class Conexion extends Mensaje
 
 	public function streamConexion(): void
 	{
-		if (session_status() === PHP_SESSION_ACTIVE) {
-			session_write_close();
-		}
-
-		set_time_limit(0);
-		ignore_user_abort(false);
-
-		// Limpia buffers previos
-		while (ob_get_level() > 0) {
-			ob_end_clean();
-		}
-
-		// Headers SSE
-		header("Content-Type: text/event-stream");
-		header("Cache-Control: no-cache");
-		header("Connection: keep-alive");
-		header("X-Accel-Buffering: no");
-
-		ini_set('output_buffering', 'off');
-		ini_set('zlib.output_compression', 0);
-
-		// // Forzar flush inicial
-		echo str_pad('', 4096) . "\n";
-		flush();
+		$this->start();
 
 		if (isset($_GET['id_receptor'])) {
 			$this->setId('id_receptor');

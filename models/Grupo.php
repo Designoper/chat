@@ -65,7 +65,8 @@ final readonly class Grupo extends MysqliConnect
 		$statement =
 			"SELECT grupos.id_grupo, grupos.nombre_grupo
 			FROM grupos
-			LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
+			LEFT JOIN membresias
+				ON membresias.id_grupo = grupos.id_grupo
 			WHERE membresias.id_usuario = ?
 			AND membresias.rol IN ('fundador','miembro')
 			ORDER BY grupos.nombre_grupo ASC";
@@ -96,7 +97,8 @@ final readonly class Grupo extends MysqliConnect
 		$statement =
 			"SELECT grupos.id_grupo, grupos.nombre_grupo
 			FROM grupos
-			LEFT JOIN membresias on membresias.id_grupo = grupos.id_grupo
+			LEFT JOIN membresias
+				ON membresias.id_grupo = grupos.id_grupo
 			WHERE membresias.id_usuario = ?
 			AND membresias.rol = ?
 			ORDER BY grupos.nombre_grupo ASC";

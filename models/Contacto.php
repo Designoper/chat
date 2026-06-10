@@ -128,30 +128,7 @@ final readonly class Contacto extends MysqliConnect
 
 	public function streamContactos(): void
 	{
-		if (session_status() === PHP_SESSION_ACTIVE) {
-			session_write_close();
-		}
-
-		set_time_limit(0);
-		ignore_user_abort(false);
-
-		// Limpia buffers previos
-		while (ob_get_level() > 0) {
-			ob_end_clean();
-		}
-
-		// Headers SSE
-		header("Content-Type: text/event-stream");
-		header("Cache-Control: no-cache");
-		header("Connection: keep-alive");
-		header("X-Accel-Buffering: no");
-
-		ini_set('output_buffering', 'off');
-		ini_set('zlib.output_compression', 0);
-
-		// Forzar flush inicial
-		echo str_pad('', 4096) . "\n";
-		flush();
+		$this->start();
 
 		$lastPing = 0;
 
@@ -166,20 +143,14 @@ final readonly class Contacto extends MysqliConnect
 			$contactosUpdate = $this->obtainContactos();
 
 			if ($contactosUpdate !== $contactos) {
-
-				echo "event: new update\n";
-				echo "data: " . json_encode($contactosUpdate) . "\n\n";
+				$this->sendEvent('new update', $contactosUpdate);
 				$contactos = $contactosUpdate;
 			}
 
 			if (time() - $lastPing > 10) {
-				echo "event: ping\n";
-				echo "data: keepalive\n\n";
+				$this->keepAlive();
 				$lastPing = time();
 			}
-
-			@ob_flush();
-			@flush();
 
 			usleep(300000); // 0.3s
 		}

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/Response.php';
+require_once __DIR__ . '/SSE.php';
 
-abstract readonly class MysqliConnect extends Response
+abstract readonly class MysqliConnect extends SSE
 {
 	private string $hostname;
 	private string $username;

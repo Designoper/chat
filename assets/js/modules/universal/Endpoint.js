@@ -70,6 +70,8 @@ export default class Endpoint extends Fetch {
 	// 	});
 	// }
 
+	// MARK: EVENT RESET
+
 	initFormHandler() {
 		document.addEventListener('submit', (e) => {
 			const form = e.target;
