@@ -205,11 +205,11 @@ final readonly class Conexion extends Mensaje
 			}
 
 			if (time() - $lastPing > 5) {
-				$this->keepAlive();
+				$this->sendEvent("keepalive", "");
 				$lastPing = time();
 			}
 
-			usleep(2000000);
+			usleep(300000);
 		}
 	}
 }

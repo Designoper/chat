@@ -13,7 +13,7 @@ export default class Conexion extends Mensaje {
 		this.urlStreamConexion.search = this.params;
 		const evtSource = new EventSource(this.urlStreamConexion);
 
-		evtSource.addEventListener("ping", async () => {
+		evtSource.addEventListener("keepalive", async () => {
 			await this.fetchWithoutForm(this.ENDPOINTS.POST.CONEXION.ESTADO, 'post', this.paramsObj);
 		});
 
