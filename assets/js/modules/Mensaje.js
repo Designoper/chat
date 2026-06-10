@@ -132,7 +132,7 @@ export default class Mensaje extends Usuario {
 
 			const cambioFecha = fechaMensajeAnterior?.dayOfYear === fechaMensajeActual.dayOfYear
 				? ""
-				: `<date datetime="${this.yearMonthDay(mensaje.fecha_envio)}">${this.yearMonthDayWeekday(mensaje.fecha_envio)}</date>`;
+				: `<date datetime="${this.yearMonthDay(mensaje.fecha_envio)}">${this.compareTime(mensaje.fecha_envio)}</date>`;
 
 			const nombreAutor = mensaje.nombre_usuario === this.mensaje?.autor
 				? ""

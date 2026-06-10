@@ -75,7 +75,7 @@ export default class TemporalFormat extends Endpoint {
 		return temporal;
 	}
 
-	compareTime(date) {
+	compareTime(date, flag = true) {
 		const currentTime = Temporal.Now.zonedDateTimeISO();
 		const fecha = this.formatearFecha(date);
 
@@ -83,8 +83,11 @@ export default class TemporalFormat extends Endpoint {
 		const yearsDifference = currentTime.year - fecha.year;
 
 		if (yearsDifference === 0) {
-			if (daysDifference === 0) {
+			if (daysDifference === 0 && flag === false) {
 				return this.hoursMinutes(date);
+			}
+			if (daysDifference === 0 && flag === true) {
+				return 'Hoy';
 			}
 
 			if (daysDifference === 1) {
