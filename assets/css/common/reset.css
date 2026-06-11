@@ -83,6 +83,6 @@ textarea {
 	resize: none;
 }
 
-:is(select, ::picker(select)) {
+:is(select, select::picker(select)) {
 	appearance: base-select;
 }

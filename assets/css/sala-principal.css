@@ -146,8 +146,4 @@ main {
 			scrollbar-width: none;
 		}
 	}
-
-	::picker-icon {
-		content: '+';
-	}
 }

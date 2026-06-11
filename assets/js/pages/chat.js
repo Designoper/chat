@@ -1,9 +1,10 @@
 import Conexion from '../modules/Conexion.js';
+import Mensaje from '../modules/Mensaje.js';
 
-const conexion = new Conexion();
+const conexion = new Mensaje();
 
 await conexion.sessionCheck();
-conexion.writeChat();
+await conexion.writeChat();
 conexion.delete();
 conexion.setForm();
 conexion.setObj();
@@ -13,4 +14,4 @@ await conexion.getMensajes();
 conexion.scrollToCurrent();
 
 conexion.streamMensajes();
-conexion.streamConexion();
+// conexion.streamConexion();

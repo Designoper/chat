@@ -28,14 +28,28 @@ abstract readonly class Helper extends SSE
 			: $this->errors->setValidationError($error_message);
 	}
 
+	// protected function setNombre(string $name): void
+	// {
+	// 	$value = $_POST[$name] ?? null;
+	// 	$error_message = "El nombre solo puede contener mayúsculas(A-Z), minúsculas(a-z), números(1-9) y guión bajo (_). Longitud de 3 a 20 carácteres.";
+
+	// 	preg_match('/^[a-zA-Z0-9_-]{3,20}$/', $value)
+	// 		? $this->$name = $value
+	// 		: $this->errors->setValidationError($error_message);
+	// }
+
 	protected function setNombre(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
-		$error_message = "El nombre solo puede contener mayúsculas(A-Z), minúsculas(a-z), números(1-9) y guión bajo (_). Longitud de 3 a 20 carácteres.";
+		$error_message = "El campo $name no puede estar vacío.";
 
-		preg_match('/^[a-zA-Z0-9_-]{3,20}$/', $value)
-			? $this->$name = $value
-			: $this->errors->setValidationError($error_message);
+		// empty($value)
+		// 	? $this->errors->setValidationError($error_message)
+		// 	: $this->$name = $value;
+
+		empty($value) || strlen($value) > 20
+			? $this->errors->setValidationError($error_message)
+			: $this->$name = $value;
 	}
 
 	protected function setPassword(string $name): void

@@ -1,6 +1,7 @@
+import Grupo from "./Grupo.js";
 import Usuario from "./Usuario.js";
 
-export default class Mensaje extends Usuario {
+export default class Mensaje extends Grupo {
 
 	urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
@@ -162,8 +163,8 @@ export default class Mensaje extends Usuario {
 					<article ${classArticle}>
 						${nombreAutor}
 						<div>
-						<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
-						<date>${fechaEnvio}</date>
+							<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
+							<date>${fechaEnvio}</date>
 						</div>
 						${formDelete}
 					</article>
@@ -189,13 +190,45 @@ export default class Mensaje extends Usuario {
 		}
 	}
 
-	writeChat() {
+	async writeChat() {
+		// const formInvitar =
+
+		const { json } = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.NO_MIEMBRO, 'get',
+			{
+				"id_grupo": this.params.get('id_grupo')
+			}
+		);
+
+		console.log(json);
+
+		const opciones = json
+			.map(user => `<option translate="no" value="${user.id_usuario}">${user.nombre_usuario}</option>`)
+			.join('');
+
+		const formInvitar =
+			`
+				<form method="POST" name="invitar">
+					<input type="hidden" value="${this.params.get('id_grupo')}" name="id_grupo">
+					<select name="id_invitado" required>
+						<option value="">Añadir a...</option>
+						${opciones}
+					</select>
+					<button>Invitar</button>
+				</form>
+			`;
+
+		// return formInvitar;
+
 		if (this.params.size === 2) {
 			if (this.params.has('nombre')) {
 				this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre'));
-				this.dom.header.insertAdjacentHTML('beforeend', `<p></p>`);
-				return;
+				// this.dom.header.insertAdjacentHTML('beforeend', `< p ></p > `);
+				// return;
+			}
+
+			if (this.params.has('id_grupo')) {
+				this.dom.header.insertAdjacentHTML('beforeend', formInvitar);
 			}
 		}
 	}
-}
+};

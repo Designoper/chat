@@ -102,7 +102,7 @@ export default class Grupo extends Contacto {
 	}
 
 	async invitar(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.INVITAR);
+		await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.INVITAR);
 	}
 
 	async aceptarInvitacion(form) {
