@@ -207,10 +207,9 @@ final readonly class Grupo extends MysqliConnect
 		$query = $this->connection->prepare($statement2);
 
 		$query->bind_param(
-			"iis",
+			"ii",
 			$id_fundador,
 			$id_grupo,
-			$rol
 		);
 
 		$query->execute();
