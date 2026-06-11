@@ -12,7 +12,7 @@ CREATE TABLE usuarios (
 
 CREATE TABLE grupos (
     id_grupo INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    nombre_grupo VARCHAR(150) NOT NULL UNIQUE
+    nombre_grupo VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE membresias (
