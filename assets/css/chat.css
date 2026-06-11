@@ -5,6 +5,7 @@ header {
 	padding: 1em 10vw;
 	background-color: var(--terciary-bg);
 	align-items: center;
+	justify-content: space-between;
 	gap: 0.75em;
 	z-index: 1;
 
@@ -37,7 +38,14 @@ header {
 		display: flex;
 		align-items: center;
 		gap: 1em;
-		margin-left: auto;
+		/* margin-left: auto; */
+		/* flex-grow: 1; */
+	}
+
+	div {
+		display: flex;
+		gap: 0.75em;
+		align-items: center;
 	}
 }
 
