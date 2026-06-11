@@ -169,30 +169,40 @@ final readonly class Grupo extends MysqliConnect
 
 		$nombre_grupo = $this->nombre_grupo;
 
-		$statement =
-			"INSERT INTO grupos (nombre_grupo)
-		 	VALUES (?)";
+		try {
+			$statement =
+				"INSERT INTO grupos (nombre_grupo)
+		 		VALUES (?)";
 
-		$query = $this->connection->prepare($statement);
+			$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"s",
-			$nombre_grupo
-		);
+			$query->bind_param(
+				"s",
+				$nombre_grupo
+			);
 
-		$query->execute();
+			$query->execute();
 
-		$id_grupo = $query->insert_id;
-		$query->close();
+			$id_grupo = $query->insert_id;
+			$query->close();
+		} catch (\mysqli_sql_exception $error) {
+
+			if ($error->getCode() === 1062) {
+				$this->status = 409;
+				$this->errors->setIntegrityError('¡Este nombre de grupo ya existe!');
+				$this->checkIntegrityErrors();
+			}
+
+			throw $error;
+		}
 
 		$id_fundador = $this->session_user;
-		$rol = 'fundador';
 
 
 
 		$statement2 =
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
-		 	VALUES (?, ?, ?)";
+		 	VALUES (?, ?, 'fundador')";
 
 		$query = $this->connection->prepare($statement2);
 

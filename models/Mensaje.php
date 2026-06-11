@@ -221,6 +221,7 @@ readonly class Mensaje extends MysqliConnect
 	{
 		$this->setId('id_receptor');
 		$this->setId('ultimo_id');
+
 		$id_receptor = $this->id_receptor;
 		$ultimo_id = $this->ultimo_id;
 		$id_usuario = $this->session_user;
