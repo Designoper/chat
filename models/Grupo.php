@@ -6,61 +6,22 @@ require_once __DIR__ . '/universal/MysqliConnect.php';
 
 final readonly class Grupo extends MysqliConnect
 {
-	private int $id_grupo;
-	private string $nombre_grupo;
-	private int $id_fundador;
-	private int $id_usuario;
+	protected int $id_grupo;
+	protected string $nombre_grupo;
+	protected int $id_invitado;
 
 	public function __construct()
 	{
 		parent::__construct();
 
 		$this->authEndpoint();
-		$this->id_fundador = $this->session_user;
-	}
-
-	// MARK: SETTERS
-
-	private function setNombreGrupo(): void
-	{
-		$name = 'nombre_grupo';
-		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío.";
-
-		empty($value)
-			? $this->errors->setValidationError($error_message)
-			: $this->nombre_grupo = $value;
-	}
-
-	private function setIdGrupo(): void
-	{
-		$name = 'id_grupo';
-		$value = $_REQUEST[$name] ?? null;
-		$min_range = 1;
-		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
-
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
-			? $this->id_grupo = (int) $value
-			: $this->errors->setValidationError($error_message);
-	}
-
-	private function setIdUsuario(): void
-	{
-		$name = 'id_usuario';
-		$value = $_POST[$name] ?? null;
-		$min_range = 1;
-		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
-
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
-			? $this->id_usuario = (int) $value
-			: $this->errors->setValidationError($error_message);
 	}
 
 	// MARK: READ GRUPOS MIEMBRO
 
 	public function readGruposMiembro(): void
 	{
-		$id_usuario = $this->id_fundador;
+		$id_usuario = $this->session_user;
 
 		$statement =
 			"SELECT grupos.id_grupo, grupos.nombre_grupo
@@ -91,8 +52,7 @@ final readonly class Grupo extends MysqliConnect
 
 	private function obtainGruposPendiente(): array
 	{
-		$id_usuario = $this->id_fundador;
-		$rolPendiente = 'pendiente';
+		$id_usuario = $this->session_user;
 
 		$statement =
 			"SELECT grupos.id_grupo, grupos.nombre_grupo
@@ -100,15 +60,14 @@ final readonly class Grupo extends MysqliConnect
 			LEFT JOIN membresias
 				ON membresias.id_grupo = grupos.id_grupo
 			WHERE membresias.id_usuario = ?
-			AND membresias.rol = ?
+			AND membresias.rol = 'pendiente'
 			ORDER BY grupos.nombre_grupo ASC";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"is",
+			"i",
 			$id_usuario,
-			$rolPendiente,
 		);
 
 		$query->execute();
@@ -133,7 +92,7 @@ final readonly class Grupo extends MysqliConnect
 
 	public function readGruposNoMiembro(): void
 	{
-		$this->setIdGrupo();
+		$this->setId('id_grupo');
 		$this->checkValidationErrors();
 
 		$id_grupo = $this->id_grupo;
@@ -168,10 +127,10 @@ final readonly class Grupo extends MysqliConnect
 
 	public function isAutorGrupo(): void
 	{
-		$this->setIdGrupo();
+		$this->setId('id_grupo');
 		$this->checkValidationErrors();
 
-		$id_usuario = $this->id_fundador;
+		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 		$rolFundador = 'fundador';
 
@@ -204,7 +163,7 @@ final readonly class Grupo extends MysqliConnect
 
 	public function createGrupo(): void
 	{
-		$this->setNombreGrupo();
+		$this->setNombre('nombre_grupo');
 
 		$this->checkValidationErrors();
 
@@ -226,7 +185,7 @@ final readonly class Grupo extends MysqliConnect
 		$id_grupo = $query->insert_id;
 		$query->close();
 
-		$id_fundador = $this->id_fundador;
+		$id_fundador = $this->session_user;
 		$rol = 'fundador';
 
 
@@ -255,26 +214,24 @@ final readonly class Grupo extends MysqliConnect
 
 	public function invitar(): void
 	{
-		$this->setIdGrupo();
-		$this->setIdUsuario();
+		$this->setId('id_grupo');
+		$this->setId('id_invitado');
 
 		$this->checkValidationErrors();
 
-		$id_usuario = $this->id_usuario;
+		$id_invitado = $this->id_invitado;
 		$id_grupo = $this->id_grupo;
-		$rol = 'pendiente';
 
 		$statement =
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
-		 VALUES (?, ?, ?)";
+		 	VALUES (?, ?, 'pendiente')";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"iis",
-			$id_usuario,
+			"ii",
+			$id_invitado,
 			$id_grupo,
-			$rol
 		);
 
 		$query->execute();
@@ -288,25 +245,23 @@ final readonly class Grupo extends MysqliConnect
 
 	public function aceptarInvitacion(): void
 	{
-		$this->setIdGrupo();
+		$this->setId('id_grupo');
 
 		$this->checkValidationErrors();
 
-		$id_usuario = $this->id_fundador;
+		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
-		$rol = 'miembro';
 
 		$statement =
 			"UPDATE membresias
-			SET rol = ?
+			SET rol = 'miembro'
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
 		$query = $this->connection->prepare($statement);
 
 		$query->bind_param(
-			"sii",
-			$rol,
+			"ii",
 			$id_usuario,
 			$id_grupo
 		);
@@ -322,11 +277,11 @@ final readonly class Grupo extends MysqliConnect
 
 	public function rechazarInvitacion(): void
 	{
-		$this->setIdGrupo();
+		$this->setId('id_grupo');
 
 		$this->checkValidationErrors();
 
-		$id_usuario = $this->id_fundador;
+		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 
 		$statement =

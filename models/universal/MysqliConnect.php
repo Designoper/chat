@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/SSE.php';
+require_once __DIR__ . '/Helper.php';
 
-abstract readonly class MysqliConnect extends SSE
+abstract readonly class MysqliConnect extends Helper
 {
 	private string $hostname;
 	private string $username;

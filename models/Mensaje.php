@@ -6,41 +6,17 @@ require_once __DIR__ . '/universal/MysqliConnect.php';
 
 readonly class Mensaje extends MysqliConnect
 {
-	private int $id_mensaje;
-	private string $contenido;
+	protected int $id_mensaje;
+	protected string $contenido;
 	protected int $id_receptor;
 	protected int $id_grupo;
-	private int $ultimo_id;
+	protected int $ultimo_id;
 
 	public function __construct()
 	{
 		parent::__construct();
 
 		$this->authEndpoint();
-	}
-
-	// MARK: SETTERS
-
-	private function setContenido(): void
-	{
-		$name = 'contenido';
-		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío.";
-
-		empty($value)
-			? $this->errors->setValidationError($error_message)
-			: $this->contenido = $value;
-	}
-
-	protected function setId(string $name): void
-	{
-		$value = $_REQUEST[$name] ?? null;
-		$min_range = 1;
-		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
-
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
-			? $this->$name = (int) $value
-			: $this->errors->setValidationError($error_message);
 	}
 
 	// MARK: GET ULTIMO MENSAJE
@@ -588,7 +564,7 @@ readonly class Mensaje extends MysqliConnect
 			$id_objetivo = $this->id_grupo;
 		}
 
-		$this->setContenido();
+		$this->setContenido('contenido');
 
 		$this->checkValidationErrors();
 

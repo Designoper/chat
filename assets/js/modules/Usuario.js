@@ -1,6 +1,6 @@
-import TemporalFormat from "./universal/Temporal.js";
+import TemporalAPI from "./universal/TemporalAPI.js";
 
-export default class Usuario extends TemporalFormat {
+export default class Usuario extends TemporalAPI {
 	usuario = {};
 
 	constructor() {

@@ -1,6 +1,6 @@
 import Endpoint from "./Endpoint.js";
 
-export default class TemporalFormat extends Endpoint {
+export default class TemporalAPI extends Endpoint {
 	constructor() {
 		super();
 	}

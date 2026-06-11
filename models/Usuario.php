@@ -6,49 +6,12 @@ require_once __DIR__ . '/universal/MysqliConnect.php';
 
 final readonly class Usuario extends MysqliConnect
 {
-	private ?int $id_usuario;
-	private string $nombre_usuario;
-	private string $password;
+	protected string $nombre_usuario;
+	protected string $password;
 
 	public function __construct()
 	{
 		parent::__construct();
-
-		$this->id_usuario = $this->session_user;
-	}
-
-	// MARK: SETTERS
-
-	protected function setNombre(string $name): void
-	{
-		$value = $_POST[$name] ?? null;
-		$error_message = "El nombre solo puede contener mayúsculas(A-Z), minúsculas(a-z), números(1-9) y guión bajo (_). Longitud de 3 a 20 carácteres.";
-
-		preg_match('/^[a-zA-Z0-9_-]{3,20}$/', $value)
-			? $this->$name = $value
-			: $this->errors->setValidationError($error_message);
-	}
-
-	private function setNombreUsuario(): void
-	{
-		$name = 'nombre_usuario';
-		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío.";
-
-		empty($value)
-			? $this->errors->setValidationError($error_message)
-			: $this->nombre_usuario = $value;
-	}
-
-	private function setPassword(): void
-	{
-		$name = 'password';
-		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío.";
-
-		empty($value)
-			? $this->errors->setValidationError($error_message)
-			: $this->password = $value;
 	}
 
 	// MARK: READ USUARIOS
@@ -87,8 +50,8 @@ final readonly class Usuario extends MysqliConnect
 
 	public function createUsuario(): void
 	{
-		$this->setNombreUsuario();
-		$this->setPassword();
+		$this->setNombre('nombre_usuario');
+		$this->setPassword('password');
 
 		$this->checkValidationErrors();
 
@@ -133,8 +96,8 @@ final readonly class Usuario extends MysqliConnect
 
 	public function login(): void
 	{
-		$this->setNombreUsuario();
-		$this->setPassword();
+		$this->setNombre('nombre_usuario');
+		$this->setPassword('password');
 
 		$this->checkValidationErrors();
 
@@ -219,7 +182,7 @@ final readonly class Usuario extends MysqliConnect
 	{
 		$this->authEndpoint();
 
-		$id_usuario = $this->id_usuario;
+		$id_usuario = $this->session_user;
 
 		$statement =
 			"SELECT id_usuario, nombre_usuario
@@ -250,7 +213,7 @@ final readonly class Usuario extends MysqliConnect
 	{
 		$this->authEndpoint();
 
-		$id_usuario = $this->id_usuario;
+		$id_usuario = $this->session_user;
 
 		$statement =
 			"DELETE FROM usuarios

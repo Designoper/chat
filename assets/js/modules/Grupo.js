@@ -54,7 +54,7 @@ export default class Grupo extends Contacto {
 
 						<form method="POST" name="invitar">
 							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
-							<select name="id_usuario" required>
+							<select name="id_invitado" required>
 								<option value="">Añadir a...</option>
 								${opciones}
 							</select>
