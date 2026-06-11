@@ -618,11 +618,9 @@ readonly class Mensaje extends MysqliConnect
 		$num_filas = $query->affected_rows;
 		$query->close();
 
-		if ($num_filas === 1) {
-			$this->status = 204;
-		} else {
-			$this->status = 404;
-		}
+		$num_filas === 1
+			? $this->status = 204
+			: $this->status = 404;
 		$this->sendResponse();
 	}
 
