@@ -28,8 +28,6 @@ final readonly class Contacto extends MysqliConnect
 
 	private function obtainContactos(): array
 	{
-		$this->authEndpoint();
-
 		$id_usuario = $this->session_user;
 
 		$statement =
