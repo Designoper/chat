@@ -1,4 +1,4 @@
-import Conexion from '../modules/Conexion.js';
+// import Conexion from '../modules/Conexion.js';
 import Mensaje from '../modules/Mensaje.js';
 
 const conexion = new Mensaje();

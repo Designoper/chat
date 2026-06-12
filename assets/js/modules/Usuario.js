@@ -29,14 +29,14 @@ export default class Usuario extends TemporalAPI {
 	}
 
 	async deleteUsuario(form) {
-		const { status, json } = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.DELETE);
-		if (status === 204) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.DELETE);
+		if (response.status === 204) {
 			location.href = 'crear-usuario.php';
 		}
 	}
 
 	async sessionCheck() {
-		const { json } = await this.fetchWithoutForm(this.ENDPOINTS.GET.USUARIOS.CURRENT, 'get');
-		this.usuario = json;
+		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.USUARIOS.CURRENT, 'get');
+		this.usuario = response.json;
 	}
 }

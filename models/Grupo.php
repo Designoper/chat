@@ -52,7 +52,7 @@ final readonly class Grupo extends MysqliConnect
 
 	private function obtainGruposPendiente(): array
 	{
-		$this->isMiembroGrupo();
+		// $this->isMiembroGrupo();
 		$id_usuario = $this->session_user;
 
 		$statement =

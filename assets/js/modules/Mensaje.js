@@ -64,12 +64,12 @@ export default class Mensaje extends Grupo {
 	}
 
 	async getMensajes() {
-		const { json } = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.paramsObj);
-		const mensajes = this.mensajesTemplate(json);
+		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.paramsObj);
+		const mensajes = this.mensajesTemplate(response.json);
 		this.dom.output.innerHTML = mensajes;
 
-		if (json.length > 0) {
-			this.paramsObj.ultimo_id = json[json.length - 1].id_mensaje;
+		if (response.json.length > 0) {
+			this.paramsObj.ultimo_id = response.json[response.json.length - 1].id_mensaje;
 			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.paramsObj);
 		}
 	}
@@ -191,44 +191,37 @@ export default class Mensaje extends Grupo {
 	}
 
 	async writeChat() {
-		// const formInvitar =
-
-		const { json } = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.NO_MIEMBRO, 'get',
-			{
-				"id_grupo": this.params.get('id_grupo')
-			}
-		);
-
-		console.log(json);
-
-		const opciones = json
-			.map(user => `<option translate="no" value="${user.id_usuario}">${user.nombre_usuario}</option>`)
-			.join('');
-
-		const formInvitar =
-			`
-				<form method="POST" name="invitar">
-					<input type="hidden" value="${this.params.get('id_grupo')}" name="id_grupo">
-					<select name="id_invitado" required>
-						<option value="">Añadir a...</option>
-						${opciones}
-					</select>
-					<button>Invitar</button>
-				</form>
-			`;
-
-		// return formInvitar;
 
 		if (this.params.size === 2) {
 			if (this.params.has('nombre')) {
 				this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre'));
-				// this.dom.header.insertAdjacentHTML('beforeend', `< p ></p > `);
-				// return;
 			}
 
 			if (this.params.has('id_grupo')) {
+				const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.NO_MIEMBRO, 'get',
+					{
+						"id_grupo": this.params.get('id_grupo')
+					}
+				);
+
+				const opciones = response.json
+					.map(user => `<option translate="no" value="${user.id_usuario}">${user.nombre_usuario}</option>`)
+					.join('');
+
+				const formInvitar =
+					`
+						<form method="POST" name="invitar">
+							<input type="hidden" value="${this.params.get('id_grupo')}" name="id_grupo">
+							<select name="id_invitado" required>
+								<option value="">Añadir a...</option>
+								${opciones}
+							</select>
+							<button>Invitar</button>
+						</form>
+					`;
+
 				this.dom.header.insertAdjacentHTML('beforeend', formInvitar);
 			}
 		}
 	}
-};
+}

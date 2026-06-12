@@ -46,8 +46,10 @@ export default class Endpoint extends Fetch {
 			GRUPOS: {
 				CREAR: `${this.ROOT}grupos/crear`,
 				INVITAR: `${this.ROOT}grupos/invitar`,
-				ACEPTAR_INVITACION: `${this.ROOT}grupos/aceptar`,
-				RECHAZAR_INVITACION: `${this.ROOT}grupos/rechazar`
+				ACEPTAR: `${this.ROOT}grupos/aceptar`,
+				RECHAZAR: `${this.ROOT}grupos/rechazar`,
+				ABANDONAR: `${this.ROOT}grupos/abandonar`,
+				ELIMINAR: `${this.ROOT}grupos/delete`
 			},
 			CONEXION: {
 				ESTADO: `${this.ROOT}conexion/estado`,

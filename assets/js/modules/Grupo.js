@@ -1,16 +1,18 @@
 import Contacto from "./Contacto.js";
+import Usuario from "./Usuario.js";
 
-export default class Grupo extends Contacto {
+export default class Grupo extends Usuario {
+	output = document.querySelector('output');
 	invitacionesMenu = this.output.querySelector('menu:nth-of-type(1)');
 
 	constructor() {
 		super();
 	}
 
-	async getGruposMiembro() {
-		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.MIEMBRO, 'get');
-		return response;
-	}
+	// async getGruposMiembro() {
+	// 	const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.MIEMBRO, 'get');
+	// 	return response;
+	// }
 
 	// async printGruposMiembro(grupos) {
 	// 	const content = await this.gruposMiembroTemplate(grupos);
@@ -102,20 +104,36 @@ export default class Grupo extends Contacto {
 	}
 
 	async invitar(form) {
-		await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.INVITAR);
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.INVITAR);
 	}
 
 	async aceptarInvitacion(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.ACEPTAR_INVITACION);
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.ACEPTAR);
 	}
 
 	async rechazarInvitacion(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.RECHAZAR_INVITACION);
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.RECHAZAR);
 	}
 
-	// MARK: STREAM GRUPOS
+	async abandonarGrupo(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.ABANDONAR);
 
-	streamGrupos() {
+		if (response.status === 204) {
+			location.href = 'sala-principal.php';
+		}
+	}
+
+	async eliminarGrupo(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.ELIMINAR);
+
+		if (response.status === 204) {
+			location.href = 'sala-principal.php';
+		}
+	}
+
+	// MARK: STREAM GRUPOS PENDIENTES
+
+	streamGruposPendientes() {
 
 		const evtSource = new EventSource(this.ENDPOINTS.GET.GRUPOS.STREAM);
 
