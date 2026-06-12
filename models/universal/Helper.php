@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/SSE.php';
 
-basename(__FILE__);
+// basename(__FILE__);
 
 abstract readonly class Helper extends SSE
 {

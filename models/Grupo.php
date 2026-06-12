@@ -19,39 +19,40 @@ final readonly class Grupo extends MysqliConnect
 
 	// MARK: READ GRUPOS MIEMBRO
 
-	public function readGruposMiembro(): void
-	{
-		$id_usuario = $this->session_user;
+	// public function readGruposMiembro(): void
+	// {
+	// 	$id_usuario = $this->session_user;
 
-		$statement =
-			"SELECT grupos.id_grupo, grupos.nombre_grupo
-			FROM grupos
-			LEFT JOIN membresias
-				ON membresias.id_grupo = grupos.id_grupo
-			WHERE membresias.id_usuario = ?
-			AND membresias.rol IN ('fundador','miembro')
-			ORDER BY grupos.nombre_grupo ASC";
+	// 	$statement =
+	// 		"SELECT grupos.id_grupo, grupos.nombre_grupo
+	// 		FROM grupos
+	// 		LEFT JOIN membresias
+	// 			ON membresias.id_grupo = grupos.id_grupo
+	// 		WHERE membresias.id_usuario = ?
+	// 		AND membresias.rol IN ('fundador','miembro')
+	// 		ORDER BY grupos.nombre_grupo ASC";
 
-		$query = $this->connection->prepare($statement);
+	// 	$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"i",
-			$id_usuario
-		);
+	// 	$query->bind_param(
+	// 		"i",
+	// 		$id_usuario
+	// 	);
 
-		$query->execute();
-		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
+	// 	$query->execute();
+	// 	$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+	// 	$query->close();
 
-		$this->status = 200;
-		$this->content = $grupos;
-		$this->sendResponse();
-	}
+	// 	$this->status = 200;
+	// 	$this->content = $grupos;
+	// 	$this->sendResponse();
+	// }
 
 	// MARK: OBTAIN GRUPOS PENDIENTE
 
 	private function obtainGruposPendiente(): array
 	{
+		$this->isMiembroGrupo();
 		$id_usuario = $this->session_user;
 
 		$statement =
@@ -125,11 +126,8 @@ final readonly class Grupo extends MysqliConnect
 
 	// MARK: IS AUTOR GRUPO
 
-	public function isAutorGrupo(): void
+	private function isAutorGrupo(): void
 	{
-		$this->setId('id_grupo');
-		$this->checkValidationErrors();
-
 		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 		$rolFundador = 'fundador';
@@ -156,6 +154,41 @@ final readonly class Grupo extends MysqliConnect
 		if ($autor['rol'] !== $rolFundador) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el fundador del grupo');
+		}
+	}
+
+	// MARK: IS MIEMBRO GRUPO
+
+	private function isMiembroGrupo(): void
+	{
+		$this->setId('id_grupo');
+		$this->checkValidationErrors();
+
+		$id_usuario = $this->session_user;
+		$id_grupo = $this->id_grupo;
+
+		$statement =
+			"SELECT rol
+			FROM membresias
+			WHERE id_usuario = ?
+			AND id_grupo = ?";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"ii",
+			$id_usuario,
+			$id_grupo
+		);
+
+		$query->execute();
+
+		$autor = $query->get_result()->fetch_assoc();
+		$query->close();
+
+		if ($autor['rol'] !== 'fundador' && $autor['rol'] !== 'miembro') {
+			$this->status = 403;
+			$this->errors->setIntegrityError('No eres miembro del grupo');
 		}
 	}
 
@@ -304,6 +337,66 @@ final readonly class Grupo extends MysqliConnect
 		$query->bind_param(
 			"ii",
 			$id_usuario,
+			$id_grupo
+		);
+
+		$query->execute();
+		$query->close();
+
+		$this->status = 204;
+		$this->sendResponse();
+	}
+
+	// MARK: ABANDONAR GRUPO
+
+	public function abandonarGrupo(): void
+	{
+		$this->setId('id_grupo');
+
+		$this->checkValidationErrors();
+
+		$id_usuario = $this->session_user;
+		$id_grupo = $this->id_grupo;
+
+		$statement =
+			"DELETE FROM membresias
+			WHERE id_usuario = ?
+			AND id_grupo = ?";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"ii",
+			$id_usuario,
+			$id_grupo
+		);
+
+		$query->execute();
+		$query->close();
+
+		$this->status = 204;
+		$this->sendResponse();
+	}
+
+	// MARK: DELETE GRUPO
+
+	public function deleteGrupo(): void
+	{
+		$this->setId('id_grupo');
+		$this->checkValidationErrors();
+
+		$this->isAutorGrupo();
+
+		$id_grupo = $this->id_grupo;
+
+		$statement =
+			"DELETE FROM grupos
+			WHERE id_grupo = ?";
+
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			"i",
 			$id_grupo
 		);
 
