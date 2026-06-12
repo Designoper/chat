@@ -198,16 +198,6 @@ export default class Mensaje extends Grupo {
 			}
 
 			if (this.params.has('id_grupo')) {
-				// const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.NO_MIEMBRO, 'get',
-				// 	{
-				// 		"id_grupo": this.params.get('id_grupo')
-				// 	}
-				// );
-
-				// const opciones = response.json
-				// 	.map(user => `<option translate="no" value="${user.id_usuario}">${user.nombre_usuario}</option>`)
-				// 	.join('');
-
 				const formInvitar =
 					`
 						<form method="POST" name="invitar">
