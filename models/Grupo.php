@@ -91,10 +91,10 @@ final readonly class Grupo extends MysqliConnect
 
 	// MARK: READ GRUPOS NO MIEMBRO
 
-	public function readGruposNoMiembro(): void
+	private function readGruposNoMiembro(): array
 	{
-		$this->setId('id_grupo');
-		$this->checkValidationErrors();
+		// $this->setId('id_grupo');
+		// $this->checkValidationErrors();
 
 		$id_grupo = $this->id_grupo;
 
@@ -119,9 +119,11 @@ final readonly class Grupo extends MysqliConnect
 		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 		$query->close();
 
-		$this->status = 200;
-		$this->content = $grupos;
-		$this->sendResponse();
+		return $grupos;
+
+		// $this->status = 200;
+		// $this->content = $grupos;
+		// $this->sendResponse();
 	}
 
 	// MARK: IS AUTOR GRUPO
@@ -428,6 +430,44 @@ final readonly class Grupo extends MysqliConnect
 			if ($gruposPendientesUpdate !== $gruposPendientes) {
 				$this->sendEvent('grupo', $gruposPendientesUpdate);
 				$gruposPendientes = $gruposPendientesUpdate;
+			}
+
+			if (time() - $lastPing > 10) {
+				$this->keepAlive();
+				$lastPing = time();
+			}
+
+			usleep(300000); // 0.3s
+		}
+	}
+
+	// MARK: STREAM GRUPOS
+
+	public function streamGruposNoMiembro(): void
+	{
+		$this->start();
+
+		if (isset($_GET['id_grupo'])) {
+			$this->setId('id_grupo');
+		}
+
+		$this->checkValidationErrors();
+
+		$lastPing = 0;
+
+		$noMiembros = [];
+
+		while (true) {
+
+			if (connection_aborted()) {
+				break;
+			}
+
+			$noMiembrosUpdate = $this->readGruposNoMiembro();
+
+			if ($noMiembrosUpdate !== $noMiembros) {
+				$this->sendEvent('no miembro', $noMiembrosUpdate);
+				$noMiembros = $noMiembrosUpdate;
 			}
 
 			if (time() - $lastPing > 10) {

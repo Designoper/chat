@@ -198,29 +198,30 @@ export default class Mensaje extends Grupo {
 			}
 
 			if (this.params.has('id_grupo')) {
-				const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.NO_MIEMBRO, 'get',
-					{
-						"id_grupo": this.params.get('id_grupo')
-					}
-				);
+				// const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.GRUPOS.NO_MIEMBRO, 'get',
+				// 	{
+				// 		"id_grupo": this.params.get('id_grupo')
+				// 	}
+				// );
 
-				const opciones = response.json
-					.map(user => `<option translate="no" value="${user.id_usuario}">${user.nombre_usuario}</option>`)
-					.join('');
+				// const opciones = response.json
+				// 	.map(user => `<option translate="no" value="${user.id_usuario}">${user.nombre_usuario}</option>`)
+				// 	.join('');
 
 				const formInvitar =
 					`
 						<form method="POST" name="invitar">
 							<input type="hidden" value="${this.params.get('id_grupo')}" name="id_grupo">
-							<select name="id_invitado" required>
+							<select name="id_invitado" id="id_invitado" required>
 								<option value="">Añadir a...</option>
-								${opciones}
 							</select>
 							<button>Invitar</button>
 						</form>
 					`;
 
 				this.dom.header.insertAdjacentHTML('beforeend', formInvitar);
+
+				this.streamNoMiembros(this.params.get('id_grupo'));
 			}
 		}
 	}
