@@ -40,15 +40,14 @@ final readonly class Conexion extends Mensaje
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_receptor,
+		$this->sqlVoid(
+			$statement,
+			'ii',
+			[
+				$id_usuario,
+				$id_receptor,
+			]
 		);
-
-		$query->execute();
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -70,15 +69,14 @@ final readonly class Conexion extends Mensaje
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_grupo,
+		$this->sqlVoid(
+			$statement,
+			'ii',
+			[
+				$id_usuario,
+				$id_grupo,
+			]
 		);
-
-		$query->execute();
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -93,7 +91,7 @@ final readonly class Conexion extends Mensaje
 
 		$statement =
 			"SELECT nombre_usuario,
-				COALESCE(DATE_FORMAT(conexion_directa.last_seen, '%Y-%m-%dT%H:%i:%sZ'),0) AS last_seen,
+				COALESCE(DATE_FORMAT(conexion_directa.last_seen, '%Y-%m-%dT%H:%i:%sZ'), 0) AS last_seen,
 				COALESCE(UNIX_TIMESTAMP(conexion_directa.last_seen), 0) AS last_seen_unix
 			FROM usuarios
 			LEFT JOIN conexion_directa
@@ -101,19 +99,14 @@ final readonly class Conexion extends Mensaje
 				AND conexion_directa.id_receptor = ?
 			WHERE usuarios.id_usuario = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_receptor
+		$conexion = $this->sqlArray(
+			$statement,
+			'ii',
+			[
+				$id_usuario,
+				$id_receptor
+			]
 		);
-
-		$query->execute();
-
-		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-
-		$query->close();
 
 		return $conexion;
 	}
@@ -127,7 +120,7 @@ final readonly class Conexion extends Mensaje
 
 		$statement =
 			"SELECT usuarios.nombre_usuario,
-				DATE_FORMAT(conexion_grupal.last_seen, '%Y-%m-%dT%H:%i:%sZ') AS last_seen,
+				COALESCE(DATE_FORMAT(conexion_grupal.last_seen, '%Y-%m-%dT%H:%i:%sZ'), 0) AS last_seen,
 				COALESCE(UNIX_TIMESTAMP(conexion_grupal.last_seen), 0) AS last_seen_unix
 			FROM usuarios
 			LEFT JOIN conexion_grupal
@@ -141,17 +134,14 @@ final readonly class Conexion extends Mensaje
 
 		$query = $this->connection->prepare($statement);
 
-		$query->bind_param(
-			"ii",
-			$id_grupo,
-			$id_usuario
+		$conexion = $this->sqlArray(
+			$statement,
+			'ii',
+			[
+				$id_grupo,
+				$id_usuario
+			]
 		);
-
-		$query->execute();
-
-		$conexion = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-
-		$query->close();
 
 		return $conexion;
 	}
