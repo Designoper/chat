@@ -66,6 +66,43 @@ abstract readonly class Helper extends MysqliConnect
 			: $this->$name = $value;
 	}
 
+	// MARK: SQL ALL
+
+	protected function sqlAll(string $statement, string $types, array $content, string $type = 'void')
+	{
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			$types,
+			...$content
+		);
+
+		$query->execute();
+
+		if ($type === 'array') {
+			$result = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		}
+
+		if ($type === 'arraySimple') {
+			$result = $query->get_result()->fetch_assoc();
+		}
+
+		if ($type === 'id') {
+			$result = (int) $query->insert_id;
+		}
+
+		if ($type === 'bind') {
+			$query->bind_result($result);
+			$query->fetch();
+		}
+
+		$query->close();
+
+		if ($type === 'array' || $type === 'arraySimple' || $type === 'id' || $type === 'bind') {
+			return $result;
+		}
+	}
+
 	// MARK: SQL ARRAY
 
 	protected function sqlArray(string $statement, string $types, array $content): array
