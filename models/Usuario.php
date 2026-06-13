@@ -58,18 +58,14 @@ final readonly class Usuario extends Helper
 				"INSERT INTO usuarios (nombre_usuario, password)
             	VALUES (?, ?)";
 
-			$query = $this->connection->prepare($statement);
-
-			$query->bind_param(
-				"ss",
-				$nombre_usuario,
-				$password
+			$id_usuario = $this->sqlId(
+				$statement,
+				'ss',
+				[
+					$nombre_usuario,
+					$password
+				]
 			);
-
-			$query->execute();
-
-			$id_usuario = $query->insert_id;
-			$query->close();
 		} catch (\mysqli_sql_exception $error) {
 
 			if ($error->getCode() === 1062) {

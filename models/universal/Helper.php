@@ -66,7 +66,7 @@ abstract readonly class Helper extends MysqliConnect
 			: $this->$name = $value;
 	}
 
-	// MARK: SQL
+	// MARK: SQL ARRAY
 
 	protected function sqlArray(string $statement, string $types, array $content): array
 	{
@@ -103,6 +103,28 @@ abstract readonly class Helper extends MysqliConnect
 
 		return $result;
 	}
+
+	// MARK: SQL ID
+
+	protected function sqlId(string $statement, string $types, array $content): int
+	{
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			$types,
+			...$content
+		);
+
+		$query->execute();
+
+		$result = (int) $query->insert_id;
+
+		$query->close();
+
+		return $result;
+	}
+
+	// MARK: SQL DELETE
 
 	protected function sqlDelete(string $statement, string $types, array $content): void
 	{
