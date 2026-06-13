@@ -137,6 +137,7 @@ final readonly class Grupo extends Helper
 		if ($rol !== 'fundador') {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el fundador del grupo');
+			$this->checkIntegrityErrors();
 		}
 	}
 
@@ -166,6 +167,7 @@ final readonly class Grupo extends Helper
 		if ($rol !== 'fundador' && $rol !== 'miembro') {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres miembro del grupo');
+			$this->checkIntegrityErrors();
 		}
 	}
 
