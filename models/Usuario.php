@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/MysqliConnect.php';
+require_once __DIR__ . '/universal/Helper.php';
 
-final readonly class Usuario extends MysqliConnect
+final readonly class Usuario extends Helper
 {
 	protected string $nombre_usuario;
 	protected string $password;

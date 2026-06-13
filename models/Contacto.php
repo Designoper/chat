@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/MysqliConnect.php';
+require_once __DIR__ . '/universal/Helper.php';
 
-final readonly class Contacto extends MysqliConnect
+final readonly class Contacto extends Helper
 {
 	public function __construct()
 	{

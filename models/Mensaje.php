@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/MysqliConnect.php';
+require_once __DIR__ . '/universal/Helper.php';
 
-readonly class Mensaje extends MysqliConnect
+readonly class Mensaje extends Helper
 {
 	protected int $id_mensaje;
 	protected string $contenido;
@@ -74,8 +74,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		$this->content =
-			$ultimo_mensaje ? $ultimo_mensaje : [];
+		$this->content = $ultimo_mensaje;
 		$this->sendResponse();
 	}
 
@@ -115,7 +114,7 @@ readonly class Mensaje extends MysqliConnect
 		$query->close();
 
 		$this->status = 200;
-		$this->content = $ultimo_mensaje ? $ultimo_mensaje : [];
+		$this->content = $ultimo_mensaje;
 		$this->sendResponse();
 	}
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/SSE.php';
+require_once __DIR__ . '/MysqliConnect.php';
 
-abstract readonly class Helper extends SSE
+abstract readonly class Helper extends MysqliConnect
 {
 	protected const string TEMPORAL_STRING = '%Y-%m-%dT%H:%i:%sZ';
 
@@ -64,5 +64,27 @@ abstract readonly class Helper extends SSE
 		empty($value)
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
+	}
+
+
+
+
+	protected function sqlnormal(string $text, string $statement, array $content): array
+	{
+		$query = $this->connection->prepare($statement);
+		$test = implode(',', $content);
+
+		$query->bind_param(
+			"$text",
+			$test
+		);
+
+		$query->execute();
+
+		$result = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+
+		$query->close();
+
+		return $result;
 	}
 }
