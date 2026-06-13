@@ -49,7 +49,8 @@ readonly class Mensaje extends Helper
 				contenido,
 				DATE_FORMAT(fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio
 				FROM mensajes
-				LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+				LEFT JOIN usuarios
+					ON mensajes.id_emisor = usuarios.id_usuario
 				WHERE
 					(id_emisor = ? AND id_receptor = ?)
 					OR (id_emisor = ? AND id_receptor = ?)
@@ -136,6 +137,8 @@ readonly class Mensaje extends Helper
 	private function getUltimoIdDirecto(): void
 	{
 		$this->setId('id_receptor');
+		$this->checkValidationErrors();
+
 		$id_receptor = $this->id_receptor;
 		$id_usuario = $this->session_user;
 
@@ -171,6 +174,8 @@ readonly class Mensaje extends Helper
 	private function getUltimoIdGrupal(): void
 	{
 		$this->setId('id_grupo');
+		$this->checkValidationErrors();
+
 		$id_grupo = $this->id_grupo;
 		$id_usuario = $this->session_user;
 
@@ -221,6 +226,8 @@ readonly class Mensaje extends Helper
 		$this->setId('id_receptor');
 		$this->setId('ultimo_id');
 
+		$this->checkValidationErrors();
+
 		$id_receptor = $this->id_receptor;
 		$ultimo_id = $this->ultimo_id;
 		$id_usuario = $this->session_user;
@@ -254,6 +261,9 @@ readonly class Mensaje extends Helper
 	{
 		$this->setId('id_grupo');
 		$this->setId('ultimo_id');
+
+		$this->checkValidationErrors();
+
 		$id_grupo = $this->id_grupo;
 		$ultimo_id = $this->ultimo_id;
 		$id_usuario = $this->session_user;
