@@ -306,16 +306,14 @@ final readonly class Grupo extends Helper
 			AND id_grupo = ?
 			AND rol = 'pendiente'";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_grupo
+		$this->sqlVoid(
+			$statement,
+			'ii',
+			[
+				$id_usuario,
+				$id_grupo,
+			]
 		);
-
-		$query->execute();
-		$query->close();
 
 		$this->status = 204;
 		$this->sendResponse();
@@ -337,16 +335,14 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_grupo
+		$this->sqlVoid(
+			$statement,
+			'ii',
+			[
+				$id_usuario,
+				$id_grupo,
+			]
 		);
-
-		$query->execute();
-		$query->close();
 
 		$this->status = 204;
 		$this->sendResponse();
@@ -367,15 +363,13 @@ final readonly class Grupo extends Helper
 			"DELETE FROM grupos
 			WHERE id_grupo = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"i",
-			$id_grupo
+		$this->sqlVoid(
+			$statement,
+			'i',
+			[
+				$id_grupo
+			]
 		);
-
-		$query->execute();
-		$query->close();
 
 		$this->status = 204;
 		$this->sendResponse();
