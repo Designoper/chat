@@ -32,16 +32,13 @@ final readonly class Grupo extends Helper
 	// 		AND membresias.rol IN ('fundador','miembro')
 	// 		ORDER BY grupos.nombre_grupo ASC";
 
-	// 	$query = $this->connection->prepare($statement);
-
-	// 	$query->bind_param(
-	// 		"i",
-	// 		$id_usuario
+	// 	$grupos = $this->sqlArray(
+	// 		$statement,
+	// 		'i',
+	// 		[
+	// 			$id_usuario
+	// 		]
 	// 	);
-
-	// 	$query->execute();
-	// 	$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-	// 	$query->close();
 
 	// 	$this->status = 200;
 	// 	$this->content = $grupos;
