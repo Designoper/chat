@@ -28,7 +28,7 @@ export default class Mensaje extends Grupo {
 
 	async getUltimoId() {
 		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID, 'get', this.paramsObj);
-		this.prueba = response.id_mensaje;
+		this.prueba = response.json.id_mensaje;
 	}
 
 	delete() {

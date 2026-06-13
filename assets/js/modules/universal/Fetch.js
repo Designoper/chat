@@ -105,12 +105,10 @@ export default class Fetch {
 	// MARK: ERROR CHECKER
 
 	errorChecker(response, output) {
-		if (response.length > 0) {
-			output.innerHTML =
-				`<ul>
-					${response.map(error => `<li>${error}</li>`).join("")}
-				</ul>`;
-		}
+		output.innerHTML =
+			`<ul>
+				${response.map(error => `<li>${error}</li>`).join("")}
+			</ul>`;
 	}
 
 	// MARK: RESET FORM

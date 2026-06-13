@@ -540,8 +540,6 @@ readonly class Mensaje extends Helper
 			$this->setId('id_grupo');
 			$columna = 'id_grupo';
 			$id_objetivo = $this->id_grupo;
-		} else {
-			$columna = 'a';
 		}
 
 		$this->setContenido('contenido');

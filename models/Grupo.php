@@ -17,34 +17,6 @@ final readonly class Grupo extends Helper
 		$this->authEndpoint();
 	}
 
-	// MARK: READ GRUPOS MIEMBRO
-
-	// public function readGruposMiembro(): void
-	// {
-	// 	$id_usuario = $this->session_user;
-
-	// 	$statement =
-	// 		"SELECT grupos.id_grupo, grupos.nombre_grupo
-	// 		FROM grupos
-	// 		LEFT JOIN membresias
-	// 			ON membresias.id_grupo = grupos.id_grupo
-	// 		WHERE membresias.id_usuario = ?
-	// 		AND membresias.rol IN ('fundador','miembro')
-	// 		ORDER BY grupos.nombre_grupo ASC";
-
-	// 	$grupos = $this->sqlArray(
-	// 		$statement,
-	// 		'i',
-	// 		[
-	// 			$id_usuario
-	// 		]
-	// 	);
-
-	// 	$this->status = 200;
-	// 	$this->content = $grupos;
-	// 	$this->sendResponse();
-	// }
-
 	// MARK: OBTAIN GRUPOS PENDIENTE
 
 	private function obtainGruposPendiente(): array
@@ -71,17 +43,6 @@ final readonly class Grupo extends Helper
 
 		return $grupos;
 	}
-
-	// MARK: READ GRUPOS PENDIENTE
-
-	// public function readGruposPendiente(): void
-	// {
-	// 	$grupos = $this->obtainGruposPendiente();
-
-	// 	$this->status = 200;
-	// 	$this->content = $grupos;
-	// 	$this->sendResponse();
-	// }
 
 	// MARK: READ GRUPOS NO MIEMBRO
 
@@ -111,9 +72,9 @@ final readonly class Grupo extends Helper
 		return $grupos;
 	}
 
-	// MARK: IS AUTOR GRUPO
+	// MARK: IS FUNDADOR
 
-	private function isAutorGrupo(): void
+	private function isFundadorGrupo(): void
 	{
 		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
@@ -141,7 +102,7 @@ final readonly class Grupo extends Helper
 		}
 	}
 
-	// MARK: IS MIEMBRO GRUPO
+	// MARK: IS MIEMBRO
 
 	private function isMiembroGrupo(): void
 	{
@@ -175,6 +136,8 @@ final readonly class Grupo extends Helper
 
 	public function createGrupo(): void
 	{
+		$this->checkAllowedvalues(['nombre_grupo'], 1);
+
 		$this->setNombre('nombre_grupo');
 
 		$this->checkValidationErrors();
@@ -230,6 +193,8 @@ final readonly class Grupo extends Helper
 
 	public function invitar(): void
 	{
+		$this->checkAllowedvalues(['id_grupo', 'id_invitado'], 2);
+
 		$this->setId('id_grupo');
 		$this->setId('id_invitado');
 
@@ -261,6 +226,8 @@ final readonly class Grupo extends Helper
 
 	public function aceptarInvitacion(): void
 	{
+		$this->checkAllowedvalues(['id_grupo'], 1);
+
 		$this->setId('id_grupo');
 
 		$this->checkValidationErrors();
@@ -292,6 +259,8 @@ final readonly class Grupo extends Helper
 
 	public function rechazarInvitacion(): void
 	{
+		$this->checkAllowedvalues(['id_grupo'], 1);
+
 		$this->setId('id_grupo');
 
 		$this->checkValidationErrors();
@@ -322,6 +291,8 @@ final readonly class Grupo extends Helper
 
 	public function abandonarGrupo(): void
 	{
+		$this->checkAllowedvalues(['id_grupo'], 1);
+
 		$this->setId('id_grupo');
 
 		$this->checkValidationErrors();
@@ -353,10 +324,12 @@ final readonly class Grupo extends Helper
 
 	public function deleteGrupo(): void
 	{
+		$this->checkAllowedvalues(['id_grupo'], 1);
+
 		$this->setId('id_grupo');
 		$this->checkValidationErrors();
 
-		$this->isAutorGrupo();
+		$this->isFundadorGrupo();
 
 		$id_grupo = $this->id_grupo;
 
@@ -412,9 +385,9 @@ final readonly class Grupo extends Helper
 
 	public function streamGruposNoMiembro(): void
 	{
-		if (isset($_GET['id_grupo'])) {
-			$this->setId('id_grupo');
-		}
+		$this->checkAllowedvalues(['id_grupo'], 1);
+
+		$this->setId('id_grupo');
 
 		$this->checkValidationErrors();
 		$this->isMiembroGrupo();
