@@ -189,7 +189,6 @@ final readonly class Grupo extends Helper
 				's',
 				[
 					$nombre_grupo
-
 				]
 			);
 		} catch (\mysqli_sql_exception $error) {
