@@ -9,20 +9,8 @@ export default class Contacto extends Usuario {
 	}
 
 	async printContactos() {
-		// const gruposMiembro = await this.getGruposMiembro();
-		// const gruposMiembroPrint = await this.gruposMiembroTemplate(gruposMiembro);
-
-		// const gruposPendiente = await this.getGruposPendiente();
-		// const gruposPendientePrint = this.gruposPendienteTemplate(gruposPendiente);
-
 		const contactos = await this.getContactos();
 		const usuariosPrint = this.contactosTemplate(contactos);
-
-		// this.output.setHTML(`${usuariosPrint}${gruposMiembroPrint}${gruposPendientePrint}`, {
-		// 	sanitizer: new Sanitizer({
-		// 		comments: false,
-		// 	})
-		// });
 
 		this.contactosMenu.setHTML(`${usuariosPrint}`, {
 			sanitizer: new Sanitizer({

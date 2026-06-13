@@ -10,28 +10,28 @@ export default class Usuario extends TemporalAPI {
 	async createUsuario(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.CREAR);
 		if (response.status === 201) {
-			location.href = 'sala-principal.php';
+			globalThis.location.href = 'sala-principal.php';
 		}
 	}
 
 	async login(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.LOGIN);
 		if (response.status === 200) {
-			location.href = 'sala-principal.php';
+			globalThis.location.href = 'sala-principal.php';
 		}
 	}
 
 	async logout(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.LOGOUT);
 		if (response.status === 204) {
-			location.href = 'index.php';
+			globalThis.location.href = 'index.php';
 		}
 	}
 
 	async deleteUsuario(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.DELETE);
 		if (response.status === 204) {
-			location.href = 'crear-usuario.php';
+			globalThis.location.href = 'crear-usuario.php';
 		}
 	}
 

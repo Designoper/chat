@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/SSE.php';
 
-// basename(__FILE__);
-
 abstract readonly class Helper extends SSE
 {
 	protected const string TEMPORAL_STRING = '%Y-%m-%dT%H:%i:%sZ';
@@ -41,11 +39,7 @@ abstract readonly class Helper extends SSE
 	protected function setNombre(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío.";
-
-		// empty($value)
-		// 	? $this->errors->setValidationError($error_message)
-		// 	: $this->$name = $value;
+		$error_message = "El campo $name no puede estar vacío ni superar los 20 carácteres.";
 
 		empty($value) || strlen($value) > 20
 			? $this->errors->setValidationError($error_message)
