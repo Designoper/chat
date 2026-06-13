@@ -76,7 +76,7 @@ abstract readonly class Helper extends MysqliConnect
 
 	// MARK: SQL ALL
 
-	protected function sqlAll(string $statement, string $types, array $content, ?SqlReturn $type = null): mixed
+	protected function sqlAll(string $statement, string $types, array $content, ?SqlReturn $type = null): string|int|array|null|false
 	{
 		$query = $this->connection->prepare($statement);
 
