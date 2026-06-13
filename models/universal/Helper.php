@@ -66,17 +66,15 @@ abstract readonly class Helper extends MysqliConnect
 			: $this->$name = $value;
 	}
 
+	// MARK: SQL
 
-
-
-	protected function sqlnormal(string $text, string $statement, array $content): array
+	protected function sqlArray(string $statement, string $types, array $content): array
 	{
 		$query = $this->connection->prepare($statement);
-		$test = implode(',', $content);
 
 		$query->bind_param(
-			"$text",
-			$test
+			$types,
+			...$content
 		);
 
 		$query->execute();
@@ -86,5 +84,36 @@ abstract readonly class Helper extends MysqliConnect
 		$query->close();
 
 		return $result;
+	}
+
+	protected function sql2(string $statement, string $types, array $content): array
+	{
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			$types,
+			...$content
+		);
+
+		$query->execute();
+
+		$result = $query->get_result()->fetch_assoc();
+
+		$query->close();
+
+		return $result;
+	}
+
+	protected function sqlDelete(string $statement, string $types, array $content): void
+	{
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			$types,
+			...$content
+		);
+
+		$query->execute();
+		$query->close();
 	}
 }

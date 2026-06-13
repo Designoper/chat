@@ -28,18 +28,13 @@ final readonly class Usuario extends Helper
 			 WHERE id_usuario != ?
 			 ORDER BY nombre_usuario ASC";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"i",
-			$id_usuario
+		$usuarios = $this->sqlArray(
+			$statement,
+			'i',
+			[
+				$id_usuario
+			]
 		);
-
-		$query->execute();
-
-		$usuarios = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-
-		$query->close();
 
 		$this->status = 200;
 		$this->content = $usuarios;
@@ -109,19 +104,13 @@ final readonly class Usuario extends Helper
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"s",
-			$nombre_usuario
+		$row = $this->sql2(
+			$statement,
+			'i',
+			[
+				$nombre_usuario
+			]
 		);
-
-		$query->execute();
-
-		$result = $query->get_result();
-		$row = $result->fetch_assoc();
-
-		$query->close();
 
 		if (!$row) {
 			$this->status = 401;
@@ -189,18 +178,13 @@ final readonly class Usuario extends Helper
 			FROM usuarios
 			WHERE id_usuario = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"i",
-			$id_usuario
+		$usuario = $this->sqlArray(
+			$statement,
+			'i',
+			[
+				$id_usuario
+			]
 		);
-
-		$query->execute();
-
-		$usuario = $query->get_result()->fetch_assoc();
-
-		$query->close();
 
 		$this->status = 200;
 		$this->content = $usuario;
@@ -219,15 +203,13 @@ final readonly class Usuario extends Helper
 			"DELETE FROM usuarios
 			WHERE id_usuario = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"i",
-			$id_usuario
+		$this->sqlDelete(
+			$statement,
+			'i',
+			[
+				$id_usuario
+			]
 		);
-
-		$query->execute();
-		$query->close();
 
 		$this->logout();
 	}

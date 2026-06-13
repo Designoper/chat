@@ -52,7 +52,6 @@ final readonly class Grupo extends Helper
 
 	private function obtainGruposPendiente(): array
 	{
-		// $this->isMiembroGrupo();
 		$id_usuario = $this->session_user;
 
 		$statement =
@@ -64,16 +63,13 @@ final readonly class Grupo extends Helper
 			AND membresias.rol = 'pendiente'
 			ORDER BY grupos.nombre_grupo ASC";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"i",
-			$id_usuario,
+		$grupos = $this->sqlArray(
+			$statement,
+			'i',
+			[
+				$id_usuario
+			]
 		);
-
-		$query->execute();
-		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
 
 		return $grupos;
 	}
@@ -108,16 +104,24 @@ final readonly class Grupo extends Helper
 				WHERE id_grupo = ?
 			)";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"i",
-			$id_grupo,
+		$grupos = $this->sqlArray(
+			$statement,
+			'i',
+			[
+				$id_grupo
+			]
 		);
 
-		$query->execute();
-		$grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
+		// $query = $this->connection->prepare($statement);
+
+		// $query->bind_param(
+		// 	"i",
+		// 	$id_grupo,
+		// );
+
+		// $query->execute();
+		// $grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		// $query->close();
 
 		return $grupos;
 

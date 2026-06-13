@@ -100,24 +100,38 @@ final readonly class Contacto extends Helper
 				fecha_envio DESC,
 				nombre ASC";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"iiiiiii",
-			$id_usuario,
-			$id_usuario,
-			$id_usuario,
-			$id_usuario,
-			$id_usuario,
-			$id_usuario,
-			$id_usuario
+		$contactos = $this->sqlArray(
+			$statement,
+			'iiiiiii',
+			[
+				$id_usuario,
+				$id_usuario,
+				$id_usuario,
+				$id_usuario,
+				$id_usuario,
+				$id_usuario,
+				$id_usuario
+			],
 		);
 
-		$query->execute();
+		// $query = $this->connection->prepare($statement);
 
-		$contactos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		// $query->bind_param(
+		// 	"iiiiiii",
+		// 	$id_usuario,
+		// 	$id_usuario,
+		// 	$id_usuario,
+		// 	$id_usuario,
+		// 	$id_usuario,
+		// 	$id_usuario,
+		// 	$id_usuario
+		// );
 
-		$query->close();
+		// $query->execute();
+
+		// $contactos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+
+		// $query->close();
 
 		return $contactos;
 	}
