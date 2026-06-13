@@ -74,14 +74,14 @@ final readonly class Grupo extends Helper
 
 	// MARK: READ GRUPOS PENDIENTE
 
-	public function readGruposPendiente(): void
-	{
-		$grupos = $this->obtainGruposPendiente();
+	// public function readGruposPendiente(): void
+	// {
+	// 	$grupos = $this->obtainGruposPendiente();
 
-		$this->status = 200;
-		$this->content = $grupos;
-		$this->sendResponse();
-	}
+	// 	$this->status = 200;
+	// 	$this->content = $grupos;
+	// 	$this->sendResponse();
+	// }
 
 	// MARK: READ GRUPOS NO MIEMBRO
 
@@ -117,7 +117,6 @@ final readonly class Grupo extends Helper
 	{
 		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
-		$rolFundador = 'fundador';
 
 		$statement =
 			"SELECT rol
@@ -125,17 +124,17 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$autor = $this->sqlAll(
+		$rol = $this->sqlAll(
 			$statement,
 			'ii',
 			[
 				$id_usuario,
 				$id_grupo
 			],
-			SqlReturn::ArraySimple
+			SqlReturn::Bind
 		);
 
-		if ($autor['rol'] !== $rolFundador) {
+		if ($rol !== 'fundador') {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el fundador del grupo');
 		}
@@ -145,9 +144,6 @@ final readonly class Grupo extends Helper
 
 	private function isMiembroGrupo(): void
 	{
-		$this->setId('id_grupo');
-		$this->checkValidationErrors();
-
 		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 
@@ -157,17 +153,17 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$autor = $this->sqlAll(
+		$rol = $this->sqlAll(
 			$statement,
 			'ii',
 			[
 				$id_usuario,
 				$id_grupo
 			],
-			SqlReturn::ArraySimple
+			SqlReturn::Bind
 		);
 
-		if ($autor['rol'] !== 'fundador' && $autor['rol'] !== 'miembro') {
+		if ($rol !== 'fundador' && $rol !== 'miembro') {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres miembro del grupo');
 		}
@@ -237,6 +233,8 @@ final readonly class Grupo extends Helper
 
 		$this->checkValidationErrors();
 
+		$this->isMiembroGrupo();
+
 		$id_invitado = $this->id_invitado;
 		$id_grupo = $this->id_grupo;
 
@@ -272,7 +270,8 @@ final readonly class Grupo extends Helper
 			"UPDATE membresias
 			SET rol = 'miembro'
 			WHERE id_usuario = ?
-			AND id_grupo = ?";
+			AND id_grupo = ?
+			AND rol = 'pendiente'";
 
 		$this->sqlAll(
 			$statement,
@@ -325,6 +324,8 @@ final readonly class Grupo extends Helper
 
 		$this->checkValidationErrors();
 
+		$this->isMiembroGrupo();
+
 		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 
@@ -373,7 +374,7 @@ final readonly class Grupo extends Helper
 		$this->sendResponse();
 	}
 
-	// MARK: STREAM GRUPOS
+	// MARK: STREAM GRUPOS PENDIENTE
 
 	public function streamGrupos(): void
 	{
@@ -405,17 +406,18 @@ final readonly class Grupo extends Helper
 		}
 	}
 
-	// MARK: STREAM GRUPOS
+	// MARK: STREAM GRUPOS NO MIEMBRO
 
 	public function streamGruposNoMiembro(): void
 	{
-		$this->setSSE();
-
 		if (isset($_GET['id_grupo'])) {
 			$this->setId('id_grupo');
 		}
 
 		$this->checkValidationErrors();
+		$this->isMiembroGrupo();
+
+		$this->setSSE();
 
 		$lastPing = 0;
 
