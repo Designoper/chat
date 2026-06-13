@@ -100,7 +100,7 @@ final readonly class Contacto extends Helper
 				fecha_envio DESC,
 				nombre ASC";
 
-		$contactos = $this->sqlArray(
+		$contactos = $this->sqlAll(
 			$statement,
 			'iiiiiii',
 			[
@@ -112,6 +112,7 @@ final readonly class Contacto extends Helper
 				$id_usuario,
 				$id_usuario
 			],
+			SqlReturn::Array
 		);
 
 		return $contactos;

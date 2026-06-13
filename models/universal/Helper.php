@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/MysqliConnect.php';
 
+enum SqlReturn
+{
+	case Array;
+	case ArraySimple;
+	case Id;
+	case Bind;
+}
+
 abstract readonly class Helper extends MysqliConnect
 {
 	protected const string TEMPORAL_STRING = '%Y-%m-%dT%H:%i:%sZ';
@@ -68,7 +76,7 @@ abstract readonly class Helper extends MysqliConnect
 
 	// MARK: SQL ALL
 
-	protected function sqlAll(string $statement, string $types, array $content, string $type = 'void')
+	protected function sqlAll(string $statement, string $types, array $content, ?SqlReturn $type = null): mixed
 	{
 		$query = $this->connection->prepare($statement);
 
@@ -79,121 +87,30 @@ abstract readonly class Helper extends MysqliConnect
 
 		$query->execute();
 
-		if ($type === 'array') {
-			$result = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+		switch ($type) {
+			case SqlReturn::Array:
+				$result = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+				break;
+
+			case SqlReturn::ArraySimple:
+				$result = $query->get_result()->fetch_assoc();
+				break;
+
+			case SqlReturn::Id:
+				$result = (int) $query->insert_id;
+				break;
+
+			case SqlReturn::Bind:
+				$query->bind_result($result);
+				$query->fetch();
+				break;
+
+			default:
+				$result = null;
 		}
-
-		if ($type === 'arraySimple') {
-			$result = $query->get_result()->fetch_assoc();
-		}
-
-		if ($type === 'id') {
-			$result = (int) $query->insert_id;
-		}
-
-		if ($type === 'bind') {
-			$query->bind_result($result);
-			$query->fetch();
-		}
-
-		$query->close();
-
-		if ($type === 'array' || $type === 'arraySimple' || $type === 'id' || $type === 'bind') {
-			return $result;
-		}
-	}
-
-	// MARK: SQL ARRAY
-
-	protected function sqlArray(string $statement, string $types, array $content): array
-	{
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			$types,
-			...$content
-		);
-
-		$query->execute();
-
-		$result = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 
 		$query->close();
 
 		return $result;
-	}
-
-	// MARK: SQL ARRAY SIMPLE
-
-	protected function sqlArraySimple(string $statement, string $types, array $content): array|false|null
-	{
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			$types,
-			...$content
-		);
-
-		$query->execute();
-
-		$result = $query->get_result()->fetch_assoc();
-
-		$query->close();
-
-		return $result;
-	}
-
-	// MARK: SQL ID
-
-	protected function sqlId(string $statement, string $types, array $content): int
-	{
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			$types,
-			...$content
-		);
-
-		$query->execute();
-
-		$result = (int) $query->insert_id;
-
-		$query->close();
-
-		return $result;
-	}
-
-	// MARK: SQL BIND
-
-	protected function sqlBind(string $statement, string $types, array $content): mixed
-	{
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			$types,
-			...$content
-		);
-
-		$query->execute();
-		$query->bind_result($result);
-		$query->fetch();
-		$query->close();
-
-		return $result;
-	}
-
-	// MARK: SQL VOID
-
-	protected function sqlVoid(string $statement, string $types, array $content): void
-	{
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			$types,
-			...$content
-		);
-
-		$query->execute();
-		$query->close();
 	}
 }

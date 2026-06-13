@@ -18,7 +18,7 @@ abstract readonly class Response extends Sanitizer
         $this->errors = new ErrorHandler();
     }
 
-    // MARK: GETTERS
+    // MARK: SEND RESPONSE
 
     protected function sendResponse(): never
     {
@@ -29,6 +29,8 @@ abstract readonly class Response extends Sanitizer
         echo json_encode($this->response, JSON_UNESCAPED_UNICODE);
         exit();
     }
+
+    // MARK: BUILD RESPONSE
 
     private function buildResponse(): void
     {
@@ -46,11 +48,6 @@ abstract readonly class Response extends Sanitizer
             $this->response = $this->content;
             return;
         }
-
-        // if ($this->status === 204) {
-        //     $this->response = [];
-        //     return;
-        // }
 
         $this->response = [];
     }

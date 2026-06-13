@@ -58,7 +58,7 @@ readonly class Mensaje extends Helper
 				ORDER BY fecha_envio DESC
 				LIMIT 1";
 
-		$ultimo_mensaje = $this->sqlArraySimple(
+		$ultimo_mensaje = $this->sqlAll(
 			$statement,
 			'iiii',
 			[
@@ -67,6 +67,7 @@ readonly class Mensaje extends Helper
 				$id_receptor,
 				$id_usuario
 			],
+			SqlReturn::ArraySimple
 		);
 
 		$this->status = 200;
@@ -96,12 +97,13 @@ readonly class Mensaje extends Helper
 				ORDER BY fecha_envio DESC
 				LIMIT 1";
 
-		$ultimo_mensaje = $this->sqlArraySimple(
+		$ultimo_mensaje = $this->sqlAll(
 			$statement,
 			'i',
 			[
 				$id_grupo
 			],
+			SqlReturn::ArraySimple
 		);
 
 		$this->status = 200;
@@ -140,13 +142,14 @@ readonly class Mensaje extends Helper
 				AND id_receptor = ?
 			), 0) AS id_mensaje";
 
-		$last_id = $this->sqlArraySimple(
+		$last_id = $this->sqlAll(
 			$statement,
 			'ii',
 			[
 				$id_usuario,
 				$id_receptor
 			],
+			SqlReturn::ArraySimple
 		);
 
 		$this->status = 200;
@@ -172,13 +175,14 @@ readonly class Mensaje extends Helper
 				AND id_grupo = ?
 			), 0) AS id_mensaje";
 
-		$last_id = $this->sqlArraySimple(
+		$last_id = $this->sqlAll(
 			$statement,
 			'ii',
 			[
 				$id_usuario,
 				$id_grupo
 			],
+			SqlReturn::ArraySimple
 		);
 
 		$this->status = 200;
@@ -218,7 +222,7 @@ readonly class Mensaje extends Helper
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
-		$this->sqlVoid(
+		$this->sqlAll(
 			$statement,
 			'iiii',
 			[
@@ -226,7 +230,7 @@ readonly class Mensaje extends Helper
 				$id_receptor,
 				$ultimo_id,
 				$ultimo_id
-			],
+			]
 		);
 
 		$this->status = 201;
@@ -252,7 +256,7 @@ readonly class Mensaje extends Helper
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
-		$this->sqlVoid(
+		$this->sqlAll(
 			$statement,
 			'iiii',
 			[
@@ -260,7 +264,7 @@ readonly class Mensaje extends Helper
 				$id_grupo,
 				$ultimo_id,
 				$ultimo_id
-			],
+			]
 		);
 
 		$this->status = 201;
@@ -304,7 +308,7 @@ readonly class Mensaje extends Helper
 				AND id_receptor = ?
 			), 0)";
 
-		$result = $this->sqlArraySimple(
+		$result = $this->sqlAll(
 			$statement,
 			"iiii",
 			[
@@ -313,6 +317,7 @@ readonly class Mensaje extends Helper
 				$id_emisor,
 				$id_receptor
 			],
+			SqlReturn::ArraySimple
 		);
 
 		$this->status = 200;
@@ -344,7 +349,7 @@ readonly class Mensaje extends Helper
 				AND id_grupo = ?
 			), 0)";
 
-		$result = $this->sqlArraySimple(
+		$result = $this->sqlAll(
 			$statement,
 			"iiii",
 			[
@@ -353,6 +358,7 @@ readonly class Mensaje extends Helper
 				$id_emisor,
 				$id_grupo
 			],
+			SqlReturn::ArraySimple
 		);
 
 		$this->status = 200;
@@ -401,7 +407,7 @@ readonly class Mensaje extends Helper
 			)
 			ORDER BY fecha_envio ASC";
 
-		$mensajes = $this->sqlArray(
+		$mensajes = $this->sqlAll(
 			$statement,
 			"iiii",
 			[
@@ -410,6 +416,7 @@ readonly class Mensaje extends Helper
 				$id_receptor,
 				$id_emisor
 			],
+			SqlReturn::Array
 		);
 
 		$this->status = 200;
@@ -441,12 +448,13 @@ readonly class Mensaje extends Helper
 			WHERE mensajes.id_grupo = ?
 			ORDER BY fecha_envio ASC";
 
-		$mensajes = $this->sqlArray(
+		$mensajes = $this->sqlAll(
 			$statement,
 			"i",
 			[
 				$id_grupo
 			],
+			SqlReturn::Array
 		);
 
 		$this->status = 200;
@@ -470,17 +478,14 @@ readonly class Mensaje extends Helper
 			FROM mensajes
 			WHERE id_mensaje = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
+		$autor = $this->sqlAll(
+			$statement,
 			"i",
-			$id_mensaje
+			[
+				$id_mensaje
+			],
+			SqlReturn::Bind
 		);
-
-		$query->execute();
-		$query->bind_result($autor);
-		$query->fetch();
-		$query->close();
 
 		if ($autor !== $id_usuario) {
 			$this->status = 403;
@@ -502,18 +507,15 @@ readonly class Mensaje extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
+		$rol = $this->sqlAll(
+			$statement,
 			"ii",
-			$id_usuario,
-			$id_grupo
+			[
+				$id_usuario,
+				$id_grupo
+			],
+			SqlReturn::Bind
 		);
-
-		$query->execute();
-		$query->bind_result($rol);
-		$query->fetch();
-		$query->close();
 
 		if ($rol === 'miembro' || $rol === 'fundador') {
 			return;
@@ -551,14 +553,14 @@ readonly class Mensaje extends Helper
 			"INSERT INTO mensajes (contenido, id_emisor, $columna)
 			VALUES (?, ?, ?)";
 
-		$this->sqlVoid(
+		$this->sqlAll(
 			$statement,
 			'sii',
 			[
 				$contenido,
 				$id_emisor,
 				$id_objetivo
-			],
+			]
 		);
 
 		$this->status = 201;
@@ -579,21 +581,18 @@ readonly class Mensaje extends Helper
 			WHERE id_mensaje = ?
 			AND id_emisor = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_mensaje,
-			$id_emisor
+		$this->sqlAll(
+			$statement,
+			'ii',
+			[
+				$id_mensaje,
+				$id_emisor
+			]
 		);
 
-		$query->execute();
-		$num_filas = $query->affected_rows;
-		$query->close();
-
-		$num_filas === 1
-			? $this->status = 204
-			: $this->status = 404;
+		// $num_filas === 1
+		$this->status = 204;
+		// : $this->status = 404;
 		$this->sendResponse();
 	}
 
@@ -626,7 +625,7 @@ readonly class Mensaje extends Helper
 			AND mensajes.id_grupo IS NULL
 			ORDER BY mensajes.id_mensaje ASC";
 
-		$mensajes = $this->sqlArray(
+		$mensajes = $this->sqlAll(
 			$statement,
 			"iiiiii",
 			[
@@ -637,6 +636,7 @@ readonly class Mensaje extends Helper
 				$id_receptor,
 				$id_emisor
 			],
+			SqlReturn::Array
 		);
 
 		return $mensajes;
@@ -668,7 +668,7 @@ readonly class Mensaje extends Helper
 			AND mensajes.id_grupo = ?
 	        ORDER BY mensajes.id_mensaje ASC";
 
-		$mensajes = $this->sqlArray(
+		$mensajes = $this->sqlAll(
 			$statement,
 			"iii",
 			[
@@ -676,6 +676,7 @@ readonly class Mensaje extends Helper
 				$id_grupo,
 				$id_grupo
 			],
+			SqlReturn::Array
 		);
 
 		return $mensajes;

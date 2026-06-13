@@ -60,12 +60,13 @@ final readonly class Grupo extends Helper
 			AND membresias.rol = 'pendiente'
 			ORDER BY grupos.nombre_grupo ASC";
 
-		$grupos = $this->sqlArray(
+		$grupos = $this->sqlAll(
 			$statement,
 			'i',
 			[
 				$id_usuario
-			]
+			],
+			SqlReturn::Array
 		);
 
 		return $grupos;
@@ -98,12 +99,13 @@ final readonly class Grupo extends Helper
 				WHERE id_grupo = ?
 			)";
 
-		$grupos = $this->sqlArray(
+		$grupos = $this->sqlAll(
 			$statement,
 			'i',
 			[
 				$id_grupo
-			]
+			],
+			SqlReturn::Array
 		);
 
 		return $grupos;
@@ -123,13 +125,14 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$autor = $this->sqlArraySimple(
+		$autor = $this->sqlAll(
 			$statement,
 			'ii',
 			[
 				$id_usuario,
 				$id_grupo
-			]
+			],
+			SqlReturn::ArraySimple
 		);
 
 		if ($autor['rol'] !== $rolFundador) {
@@ -154,13 +157,14 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$autor = $this->sqlArraySimple(
+		$autor = $this->sqlAll(
 			$statement,
 			'ii',
 			[
 				$id_usuario,
 				$id_grupo
-			]
+			],
+			SqlReturn::ArraySimple
 		);
 
 		if ($autor['rol'] !== 'fundador' && $autor['rol'] !== 'miembro') {
@@ -184,12 +188,13 @@ final readonly class Grupo extends Helper
 		 	VALUES (?)";
 
 		try {
-			$id_grupo = $this->sqlId(
+			$id_grupo = $this->sqlAll(
 				$statement,
 				's',
 				[
 					$nombre_grupo
-				]
+				],
+				SqlReturn::Id
 			);
 		} catch (\mysqli_sql_exception $error) {
 
@@ -210,7 +215,7 @@ final readonly class Grupo extends Helper
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, 'fundador')";
 
-		$this->sqlVoid(
+		$this->sqlAll(
 			$statement2,
 			'ii',
 			[
@@ -239,7 +244,7 @@ final readonly class Grupo extends Helper
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, 'pendiente')";
 
-		$this->sqlVoid(
+		$this->sqlAll(
 			$statement,
 			'ii',
 			[
@@ -269,7 +274,7 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$this->sqlVoid(
+		$this->sqlAll(
 			$statement,
 			'ii',
 			[
@@ -299,7 +304,7 @@ final readonly class Grupo extends Helper
 			AND id_grupo = ?
 			AND rol = 'pendiente'";
 
-		$this->sqlVoid(
+		$this->sqlAll(
 			$statement,
 			'ii',
 			[
@@ -328,7 +333,7 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$this->sqlVoid(
+		$this->sqlAll(
 			$statement,
 			'ii',
 			[
@@ -356,7 +361,7 @@ final readonly class Grupo extends Helper
 			"DELETE FROM grupos
 			WHERE id_grupo = ?";
 
-		$this->sqlVoid(
+		$this->sqlAll(
 			$statement,
 			'i',
 			[

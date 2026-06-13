@@ -28,12 +28,13 @@ final readonly class Usuario extends Helper
 			 WHERE id_usuario != ?
 			 ORDER BY nombre_usuario ASC";
 
-		$usuarios = $this->sqlArray(
+		$usuarios = $this->sqlAll(
 			$statement,
 			'i',
 			[
 				$id_usuario
-			]
+			],
+			SqlReturn::Array
 		);
 
 		$this->status = 200;
@@ -58,13 +59,14 @@ final readonly class Usuario extends Helper
             VALUES (?, ?)";
 
 		try {
-			$id_usuario = $this->sqlId(
+			$id_usuario = $this->sqlAll(
 				$statement,
 				'ss',
 				[
 					$nombre_usuario,
 					$password
-				]
+				],
+				SqlReturn::Id
 			);
 		} catch (\mysqli_sql_exception $error) {
 
@@ -100,12 +102,13 @@ final readonly class Usuario extends Helper
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
-		$row = $this->sqlArraySimple(
+		$row = $this->sqlAll(
 			$statement,
 			's',
 			[
 				$nombre_usuario
-			]
+			],
+			SqlReturn::ArraySimple
 		);
 
 		if (!$row || !password_verify($password, $row['password'])) {
@@ -166,12 +169,13 @@ final readonly class Usuario extends Helper
 			FROM usuarios
 			WHERE id_usuario = ?";
 
-		$usuario = $this->sqlArray(
+		$usuario = $this->sqlAll(
 			$statement,
 			'i',
 			[
 				$id_usuario
-			]
+			],
+			SqlReturn::ArraySimple
 		);
 
 		$this->status = 200;
@@ -191,7 +195,7 @@ final readonly class Usuario extends Helper
 			"DELETE FROM usuarios
 			WHERE id_usuario = ?";
 
-		$this->sqlVoid(
+		$this->sqlAll(
 			$statement,
 			'i',
 			[
