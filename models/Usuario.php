@@ -53,11 +53,11 @@ final readonly class Usuario extends Helper
 		$nombre_usuario = $this->nombre_usuario;
 		$password = password_hash($this->password, PASSWORD_DEFAULT);
 
-		try {
-			$statement =
-				"INSERT INTO usuarios (nombre_usuario, password)
-            	VALUES (?, ?)";
+		$statement =
+			"INSERT INTO usuarios (nombre_usuario, password)
+            VALUES (?, ?)";
 
+		try {
 			$id_usuario = $this->sqlId(
 				$statement,
 				'ss',
