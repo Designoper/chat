@@ -112,22 +112,7 @@ final readonly class Grupo extends Helper
 			]
 		);
 
-		// $query = $this->connection->prepare($statement);
-
-		// $query->bind_param(
-		// 	"i",
-		// 	$id_grupo,
-		// );
-
-		// $query->execute();
-		// $grupos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		// $query->close();
-
 		return $grupos;
-
-		// $this->status = 200;
-		// $this->content = $grupos;
-		// $this->sendResponse();
 	}
 
 	// MARK: IS AUTOR GRUPO
@@ -144,18 +129,14 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_grupo
+		$autor = $this->sqlArraySimple(
+			$statement,
+			'ii',
+			[
+				$id_usuario,
+				$id_grupo
+			]
 		);
-
-		$query->execute();
-
-		$autor = $query->get_result()->fetch_assoc();
-		$query->close();
 
 		if ($autor['rol'] !== $rolFundador) {
 			$this->status = 403;
@@ -179,18 +160,14 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_grupo
+		$autor = $this->sqlArraySimple(
+			$statement,
+			'ii',
+			[
+				$id_usuario,
+				$id_grupo
+			]
 		);
-
-		$query->execute();
-
-		$autor = $query->get_result()->fetch_assoc();
-		$query->close();
 
 		if ($autor['rol'] !== 'fundador' && $autor['rol'] !== 'miembro') {
 			$this->status = 403;
@@ -208,22 +185,19 @@ final readonly class Grupo extends Helper
 
 		$nombre_grupo = $this->nombre_grupo;
 
+		$statement =
+			"INSERT INTO grupos (nombre_grupo)
+		 	VALUES (?)";
+
 		try {
-			$statement =
-				"INSERT INTO grupos (nombre_grupo)
-		 		VALUES (?)";
+			$id_grupo = $this->sqlId(
+				$statement,
+				's',
+				[
+					$nombre_grupo
 
-			$query = $this->connection->prepare($statement);
-
-			$query->bind_param(
-				"s",
-				$nombre_grupo
+				]
 			);
-
-			$query->execute();
-
-			$id_grupo = $query->insert_id;
-			$query->close();
 		} catch (\mysqli_sql_exception $error) {
 
 			if ($error->getCode() === 1062) {
@@ -243,16 +217,14 @@ final readonly class Grupo extends Helper
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, 'fundador')";
 
-		$query = $this->connection->prepare($statement2);
-
-		$query->bind_param(
-			"ii",
-			$id_fundador,
-			$id_grupo,
+		$this->sqlVoid(
+			$statement2,
+			'ii',
+			[
+				$id_fundador,
+				$id_grupo,
+			]
 		);
-
-		$query->execute();
-		$query->close();
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -274,16 +246,14 @@ final readonly class Grupo extends Helper
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, 'pendiente')";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_invitado,
-			$id_grupo,
+		$this->sqlVoid(
+			$statement,
+			'ii',
+			[
+				$id_invitado,
+				$id_grupo,
+			]
 		);
-
-		$query->execute();
-		$query->close();
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -306,16 +276,14 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_grupo
+		$this->sqlVoid(
+			$statement,
+			'ii',
+			[
+				$id_usuario,
+				$id_grupo,
+			]
 		);
-
-		$query->execute();
-		$query->close();
 
 		$this->status = 200;
 		$this->sendResponse();
@@ -417,7 +385,7 @@ final readonly class Grupo extends Helper
 
 	public function streamGrupos(): void
 	{
-		$this->start();
+		$this->setSSE();
 
 		$lastPing = 0;
 
@@ -449,7 +417,7 @@ final readonly class Grupo extends Helper
 
 	public function streamGruposNoMiembro(): void
 	{
-		$this->start();
+		$this->setSSE();
 
 		if (isset($_GET['id_grupo'])) {
 			$this->setId('id_grupo');

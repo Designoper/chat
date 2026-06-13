@@ -191,7 +191,7 @@ final readonly class Usuario extends Helper
 			"DELETE FROM usuarios
 			WHERE id_usuario = ?";
 
-		$this->sqlDelete(
+		$this->sqlVoid(
 			$statement,
 			'i',
 			[

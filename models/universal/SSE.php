@@ -11,7 +11,7 @@ abstract readonly class SSE extends Response
 		parent::__construct();
 	}
 
-	protected function start(): void
+	protected function setSSE(): void
 	{
 		if (session_status() === PHP_SESSION_ACTIVE) {
 			session_write_close();

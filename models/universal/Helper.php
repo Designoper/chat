@@ -124,9 +124,9 @@ abstract readonly class Helper extends MysqliConnect
 		return $result;
 	}
 
-	// MARK: SQL DELETE
+	// MARK: SQL VOID
 
-	protected function sqlDelete(string $statement, string $types, array $content): void
+	protected function sqlVoid(string $statement, string $types, array $content): void
 	{
 		$query = $this->connection->prepare($statement);
 

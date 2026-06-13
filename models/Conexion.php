@@ -160,7 +160,7 @@ final readonly class Conexion extends Mensaje
 
 	public function streamConexion(): void
 	{
-		$this->start();
+		$this->setSSE();
 
 		if (isset($_GET['id_receptor'])) {
 			$this->setId('id_receptor');

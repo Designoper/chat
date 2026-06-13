@@ -716,7 +716,7 @@ readonly class Mensaje extends Helper
 
 	public function streamMensajes(): void
 	{
-		$this->start();
+		$this->setSSE();
 
 		if (isset($_GET['id_receptor'])) {
 			$this->setId('id_receptor');

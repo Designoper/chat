@@ -140,7 +140,7 @@ final readonly class Contacto extends Helper
 
 	public function streamContactos(): void
 	{
-		$this->start();
+		$this->setSSE();
 
 		$lastPing = 0;
 
