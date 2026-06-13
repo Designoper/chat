@@ -16,6 +16,7 @@ export default class Fetch {
 		// const request = new Request;
 		const init = {};
 		init.method = method;
+		init.cache = "no-store";
 
 		if (method === "POST") {
 			init.body = data instanceof FormData

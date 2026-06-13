@@ -30,31 +30,37 @@ RewriteRule ^(.*)$ /Router.php [QSA,L]
 # Bloquear carpetas internas
 RewriteRule ^(\.git|\.svn|config|private|backups|models)(/|$) - [F,L]
 
-<IfModule mod_headers.c>
-    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
-    Header set Pragma "no-cache"
-    Header set Expires "0"
-</IfModule>
-
-# # Cache configuration to improve page loading speed
-# <IfModule mod_expires.c>
-
-#     ExpiresActive on
-
-#     # Add additional content types
-#     AddType text/css .css
-#     AddType text/javascript .js
-#     AddType image/png .png
-#     AddType font/woff2 .woff2
-
-#     # Set expiry times for cache. Despite lighthouse advises to set a very high time (1 year), I think a shorter cache (5-10 min) gives almost the same benefit to the user and avoids having to resort to cache busting if content changes
-#     ExpiresDefault "access plus 5 minutes"
-#     ExpiresByType text/css "access plus 5 minutes"
-#     ExpiresByType text/javascript "access plus 5 minutes"
-#     ExpiresByType image/png "access plus 5 minutes"
-#     ExpiresByType font/woff2 "access plus 5 minutes"
-
+# <IfModule mod_headers.c>
+#     Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+#     Header set Pragma "no-cache"
+#     Header set Expires "0"
 # </IfModule>
+
+# <IfModule mod_headers.c>
+#     Header set Cache-Control "public, max-age=120"
+#     Header unset Pragma
+#     Header set Expires "120"
+# </IfModule>
+
+# Cache configuration to improve page loading speed
+<IfModule mod_expires.c>
+
+    ExpiresActive on
+
+    # Add additional content types
+    AddType text/css .css
+    AddType text/javascript .js
+    AddType image/png .png
+    AddType font/woff2 .woff2
+
+    # Set expiry times for cache. Despite lighthouse advises to set a very high time (1 year), I think a shorter cache (5-10 min) gives almost the same benefit to the user and avoids having to resort to cache busting if content changes
+    ExpiresDefault "access plus 5 minutes"
+    ExpiresByType text/css "access plus 5 minutes"
+    ExpiresByType text/javascript "access plus 5 minutes"
+    ExpiresByType image/png "access plus 5 minutes"
+    ExpiresByType font/woff2 "access plus 5 minutes"
+
+</IfModule>
 
 # Mainly settings involving security and privacy
 <IfModule mod_headers.c>
