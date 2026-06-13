@@ -106,21 +106,13 @@ final readonly class Usuario extends Helper
 
 		$row = $this->sql2(
 			$statement,
-			'i',
+			's',
 			[
 				$nombre_usuario
 			]
 		);
 
-		if (!$row) {
-			$this->status = 401;
-			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
-			$this->checkIntegrityErrors();
-		}
-
-		$hashGuardado = $row['password'];
-
-		if (!password_verify($password, $hashGuardado)) {
+		if (!$row || !password_verify($password, $row['password'])) {
 			$this->status = 401;
 			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
 			$this->checkIntegrityErrors();
