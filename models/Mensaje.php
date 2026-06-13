@@ -689,7 +689,7 @@ readonly class Mensaje extends Helper
 	public function streamMensajes(): void
 	{
 
-		$this->setvalues([
+		$this->checkAllowedvalues([
 			'id_receptor',
 			'id_grupo'
 		], 1);

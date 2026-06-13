@@ -19,6 +19,7 @@ final readonly class Usuario extends Helper
 	public function readUsuarios(): void
 	{
 		$this->authEndpoint();
+		$this->checkAllowedvalues([], 0);
 
 		$id_usuario = $this->session_user;
 
@@ -46,6 +47,8 @@ final readonly class Usuario extends Helper
 
 	public function createUsuario(): void
 	{
+		$this->checkAllowedvalues(['nombre_usuario', 'password'], 2);
+
 		$this->setNombre('nombre_usuario');
 		$this->setPassword('password');
 
@@ -89,6 +92,8 @@ final readonly class Usuario extends Helper
 
 	public function login(): void
 	{
+		$this->checkAllowedvalues(['nombre_usuario', 'password'], 2);
+
 		$this->setNombre('nombre_usuario');
 		$this->setPassword('password');
 
@@ -128,6 +133,7 @@ final readonly class Usuario extends Helper
 	public function logout(): void
 	{
 		$this->authEndpoint();
+		$this->checkAllowedvalues([], 0);
 
 		// Asegurar que la sesión está iniciada
 		if (session_status() === PHP_SESSION_NONE) {
@@ -161,6 +167,7 @@ final readonly class Usuario extends Helper
 	public function currentUsuario(): void
 	{
 		$this->authEndpoint();
+		$this->checkAllowedvalues([], 0);
 
 		$id_usuario = $this->session_user;
 
@@ -188,6 +195,7 @@ final readonly class Usuario extends Helper
 	public function deleteUsuario(): void
 	{
 		$this->authEndpoint();
+		$this->checkAllowedvalues([], 0);
 
 		$id_usuario = $this->session_user;
 
