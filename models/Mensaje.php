@@ -58,21 +58,16 @@ readonly class Mensaje extends Helper
 				ORDER BY fecha_envio DESC
 				LIMIT 1";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"iiii",
-			$id_usuario,
-			$id_receptor,
-			$id_receptor,
-			$id_usuario
+		$ultimo_mensaje = $this->sqlArraySimple(
+			$statement,
+			'iiii',
+			[
+				$id_usuario,
+				$id_receptor,
+				$id_receptor,
+				$id_usuario
+			],
 		);
-
-		$query->execute();
-
-		$ultimo_mensaje = $query->get_result()->fetch_assoc();
-
-		$query->close();
 
 		$this->status = 200;
 		$this->content = $ultimo_mensaje;
@@ -101,18 +96,13 @@ readonly class Mensaje extends Helper
 				ORDER BY fecha_envio DESC
 				LIMIT 1";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"i",
-			$id_grupo,
+		$ultimo_mensaje = $this->sqlArraySimple(
+			$statement,
+			'i',
+			[
+				$id_grupo
+			],
 		);
-
-		$query->execute();
-
-		$ultimo_mensaje = $query->get_result()->fetch_assoc();
-
-		$query->close();
 
 		$this->status = 200;
 		$this->content = $ultimo_mensaje;
@@ -150,19 +140,14 @@ readonly class Mensaje extends Helper
 				AND id_receptor = ?
 			), 0) AS id_mensaje";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_receptor
+		$last_id = $this->sqlArraySimple(
+			$statement,
+			'ii',
+			[
+				$id_usuario,
+				$id_receptor
+			],
 		);
-
-		$query->execute();
-
-		$last_id = $query->get_result()->fetch_assoc();
-
-		$query->close();
 
 		$this->status = 200;
 		$this->content = $last_id;
@@ -187,19 +172,14 @@ readonly class Mensaje extends Helper
 				AND id_grupo = ?
 			), 0) AS id_mensaje";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"ii",
-			$id_usuario,
-			$id_grupo
+		$last_id = $this->sqlArraySimple(
+			$statement,
+			'ii',
+			[
+				$id_usuario,
+				$id_grupo
+			],
 		);
-
-		$query->execute();
-
-		$last_id = $query->get_result()->fetch_assoc();
-
-		$query->close();
 
 		$this->status = 200;
 		$this->content = $last_id;
@@ -238,18 +218,16 @@ readonly class Mensaje extends Helper
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"iiii",
-			$id_usuario,
-			$id_receptor,
-			$ultimo_id,
-			$ultimo_id
+		$this->sqlVoid(
+			$statement,
+			'iiii',
+			[
+				$id_usuario,
+				$id_receptor,
+				$ultimo_id,
+				$ultimo_id
+			],
 		);
-
-		$query->execute();
-		$query->close();
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -274,18 +252,16 @@ readonly class Mensaje extends Helper
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"iiii",
-			$id_usuario,
-			$id_grupo,
-			$ultimo_id,
-			$ultimo_id
+		$this->sqlVoid(
+			$statement,
+			'iiii',
+			[
+				$id_usuario,
+				$id_grupo,
+				$ultimo_id,
+				$ultimo_id
+			],
 		);
-
-		$query->execute();
-		$query->close();
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -328,19 +304,16 @@ readonly class Mensaje extends Helper
 				AND id_receptor = ?
 			), 0)";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
+		$result = $this->sqlArraySimple(
+			$statement,
 			"iiii",
-			$id_emisor,
-			$id_receptor,
-			$id_emisor,
-			$id_receptor
+			[
+				$id_emisor,
+				$id_receptor,
+				$id_emisor,
+				$id_receptor
+			],
 		);
-
-		$query->execute();
-		$result = $query->get_result()->fetch_assoc();
-		$query->close();
 
 		$this->status = 200;
 		$this->content = $result;
@@ -371,19 +344,16 @@ readonly class Mensaje extends Helper
 				AND id_grupo = ?
 			), 0)";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
+		$result = $this->sqlArraySimple(
+			$statement,
 			"iiii",
-			$id_grupo,
-			$id_emisor,
-			$id_emisor,
-			$id_grupo
+			[
+				$id_grupo,
+				$id_emisor,
+				$id_emisor,
+				$id_grupo
+			],
 		);
-
-		$query->execute();
-		$result = $query->get_result()->fetch_assoc();
-		$query->close();
 
 		$this->status = 200;
 		$this->content = $result;
@@ -422,7 +392,8 @@ readonly class Mensaje extends Helper
 				mensajes.id_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
-			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+			LEFT JOIN usuarios
+				ON mensajes.id_emisor = usuarios.id_usuario
 			WHERE mensajes.id_receptor IS NOT NULL
 			AND (
 				(id_emisor = ? AND id_receptor = ?)
@@ -430,19 +401,16 @@ readonly class Mensaje extends Helper
 			)
 			ORDER BY fecha_envio ASC";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
+		$mensajes = $this->sqlArray(
+			$statement,
 			"iiii",
-			$id_emisor,
-			$id_receptor,
-			$id_receptor,
-			$id_emisor
+			[
+				$id_emisor,
+				$id_receptor,
+				$id_receptor,
+				$id_emisor
+			],
 		);
-
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
 
 		$this->status = 200;
 		$this->content = $mensajes;
@@ -468,20 +436,18 @@ readonly class Mensaje extends Helper
 				mensajes.id_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
-			LEFT JOIN usuarios on mensajes.id_emisor = usuarios.id_usuario
+			LEFT JOIN usuarios
+				ON mensajes.id_emisor = usuarios.id_usuario
 			WHERE mensajes.id_grupo = ?
 			ORDER BY fecha_envio ASC";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
+		$mensajes = $this->sqlArray(
+			$statement,
 			"i",
-			$id_grupo
+			[
+				$id_grupo
+			],
 		);
-
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
 
 		$this->status = 200;
 		$this->content = $mensajes;
@@ -585,17 +551,15 @@ readonly class Mensaje extends Helper
 			"INSERT INTO mensajes (contenido, id_emisor, $columna)
 			VALUES (?, ?, ?)";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
-			"sii",
-			$contenido,
-			$id_emisor,
-			$id_objetivo
+		$this->sqlVoid(
+			$statement,
+			'sii',
+			[
+				$contenido,
+				$id_emisor,
+				$id_objetivo
+			],
 		);
-
-		$query->execute();
-		$query->close();
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -647,7 +611,8 @@ readonly class Mensaje extends Helper
 				mensajes.id_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
-			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+			LEFT JOIN usuarios
+				ON mensajes.id_emisor = usuarios.id_usuario
 			WHERE mensajes.id_mensaje > COALESCE((
 				SELECT id_mensaje
 				FROM ultimos_mensajes_leidos_directos
@@ -661,22 +626,18 @@ readonly class Mensaje extends Helper
 			AND mensajes.id_grupo IS NULL
 			ORDER BY mensajes.id_mensaje ASC";
 
-
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
+		$mensajes = $this->sqlArray(
+			$statement,
 			"iiiiii",
-			$id_emisor,
-			$id_receptor,
-			$id_emisor,
-			$id_receptor,
-			$id_receptor,
-			$id_emisor
+			[
+				$id_emisor,
+				$id_receptor,
+				$id_emisor,
+				$id_receptor,
+				$id_receptor,
+				$id_emisor
+			],
 		);
-
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
 
 		return $mensajes;
 	}
@@ -695,7 +656,8 @@ readonly class Mensaje extends Helper
 				mensajes.id_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
-			LEFT JOIN usuarios ON mensajes.id_emisor = usuarios.id_usuario
+			LEFT JOIN usuarios
+				ON mensajes.id_emisor = usuarios.id_usuario
 	        WHERE mensajes.id_mensaje > COALESCE((
 				SELECT id_mensaje
 				FROM ultimos_mensajes_leidos_grupales
@@ -706,18 +668,15 @@ readonly class Mensaje extends Helper
 			AND mensajes.id_grupo = ?
 	        ORDER BY mensajes.id_mensaje ASC";
 
-		$query = $this->connection->prepare($statement);
-
-		$query->bind_param(
+		$mensajes = $this->sqlArray(
+			$statement,
 			"iii",
-			$id_usuario,
-			$id_grupo,
-			$id_grupo
+			[
+				$id_usuario,
+				$id_grupo,
+				$id_grupo
+			],
 		);
-
-		$query->execute();
-		$mensajes = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-		$query->close();
 
 		return $mensajes;
 	}

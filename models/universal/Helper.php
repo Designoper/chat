@@ -86,6 +86,8 @@ abstract readonly class Helper extends MysqliConnect
 		return $result;
 	}
 
+	// MARK: SQL ARRAY SIMPLE
+
 	protected function sqlArraySimple(string $statement, string $types, array $content): array|false|null
 	{
 		$query = $this->connection->prepare($statement);
@@ -119,6 +121,25 @@ abstract readonly class Helper extends MysqliConnect
 
 		$result = (int) $query->insert_id;
 
+		$query->close();
+
+		return $result;
+	}
+
+	// MARK: SQL BIND
+
+	protected function sqlBind(string $statement, string $types, array $content): mixed
+	{
+		$query = $this->connection->prepare($statement);
+
+		$query->bind_param(
+			$types,
+			...$content
+		);
+
+		$query->execute();
+		$query->bind_result($result);
+		$query->fetch();
 		$query->close();
 
 		return $result;
