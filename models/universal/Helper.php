@@ -23,6 +23,22 @@ abstract readonly class Helper extends MysqliConnect
 
 	// MARK: SETTERS
 
+	protected function setvalues(array $allowed, int $max): void
+	{
+		if (count($_REQUEST) > $max) {
+			$this->errors->setValidationError("No se puede enviar más de $max valores.");
+			// $this->checkValidationErrors();
+		}
+
+		foreach ($_REQUEST as $key => $value) {
+			if (!in_array($key, $allowed)) {
+				$this->errors->setValidationError("El valor $key no está permitido.");
+			}
+		}
+
+		$this->checkValidationErrors();
+	}
+
 	protected function setId(string $name): void
 	{
 		$value = $_REQUEST[$name] ?? null;

@@ -540,6 +540,8 @@ readonly class Mensaje extends Helper
 			$this->setId('id_grupo');
 			$columna = 'id_grupo';
 			$id_objetivo = $this->id_grupo;
+		} else {
+			$columna = 'a';
 		}
 
 		$this->setContenido('contenido');
@@ -686,7 +688,11 @@ readonly class Mensaje extends Helper
 
 	public function streamMensajes(): void
 	{
-		$this->setSSE();
+
+		$this->setvalues([
+			'id_receptor',
+			'id_grupo'
+		], 1);
 
 		if (isset($_GET['id_receptor'])) {
 			$this->setId('id_receptor');
@@ -697,6 +703,9 @@ readonly class Mensaje extends Helper
 		}
 
 		$this->checkValidationErrors();
+
+		$this->setSSE();
+
 
 		$lastPing = 0;
 
