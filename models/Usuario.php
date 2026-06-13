@@ -100,7 +100,7 @@ final readonly class Usuario extends Helper
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
-		$row = $this->sql2(
+		$row = $this->sqlArraySimple(
 			$statement,
 			's',
 			[

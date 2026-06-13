@@ -86,7 +86,7 @@ abstract readonly class Helper extends MysqliConnect
 		return $result;
 	}
 
-	protected function sql2(string $statement, string $types, array $content): array|false|null
+	protected function sqlArraySimple(string $statement, string $types, array $content): array|false|null
 	{
 		$query = $this->connection->prepare($statement);
 
