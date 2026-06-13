@@ -114,25 +114,6 @@ final readonly class Contacto extends Helper
 			],
 		);
 
-		// $query = $this->connection->prepare($statement);
-
-		// $query->bind_param(
-		// 	"iiiiiii",
-		// 	$id_usuario,
-		// 	$id_usuario,
-		// 	$id_usuario,
-		// 	$id_usuario,
-		// 	$id_usuario,
-		// 	$id_usuario,
-		// 	$id_usuario
-		// );
-
-		// $query->execute();
-
-		// $contactos = $query->get_result()->fetch_all(MYSQLI_ASSOC);
-
-		// $query->close();
-
 		return $contactos;
 	}
 
