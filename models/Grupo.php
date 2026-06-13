@@ -89,9 +89,6 @@ final readonly class Grupo extends Helper
 
 	private function readGruposNoMiembro(): array
 	{
-		// $this->setId('id_grupo');
-		// $this->checkValidationErrors();
-
 		$id_grupo = $this->id_grupo;
 
 		$statement =
