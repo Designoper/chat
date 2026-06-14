@@ -106,7 +106,7 @@ final readonly class Conexion extends Mensaje
 				$id_usuario,
 				$id_receptor
 			],
-			SqlReturn::Array
+			SqlReturn::FetchAssoc
 		);
 
 		return $conexion;
@@ -140,7 +140,7 @@ final readonly class Conexion extends Mensaje
 				$id_grupo,
 				$id_usuario
 			],
-			SqlReturn::Array
+			SqlReturn::FetchAssoc
 		);
 
 		return $conexion;

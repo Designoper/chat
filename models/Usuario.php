@@ -35,7 +35,7 @@ final readonly class Usuario extends Helper
 			[
 				$id_usuario
 			],
-			SqlReturn::Array
+			SqlReturn::FetchAll
 		);
 
 		$this->status = 200;
@@ -69,7 +69,7 @@ final readonly class Usuario extends Helper
 					$nombre_usuario,
 					$password
 				],
-				SqlReturn::Id
+				SqlReturn::InsertId
 			);
 		} catch (\mysqli_sql_exception $error) {
 
@@ -113,7 +113,7 @@ final readonly class Usuario extends Helper
 			[
 				$nombre_usuario
 			],
-			SqlReturn::ArraySimple
+			SqlReturn::FetchAssoc
 		);
 
 		if (!$row || !password_verify($password, $row['password'])) {
@@ -182,7 +182,7 @@ final readonly class Usuario extends Helper
 			[
 				$id_usuario
 			],
-			SqlReturn::ArraySimple
+			SqlReturn::FetchAssoc
 		);
 
 		$this->status = 200;

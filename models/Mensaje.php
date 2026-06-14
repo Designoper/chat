@@ -67,7 +67,7 @@ readonly class Mensaje extends Helper
 				$id_receptor,
 				$id_usuario
 			],
-			SqlReturn::ArraySimple
+			SqlReturn::FetchAssoc
 		);
 
 		$this->status = 200;
@@ -103,7 +103,7 @@ readonly class Mensaje extends Helper
 			[
 				$id_grupo
 			],
-			SqlReturn::ArraySimple
+			SqlReturn::FetchAssoc
 		);
 
 		$this->status = 200;
@@ -149,7 +149,7 @@ readonly class Mensaje extends Helper
 				$id_usuario,
 				$id_receptor
 			],
-			SqlReturn::ArraySimple
+			SqlReturn::FetchAssoc
 		);
 
 		$this->status = 200;
@@ -182,7 +182,7 @@ readonly class Mensaje extends Helper
 				$id_usuario,
 				$id_grupo
 			],
-			SqlReturn::ArraySimple
+			SqlReturn::FetchAssoc
 		);
 
 		$this->status = 200;
@@ -317,7 +317,7 @@ readonly class Mensaje extends Helper
 				$id_emisor,
 				$id_receptor
 			],
-			SqlReturn::ArraySimple
+			SqlReturn::FetchAssoc
 		);
 
 		$this->status = 200;
@@ -358,7 +358,7 @@ readonly class Mensaje extends Helper
 				$id_emisor,
 				$id_grupo
 			],
-			SqlReturn::ArraySimple
+			SqlReturn::FetchAssoc
 		);
 
 		$this->status = 200;
@@ -416,7 +416,7 @@ readonly class Mensaje extends Helper
 				$id_receptor,
 				$id_emisor
 			],
-			SqlReturn::Array
+			SqlReturn::FetchAll
 		);
 
 		$this->status = 200;
@@ -454,7 +454,7 @@ readonly class Mensaje extends Helper
 			[
 				$id_grupo
 			],
-			SqlReturn::Array
+			SqlReturn::FetchAll
 		);
 
 		$this->status = 200;
@@ -484,7 +484,7 @@ readonly class Mensaje extends Helper
 			[
 				$id_mensaje
 			],
-			SqlReturn::Bind
+			SqlReturn::BindResult
 		);
 
 		if ($autor !== $id_usuario) {
@@ -514,16 +514,14 @@ readonly class Mensaje extends Helper
 				$id_usuario,
 				$id_grupo
 			],
-			SqlReturn::Bind
+			SqlReturn::BindResult
 		);
 
-		if ($rol === 'miembro' || $rol === 'fundador') {
-			return;
+		if ($rol !== 'miembro' && $rol !== 'fundador') {
+			$this->status = 403;
+			$this->errors->setIntegrityError('No formas parte del grupo');
+			$this->checkIntegrityErrors();
 		}
-
-		$this->status = 403;
-		$this->errors->setIntegrityError('No formas parte del grupo');
-		$this->checkIntegrityErrors();
 	}
 
 	// MARK: CREATE MENSAJE
@@ -590,9 +588,7 @@ readonly class Mensaje extends Helper
 			]
 		);
 
-		// $num_filas === 1
 		$this->status = 204;
-		// : $this->status = 404;
 		$this->sendResponse();
 	}
 
@@ -636,7 +632,7 @@ readonly class Mensaje extends Helper
 				$id_receptor,
 				$id_emisor
 			],
-			SqlReturn::Array
+			SqlReturn::FetchAll
 		);
 
 		return $mensajes;
@@ -676,7 +672,7 @@ readonly class Mensaje extends Helper
 				$id_grupo,
 				$id_grupo
 			],
-			SqlReturn::Array
+			SqlReturn::FetchAll
 		);
 
 		return $mensajes;

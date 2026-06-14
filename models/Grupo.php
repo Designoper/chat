@@ -38,7 +38,7 @@ final readonly class Grupo extends Helper
 			[
 				$id_usuario
 			],
-			SqlReturn::Array
+			SqlReturn::FetchAll
 		);
 
 		return $grupos;
@@ -66,7 +66,7 @@ final readonly class Grupo extends Helper
 			[
 				$id_grupo
 			],
-			SqlReturn::Array
+			SqlReturn::FetchAll
 		);
 
 		return $grupos;
@@ -92,7 +92,7 @@ final readonly class Grupo extends Helper
 				$id_usuario,
 				$id_grupo
 			],
-			SqlReturn::Bind
+			SqlReturn::BindResult
 		);
 
 		if ($rol !== 'fundador') {
@@ -122,7 +122,7 @@ final readonly class Grupo extends Helper
 				$id_usuario,
 				$id_grupo
 			],
-			SqlReturn::Bind
+			SqlReturn::BindResult
 		);
 
 		if ($rol !== 'fundador' && $rol !== 'miembro') {
@@ -155,7 +155,7 @@ final readonly class Grupo extends Helper
 				[
 					$nombre_grupo
 				],
-				SqlReturn::Id
+				SqlReturn::InsertId
 			);
 		} catch (\mysqli_sql_exception $error) {
 

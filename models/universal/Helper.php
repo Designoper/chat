@@ -6,10 +6,10 @@ require_once __DIR__ . '/MysqliConnect.php';
 
 enum SqlReturn
 {
-	case Array;
-	case ArraySimple;
-	case Id;
-	case Bind;
+	case FetchAll;
+	case FetchAssoc;
+	case InsertId;
+	case BindResult;
 }
 
 abstract readonly class Helper extends MysqliConnect
@@ -104,19 +104,19 @@ abstract readonly class Helper extends MysqliConnect
 		$query->execute();
 
 		switch ($type) {
-			case SqlReturn::Array:
+			case SqlReturn::FetchAll:
 				$result = $query->get_result()->fetch_all(MYSQLI_ASSOC);
 				break;
 
-			case SqlReturn::ArraySimple:
+			case SqlReturn::FetchAssoc:
 				$result = $query->get_result()->fetch_assoc();
 				break;
 
-			case SqlReturn::Id:
+			case SqlReturn::InsertId:
 				$result = (int) $query->insert_id;
 				break;
 
-			case SqlReturn::Bind:
+			case SqlReturn::BindResult:
 				$query->bind_result($result);
 				$query->fetch();
 				break;

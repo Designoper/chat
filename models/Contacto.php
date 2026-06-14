@@ -112,7 +112,7 @@ final readonly class Contacto extends Helper
 				$id_usuario,
 				$id_usuario
 			],
-			SqlReturn::Array
+			SqlReturn::FetchAll
 		);
 
 		return $contactos;
