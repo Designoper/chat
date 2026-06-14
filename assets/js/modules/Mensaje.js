@@ -6,7 +6,7 @@ export default class Mensaje extends Grupo {
 	urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
 
-	params = new URLSearchParams(location.search);
+	urlSearchparams = new URLSearchParams(location.search);
 	ringtone = new Audio("../../../assets/audio/ringtone.mp3");
 
 	mostrado = false;
@@ -32,19 +32,15 @@ export default class Mensaje extends Grupo {
 	}
 
 	delete() {
-		for (const key of this.params.keys()) {
-			if (!key.startsWith("id")) {
-				this.params.delete(key);
-			}
-		}
+		this.urlSearchparams.delete('nombre');
 	}
 
 	setObj() {
-		this.paramsObj = Object.fromEntries(this.params);
+		this.paramsObj = Object.fromEntries(this.urlSearchparams);
 	}
 
 	setForm() {
-		for (const [key, value] of this.params.entries()) {
+		for (const [key, value] of this.urlSearchparams.entries()) {
 			this.dom.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}">`);
 		}
 	}
@@ -54,12 +50,12 @@ export default class Mensaje extends Grupo {
 
 		marcador
 			? marcador.scrollIntoView({
-				behavior: "smooth",
+				behavior: "instant",
 				block: "center"
 			})
 			: globalThis.scrollTo({
 				top: document.body.scrollHeight,
-				behavior: "smooth"
+				behavior: "instant"
 			});
 	}
 
@@ -76,7 +72,7 @@ export default class Mensaje extends Grupo {
 
 	streamMensajes() {
 
-		this.urlStreamMensajes.search = this.params;
+		this.urlStreamMensajes.search = this.urlSearchparams;
 		const evtSource = new EventSource(this.urlStreamMensajes);
 		this.mostrado = true;
 
@@ -116,7 +112,7 @@ export default class Mensaje extends Grupo {
 		});
 	}
 
-	mensajesTemplate(fetchedMensajes) {
+	mensajesTemplate(fetchedMensajes = new Array) {
 
 		const mensajes = fetchedMensajes.map(mensaje => {
 
@@ -192,14 +188,14 @@ export default class Mensaje extends Grupo {
 
 	async writeChat() {
 
-		if (this.params.size === 2) {
-			this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre'));
+		if (this.urlSearchparams.size === 2) {
+			this.dom.h1.insertAdjacentHTML("afterbegin", this.urlSearchparams.get('nombre'));
 
-			if (this.params.has('id_grupo')) {
+			if (this.urlSearchparams.has('id_grupo')) {
 				const formInvitar =
 					`
 						<form method="POST" name="invitar">
-							<input type="hidden" value="${this.params.get('id_grupo')}" name="id_grupo">
+							<input type="hidden" value="${this.urlSearchparams.get('id_grupo')}" name="id_grupo">
 							<select name="id_invitado" id="id_invitado" required>
 								<option value="">Añadir a...</option>
 							</select>
@@ -209,7 +205,7 @@ export default class Mensaje extends Grupo {
 
 				this.dom.header.insertAdjacentHTML('beforeend', formInvitar);
 
-				this.streamNoMiembros(this.params.get('id_grupo'));
+				this.streamNoMiembros(this.urlSearchparams.get('id_grupo'));
 			}
 		}
 	}

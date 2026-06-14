@@ -10,7 +10,7 @@ export default class Conexion extends Mensaje {
 	// MARK: STREAM CONEXION
 	streamConexion() {
 
-		this.urlStreamConexion.search = this.params;
+		this.urlStreamConexion.search = this.urlSearchparams;
 		const evtSource = new EventSource(this.urlStreamConexion);
 
 		evtSource.addEventListener("keepalive", async () => {
