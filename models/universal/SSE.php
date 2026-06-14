@@ -25,18 +25,8 @@ abstract readonly class SSE extends Response
 			ob_end_clean();
 		}
 
-		// Headers SSE
 		header("Content-Type: text/event-stream");
 		header("Cache-Control: no-cache");
-		header("Connection: keep-alive");
-		header("X-Accel-Buffering: no");
-
-		ini_set('output_buffering', 'off');
-		ini_set('zlib.output_compression', 0);
-
-		// Flush inicial
-		echo str_pad('', 4096) . "\n";
-		flush();
 	}
 
 	protected function sendEvent(string $event, mixed $data): void
