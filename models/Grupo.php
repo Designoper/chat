@@ -136,8 +136,6 @@ final readonly class Grupo extends Helper
 
 	public function createGrupo(): void
 	{
-		$this->checkAllowedvalues(['nombre_grupo'], 1);
-
 		$this->setNombre('nombre_grupo');
 
 		$this->checkValidationErrors();
@@ -193,8 +191,6 @@ final readonly class Grupo extends Helper
 
 	public function invitar(): void
 	{
-		$this->checkAllowedvalues(['id_grupo', 'id_invitado'], 2);
-
 		$this->setId('id_grupo');
 		$this->setId('id_invitado');
 
@@ -226,8 +222,6 @@ final readonly class Grupo extends Helper
 
 	public function aceptarInvitacion(): void
 	{
-		$this->checkAllowedvalues(['id_grupo'], 1);
-
 		$this->setId('id_grupo');
 
 		$this->checkValidationErrors();
@@ -259,8 +253,6 @@ final readonly class Grupo extends Helper
 
 	public function rechazarInvitacion(): void
 	{
-		$this->checkAllowedvalues(['id_grupo'], 1);
-
 		$this->setId('id_grupo');
 
 		$this->checkValidationErrors();
@@ -291,8 +283,6 @@ final readonly class Grupo extends Helper
 
 	public function abandonarGrupo(): void
 	{
-		$this->checkAllowedvalues(['id_grupo'], 1);
-
 		$this->setId('id_grupo');
 
 		$this->checkValidationErrors();
@@ -324,8 +314,6 @@ final readonly class Grupo extends Helper
 
 	public function deleteGrupo(): void
 	{
-		$this->checkAllowedvalues(['id_grupo'], 1);
-
 		$this->setId('id_grupo');
 		$this->checkValidationErrors();
 
@@ -385,8 +373,6 @@ final readonly class Grupo extends Helper
 
 	public function streamGruposNoMiembro(): void
 	{
-		$this->checkAllowedvalues(['id_grupo'], 1);
-
 		$this->setId('id_grupo');
 
 		$this->checkValidationErrors();

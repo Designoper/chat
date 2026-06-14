@@ -341,12 +341,6 @@ readonly class Mensaje extends Helper
 
 	public function createMensaje(): void
 	{
-		// $this->checkAllowedvalues([
-		// 	'contenido',
-		// 	'id_receptor',
-		// 	"id_grupo"
-		// ], 2, 2);
-
 		$columna = null;
 		$id_objetivo = null;
 
@@ -513,20 +507,6 @@ readonly class Mensaje extends Helper
 
 	public function streamMensajes(): void
 	{
-		// $this->checkAllowedvalues(
-		// 	[
-		// 		'id_receptor',
-		// 		'id_grupo'
-		// 	],
-		// 	1,
-		// 	1,
-		// 	[
-		// 		'id_receptor'
-		// 	]
-		// );
-
-		$this->checkValidationErrors();
-
 		$mensajes = null;
 
 		if (isset($_GET['id_receptor'])) {
@@ -546,8 +526,6 @@ readonly class Mensaje extends Helper
 			$this->errors->setValidationError("No se ha especificado un receptor o grupo.");
 			$this->checkValidationErrors();
 		}
-
-		$this->checkValidationErrors();
 
 		$this->setSSE();
 
