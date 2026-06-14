@@ -39,12 +39,6 @@ abstract readonly class Helper extends MysqliConnect
 			}
 		}
 
-		// foreach ($allowed as $allowedKey) {
-		// 	if (!in_array($key, $allowed)) {
-		// 		$this->errors->setValidationError("El valor $allowedKey no está permitido.");
-		// 	}
-		// }
-
 		foreach ($necessary as $requiredKey) {
 			if (!isset($_REQUEST[$requiredKey])) {
 				$this->errors->setValidationError("El valor $requiredKey es obligatorio.");

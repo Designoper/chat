@@ -513,17 +513,17 @@ readonly class Mensaje extends Helper
 
 	public function streamMensajes(): void
 	{
-		$this->checkAllowedvalues(
-			[
-				'id_receptor',
-				'id_grupo'
-			],
-			1,
-			1,
-			[
-				'id_receptor'
-			]
-		);
+		// $this->checkAllowedvalues(
+		// 	[
+		// 		'id_receptor',
+		// 		'id_grupo'
+		// 	],
+		// 	1,
+		// 	1,
+		// 	[
+		// 		'id_receptor'
+		// 	]
+		// );
 
 		$this->checkValidationErrors();
 
@@ -531,9 +531,13 @@ readonly class Mensaje extends Helper
 
 		if (isset($_GET['id_receptor'])) {
 			$this->setId('id_receptor');
+			$this->checkValidationErrors();
+
 			$mensajes = fn() => $this->getNuevosMensajesDirectos();
 		} else if (isset($_GET['id_grupo'])) {
 			$this->setId('id_grupo');
+			$this->checkValidationErrors();
+
 			$this->isMiembroGrupo();
 			$mensajes = fn() => $this->getNuevosMensajesGrupales();
 		}
