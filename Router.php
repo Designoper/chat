@@ -94,16 +94,13 @@ final class Router
                 }
 
                 http_response_code(404);
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'message' => 'La ruta solicitada no existe',
-                    'requested_path' => $requestUri
-                ], JSON_UNESCAPED_UNICODE);
+                header("Content-Type: application/json");
+                echo json_encode("La ruta solicitada no existe: $requestUri", JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                 return;
 
             default:
                 http_response_code(405);
-                header('Allow: GET, POST');
+                header("Allow: GET, POST");
         }
     }
 }

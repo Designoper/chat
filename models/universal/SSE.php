@@ -32,19 +32,19 @@ abstract readonly class SSE extends Response
 	protected function sendEvent(string $event, mixed $data): void
 	{
 		echo "event: $event\n";
-		echo "data: " . json_encode($data) . "\n\n";
+		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
 		flush();
 	}
 
 	protected function sendMessage(mixed $data): void
 	{
-		echo "data: " . json_encode($data) . "\n\n";
+		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
 		flush();
 	}
 
 	protected function keepAlive(): void
 	{
-		echo "keepalive\n\n";
+		echo ": keepalive\n\n";
 		flush();
 	}
 }
