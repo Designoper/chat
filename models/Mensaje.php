@@ -341,16 +341,34 @@ readonly class Mensaje extends Helper
 
 	public function createMensaje(): void
 	{
+		// $this->checkAllowedvalues([
+		// 	'contenido',
+		// 	'id_receptor',
+		// 	"id_grupo"
+		// ], 2, 2);
+
+		$columna = null;
+		$id_objetivo = null;
+
 		if (isset($_POST['id_receptor'])) {
 			$this->setId('id_receptor');
+			$this->checkValidationErrors();
+
 			$columna = 'id_receptor';
 			$id_objetivo = $this->id_receptor;
 		}
 
 		if (isset($_POST['id_grupo'])) {
 			$this->setId('id_grupo');
+			$this->checkValidationErrors();
+
 			$columna = 'id_grupo';
 			$id_objetivo = $this->id_grupo;
+		}
+
+		if ($columna === null || $id_objetivo === null) {
+			$this->errors->setValidationError("No se ha especificado un id_receptor o id_grupo.");
+			$this->checkValidationErrors();
 		}
 
 		$this->setContenido('contenido');
@@ -495,21 +513,34 @@ readonly class Mensaje extends Helper
 
 	public function streamMensajes(): void
 	{
-		$this->checkAllowedvalues([
-			'id_receptor',
-			'id_grupo'
-		], 1);
+		$this->checkAllowedvalues(
+			[
+				'id_receptor',
+				'id_grupo'
+			],
+			1,
+			1,
+			[
+				'id_receptor'
+			]
+		);
 
 		$this->checkValidationErrors();
+
+		$mensajes = null;
 
 		if (isset($_GET['id_receptor'])) {
 			$this->setId('id_receptor');
 			$mensajes = fn() => $this->getNuevosMensajesDirectos();
 		} else if (isset($_GET['id_grupo'])) {
-
 			$this->setId('id_grupo');
 			$this->isMiembroGrupo();
 			$mensajes = fn() => $this->getNuevosMensajesGrupales();
+		}
+
+		if ($mensajes === null) {
+			$this->errors->setValidationError("No se ha especificado un receptor o grupo.");
+			$this->checkValidationErrors();
 		}
 
 		$this->checkValidationErrors();

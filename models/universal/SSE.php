@@ -20,7 +20,6 @@ abstract readonly class SSE extends Response
 		set_time_limit(0);
 		ignore_user_abort(false);
 
-		// Limpia buffers previos
 		while (ob_get_level() > 0) {
 			ob_end_clean();
 		}

@@ -47,7 +47,7 @@ final readonly class Usuario extends Helper
 
 	public function createUsuario(): void
 	{
-		$this->checkAllowedvalues(['nombre_usuario', 'password'], 2);
+		$this->checkAllowedvalues(['nombre_usuario', 'password'], 2, 2);
 
 		$this->setNombre('nombre_usuario');
 		$this->setPassword('password');
@@ -92,7 +92,7 @@ final readonly class Usuario extends Helper
 
 	public function login(): void
 	{
-		$this->checkAllowedvalues(['nombre_usuario', 'password'], 2);
+		$this->checkAllowedvalues(['nombre_usuario', 'password'], 2, 2);
 
 		$this->setNombre('nombre_usuario');
 		$this->setPassword('password');

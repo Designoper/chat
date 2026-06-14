@@ -23,16 +23,31 @@ abstract readonly class Helper extends MysqliConnect
 
 	// MARK: SETTERS
 
-	protected function checkAllowedvalues(array $allowed, int $max): void
+	protected function checkAllowedvalues(array $allowed, int $max, int $min = 0, array $necessary = []): void
 	{
 		if (count($_REQUEST) > $max) {
 			$this->errors->setValidationError("No se puede enviar más de $max valores.");
-			// $this->checkValidationErrors();
+		}
+
+		if (count($_REQUEST) < $min) {
+			$this->errors->setValidationError("No se puede enviar menos de $min valores.");
 		}
 
 		foreach ($_REQUEST as $key => $value) {
 			if (!in_array($key, $allowed)) {
 				$this->errors->setValidationError("El valor $key no está permitido.");
+			}
+		}
+
+		// foreach ($allowed as $allowedKey) {
+		// 	if (!in_array($key, $allowed)) {
+		// 		$this->errors->setValidationError("El valor $allowedKey no está permitido.");
+		// 	}
+		// }
+
+		foreach ($necessary as $requiredKey) {
+			if (!isset($_REQUEST[$requiredKey])) {
+				$this->errors->setValidationError("El valor $requiredKey es obligatorio.");
 			}
 		}
 
