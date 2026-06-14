@@ -20,13 +20,10 @@ final class Router
 
         // Usuarios
         $this->setRoute($GET, 'usuarios/current', [Usuario::class, 'currentUsuario']);
-        $this->setRoute($GET, 'usuarios$', [Usuario::class, 'readUsuarios']);
 
         // Mensajes
         $this->setRoute($GET, 'mensajes/stream', [Mensaje::class, 'streamMensajes']);
-        // $this->setRoute($GET, 'mensajes/no-leidos', [Mensaje::class, 'countUnreadMessages']);
         $this->setRoute($GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']);
-        // $this->setRoute($GET, 'mensajes/ultimo-mensaje', [Mensaje::class, 'getUltimoMensaje']);
         $this->setRoute($GET, 'mensajes', [Mensaje::class, 'readMensajes']);
 
         // Grupos
@@ -41,7 +38,6 @@ final class Router
 
         // Contactos
         $this->setRoute($GET, 'contactos/stream', [Contacto::class, 'streamContactos']);
-        // $this->setRoute($GET, 'contactos', [Contacto::class, 'readContactos']);
 
         // Usuarios
         $this->setRoute($POST, 'usuarios/crear', [Usuario::class, 'createUsuario']);
