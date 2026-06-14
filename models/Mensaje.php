@@ -10,7 +10,6 @@ readonly class Mensaje extends Helper
 	protected string $contenido;
 	protected int $id_receptor;
 	protected int $id_grupo;
-	protected int $ultimo_id;
 
 	public function __construct()
 	{
@@ -116,12 +115,12 @@ readonly class Mensaje extends Helper
 	private function setUltimoIdDirecto(): void
 	{
 		$this->setId('id_receptor');
-		$this->setId('ultimo_id');
+		$this->setId('id_mensaje');
 
 		$this->checkValidationErrors();
 
 		$id_receptor = $this->id_receptor;
-		$ultimo_id = $this->ultimo_id;
+		$id_mensaje = $this->id_mensaje;
 		$id_usuario = $this->session_user;
 
 		$statement =
@@ -136,8 +135,8 @@ readonly class Mensaje extends Helper
 			[
 				$id_usuario,
 				$id_receptor,
-				$ultimo_id,
-				$ultimo_id
+				$id_mensaje,
+				$id_mensaje
 			]
 		);
 
@@ -150,12 +149,12 @@ readonly class Mensaje extends Helper
 	private function setUltimoIdGrupal(): void
 	{
 		$this->setId('id_grupo');
-		$this->setId('ultimo_id');
+		$this->setId('id_mensaje');
 
 		$this->checkValidationErrors();
 
 		$id_grupo = $this->id_grupo;
-		$ultimo_id = $this->ultimo_id;
+		$id_mensaje = $this->id_mensaje;
 		$id_usuario = $this->session_user;
 
 		$statement =
@@ -170,8 +169,8 @@ readonly class Mensaje extends Helper
 			[
 				$id_usuario,
 				$id_grupo,
-				$ultimo_id,
-				$ultimo_id
+				$id_mensaje,
+				$id_mensaje
 			]
 		);
 

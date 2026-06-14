@@ -69,7 +69,7 @@ export default class Mensaje extends Grupo {
 		this.dom.output.innerHTML = mensajes;
 
 		if (response.json.length > 0) {
-			this.paramsObj.ultimo_id = response.json[response.json.length - 1].id_mensaje;
+			this.paramsObj.id_mensaje = response.json[response.json.length - 1].id_mensaje;
 			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.paramsObj);
 		}
 	}
@@ -90,7 +90,7 @@ export default class Mensaje extends Grupo {
 
 		evtSource.addEventListener("new mensaje", async (event) => {
 			const mensaje = JSON.parse(event.data);
-			this.paramsObj.ultimo_id = mensaje;
+			this.paramsObj.id_mensaje = mensaje;
 
 			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.paramsObj);
 		});
@@ -193,9 +193,7 @@ export default class Mensaje extends Grupo {
 	async writeChat() {
 
 		if (this.params.size === 2) {
-			if (this.params.has('nombre')) {
-				this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre'));
-			}
+			this.dom.h1.insertAdjacentHTML("afterbegin", this.params.get('nombre'));
 
 			if (this.params.has('id_grupo')) {
 				const formInvitar =
