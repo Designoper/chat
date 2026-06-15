@@ -124,13 +124,13 @@ final readonly class Contacto extends Helper
 	{
 		$this->setSSE();
 
-		$contactos = [];
-
 		while (true) {
 
 			if (connection_aborted()) {
 				break;
 			}
+
+			static $contactos = [];
 
 			$contactosUpdate = $this->obtainContactos();
 

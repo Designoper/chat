@@ -343,13 +343,13 @@ final readonly class Grupo extends Helper
 	{
 		$this->setSSE();
 
-		$gruposPendientes = [];
-
 		while (true) {
 
 			if (connection_aborted()) {
 				break;
 			}
+
+			static $gruposPendientes = [];
 
 			$gruposPendientesUpdate = $this->obtainGruposPendiente();
 
@@ -375,13 +375,13 @@ final readonly class Grupo extends Helper
 
 		$this->setSSE();
 
-		$noMiembros = [];
-
 		while (true) {
 
 			if (connection_aborted()) {
 				break;
 			}
+
+			static $noMiembros = [];
 
 			$noMiembrosUpdate = $this->readGruposNoMiembro();
 

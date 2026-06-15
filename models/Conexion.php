@@ -150,8 +150,6 @@ final readonly class Conexion extends Mensaje
 
 	public function streamConexion(): void
 	{
-		$this->setSSE();
-
 		if (isset($_GET['id_receptor'])) {
 			$this->setId('id_receptor');
 			$getConexion = fn() => $this->getConexionDirecta();
@@ -166,7 +164,7 @@ final readonly class Conexion extends Mensaje
 
 		$this->checkValidationErrors();
 
-		$array = [];
+		$this->setSSE();
 
 		while (true) {
 
@@ -175,6 +173,8 @@ final readonly class Conexion extends Mensaje
 			}
 
 			$conexion = $getConexion();
+
+			static $array = [];
 
 			$newArray = [];
 
