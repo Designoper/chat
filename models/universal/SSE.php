@@ -45,10 +45,4 @@ abstract readonly class SSE extends Response
 		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
 		flush();
 	}
-
-	protected function sendMessage(mixed $data): void
-	{
-		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
-		flush();
-	}
 }
