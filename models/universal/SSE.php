@@ -33,8 +33,9 @@ abstract readonly class SSE extends Response
 		static $lastPing = 0;
 
 		if (time() - $lastPing > 10) {
-			$this->keepAlive();
 			$lastPing = time();
+			echo ": keepalive\n\n";
+			flush();
 		}
 	}
 
@@ -48,12 +49,6 @@ abstract readonly class SSE extends Response
 	protected function sendMessage(mixed $data): void
 	{
 		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
-		flush();
-	}
-
-	private function keepAlive(): void
-	{
-		echo ": keepalive\n\n";
 		flush();
 	}
 }
