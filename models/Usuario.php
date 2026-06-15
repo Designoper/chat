@@ -14,34 +14,6 @@ final readonly class Usuario extends Helper
 		parent::__construct();
 	}
 
-	// MARK: READ USUARIOS
-
-	public function readUsuarios(): void
-	{
-		$this->authEndpoint();
-
-		$id_usuario = $this->session_user;
-
-		$statement =
-			"SELECT id_usuario, nombre_usuario
-			 FROM usuarios
-			 WHERE id_usuario != ?
-			 ORDER BY nombre_usuario ASC";
-
-		$usuarios = $this->sqlAll(
-			$statement,
-			'i',
-			[
-				$id_usuario
-			],
-			SqlReturn::FetchAll
-		);
-
-		$this->status = 200;
-		$this->content = $usuarios;
-		$this->sendResponse();
-	}
-
 	// MARK: CREATE
 
 	public function createUsuario(): void
@@ -102,7 +74,7 @@ final readonly class Usuario extends Helper
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
-		$row = $this->sqlAll(
+		$usuario = $this->sqlAll(
 			$statement,
 			's',
 			[
@@ -111,13 +83,13 @@ final readonly class Usuario extends Helper
 			SqlReturn::FetchAssoc
 		);
 
-		if (!$row || !password_verify($password, $row['password'])) {
+		if (!$usuario || !password_verify($password, $usuario['password'])) {
 			$this->status = 401;
 			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
 			$this->checkIntegrityErrors();
 		}
 
-		$_SESSION['id_usuario'] = $row['id_usuario'];
+		$_SESSION['id_usuario'] = $usuario['id_usuario'];
 
 		$this->status = 200;
 		$this->sendResponse();
