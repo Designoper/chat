@@ -343,8 +343,6 @@ final readonly class Grupo extends Helper
 	{
 		$this->setSSE();
 
-		$lastPing = 0;
-
 		$gruposPendientes = [];
 
 		while (true) {
@@ -360,10 +358,7 @@ final readonly class Grupo extends Helper
 				$gruposPendientes = $gruposPendientesUpdate;
 			}
 
-			if (time() - $lastPing > 10) {
-				$this->keepAlive();
-				$lastPing = time();
-			}
+			$this->heartbeat();
 
 			usleep(300000); // 0.3s
 		}
@@ -380,8 +375,6 @@ final readonly class Grupo extends Helper
 
 		$this->setSSE();
 
-		$lastPing = 0;
-
 		$noMiembros = [];
 
 		while (true) {
@@ -397,10 +390,7 @@ final readonly class Grupo extends Helper
 				$noMiembros = $noMiembrosUpdate;
 			}
 
-			if (time() - $lastPing > 10) {
-				$this->keepAlive();
-				$lastPing = time();
-			}
+			$this->heartbeat();
 
 			usleep(300000); // 0.3s
 		}

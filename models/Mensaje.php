@@ -528,8 +528,6 @@ readonly class Mensaje extends Helper
 
 		$this->setSSE();
 
-		$lastPing = 0;
-
 		while (true) {
 
 			if (connection_aborted()) {
@@ -548,10 +546,7 @@ readonly class Mensaje extends Helper
 				$this->sendEvent('new mensaje', $ultimo_id);
 			}
 
-			if (time() - $lastPing > 10) {
-				$this->keepAlive();
-				$lastPing = time();
-			}
+			$this->heartbeat();
 
 			usleep(300000); // 0.3s
 		}

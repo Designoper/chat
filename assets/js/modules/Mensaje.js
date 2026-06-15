@@ -26,17 +26,20 @@ export default class Mensaje extends Grupo {
 		super();
 	}
 
+	// MARK: GET ULTIMO ID
+
 	async getUltimoId() {
-		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID, 'get', this.paramsObj);
-		this.prueba = response.json.id_mensaje;
+		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID, 'get', this.urlSearchparamsObj);
+		this.ultimoIdLeido = response.json.id_mensaje;
 	}
 
 	delete() {
 		this.urlSearchparams.delete('nombre');
+		// this.urlSearchparams.delete('id_receptor2');
 	}
 
 	setObj() {
-		this.paramsObj = Object.fromEntries(this.urlSearchparams);
+		this.urlSearchparamsObj = Object.fromEntries(this.urlSearchparams);
 	}
 
 	setForm() {
@@ -44,6 +47,8 @@ export default class Mensaje extends Grupo {
 			this.dom.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}">`);
 		}
 	}
+
+	// MARK: SCROLL TO CURRENT
 
 	scrollToCurrent() {
 		const marcador = this.dom.output.querySelector("#marcador");
@@ -59,16 +64,20 @@ export default class Mensaje extends Grupo {
 			});
 	}
 
+	// MARK: GET MENSAJES
+
 	async getMensajes() {
-		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.paramsObj);
+		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.urlSearchparamsObj);
 		const mensajes = this.mensajesTemplate(response.json);
 		this.dom.output.innerHTML = mensajes;
 
 		if (response.json.length > 0) {
-			this.paramsObj.id_mensaje = response.json[response.json.length - 1].id_mensaje;
-			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.paramsObj);
+			this.urlSearchparamsObj.id_mensaje = response.json[response.json.length - 1].id_mensaje;
+			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.urlSearchparamsObj);
 		}
 	}
+
+	// MARK: STREAM MENSAJES
 
 	streamMensajes() {
 
@@ -86,9 +95,9 @@ export default class Mensaje extends Grupo {
 
 		evtSource.addEventListener("new mensaje", async (event) => {
 			const mensaje = JSON.parse(event.data);
-			this.paramsObj.id_mensaje = mensaje;
+			this.urlSearchparamsObj.id_mensaje = mensaje;
 
-			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.paramsObj);
+			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.urlSearchparamsObj);
 		});
 	}
 
@@ -112,13 +121,15 @@ export default class Mensaje extends Grupo {
 		});
 	}
 
+	// MARK: MENSAJES TEMPLATE
+
 	mensajesTemplate(fetchedMensajes = new Array) {
 
 		const mensajes = fetchedMensajes.map(mensaje => {
 
 			let marcador = "";
 
-			if (!this.mostrado && mensaje.id_mensaje > this.prueba) {
+			if (!this.mostrado && mensaje.id_mensaje > this.ultimoIdLeido) {
 				marcador = "<p id='marcador'>Nuevos mensajes</p>";
 				this.mostrado = true; // ← ya no se vuelve a mostrar
 			}
@@ -175,9 +186,13 @@ export default class Mensaje extends Grupo {
 		return mensajes.join("");
 	}
 
+	// MARK: CREATE MENSAJES
+
 	async createMensaje(form) {
 		await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR);
 	}
+
+	// MARK: DELETE MENSAJES
 
 	async deleteMensaje(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.ELIMINAR);
@@ -185,6 +200,8 @@ export default class Mensaje extends Grupo {
 			form.closest("article").remove();
 		}
 	}
+
+	// MARK: WRITE CHAT
 
 	async writeChat() {
 

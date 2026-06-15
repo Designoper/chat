@@ -16,7 +16,6 @@ export default class Fetch {
 		// const request = new Request;
 		const init = {};
 		init.method = method;
-		init.cache = "no-store";
 
 		if (method === "POST") {
 			init.body = data instanceof FormData
@@ -31,11 +30,11 @@ export default class Fetch {
 		const url = new URL(endpoint);
 
 		if (method === "GET") {
-			const params = data instanceof FormData
+			const urlSearchParams = data instanceof FormData
 				? new URLSearchParams(data)
 				: new URLSearchParams(this.objToFormdata(data));
 
-			url.search = params;
+			url.search = urlSearchParams;
 		}
 
 		return url;

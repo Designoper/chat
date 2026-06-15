@@ -166,8 +166,6 @@ final readonly class Conexion extends Mensaje
 
 		$this->checkValidationErrors();
 
-		$lastPing = 0;
-
 		$array = [];
 
 		while (true) {
@@ -194,10 +192,7 @@ final readonly class Conexion extends Mensaje
 				$array = $newArray;
 			}
 
-			if (time() - $lastPing > 5) {
-				$this->sendEvent("keepalive", "");
-				$lastPing = time();
-			}
+			$this->heartbeat();
 
 			usleep(300000);
 		}

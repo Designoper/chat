@@ -28,6 +28,16 @@ abstract readonly class SSE extends Response
 		header("Cache-Control: no-cache");
 	}
 
+	protected function heartbeat(): void
+	{
+		static $lastPing = 0;
+
+		if (time() - $lastPing > 10) {
+			$this->keepAlive();
+			$lastPing = time();
+		}
+	}
+
 	protected function sendEvent(string $event, mixed $data): void
 	{
 		echo "event: $event\n";
@@ -41,7 +51,7 @@ abstract readonly class SSE extends Response
 		flush();
 	}
 
-	protected function keepAlive(): void
+	private function keepAlive(): void
 	{
 		echo ": keepalive\n\n";
 		flush();

@@ -14,7 +14,7 @@ export default class Conexion extends Mensaje {
 		const evtSource = new EventSource(this.urlStreamConexion);
 
 		evtSource.addEventListener("keepalive", async () => {
-			await this.fetchWithoutForm(this.ENDPOINTS.POST.CONEXION.ESTADO, 'post', this.paramsObj);
+			await this.fetchWithoutForm(this.ENDPOINTS.POST.CONEXION.ESTADO, 'post', this.urlSearchparamsObj);
 		});
 
 		evtSource.addEventListener("conexion directo", (event) => {

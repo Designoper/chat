@@ -124,8 +124,6 @@ final readonly class Contacto extends Helper
 	{
 		$this->setSSE();
 
-		$lastPing = 0;
-
 		$contactos = [];
 
 		while (true) {
@@ -141,10 +139,7 @@ final readonly class Contacto extends Helper
 				$contactos = $contactosUpdate;
 			}
 
-			if (time() - $lastPing > 10) {
-				$this->keepAlive();
-				$lastPing = time();
-			}
+			$this->heartbeat();
 
 			usleep(300000); // 0.3s
 		}
