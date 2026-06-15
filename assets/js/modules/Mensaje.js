@@ -6,7 +6,7 @@ export default class Mensaje extends Grupo {
 	urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
 
-	urlSearchparams = new URLSearchParams(location.search);
+	urlSearchParams = new URLSearchParams(location.search);
 	ringtone = new Audio("../../../assets/audio/ringtone.mp3");
 
 	mostrado = false;
@@ -34,16 +34,16 @@ export default class Mensaje extends Grupo {
 	}
 
 	delete() {
-		this.urlSearchparams.delete('nombre');
+		this.urlSearchParams.delete('nombre');
 		// this.urlSearchparams.delete('id_receptor2');
 	}
 
 	setObj() {
-		this.urlSearchparamsObj = Object.fromEntries(this.urlSearchparams);
+		this.urlSearchparamsObj = Object.fromEntries(this.urlSearchParams);
 	}
 
 	setForm() {
-		for (const [key, value] of this.urlSearchparams.entries()) {
+		for (const [key, value] of this.urlSearchParams.entries()) {
 			this.dom.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}">`);
 		}
 	}
@@ -81,7 +81,7 @@ export default class Mensaje extends Grupo {
 
 	streamMensajes() {
 
-		this.urlStreamMensajes.search = this.urlSearchparams;
+		this.urlStreamMensajes.search = this.urlSearchParams;
 		const evtSource = new EventSource(this.urlStreamMensajes);
 		this.mostrado = true;
 
@@ -205,14 +205,14 @@ export default class Mensaje extends Grupo {
 
 	async writeChat() {
 
-		if (this.urlSearchparams.size === 2) {
-			this.dom.h1.insertAdjacentHTML("afterbegin", this.urlSearchparams.get('nombre'));
+		if (this.urlSearchParams.size === 2) {
+			this.dom.h1.insertAdjacentHTML("afterbegin", this.urlSearchParams.get('nombre'));
 
-			if (this.urlSearchparams.has('id_grupo')) {
+			if (this.urlSearchParams.has('id_grupo')) {
 				const formInvitar =
 					`
 						<form method="POST" name="invitar">
-							<input type="hidden" value="${this.urlSearchparams.get('id_grupo')}" name="id_grupo">
+							<input type="hidden" value="${this.urlSearchParams.get('id_grupo')}" name="id_grupo">
 							<select name="id_invitado" id="id_invitado" required>
 								<option value="">Añadir a...</option>
 							</select>
@@ -222,7 +222,7 @@ export default class Mensaje extends Grupo {
 
 				this.dom.header.insertAdjacentHTML('beforeend', formInvitar);
 
-				this.streamNoMiembros(this.urlSearchparams.get('id_grupo'));
+				this.streamNoMiembros(this.urlSearchParams.get('id_grupo'));
 			}
 		}
 	}
