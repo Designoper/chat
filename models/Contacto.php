@@ -13,17 +13,6 @@ final readonly class Contacto extends Helper
 		$this->authEndpoint();
 	}
 
-	// MARK: READ CONTACTOS
-
-	public function readContactos(): void
-	{
-		$contactos = $this->obtainContactos();
-
-		$this->status = 200;
-		$this->content = $contactos;
-		$this->sendResponse();
-	}
-
 	// MARK: OBTAIN CONTACTOS
 
 	private function obtainContactos(): array
