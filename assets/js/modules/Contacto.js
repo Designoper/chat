@@ -8,6 +8,8 @@ export default class Contacto extends Usuario {
 		super();
 	}
 
+	// MARK: CONTACTOS TEMPLATE
+
 	contactosTemplate(fetchedContactos) {
 
 		const contactos = fetchedContactos.map(contacto => {
@@ -54,6 +56,8 @@ export default class Contacto extends Usuario {
 
 		return contactos.join('');
 	}
+
+	// MARK: STREAM CONTACTOS
 
 	streamContactos() {
 
