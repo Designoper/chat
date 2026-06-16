@@ -8,22 +8,6 @@ export default class Contacto extends Usuario {
 		super();
 	}
 
-	// async printContactos() {
-	// 	const contactos = await this.getContactos();
-	// 	const usuariosPrint = this.contactosTemplate(contactos);
-
-	// 	this.contactosMenu.setHTML(`${usuariosPrint}`, {
-	// 		sanitizer: new Sanitizer({
-	// 			comments: false,
-	// 		})
-	// 	});
-	// }
-
-	// async getContactos() {
-	// 	const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.CONTACTOS.TODOS, 'get');
-	// 	return response.json;
-	// }
-
 	contactosTemplate(fetchedContactos) {
 
 		const contactos = fetchedContactos.map(contacto => {
