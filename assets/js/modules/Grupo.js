@@ -51,6 +51,8 @@ export default class Grupo extends Usuario {
 		return grupos.join('');
 	}
 
+	// MARK: GRUPOS CRUD
+
 	async createGrupo(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.CREAR);
 	}
@@ -96,6 +98,8 @@ export default class Grupo extends Usuario {
 			this.invitacionesMenu.innerHTML = content;
 		});
 	}
+
+	// MARK: STREAM NO MIEMBROS
 
 	streamNoMiembros(idGrupo) {
 
