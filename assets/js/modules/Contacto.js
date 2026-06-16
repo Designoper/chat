@@ -8,21 +8,21 @@ export default class Contacto extends Usuario {
 		super();
 	}
 
-	async printContactos() {
-		const contactos = await this.getContactos();
-		const usuariosPrint = this.contactosTemplate(contactos);
+	// async printContactos() {
+	// 	const contactos = await this.getContactos();
+	// 	const usuariosPrint = this.contactosTemplate(contactos);
 
-		this.contactosMenu.setHTML(`${usuariosPrint}`, {
-			sanitizer: new Sanitizer({
-				comments: false,
-			})
-		});
-	}
+	// 	this.contactosMenu.setHTML(`${usuariosPrint}`, {
+	// 		sanitizer: new Sanitizer({
+	// 			comments: false,
+	// 		})
+	// 	});
+	// }
 
-	async getContactos() {
-		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.CONTACTOS.TODOS, 'get');
-		return response.json;
-	}
+	// async getContactos() {
+	// 	const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.CONTACTOS.TODOS, 'get');
+	// 	return response.json;
+	// }
 
 	contactosTemplate(fetchedContactos) {
 
@@ -79,11 +79,7 @@ export default class Contacto extends Usuario {
 			const contactos = JSON.parse(event.data);
 			const content = this.contactosTemplate(contactos);
 
-			this.contactosMenu.setHTML(`${content}`, {
-				sanitizer: new Sanitizer({
-					comments: false,
-				})
-			});
+			this.contactosMenu.setHTML(content, this.sanitizeDefault4);
 		});
 	}
 }

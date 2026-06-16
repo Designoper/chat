@@ -1,6 +1,6 @@
-import Endpoint from "./Endpoint.js";
+import SanitizerAPI from "./SanitizerAPI.js";
 
-export default class TemporalAPI extends Endpoint {
+export default class TemporalAPI extends SanitizerAPI {
 	constructor() {
 		super();
 	}
