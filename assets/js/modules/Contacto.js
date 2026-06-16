@@ -79,7 +79,8 @@ export default class Contacto extends Usuario {
 			const contactos = JSON.parse(event.data);
 			const content = this.contactosTemplate(contactos);
 
-			this.contactosMenu.setHTML(content, this.sanitizeDefault4);
+			// this.contactosMenu.setHTML(content, {this.sanitizeDefault4});
+			this.contactosMenu.setHTML(content, { sanitizer: new Sanitizer({}) });
 		});
 	}
 }
