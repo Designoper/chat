@@ -50,11 +50,19 @@ main {
 
 		button {
 			white-space: nowrap;
+			background-color: rgb(255, 255, 255);
+			padding: 0.25em;
+			border-radius: 1em;
+
+			img {
+				width: 1.25em;
+				/* height: inherit; */
+			}
 		}
 
 		&:has(:invalid) {
 			button:not([type="reset"], [type="button"]) {
-				opacity: 50%;
+				opacity: 25%;
 				cursor: not-allowed;
 			}
 		}
@@ -86,9 +94,13 @@ main {
 				}
 
 				button {
-					padding: 0.5em;
-					border-radius: 0.25em;
-					background-color: white;
+					/* padding: 0.5em; */
+					/* width: 1em; */
+
+					/* background-color: white; */
+					img {
+						width: 1.5em;
+					}
 				}
 			}
 

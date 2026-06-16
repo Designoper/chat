@@ -35,12 +35,16 @@ export default class Grupo extends Usuario {
 
 						<form method="POST" name="aceptarInvitacion">
 							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
-							<button>Aceptar</button>
+							<button>
+								<img src="./assets/img/accept.svg">
+							</button>
 						</form>
 
 						<form method="POST" name="rechazarInvitacion">
 							<input type="hidden" value="${grupo.id_grupo}" name="id_grupo">
-							<button>Rechazar</button>
+							<button>
+								<img src="./assets/img/rechazar.svg">
+							</button>
 						</form>
 					</li>
 				`;

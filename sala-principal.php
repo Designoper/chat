@@ -80,7 +80,9 @@ new Usuario()->authBrowser();
 		<form method="POST" name="createGrupo">
 			<label for="nombre_grupo">Nuevo grupo</label>
 			<input name="nombre_grupo" id="nombre_grupo" autocomplete="off" required maxlength="20">
-			<button>Crear</button>
+			<button>
+				<img src="./assets/img/mas.svg">
+			</button>
 		</form>
 
 	</main>
