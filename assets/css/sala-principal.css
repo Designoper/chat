@@ -34,12 +34,22 @@ main {
 		background-color: var(--terciary-bg);
 		padding: 1em 10vw;
 		margin-top: auto;
+		flex-wrap: nowrap;
 
 		input {
+			min-width: 0;
 			background-color: white;
 			flex-grow: 1;
 			padding: 0.25em 0.5em;
 			border-radius: 0.15em;
+		}
+
+		label {
+			white-space: nowrap;
+		}
+
+		button {
+			white-space: nowrap;
 		}
 
 		&:has(:invalid) {
