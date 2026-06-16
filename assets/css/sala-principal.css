@@ -4,10 +4,10 @@ header {
 	align-items: center;
 	position: sticky;
 	top: 0;
-	background-color: var(--quartery-bg);
 	padding: 1em 10vw;
 	width: 100%;
 	z-index: 1;
+	background-color: var(--quartery-bg);
 
 	svg {
 		width: 1.25em;
@@ -26,22 +26,22 @@ main {
 
 	> form {
 		display: flex;
-		width: 100%;
+		flex-wrap: nowrap;
 		gap: 1em;
 		align-items: center;
+		width: 100%;
 		position: sticky;
 		bottom: 0;
-		background-color: var(--terciary-bg);
 		padding: 1em 10vw;
 		margin-top: auto;
-		flex-wrap: nowrap;
+		background-color: var(--terciary-bg);
 
 		input {
 			min-width: 0;
-			background-color: white;
 			flex-grow: 1;
 			padding: 0.25em 0.5em;
 			border-radius: 0.15em;
+			background-color: white;
 		}
 
 		label {
@@ -62,11 +62,13 @@ main {
 
 	output {
 		display: grid;
-		row-rule: solid 1px var(--primary-bg);
+		/* row-rule: solid 1px var(--primary-bg); */
 
 		menu {
 			display: grid;
+			/* row-rule: inherit; */
 			row-rule: solid 1px var(--primary-bg);
+
 
 			&:nth-of-type(1) {
 				background-color: var(--terciary-bg);
@@ -91,25 +93,11 @@ main {
 			}
 
 			&:nth-of-type(2) {
-
 				img {
 					height: 1em;
 					width: auto;
-					/* aspect-ratio: 1; */
 				}
 			}
-
-			/* svg {
-				width: 1.5em;
-
-				path {
-					fill: var(--quartery-bg);
-				}
-			}
-
-			img {
-				width: 1.5em;
-			} */
 		}
 
 		p {
