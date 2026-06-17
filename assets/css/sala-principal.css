@@ -44,19 +44,13 @@ main {
 			background-color: white;
 		}
 
-		label {
-			white-space: nowrap;
-		}
-
 		button {
-			white-space: nowrap;
 			background-color: rgb(255, 255, 255);
 			padding: 0.35em;
 			border-radius: 1em;
 
 			img {
 				width: 1.125em;
-				/* height: inherit; */
 			}
 		}
 
@@ -89,17 +83,21 @@ main {
 					padding: 1em 10vw;
 
 					h2 {
-						margin-right: auto;
+						flex-grow: 1;
 					}
 				}
 
 				button {
-					/* padding: 0.5em; */
-					/* width: 1em; */
+					width: 1.5em;
 
-					/* background-color: white; */
-					img {
-						width: 1.5em;
+					svg {
+						path {
+							fill: var(--secondary-bg);
+						}
+
+						circle {
+							fill: black;
+						}
 					}
 				}
 			}
