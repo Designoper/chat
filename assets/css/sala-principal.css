@@ -24,44 +24,6 @@ main {
 	flex-direction: column;
 	background-color: var(--secondary-bg);
 
-	> form {
-		display: flex;
-		flex-wrap: nowrap;
-		gap: 1em;
-		align-items: center;
-		width: 100%;
-		position: sticky;
-		bottom: 0;
-		padding: 1em 10vw;
-		margin-top: auto;
-		background-color: var(--terciary-bg);
-
-		input {
-			min-width: 0;
-			flex-grow: 1;
-			padding: 0.25em 0.75em;
-			border-radius: 0.15em;
-			background-color: white;
-		}
-
-		button {
-			background-color: rgb(255, 255, 255);
-			padding: 0.35em;
-			border-radius: 1em;
-
-			img {
-				width: 1.125em;
-			}
-		}
-
-		/* &:has(:invalid) {
-			button:not([type="reset"], [type="button"]) {
-				opacity: 25%;
-				cursor: not-allowed;
-			}
-		} */
-	}
-
 	output {
 		display: grid;
 		/* row-rule: solid 1px var(--primary-bg); */
@@ -152,5 +114,47 @@ main {
 			overflow: hidden;
 			scrollbar-width: none;
 		}
+	}
+
+	> form {
+		display: flex;
+		flex-wrap: nowrap;
+		gap: 1em;
+		align-items: center;
+		width: 100%;
+		position: sticky;
+		bottom: 0;
+		padding: 1em 10vw;
+		margin-top: auto;
+		background-color: var(--terciary-bg);
+
+		input {
+			min-width: 0;
+			flex-grow: 1;
+			padding: 0.25em 0.75em;
+			border-radius: 0.15em;
+			background-color: white;
+		}
+
+		button {
+			svg {
+				width: 1.75em;
+
+				path {
+					fill: black;
+				}
+
+				circle {
+					fill: white;
+				}
+			}
+		}
+
+		/* &:has(:invalid) {
+			button:not([type="reset"], [type="button"]) {
+				opacity: 25%;
+				cursor: not-allowed;
+			}
+		} */
 	}
 }
