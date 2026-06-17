@@ -68,13 +68,14 @@ export default class Mensaje extends Grupo {
 
 	async getMensajes() {
 		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.urlSearchparamsObj);
-		const mensajes = this.mensajesTemplate(response.json);
-		this.dom.output.innerHTML = mensajes;
 
 		if (response.json.length > 0) {
 			this.urlSearchparamsObj.id_mensaje = response.json[response.json.length - 1].id_mensaje;
 			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.urlSearchparamsObj);
 		}
+
+		const mensajes = this.mensajesTemplate(response.json);
+		this.dom.output.innerHTML = mensajes;
 	}
 
 	// MARK: STREAM MENSAJES
@@ -203,7 +204,7 @@ export default class Mensaje extends Grupo {
 
 	// MARK: WRITE CHAT
 
-	async writeChat() {
+	writeChat() {
 
 		if (this.urlSearchParams.size === 2) {
 			this.dom.h1.insertAdjacentHTML("afterbegin", this.urlSearchParams.get('nombre'));
