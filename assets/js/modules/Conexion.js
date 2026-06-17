@@ -29,7 +29,7 @@ export default class Conexion extends Mensaje {
 				ultimaConexion = `Última conexión: ${this.fullDate(ultimaConexion)}`;
 			}
 
-			document.querySelector('header p').innerHTML = ultimaConexion;
+			document.querySelector('header p').textContent = ultimaConexion;
 		});
 	}
 }

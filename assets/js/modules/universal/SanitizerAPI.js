@@ -5,42 +5,12 @@ export default class SanitizerAPI extends Endpoint {
 		super();
 	}
 
-	sanitizeDefault(dom, content) {
-		dom.setHTML(content, {
-			sanitizer: new Sanitizer({})
-		});
-	}
+	sanitize(htmlInseguro) {
 
-	sanitizeDefault2(dom, content) {
-		dom.setHTML(content, {
-			sanitizer: new Sanitizer({
-				comments: false,
-				attributes: false
-			})
-		});
-	}
+		const contenedorTemporal = document.createElement('div');
+		contenedorTemporal.setHTML(htmlInseguro, { sanitizer: new Sanitizer({}) });
+		const htmlLimpio = contenedorTemporal.innerHTML;
 
-	sanitizeDefault3() {
-		{
-			sanitizer: new Sanitizer({
-				comments: true,
-				dataAttributes: true,
-
-			});
-		}
-	}
-
-	sanitizeDefault4() {
-		{
-			sanitizer: new Sanitizer({
-
-			}).setComments(true);
-		}
-	}
-
-	sanitizeHTML(html) {
-		html, {
-			sanitizer: new Sanitizer({})
-		};
+		return htmlLimpio;
 	}
 }

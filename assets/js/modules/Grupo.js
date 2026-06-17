@@ -105,7 +105,7 @@ export default class Grupo extends Usuario {
 			const state = JSON.parse(event.data);
 
 			const content = this.gruposPendienteTemplate(state);
-			this.invitacionesMenu.innerHTML = content;
+			this.invitacionesMenu.innerHTML = this.sanitize(content);
 		});
 	}
 
@@ -121,7 +121,7 @@ export default class Grupo extends Usuario {
 
 			const content = this.gruposNoMiembroTemplate(state);
 			const select = document.getElementById('id_invitado');
-			select.innerHTML = content;
+			select.innerHTML = this.sanitize(content);
 		});
 	}
 }

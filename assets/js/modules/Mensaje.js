@@ -35,7 +35,6 @@ export default class Mensaje extends Grupo {
 
 	delete() {
 		this.urlSearchParams.delete('nombre');
-		// this.urlSearchparams.delete('id_receptor2');
 	}
 
 	setObj() {
@@ -44,7 +43,8 @@ export default class Mensaje extends Grupo {
 
 	setForm() {
 		for (const [key, value] of this.urlSearchParams.entries()) {
-			this.dom.form.insertAdjacentHTML('afterbegin', `<input type="hidden" name="${key}" value="${value}">`);
+			const hiddenInput = `<input type="hidden" name="${key}" value="${value}">`;
+			this.dom.form.insertAdjacentHTML('afterbegin', this.sanitize(hiddenInput));
 		}
 	}
 
@@ -75,7 +75,7 @@ export default class Mensaje extends Grupo {
 		}
 
 		const mensajes = this.mensajesTemplate(response.json);
-		this.dom.output.innerHTML = mensajes;
+		this.dom.output.innerHTML = this.sanitize(mensajes);
 	}
 
 	// MARK: STREAM MENSAJES
@@ -90,7 +90,7 @@ export default class Mensaje extends Grupo {
 			const mensaje = JSON.parse(event.data);
 			const content = this.mensajesTemplate([mensaje]);
 
-			this.dom.output.insertAdjacentHTML("beforeend", content);
+			this.dom.output.insertAdjacentHTML("beforeend", this.sanitize(content));
 			this.ringtone.play();
 		});
 
@@ -207,7 +207,7 @@ export default class Mensaje extends Grupo {
 	writeChat() {
 
 		if (this.urlSearchParams.size === 2) {
-			this.dom.h1.insertAdjacentHTML("afterbegin", this.urlSearchParams.get('nombre'));
+			this.dom.h1.textContent = this.urlSearchParams.get('nombre');
 
 			if (this.urlSearchParams.has('id_grupo')) {
 				const formInvitar =
@@ -221,7 +221,8 @@ export default class Mensaje extends Grupo {
 						</form>
 					`;
 
-				this.dom.header.insertAdjacentHTML('beforeend', formInvitar);
+				this.dom.header.insertAdjacentHTML('beforeend', this.sanitize(formInvitar));
+				// this.dom.header.appendChild(this.sanitize(formInvitar));
 
 				this.streamNoMiembros(this.urlSearchParams.get('id_grupo'));
 			}
