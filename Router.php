@@ -8,9 +8,9 @@ require_once __DIR__ . '/models/Grupo.php';
 require_once __DIR__ . '/models/Conexion.php';
 require_once __DIR__ . '/models/Contacto.php';
 
-final class Router
+final readonly class Router
 {
-    private const string COMMON_PATH = '/api/';
+    private const COMMON_PATH = '/api/';
     private array $routes;
 
     public function __construct()
@@ -18,87 +18,65 @@ final class Router
         $GET = 'GET';
         $POST = 'POST';
 
-        // Usuarios
-        $this->setRoute($GET, 'usuarios/current', [Usuario::class, 'currentUsuario']);
+        $this->routes = [
+            $this->makeRoute($GET, 'usuarios/current', [Usuario::class, 'currentUsuario']),
+            $this->makeRoute($GET, 'mensajes/stream', [Mensaje::class, 'streamMensajes']),
+            $this->makeRoute($GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']),
+            $this->makeRoute($GET, 'mensajes', [Mensaje::class, 'readMensajes']),
 
-        // Mensajes
-        $this->setRoute($GET, 'mensajes/stream', [Mensaje::class, 'streamMensajes']);
-        $this->setRoute($GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']);
-        $this->setRoute($GET, 'mensajes', [Mensaje::class, 'readMensajes']);
+            $this->makeRoute($GET, 'grupos/no-miembro/stream', [Grupo::class, 'streamGruposNoMiembro']),
+            $this->makeRoute($GET, 'grupos/stream', [Grupo::class, 'streamGrupos']),
 
-        // Grupos
-        $this->setRoute($GET, 'grupos/no-miembro/stream', [Grupo::class, 'streamGruposNoMiembro']);
-        $this->setRoute($GET, 'grupos/stream', [Grupo::class, 'streamGrupos']);
+            $this->makeRoute($GET, 'conexion/stream', [Conexion::class, 'streamConexion']),
+            $this->makeRoute($GET, 'contactos/stream', [Contacto::class, 'streamContactos']),
 
-        // Conexión
-        $this->setRoute($GET, 'conexion/stream', [Conexion::class, 'streamConexion']);
+            $this->makeRoute($POST, 'usuarios/crear', [Usuario::class, 'createUsuario']),
+            $this->makeRoute($POST, 'usuarios/login', [Usuario::class, 'login']),
+            $this->makeRoute($POST, 'usuarios/logout', [Usuario::class, 'logout']),
+            $this->makeRoute($POST, 'usuarios/delete', [Usuario::class, 'deleteUsuario']),
 
-        // Contactos
-        $this->setRoute($GET, 'contactos/stream', [Contacto::class, 'streamContactos']);
+            $this->makeRoute($POST, 'mensajes/crear', [Mensaje::class, 'createMensaje']),
+            $this->makeRoute($POST, 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),
+            $this->makeRoute($POST, 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdLeido']),
 
-        // Usuarios
-        $this->setRoute($POST, 'usuarios/crear', [Usuario::class, 'createUsuario']);
-        $this->setRoute($POST, 'usuarios/login', [Usuario::class, 'login']);
-        $this->setRoute($POST, 'usuarios/logout', [Usuario::class, 'logout']);
-        $this->setRoute($POST, 'usuarios/delete', [Usuario::class, 'deleteUsuario']);
+            $this->makeRoute($POST, 'grupos/crear', [Grupo::class, 'createGrupo']),
+            $this->makeRoute($POST, 'grupos/invitar', [Grupo::class, 'invitar']),
+            $this->makeRoute($POST, 'grupos/aceptar', [Grupo::class, 'aceptarInvitacion']),
+            $this->makeRoute($POST, 'grupos/rechazar', [Grupo::class, 'rechazarInvitacion']),
+            $this->makeRoute($POST, 'grupos/abandonar', [Grupo::class, 'abandonarGrupo']),
+            $this->makeRoute($POST, 'grupos/delete', [Grupo::class, 'deleteGrupo']),
 
-        // Mensajes
-        $this->setRoute($POST, 'mensajes/crear', [Mensaje::class, 'createMensaje']);
-        $this->setRoute($POST, 'mensajes/delete', [Mensaje::class, 'deleteMensaje']);
-        $this->setRoute($POST, 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdLeido']);
-
-        // Grupos
-        $this->setRoute($POST, 'grupos/crear', [Grupo::class, 'createGrupo']);
-        $this->setRoute($POST, 'grupos/invitar', [Grupo::class, 'invitar']);
-        $this->setRoute($POST, 'grupos/aceptar', [Grupo::class, 'aceptarInvitacion']);
-        $this->setRoute($POST, 'grupos/rechazar', [Grupo::class, 'rechazarInvitacion']);
-        $this->setRoute($POST, 'grupos/abandonar', [Grupo::class, 'abandonarGrupo']);
-        $this->setRoute($POST, 'grupos/delete', [Grupo::class, 'deleteGrupo']);
-
-        // Conexión
-        $this->setRoute($POST, 'conexion/estado', [Conexion::class, 'setConexion']);
+            $this->makeRoute($POST, 'conexion/estado', [Conexion::class, 'setConexion']),
+        ];
 
         $this->handleRequest();
     }
 
-    // MARK: SET ROUTE
-    private function setRoute(string $method, string $path, array $action): void
+    private function makeRoute(string $method, string $path, array $action): array
     {
         [$class, $methodName] = $action;
 
-        $this->routes[] = [
+        return [
             'method'  => $method,
             'path'    => self::COMMON_PATH . $path,
             'handler' => fn() => (new $class())->$methodName()
         ];
     }
 
-    // MARK: HANDLE REQUEST
     private function handleRequest(): void
     {
         $method = $_SERVER['REQUEST_METHOD'];
         $requestUri = $_SERVER['REQUEST_URI'];
 
-        switch ($method) {
-            case 'GET':
-            case 'POST':
-
-                foreach ($this->routes as $route) {
-                    if ($route['method'] === $method && preg_match("#^{$route['path']}#", $requestUri)) {
-                        $route['handler']();
-                        return;
-                    }
-                }
-
-                http_response_code(404);
-                header("Content-Type: application/json");
-                echo json_encode("La ruta solicitada no existe: $requestUri", JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        foreach ($this->routes as $route) {
+            if ($route['method'] === $method && preg_match("#^{$route['path']}#", $requestUri)) {
+                $route['handler']();
                 return;
-
-            default:
-                http_response_code(405);
-                header("Allow: GET, POST");
+            }
         }
+
+        http_response_code(404);
+        echo json_encode("La ruta solicitada no existe: $requestUri");
     }
 }
 
