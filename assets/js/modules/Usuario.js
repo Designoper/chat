@@ -31,7 +31,7 @@ export default class Usuario extends TemporalAPI {
 	async deleteUsuario(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.DELETE);
 		if (response.status === 204) {
-			globalThis.location.href = 'crear-usuario.php';
+			globalThis.location.href = 'registro.php';
 		}
 	}
 

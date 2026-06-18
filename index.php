@@ -66,7 +66,7 @@ new Usuario()->sessionRedirect();
 
 			<output></output>
 
-			<p>¿No tienes cuenta? <a href="./crear-usuario.php">Regístrate</a></p>
+			<p>¿No tienes cuenta? <a href="./registro.php">Regístrate</a></p>
 
 		</form>
 
