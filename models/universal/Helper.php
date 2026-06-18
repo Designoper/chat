@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/MysqliConnect.php';
+require_once __DIR__ . '/Database.php';
 
 enum SqlReturn
 {
@@ -12,7 +12,7 @@ enum SqlReturn
 	case BindResult;
 }
 
-abstract readonly class Helper extends MysqliConnect
+abstract readonly class Helper extends Database
 {
 	protected const string TEMPORAL_STRING = '%Y-%m-%dT%H:%i:%sZ';
 

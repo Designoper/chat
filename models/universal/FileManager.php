@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/MysqliConnect.php';
+require_once __DIR__ . '/Database.php';
 
-final readonly class FileManager extends MysqliConnect
+final readonly class FileManager extends Database
 {
     private const string IMAGE_PATH = '/assets/img/';
     public const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
