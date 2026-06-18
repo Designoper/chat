@@ -9,55 +9,18 @@ final readonly class FileManager extends Database
     private const string IMAGE_PATH = '/assets/img/';
     public const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
 
-    private string $extraDirectories;
-    private string $uniqueFilename;
+    public string $extraDirectories;
+    public string $uniqueFilename;
 
-    private ?array $file;
-    private bool $deleteCheckbox;
+    public ?array $file;
+    public bool $deleteCheckbox;
 
     public function __construct()
     {
         parent::__construct();
     }
 
-    // MARK: GETTERS
-
-    private function getFile(): ?array
-    {
-        return $this->file;
-    }
-
-    private function getDeleteCheckbox(): bool
-    {
-        return $this->deleteCheckbox;
-    }
-
-    private function getExtraDirectories(): string
-    {
-        return $this->extraDirectories;
-    }
-
-    private function getUniqueFilename(): string
-    {
-        return $this->uniqueFilename;
-    }
-
     // MARK: SETTERS
-
-    public function setFile(?array $file): void
-    {
-        $this->file = $file;
-    }
-
-    public function setDeleteCheckbox(bool $deleteCheckbox): void
-    {
-        $this->deleteCheckbox = $deleteCheckbox;
-    }
-
-    public function setExtraDirectories(string $extraDirectories): void
-    {
-        $this->extraDirectories = $extraDirectories;
-    }
 
     private function setUniqueFilename(string $originalFilename): void
     {
@@ -101,53 +64,53 @@ final readonly class FileManager extends Database
 
     public function uploadFileName(): ?string
     {
-        if ($this->getFile() === null) {
+        if ($this->file === null) {
             return null;
         }
 
-        $this->setUniqueFilename($this->getFile()['name']);
+        $this->setUniqueFilename($this->file['name']);
 
-        return self::IMAGE_PATH . $this->getExtraDirectories() . $this->getUniqueFilename();
+        return self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
     }
 
     public function uploadFile(): void
     {
-        if ($this->getFile() === null) {
+        if ($this->file === null) {
             return;
         }
 
-        $folderDestination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories();
+        $folderDestination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories;
 
         if (!file_exists($folderDestination)) {
             mkdir($folderDestination, 0755, true);
         }
 
-        $finalDestination = $folderDestination . $this->getUniqueFilename();
+        $finalDestination = $folderDestination . $this->uniqueFilename;
 
-        move_uploaded_file($this->getFile()['tmp_name'], $finalDestination);
+        move_uploaded_file($this->file['tmp_name'], $finalDestination);
     }
 
     public function updateFileName(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
     {
-        if ($this->getFile() === null) {
-            if ($this->getDeleteCheckbox() === true) {
+        if ($this->file === null) {
+            if ($this->deleteCheckbox === true) {
                 return null;
             }
             $fileUrl = $this->getFileUrl($column, $table, $primaryKey, $primaryKeyValue);
             return $fileUrl;
         }
 
-        $this->setUniqueFilename($this->getFile()['name']);
+        $this->setUniqueFilename($this->file['name']);
 
-        $imagePath = self::IMAGE_PATH . $this->getExtraDirectories() . $this->getUniqueFilename();
+        $imagePath = self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
 
         return $imagePath;
     }
 
     public function updateFile(?string $filePath): void
     {
-        if ($this->getFile() === null) {
-            if ($this->getDeleteCheckbox() === true) {
+        if ($this->file === null) {
+            if ($this->deleteCheckbox === true) {
                 $this->deleteFile($filePath);
                 return;
             }
@@ -167,7 +130,7 @@ final readonly class FileManager extends Database
 
     public function deleteAllFiles(): void
     {
-        $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->getExtraDirectories();
+        $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories;
 
         if (!is_dir($folderPath)) {
             return;
