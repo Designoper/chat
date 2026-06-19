@@ -68,9 +68,6 @@ readonly class Mensaje extends Helper
 		$this->setId('id_grupo');
 		$this->checkValidationErrors();
 
-		$id_grupo = $this->id_grupo;
-		$id_usuario = $this->session_user;
-
 		$statement =
 			"SELECT COALESCE((
 				SELECT id_mensaje
@@ -83,8 +80,8 @@ readonly class Mensaje extends Helper
 			$statement,
 			'ii',
 			[
-				$id_usuario,
-				$id_grupo
+				$this->session_user,
+				$this->id_grupo
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -113,12 +110,7 @@ readonly class Mensaje extends Helper
 	{
 		$this->setId('id_receptor');
 		$this->setId('id_mensaje');
-
 		$this->checkValidationErrors();
-
-		$id_receptor = $this->id_receptor;
-		$id_mensaje = $this->id_mensaje;
-		$id_usuario = $this->session_user;
 
 		$statement =
 			"INSERT INTO ultimos_mensajes_leidos_directos (id_usuario, id_receptor, id_mensaje)
@@ -130,10 +122,10 @@ readonly class Mensaje extends Helper
 			$statement,
 			'iiii',
 			[
-				$id_usuario,
-				$id_receptor,
-				$id_mensaje,
-				$id_mensaje
+				$this->session_user,
+				$this->id_receptor,
+				$this->id_mensaje,
+				$this->id_mensaje
 			]
 		);
 
@@ -147,12 +139,7 @@ readonly class Mensaje extends Helper
 	{
 		$this->setId('id_grupo');
 		$this->setId('id_mensaje');
-
 		$this->checkValidationErrors();
-
-		$id_grupo = $this->id_grupo;
-		$id_mensaje = $this->id_mensaje;
-		$id_usuario = $this->session_user;
 
 		$statement =
 			"INSERT INTO ultimos_mensajes_leidos_grupales (id_usuario, id_grupo, id_mensaje)
@@ -164,10 +151,10 @@ readonly class Mensaje extends Helper
 			$statement,
 			'iiii',
 			[
-				$id_usuario,
-				$id_grupo,
-				$id_mensaje,
-				$id_mensaje
+				$this->session_user,
+				$this->id_grupo,
+				$this->id_mensaje,
+				$this->id_mensaje
 			]
 		);
 
@@ -241,8 +228,6 @@ readonly class Mensaje extends Helper
 
 		$this->isMiembroGrupo();
 
-		$id_grupo = $this->id_grupo;
-
 		$statement =
 			"SELECT
 				mensajes.id_mensaje,
@@ -260,7 +245,7 @@ readonly class Mensaje extends Helper
 			$statement,
 			"i",
 			[
-				$id_grupo
+				$this->id_grupo
 			],
 			SqlReturn::FetchAll
 		);
@@ -275,11 +260,7 @@ readonly class Mensaje extends Helper
 	private function isAutorMensaje(): void
 	{
 		$this->setId('id_mensaje');
-
 		$this->checkValidationErrors();
-
-		$id_usuario = $this->session_user;
-		$id_mensaje = $this->id_mensaje;
 
 		$statement =
 			"SELECT id_emisor
@@ -290,12 +271,12 @@ readonly class Mensaje extends Helper
 			$statement,
 			"i",
 			[
-				$id_mensaje
+				$this->id_mensaje
 			],
 			SqlReturn::BindResult
 		);
 
-		if ($autor !== $id_usuario) {
+		if ($autor !== $this->session_user) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el autor del mensaje');
 			$this->checkIntegrityErrors();
@@ -306,9 +287,6 @@ readonly class Mensaje extends Helper
 
 	private function isMiembroGrupo(): void
 	{
-		$id_usuario = $this->session_user;
-		$id_grupo = $this->id_grupo;
-
 		$statement =
 			"SELECT rol
 			FROM membresias
@@ -319,8 +297,8 @@ readonly class Mensaje extends Helper
 			$statement,
 			"ii",
 			[
-				$id_usuario,
-				$id_grupo
+				$this->session_user,
+				$this->id_grupo
 			],
 			SqlReturn::BindResult
 		);
@@ -361,11 +339,7 @@ readonly class Mensaje extends Helper
 		}
 
 		$this->setContenido('contenido');
-
 		$this->checkValidationErrors();
-
-		$id_emisor = $this->session_user;
-		$contenido = $this->contenido;
 
 		$statement =
 			"INSERT INTO mensajes (contenido, id_emisor, $columna)
@@ -375,8 +349,8 @@ readonly class Mensaje extends Helper
 			$statement,
 			'sii',
 			[
-				$contenido,
-				$id_emisor,
+				$this->contenido,
+				$this->session_user,
 				$id_objetivo
 			]
 		);
@@ -391,9 +365,6 @@ readonly class Mensaje extends Helper
 	{
 		$this->isAutorMensaje();
 
-		$id_mensaje = $this->id_mensaje;
-		$id_emisor = $this->session_user;
-
 		$statement =
 			"DELETE FROM mensajes
 			WHERE id_mensaje = ?
@@ -403,8 +374,8 @@ readonly class Mensaje extends Helper
 			$statement,
 			'ii',
 			[
-				$id_mensaje,
-				$id_emisor
+				$this->id_mensaje,
+				$this->session_user
 			]
 		);
 
@@ -416,9 +387,6 @@ readonly class Mensaje extends Helper
 
 	private function getNuevosMensajesDirectos(): array
 	{
-		$id_receptor = $this->id_receptor;
-		$id_emisor = $this->session_user;
-
 		$statement =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
@@ -445,12 +413,12 @@ readonly class Mensaje extends Helper
 			$statement,
 			"iiiiii",
 			[
-				$id_emisor,
-				$id_receptor,
-				$id_emisor,
-				$id_receptor,
-				$id_receptor,
-				$id_emisor
+				$this->session_user,
+				$this->id_receptor,
+				$this->session_user,
+				$this->id_receptor,
+				$this->id_receptor,
+				$this->session_user
 			],
 			SqlReturn::FetchAll
 		);
@@ -462,9 +430,6 @@ readonly class Mensaje extends Helper
 
 	private function getNuevosMensajesGrupales(): array
 	{
-		$id_grupo = $this->id_grupo;
-		$id_usuario = $this->session_user;
-
 		$statement =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
@@ -488,9 +453,9 @@ readonly class Mensaje extends Helper
 			$statement,
 			"iii",
 			[
-				$id_usuario,
-				$id_grupo,
-				$id_grupo
+				$this->session_user,
+				$this->id_grupo,
+				$this->id_grupo
 			],
 			SqlReturn::FetchAll
 		);
