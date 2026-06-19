@@ -4,12 +4,20 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/universal/Helper.php';
 
+enum MensajeProperties: string
+{
+	case ID_MENSAJE = 'id_mensaje';
+	case ID_RECEPTOR = 'id_receptor';
+	case ID_GRUPO = 'id_grupo';
+	case ID_CONTENIDO = 'contenido';
+}
+
 readonly class Mensaje extends Helper
 {
 	protected int $id_mensaje;
-	protected string $contenido;
 	protected int $id_receptor;
 	protected int $id_grupo;
+	protected string $contenido;
 
 	public function __construct()
 	{
@@ -35,7 +43,7 @@ readonly class Mensaje extends Helper
 
 	private function getUltimoIdDirecto(): void
 	{
-		$this->setId('id_receptor');
+		$this->setId(MensajeProperties::ID_RECEPTOR->value);
 		$this->checkValidationErrors();
 
 		$query =
@@ -65,7 +73,7 @@ readonly class Mensaje extends Helper
 
 	private function getUltimoIdGrupal(): void
 	{
-		$this->setId('id_grupo');
+		$this->setId(MensajeProperties::ID_GRUPO->value);
 		$this->checkValidationErrors();
 
 		$query =
@@ -95,11 +103,11 @@ readonly class Mensaje extends Helper
 
 	public function setultimoIdLeido(): void
 	{
-		if (isset($_POST['id_receptor'])) {
+		if (isset($_POST[MensajeProperties::ID_RECEPTOR->value])) {
 			$this->setUltimoIdDirecto();
 		}
 
-		if (isset($_POST['id_grupo'])) {
+		if (isset($_POST[MensajeProperties::ID_GRUPO->value])) {
 			$this->setUltimoIdGrupal();
 		}
 	}
