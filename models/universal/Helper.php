@@ -14,7 +14,7 @@ enum SqlReturn
 
 abstract readonly class Helper extends Database
 {
-	protected const string TEMPORAL_STRING = '%Y-%m-%dT%H:%i:%sZ';
+	protected const string ISO8601_SQL_FORMAT = "'%Y-%m-%dT%H:%i:%sZ'";
 
 	protected function __construct()
 	{

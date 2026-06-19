@@ -201,12 +201,13 @@ readonly class Mensaje extends Helper
 
 		$id_emisor = $this->session_user;
 		$id_receptor = $this->id_receptor;
+		$dateFormat = self::ISO8601_SQL_FORMAT;
 
-		$statement =
-			"SELECT
+		$statement = <<<SQL
+			SELECT
 				mensajes.id_mensaje,
 				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
 				mensajes.id_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
@@ -217,7 +218,8 @@ readonly class Mensaje extends Helper
 				(id_emisor = ? AND id_receptor = ?)
 				OR (id_emisor = ? AND id_receptor = ?)
 			)
-			ORDER BY fecha_envio ASC";
+			ORDER BY fecha_envio ASC
+			SQL;
 
 		$mensajes = $this->sqlAll(
 			$statement,
