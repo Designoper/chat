@@ -23,9 +23,6 @@ final readonly class Usuario extends Helper
 
 		$this->checkValidationErrors();
 
-		$nombre_usuario = $this->nombre_usuario;
-		$password = password_hash($this->password, PASSWORD_DEFAULT);
-
 		$query =
 			"INSERT INTO usuarios (nombre_usuario, password)
             VALUES (?, ?)";
@@ -35,8 +32,8 @@ final readonly class Usuario extends Helper
 				$query,
 				'ss',
 				[
-					$nombre_usuario,
-					$password
+					$this->nombre_usuario,
+					password_hash($this->password, PASSWORD_DEFAULT)
 				],
 				SqlReturn::InsertId
 			);
@@ -66,9 +63,6 @@ final readonly class Usuario extends Helper
 
 		$this->checkValidationErrors();
 
-		$nombre_usuario = $this->nombre_usuario;
-		$password = $this->password;
-
 		$query =
 			"SELECT id_usuario, password
 			FROM usuarios
@@ -78,12 +72,12 @@ final readonly class Usuario extends Helper
 			$query,
 			's',
 			[
-				$nombre_usuario
+				$this->nombre_usuario
 			],
 			SqlReturn::FetchAssoc
 		);
 
-		if (!$usuario || !password_verify($password, $usuario['password'])) {
+		if (!$usuario || !password_verify($this->password, $usuario['password'])) {
 			$this->status = 401;
 			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
 			$this->checkIntegrityErrors();
@@ -132,8 +126,6 @@ final readonly class Usuario extends Helper
 	{
 		$this->authEndpoint();
 
-		$id_usuario = $this->session_user;
-
 		$query =
 			"SELECT id_usuario, nombre_usuario
 			FROM usuarios
@@ -143,7 +135,7 @@ final readonly class Usuario extends Helper
 			$query,
 			'i',
 			[
-				$id_usuario
+				$this->session_user
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -159,8 +151,6 @@ final readonly class Usuario extends Helper
 	{
 		$this->authEndpoint();
 
-		$id_usuario = $this->session_user;
-
 		$query =
 			"DELETE FROM usuarios
 			WHERE id_usuario = ?";
@@ -169,7 +159,7 @@ final readonly class Usuario extends Helper
 			$query,
 			'i',
 			[
-				$id_usuario
+				$this->session_user
 			]
 		);
 
