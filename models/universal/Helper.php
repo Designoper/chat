@@ -21,8 +21,6 @@ abstract readonly class Helper extends Database
 		parent::__construct();
 	}
 
-	// MARK: SETTERS
-
 	// protected function checkAllowedvalues(array $allowed, int $max, int $min = 0, array $necessary = []): void
 	// {
 	// 	if (count($_REQUEST) > $max) {
@@ -48,6 +46,8 @@ abstract readonly class Helper extends Database
 	// 	$this->checkValidationErrors();
 	// }
 
+	// MARK: SET ID
+
 	protected function setId(string $name): void
 	{
 		$value = $_REQUEST[$name] ?? null;
@@ -69,6 +69,8 @@ abstract readonly class Helper extends Database
 	// 		: $this->errors->setValidationError($error_message);
 	// }
 
+	// MARK: SET NOMBRE
+
 	protected function setNombre(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
@@ -79,6 +81,8 @@ abstract readonly class Helper extends Database
 			: $this->$name = $value;
 	}
 
+	// MARK: SET PASSWORD
+
 	protected function setPassword(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
@@ -88,6 +92,8 @@ abstract readonly class Helper extends Database
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
 	}
+
+	// MARK: SET CONTENIDO
 
 	protected function setContenido(string $name): void
 	{
