@@ -395,6 +395,9 @@ readonly class Mensaje extends Helper
 
 	private function getNuevosMensajesDirectos(): array
 	{
+		$user_min = min($this->session_user, $this->id_receptor);
+		$user_max = max($this->session_user, $this->id_receptor);
+
 		$query =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
@@ -411,22 +414,20 @@ readonly class Mensaje extends Helper
 				AND id_receptor = ?
 			), 0)
 			AND (
-				(id_emisor = ? AND id_receptor = ?)
-				OR (id_emisor = ? AND id_receptor = ?)
+				LEAST(id_emisor, id_receptor) = ?
+				AND GREATEST(id_emisor, id_receptor) = ?
 			)
 			AND mensajes.id_grupo IS NULL
 			ORDER BY mensajes.id_mensaje ASC";
 
 		$mensajes = $this->executeQuery(
 			$query,
-			"iiiiii",
+			"iiii",
 			[
 				$this->session_user,
 				$this->id_receptor,
-				$this->session_user,
-				$this->id_receptor,
-				$this->id_receptor,
-				$this->session_user
+				$user_min,
+				$user_max
 			],
 			SqlReturn::FetchAll
 		);
