@@ -17,8 +17,6 @@ final readonly class Contacto extends Helper
 
 	private function obtainContactos(): array
 	{
-		$id_usuario = $this->session_user;
-
 		$query =
 			"SELECT *
 			FROM (
@@ -93,13 +91,13 @@ final readonly class Contacto extends Helper
 			$query,
 			'iiiiiii',
 			[
-				$id_usuario,
-				$id_usuario,
-				$id_usuario,
-				$id_usuario,
-				$id_usuario,
-				$id_usuario,
-				$id_usuario
+				$this->session_user,
+				$this->session_user,
+				$this->session_user,
+				$this->session_user,
+				$this->session_user,
+				$this->session_user,
+				$this->session_user
 			],
 			SqlReturn::FetchAll
 		);

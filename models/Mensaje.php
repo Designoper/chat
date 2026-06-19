@@ -190,6 +190,9 @@ readonly class Mensaje extends Helper
 		$this->setId('id_receptor');
 		$this->checkValidationErrors();
 
+		$user_min = min($this->session_user, $this->id_receptor);
+		$user_max = max($this->session_user, $this->id_receptor);
+
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
 		$query = <<<SQL
@@ -204,20 +207,18 @@ readonly class Mensaje extends Helper
 				ON mensajes.id_emisor = usuarios.id_usuario
 			WHERE mensajes.id_receptor IS NOT NULL
 			AND (
-				(id_emisor = ? AND id_receptor = ?)
-				OR (id_emisor = ? AND id_receptor = ?)
+				LEAST(id_emisor, id_receptor) = ?
+				AND GREATEST(id_emisor, id_receptor) = ?
 			)
 			ORDER BY fecha_envio ASC
 			SQL;
 
 		$mensajes = $this->executeQuery(
 			$query,
-			"iiii",
+			"ii",
 			[
-				$this->session_user,
-				$this->id_receptor,
-				$this->id_receptor,
-				$this->session_user,
+				$user_min,
+				$user_max
 			],
 			SqlReturn::FetchAll
 		);
@@ -236,11 +237,13 @@ readonly class Mensaje extends Helper
 
 		$this->isMiembroGrupo();
 
+		$dateFormat = self::ISO8601_SQL_FORMAT;
+
 		$query =
 			"SELECT
 				mensajes.id_mensaje,
 				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
 				mensajes.id_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
@@ -398,10 +401,12 @@ readonly class Mensaje extends Helper
 		$user_min = min($this->session_user, $this->id_receptor);
 		$user_max = max($this->session_user, $this->id_receptor);
 
+		$dateFormat = self::ISO8601_SQL_FORMAT;
+
 		$query =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
 				mensajes.id_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
@@ -439,10 +444,12 @@ readonly class Mensaje extends Helper
 
 	private function getNuevosMensajesGrupales(): array
 	{
+		$dateFormat = self::ISO8601_SQL_FORMAT;
+
 		$query =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
 				mensajes.id_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
