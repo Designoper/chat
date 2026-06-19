@@ -40,7 +40,7 @@ final readonly class Conexion extends Mensaje
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -69,7 +69,7 @@ final readonly class Conexion extends Mensaje
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -99,7 +99,7 @@ final readonly class Conexion extends Mensaje
 				AND conexion_directa.id_receptor = ?
 			WHERE usuarios.id_usuario = ?";
 
-		$conexion = $this->sqlAll(
+		$conexion = $this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -133,7 +133,7 @@ final readonly class Conexion extends Mensaje
 			AND membresias.rol IN ('fundador','miembro')
 			ORDER BY usuarios.nombre_usuario ASC";
 
-		$conexion = $this->sqlAll(
+		$conexion = $this->executeQuery(
 			$statement,
 			'ii',
 			[

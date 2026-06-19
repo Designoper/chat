@@ -89,7 +89,7 @@ final readonly class Contacto extends Helper
 				fecha_envio DESC,
 				nombre ASC";
 
-		$contactos = $this->sqlAll(
+		$contactos = $this->executeQuery(
 			$statement,
 			'iiiiiii',
 			[

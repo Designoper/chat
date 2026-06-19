@@ -32,7 +32,7 @@ final readonly class Grupo extends Helper
 			AND membresias.rol = 'pendiente'
 			ORDER BY grupos.nombre_grupo ASC";
 
-		$grupos = $this->sqlAll(
+		$grupos = $this->executeQuery(
 			$statement,
 			'i',
 			[
@@ -60,7 +60,7 @@ final readonly class Grupo extends Helper
 				WHERE id_grupo = ?
 			)";
 
-		$grupos = $this->sqlAll(
+		$grupos = $this->executeQuery(
 			$statement,
 			'i',
 			[
@@ -85,7 +85,7 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$rol = $this->sqlAll(
+		$rol = $this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -115,7 +115,7 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$rol = $this->sqlAll(
+		$rol = $this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -147,7 +147,7 @@ final readonly class Grupo extends Helper
 		 	VALUES (?)";
 
 		try {
-			$id_grupo = $this->sqlAll(
+			$id_grupo = $this->executeQuery(
 				$statement,
 				's',
 				[
@@ -174,7 +174,7 @@ final readonly class Grupo extends Helper
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, 'fundador')";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement2,
 			'ii',
 			[
@@ -205,7 +205,7 @@ final readonly class Grupo extends Helper
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, 'pendiente')";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -236,7 +236,7 @@ final readonly class Grupo extends Helper
 			AND id_grupo = ?
 			AND rol = 'pendiente'";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -266,7 +266,7 @@ final readonly class Grupo extends Helper
 			AND id_grupo = ?
 			AND rol = 'pendiente'";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -297,7 +297,7 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -325,7 +325,7 @@ final readonly class Grupo extends Helper
 			"DELETE FROM grupos
 			WHERE id_grupo = ?";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'i',
 			[

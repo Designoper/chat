@@ -46,7 +46,7 @@ readonly class Mensaje extends Helper
 				AND id_receptor = ?
 			), 0) AS id_mensaje";
 
-		$last_id = $this->sqlAll(
+		$last_id = $this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -76,7 +76,7 @@ readonly class Mensaje extends Helper
 				AND id_grupo = ?
 			), 0) AS id_mensaje";
 
-		$last_id = $this->sqlAll(
+		$last_id = $this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -118,7 +118,7 @@ readonly class Mensaje extends Helper
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'iiii',
 			[
@@ -147,7 +147,7 @@ readonly class Mensaje extends Helper
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'iiii',
 			[
@@ -202,7 +202,7 @@ readonly class Mensaje extends Helper
 			ORDER BY fecha_envio ASC
 			SQL;
 
-		$mensajes = $this->sqlAll(
+		$mensajes = $this->executeQuery(
 			$statement,
 			"iiii",
 			[
@@ -241,7 +241,7 @@ readonly class Mensaje extends Helper
 			WHERE mensajes.id_grupo = ?
 			ORDER BY fecha_envio ASC";
 
-		$mensajes = $this->sqlAll(
+		$mensajes = $this->executeQuery(
 			$statement,
 			"i",
 			[
@@ -267,7 +267,7 @@ readonly class Mensaje extends Helper
 			FROM mensajes
 			WHERE id_mensaje = ?";
 
-		$autor = $this->sqlAll(
+		$autor = $this->executeQuery(
 			$statement,
 			"i",
 			[
@@ -293,7 +293,7 @@ readonly class Mensaje extends Helper
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$rol = $this->sqlAll(
+		$rol = $this->executeQuery(
 			$statement,
 			"ii",
 			[
@@ -345,7 +345,7 @@ readonly class Mensaje extends Helper
 			"INSERT INTO mensajes (contenido, id_emisor, $columna)
 			VALUES (?, ?, ?)";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'sii',
 			[
@@ -370,7 +370,7 @@ readonly class Mensaje extends Helper
 			WHERE id_mensaje = ?
 			AND id_emisor = ?";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'ii',
 			[
@@ -409,7 +409,7 @@ readonly class Mensaje extends Helper
 			AND mensajes.id_grupo IS NULL
 			ORDER BY mensajes.id_mensaje ASC";
 
-		$mensajes = $this->sqlAll(
+		$mensajes = $this->executeQuery(
 			$statement,
 			"iiiiii",
 			[
@@ -449,7 +449,7 @@ readonly class Mensaje extends Helper
 			AND mensajes.id_grupo = ?
 	        ORDER BY mensajes.id_mensaje ASC";
 
-		$mensajes = $this->sqlAll(
+		$mensajes = $this->executeQuery(
 			$statement,
 			"iii",
 			[

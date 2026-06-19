@@ -31,7 +31,7 @@ final readonly class Usuario extends Helper
             VALUES (?, ?)";
 
 		try {
-			$id_usuario = $this->sqlAll(
+			$id_usuario = $this->executeQuery(
 				$statement,
 				'ss',
 				[
@@ -74,7 +74,7 @@ final readonly class Usuario extends Helper
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
-		$usuario = $this->sqlAll(
+		$usuario = $this->executeQuery(
 			$statement,
 			's',
 			[
@@ -139,7 +139,7 @@ final readonly class Usuario extends Helper
 			FROM usuarios
 			WHERE id_usuario = ?";
 
-		$usuario = $this->sqlAll(
+		$usuario = $this->executeQuery(
 			$statement,
 			'i',
 			[
@@ -165,7 +165,7 @@ final readonly class Usuario extends Helper
 			"DELETE FROM usuarios
 			WHERE id_usuario = ?";
 
-		$this->sqlAll(
+		$this->executeQuery(
 			$statement,
 			'i',
 			[

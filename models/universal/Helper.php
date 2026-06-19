@@ -54,7 +54,7 @@ abstract readonly class Helper extends Database
 		$min_range = 1;
 		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
 
-		filter_var($value, FILTER_VALIDATE_INT, array("options" => array("min_range" => $min_range)))
+		filter_var($value, FILTER_VALIDATE_INT, ["options" => ["min_range" => $min_range]])
 			? $this->$name = (int) $value
 			: $this->errors->setValidationError($error_message);
 	}
@@ -99,42 +99,42 @@ abstract readonly class Helper extends Database
 			: $this->$name = $value;
 	}
 
-	// MARK: SQL ALL
+	// MARK: EXECUTE QUERY
 
-	protected function sqlAll(string $statement, string $types, array $content, ?SqlReturn $type = null): string|int|array|null|false
+	protected function executeQuery(string $query, string $types, array $variables, ?SqlReturn $type = null): string|int|array|null|false
 	{
-		$query = $this->connection->prepare($statement);
+		$mysqli_stmt = $this->connection->prepare($query);
 
-		$query->bind_param(
+		$mysqli_stmt->bind_param(
 			$types,
-			...$content
+			...$variables
 		);
 
-		$query->execute();
+		$mysqli_stmt->execute();
 
 		switch ($type) {
 			case SqlReturn::FetchAll:
-				$result = $query->get_result()->fetch_all(MYSQLI_ASSOC);
+				$result = $mysqli_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 				break;
 
 			case SqlReturn::FetchAssoc:
-				$result = $query->get_result()->fetch_assoc();
+				$result = $mysqli_stmt->get_result()->fetch_assoc();
 				break;
 
 			case SqlReturn::InsertId:
-				$result = (int) $query->insert_id;
+				$result = (int) $mysqli_stmt->insert_id;
 				break;
 
 			case SqlReturn::BindResult:
-				$query->bind_result($result);
-				$query->fetch();
+				$mysqli_stmt->bind_result($result);
+				$mysqli_stmt->fetch();
 				break;
 
 			default:
 				$result = null;
 		}
 
-		$query->close();
+		$mysqli_stmt->close();
 
 		return $result;
 	}
