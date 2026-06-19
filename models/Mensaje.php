@@ -38,7 +38,7 @@ readonly class Mensaje extends Helper
 		$this->setId('id_receptor');
 		$this->checkValidationErrors();
 
-		$statement =
+		$query =
 			"SELECT COALESCE((
 				SELECT id_mensaje
 				FROM ultimos_mensajes_leidos_directos
@@ -47,7 +47,7 @@ readonly class Mensaje extends Helper
 			), 0) AS id_mensaje";
 
 		$last_id = $this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$this->session_user,
@@ -68,7 +68,7 @@ readonly class Mensaje extends Helper
 		$this->setId('id_grupo');
 		$this->checkValidationErrors();
 
-		$statement =
+		$query =
 			"SELECT COALESCE((
 				SELECT id_mensaje
 				FROM ultimos_mensajes_leidos_grupales
@@ -77,7 +77,7 @@ readonly class Mensaje extends Helper
 			), 0) AS id_mensaje";
 
 		$last_id = $this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$this->session_user,
@@ -112,14 +112,14 @@ readonly class Mensaje extends Helper
 		$this->setId('id_mensaje');
 		$this->checkValidationErrors();
 
-		$statement =
+		$query =
 			"INSERT INTO ultimos_mensajes_leidos_directos (id_usuario, id_receptor, id_mensaje)
 			VALUES (?, ?, ?)
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'iiii',
 			[
 				$this->session_user,
@@ -141,14 +141,14 @@ readonly class Mensaje extends Helper
 		$this->setId('id_mensaje');
 		$this->checkValidationErrors();
 
-		$statement =
+		$query =
 			"INSERT INTO ultimos_mensajes_leidos_grupales (id_usuario, id_grupo, id_mensaje)
 			VALUES (?, ?, ?)
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'iiii',
 			[
 				$this->session_user,
@@ -184,7 +184,7 @@ readonly class Mensaje extends Helper
 
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
-		$statement = <<<SQL
+		$query = <<<SQL
 			SELECT
 				mensajes.id_mensaje,
 				mensajes.contenido,
@@ -203,7 +203,7 @@ readonly class Mensaje extends Helper
 			SQL;
 
 		$mensajes = $this->executeQuery(
-			$statement,
+			$query,
 			"iiii",
 			[
 				$this->session_user,
@@ -228,7 +228,7 @@ readonly class Mensaje extends Helper
 
 		$this->isMiembroGrupo();
 
-		$statement =
+		$query =
 			"SELECT
 				mensajes.id_mensaje,
 				mensajes.contenido,
@@ -242,7 +242,7 @@ readonly class Mensaje extends Helper
 			ORDER BY fecha_envio ASC";
 
 		$mensajes = $this->executeQuery(
-			$statement,
+			$query,
 			"i",
 			[
 				$this->id_grupo
@@ -262,13 +262,13 @@ readonly class Mensaje extends Helper
 		$this->setId('id_mensaje');
 		$this->checkValidationErrors();
 
-		$statement =
+		$query =
 			"SELECT id_emisor
 			FROM mensajes
 			WHERE id_mensaje = ?";
 
 		$autor = $this->executeQuery(
-			$statement,
+			$query,
 			"i",
 			[
 				$this->id_mensaje
@@ -287,14 +287,14 @@ readonly class Mensaje extends Helper
 
 	private function isMiembroGrupo(): void
 	{
-		$statement =
+		$query =
 			"SELECT rol
 			FROM membresias
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
 		$rol = $this->executeQuery(
-			$statement,
+			$query,
 			"ii",
 			[
 				$this->session_user,
@@ -341,12 +341,12 @@ readonly class Mensaje extends Helper
 		$this->setContenido('contenido');
 		$this->checkValidationErrors();
 
-		$statement =
+		$query =
 			"INSERT INTO mensajes (contenido, id_emisor, $columna)
 			VALUES (?, ?, ?)";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'sii',
 			[
 				$this->contenido,
@@ -365,13 +365,13 @@ readonly class Mensaje extends Helper
 	{
 		$this->isAutorMensaje();
 
-		$statement =
+		$query =
 			"DELETE FROM mensajes
 			WHERE id_mensaje = ?
 			AND id_emisor = ?";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$this->id_mensaje,
@@ -387,7 +387,7 @@ readonly class Mensaje extends Helper
 
 	private function getNuevosMensajesDirectos(): array
 	{
-		$statement =
+		$query =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
 				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
@@ -410,7 +410,7 @@ readonly class Mensaje extends Helper
 			ORDER BY mensajes.id_mensaje ASC";
 
 		$mensajes = $this->executeQuery(
-			$statement,
+			$query,
 			"iiiiii",
 			[
 				$this->session_user,
@@ -430,7 +430,7 @@ readonly class Mensaje extends Helper
 
 	private function getNuevosMensajesGrupales(): array
 	{
-		$statement =
+		$query =
 			"SELECT mensajes.id_mensaje,
 				mensajes.contenido,
 				DATE_FORMAT(mensajes.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
@@ -450,7 +450,7 @@ readonly class Mensaje extends Helper
 	        ORDER BY mensajes.id_mensaje ASC";
 
 		$mensajes = $this->executeQuery(
-			$statement,
+			$query,
 			"iii",
 			[
 				$this->session_user,

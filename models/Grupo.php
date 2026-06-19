@@ -23,7 +23,7 @@ final readonly class Grupo extends Helper
 	{
 		$id_usuario = $this->session_user;
 
-		$statement =
+		$query =
 			"SELECT grupos.id_grupo, grupos.nombre_grupo
 			FROM grupos
 			LEFT JOIN membresias
@@ -33,7 +33,7 @@ final readonly class Grupo extends Helper
 			ORDER BY grupos.nombre_grupo ASC";
 
 		$grupos = $this->executeQuery(
-			$statement,
+			$query,
 			'i',
 			[
 				$id_usuario
@@ -50,7 +50,7 @@ final readonly class Grupo extends Helper
 	{
 		$id_grupo = $this->id_grupo;
 
-		$statement =
+		$query =
 			"SELECT id_usuario, nombre_usuario
 			FROM usuarios
 			WHERE id_usuario NOT IN
@@ -61,7 +61,7 @@ final readonly class Grupo extends Helper
 			)";
 
 		$grupos = $this->executeQuery(
-			$statement,
+			$query,
 			'i',
 			[
 				$id_grupo
@@ -79,14 +79,14 @@ final readonly class Grupo extends Helper
 		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 
-		$statement =
+		$query =
 			"SELECT rol
 			FROM membresias
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
 		$rol = $this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$id_usuario,
@@ -109,14 +109,14 @@ final readonly class Grupo extends Helper
 		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 
-		$statement =
+		$query =
 			"SELECT rol
 			FROM membresias
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
 		$rol = $this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$id_usuario,
@@ -142,13 +142,13 @@ final readonly class Grupo extends Helper
 
 		$nombre_grupo = $this->nombre_grupo;
 
-		$statement =
+		$query =
 			"INSERT INTO grupos (nombre_grupo)
 		 	VALUES (?)";
 
 		try {
 			$id_grupo = $this->executeQuery(
-				$statement,
+				$query,
 				's',
 				[
 					$nombre_grupo
@@ -170,12 +170,12 @@ final readonly class Grupo extends Helper
 
 
 
-		$statement2 =
+		$query2 =
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, 'fundador')";
 
 		$this->executeQuery(
-			$statement2,
+			$query2,
 			'ii',
 			[
 				$id_fundador,
@@ -201,12 +201,12 @@ final readonly class Grupo extends Helper
 		$id_invitado = $this->id_invitado;
 		$id_grupo = $this->id_grupo;
 
-		$statement =
+		$query =
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, 'pendiente')";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$id_invitado,
@@ -229,7 +229,7 @@ final readonly class Grupo extends Helper
 		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 
-		$statement =
+		$query =
 			"UPDATE membresias
 			SET rol = 'miembro'
 			WHERE id_usuario = ?
@@ -237,7 +237,7 @@ final readonly class Grupo extends Helper
 			AND rol = 'pendiente'";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$id_usuario,
@@ -260,14 +260,14 @@ final readonly class Grupo extends Helper
 		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 
-		$statement =
+		$query =
 			"DELETE FROM membresias
 			WHERE id_usuario = ?
 			AND id_grupo = ?
 			AND rol = 'pendiente'";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$id_usuario,
@@ -292,13 +292,13 @@ final readonly class Grupo extends Helper
 		$id_usuario = $this->session_user;
 		$id_grupo = $this->id_grupo;
 
-		$statement =
+		$query =
 			"DELETE FROM membresias
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$id_usuario,
@@ -321,12 +321,12 @@ final readonly class Grupo extends Helper
 
 		$id_grupo = $this->id_grupo;
 
-		$statement =
+		$query =
 			"DELETE FROM grupos
 			WHERE id_grupo = ?";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'i',
 			[
 				$id_grupo

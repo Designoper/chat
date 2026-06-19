@@ -34,14 +34,14 @@ final readonly class Conexion extends Mensaje
 		$id_receptor = $this->id_receptor;
 		$id_usuario = $this->session_user;
 
-		$statement =
+		$query =
 			"INSERT INTO conexion_directa (id_usuario, id_receptor)
 			VALUES (?, ?)
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$id_usuario,
@@ -63,14 +63,14 @@ final readonly class Conexion extends Mensaje
 		$id_grupo = $this->id_grupo;
 		$id_usuario = $this->session_user;
 
-		$statement =
+		$query =
 			"INSERT INTO conexion_grupal (id_usuario, id_grupo)
 			VALUES (?, ?)
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$id_usuario,
@@ -89,7 +89,7 @@ final readonly class Conexion extends Mensaje
 		$id_receptor = $this->id_receptor;
 		$id_usuario = $this->session_user;
 
-		$statement =
+		$query =
 			"SELECT nombre_usuario,
 				COALESCE(DATE_FORMAT(conexion_directa.last_seen, '%Y-%m-%dT%H:%i:%sZ'), 0) AS last_seen,
 				COALESCE(UNIX_TIMESTAMP(conexion_directa.last_seen), 0) AS last_seen_unix
@@ -100,7 +100,7 @@ final readonly class Conexion extends Mensaje
 			WHERE usuarios.id_usuario = ?";
 
 		$conexion = $this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$id_usuario,
@@ -119,7 +119,7 @@ final readonly class Conexion extends Mensaje
 		$id_grupo = $this->id_grupo;
 		$id_usuario = $this->session_user;
 
-		$statement =
+		$query =
 			"SELECT usuarios.nombre_usuario,
 				COALESCE(DATE_FORMAT(conexion_grupal.last_seen, '%Y-%m-%dT%H:%i:%sZ'), 0) AS last_seen,
 				COALESCE(UNIX_TIMESTAMP(conexion_grupal.last_seen), 0) AS last_seen_unix
@@ -134,7 +134,7 @@ final readonly class Conexion extends Mensaje
 			ORDER BY usuarios.nombre_usuario ASC";
 
 		$conexion = $this->executeQuery(
-			$statement,
+			$query,
 			'ii',
 			[
 				$id_grupo,

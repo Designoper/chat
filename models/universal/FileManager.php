@@ -147,21 +147,21 @@ final readonly class FileManager extends Database
 
     public function getFileUrl(string $column, string $table, string $primaryKey, int $primaryKeyValue): string|null|false
     {
-        $statement =
+        $query =
             "SELECT $column
             FROM $table
             WHERE $primaryKey = ?";
 
-        $query = $this->connection->prepare($statement);
+        $mysqli_stmt = $this->connection->prepare($query);
 
-        $query->bind_param(
+        $mysqli_stmt->bind_param(
             "i",
             $primaryKeyValue
         );
 
-        $query->execute();
-        $fileUrl = $query->get_result()->fetch_column();
-        $query->close();
+        $mysqli_stmt->execute();
+        $fileUrl = $mysqli_stmt->get_result()->fetch_column();
+        $mysqli_stmt->close();
 
         return $fileUrl;
     }

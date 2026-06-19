@@ -19,7 +19,7 @@ final readonly class Contacto extends Helper
 	{
 		$id_usuario = $this->session_user;
 
-		$statement =
+		$query =
 			"SELECT *
 			FROM (
 				-- CHATS DIRECTOS (usuarios)
@@ -90,7 +90,7 @@ final readonly class Contacto extends Helper
 				nombre ASC";
 
 		$contactos = $this->executeQuery(
-			$statement,
+			$query,
 			'iiiiiii',
 			[
 				$id_usuario,

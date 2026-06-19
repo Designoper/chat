@@ -26,13 +26,13 @@ final readonly class Usuario extends Helper
 		$nombre_usuario = $this->nombre_usuario;
 		$password = password_hash($this->password, PASSWORD_DEFAULT);
 
-		$statement =
+		$query =
 			"INSERT INTO usuarios (nombre_usuario, password)
             VALUES (?, ?)";
 
 		try {
 			$id_usuario = $this->executeQuery(
-				$statement,
+				$query,
 				'ss',
 				[
 					$nombre_usuario,
@@ -69,13 +69,13 @@ final readonly class Usuario extends Helper
 		$nombre_usuario = $this->nombre_usuario;
 		$password = $this->password;
 
-		$statement =
+		$query =
 			"SELECT id_usuario, password
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
 		$usuario = $this->executeQuery(
-			$statement,
+			$query,
 			's',
 			[
 				$nombre_usuario
@@ -134,13 +134,13 @@ final readonly class Usuario extends Helper
 
 		$id_usuario = $this->session_user;
 
-		$statement =
+		$query =
 			"SELECT id_usuario, nombre_usuario
 			FROM usuarios
 			WHERE id_usuario = ?";
 
 		$usuario = $this->executeQuery(
-			$statement,
+			$query,
 			'i',
 			[
 				$id_usuario
@@ -161,12 +161,12 @@ final readonly class Usuario extends Helper
 
 		$id_usuario = $this->session_user;
 
-		$statement =
+		$query =
 			"DELETE FROM usuarios
 			WHERE id_usuario = ?";
 
 		$this->executeQuery(
-			$statement,
+			$query,
 			'i',
 			[
 				$id_usuario
