@@ -104,12 +104,7 @@ abstract readonly class Helper extends Database
 	protected function executeQuery(string $query, string $types, array $variables, ?SqlReturn $type = null): string|int|array|null|false
 	{
 		$mysqli_stmt = $this->connection->prepare($query);
-
-		$mysqli_stmt->bind_param(
-			$types,
-			...$variables
-		);
-
+		$mysqli_stmt->bind_param($types, ...$variables);
 		$mysqli_stmt->execute();
 
 		switch ($type) {
