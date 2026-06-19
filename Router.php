@@ -68,15 +68,26 @@ final readonly class Router
         $method = $_SERVER['REQUEST_METHOD'];
         $requestUri = $_SERVER['REQUEST_URI'];
 
-        foreach ($this->routes as $route) {
-            if ($route['method'] === $method && preg_match("#^{$route['path']}#", $requestUri)) {
-                $route['handler']();
-                return;
-            }
-        }
+        switch ($method) {
+            case 'GET':
+            case 'POST':
 
-        http_response_code(404);
-        echo json_encode("La ruta solicitada no existe: $requestUri");
+                foreach ($this->routes as $route) {
+                    if ($route['method'] === $method && preg_match("#^{$route['path']}#", $requestUri)) {
+                        $route['handler']();
+                        return;
+                    }
+                }
+
+                http_response_code(404);
+                header("Content-Type: application/json");
+                echo json_encode("La ruta solicitada no existe: $requestUri", JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                return;
+
+            default:
+                http_response_code(405);
+                header("Allow: GET, POST");
+        }
     }
 }
 
