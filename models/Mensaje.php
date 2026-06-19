@@ -9,7 +9,7 @@ enum MensajeProperties: string
 	case ID_MENSAJE = 'id_mensaje';
 	case ID_RECEPTOR = 'id_receptor';
 	case ID_GRUPO = 'id_grupo';
-	case ID_CONTENIDO = 'contenido';
+	case CONTENIDO = 'contenido';
 }
 
 readonly class Mensaje extends Helper
@@ -195,8 +195,8 @@ readonly class Mensaje extends Helper
 
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
-		$query = <<<SQL
-			SELECT
+		$query =
+			"SELECT
 				mensajes.id_mensaje,
 				mensajes.contenido,
 				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
@@ -210,8 +210,7 @@ readonly class Mensaje extends Helper
 				LEAST(id_emisor, id_receptor) = ?
 				AND GREATEST(id_emisor, id_receptor) = ?
 			)
-			ORDER BY fecha_envio ASC
-			SQL;
+			ORDER BY fecha_envio ASC";
 
 		$mensajes = $this->executeQuery(
 			$query,
