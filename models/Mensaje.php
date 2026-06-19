@@ -38,9 +38,6 @@ readonly class Mensaje extends Helper
 		$this->setId('id_receptor');
 		$this->checkValidationErrors();
 
-		$id_receptor = $this->id_receptor;
-		$id_usuario = $this->session_user;
-
 		$statement =
 			"SELECT COALESCE((
 				SELECT id_mensaje
@@ -53,8 +50,8 @@ readonly class Mensaje extends Helper
 			$statement,
 			'ii',
 			[
-				$id_usuario,
-				$id_receptor
+				$this->session_user,
+				$this->id_receptor
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -196,11 +193,8 @@ readonly class Mensaje extends Helper
 	private function readMensajesDirectos(): void
 	{
 		$this->setId('id_receptor');
-
 		$this->checkValidationErrors();
 
-		$id_emisor = $this->session_user;
-		$id_receptor = $this->id_receptor;
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
 		$statement = <<<SQL
@@ -225,10 +219,10 @@ readonly class Mensaje extends Helper
 			$statement,
 			"iiii",
 			[
-				$id_emisor,
-				$id_receptor,
-				$id_receptor,
-				$id_emisor
+				$this->session_user,
+				$this->id_receptor,
+				$this->id_receptor,
+				$this->session_user,
 			],
 			SqlReturn::FetchAll
 		);
