@@ -21,8 +21,6 @@ final readonly class Grupo extends Helper
 
 	private function obtainGruposPendiente(): array
 	{
-		$id_usuario = $this->session_user;
-
 		$query =
 			"SELECT grupos.id_grupo, grupos.nombre_grupo
 			FROM grupos
@@ -36,7 +34,7 @@ final readonly class Grupo extends Helper
 			$query,
 			'i',
 			[
-				$id_usuario
+				$this->session_user
 			],
 			SqlReturn::FetchAll
 		);
@@ -48,8 +46,6 @@ final readonly class Grupo extends Helper
 
 	private function readGruposNoMiembro(): array
 	{
-		$id_grupo = $this->id_grupo;
-
 		$query =
 			"SELECT id_usuario, nombre_usuario
 			FROM usuarios
@@ -64,7 +60,7 @@ final readonly class Grupo extends Helper
 			$query,
 			'i',
 			[
-				$id_grupo
+				$this->id_grupo
 			],
 			SqlReturn::FetchAll
 		);
@@ -76,9 +72,6 @@ final readonly class Grupo extends Helper
 
 	private function isFundadorGrupo(): void
 	{
-		$id_usuario = $this->session_user;
-		$id_grupo = $this->id_grupo;
-
 		$query =
 			"SELECT rol
 			FROM membresias
@@ -89,8 +82,8 @@ final readonly class Grupo extends Helper
 			$query,
 			'ii',
 			[
-				$id_usuario,
-				$id_grupo
+				$this->session_user,
+				$this->id_grupo
 			],
 			SqlReturn::BindResult
 		);
@@ -106,9 +99,6 @@ final readonly class Grupo extends Helper
 
 	private function isMiembroGrupo(): void
 	{
-		$id_usuario = $this->session_user;
-		$id_grupo = $this->id_grupo;
-
 		$query =
 			"SELECT rol
 			FROM membresias
@@ -119,8 +109,8 @@ final readonly class Grupo extends Helper
 			$query,
 			'ii',
 			[
-				$id_usuario,
-				$id_grupo
+				$this->session_user,
+				$this->id_grupo
 			],
 			SqlReturn::BindResult
 		);
@@ -140,8 +130,6 @@ final readonly class Grupo extends Helper
 
 		$this->checkValidationErrors();
 
-		$nombre_grupo = $this->nombre_grupo;
-
 		$query =
 			"INSERT INTO grupos (nombre_grupo)
 		 	VALUES (?)";
@@ -151,7 +139,7 @@ final readonly class Grupo extends Helper
 				$query,
 				's',
 				[
-					$nombre_grupo
+					$this->nombre_grupo
 				],
 				SqlReturn::InsertId
 			);
@@ -166,10 +154,6 @@ final readonly class Grupo extends Helper
 			throw $error;
 		}
 
-		$id_fundador = $this->session_user;
-
-
-
 		$query2 =
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, 'fundador')";
@@ -178,7 +162,7 @@ final readonly class Grupo extends Helper
 			$query2,
 			'ii',
 			[
-				$id_fundador,
+				$this->session_user,
 				$id_grupo,
 			]
 		);
@@ -198,9 +182,6 @@ final readonly class Grupo extends Helper
 
 		$this->isMiembroGrupo();
 
-		$id_invitado = $this->id_invitado;
-		$id_grupo = $this->id_grupo;
-
 		$query =
 			"INSERT INTO membresias (id_usuario, id_grupo, rol)
 		 	VALUES (?, ?, 'pendiente')";
@@ -209,8 +190,8 @@ final readonly class Grupo extends Helper
 			$query,
 			'ii',
 			[
-				$id_invitado,
-				$id_grupo,
+				$this->id_invitado,
+				$this->id_grupo,
 			]
 		);
 
@@ -226,9 +207,6 @@ final readonly class Grupo extends Helper
 
 		$this->checkValidationErrors();
 
-		$id_usuario = $this->session_user;
-		$id_grupo = $this->id_grupo;
-
 		$query =
 			"UPDATE membresias
 			SET rol = 'miembro'
@@ -240,8 +218,8 @@ final readonly class Grupo extends Helper
 			$query,
 			'ii',
 			[
-				$id_usuario,
-				$id_grupo,
+				$this->session_user,
+				$this->id_grupo,
 			]
 		);
 
@@ -257,9 +235,6 @@ final readonly class Grupo extends Helper
 
 		$this->checkValidationErrors();
 
-		$id_usuario = $this->session_user;
-		$id_grupo = $this->id_grupo;
-
 		$query =
 			"DELETE FROM membresias
 			WHERE id_usuario = ?
@@ -270,8 +245,8 @@ final readonly class Grupo extends Helper
 			$query,
 			'ii',
 			[
-				$id_usuario,
-				$id_grupo,
+				$this->session_user,
+				$this->id_grupo,
 			]
 		);
 
@@ -289,9 +264,6 @@ final readonly class Grupo extends Helper
 
 		$this->isMiembroGrupo();
 
-		$id_usuario = $this->session_user;
-		$id_grupo = $this->id_grupo;
-
 		$query =
 			"DELETE FROM membresias
 			WHERE id_usuario = ?
@@ -301,8 +273,8 @@ final readonly class Grupo extends Helper
 			$query,
 			'ii',
 			[
-				$id_usuario,
-				$id_grupo,
+				$this->session_user,
+				$this->id_grupo,
 			]
 		);
 
@@ -319,8 +291,6 @@ final readonly class Grupo extends Helper
 
 		$this->isFundadorGrupo();
 
-		$id_grupo = $this->id_grupo;
-
 		$query =
 			"DELETE FROM grupos
 			WHERE id_grupo = ?";
@@ -329,7 +299,7 @@ final readonly class Grupo extends Helper
 			$query,
 			'i',
 			[
-				$id_grupo
+				$this->id_grupo
 			]
 		);
 

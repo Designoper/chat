@@ -116,8 +116,8 @@ readonly class Mensaje extends Helper
 
 	private function setUltimoIdDirecto(): void
 	{
-		$this->setId('id_receptor');
-		$this->setId('id_mensaje');
+		$this->setId(MensajeProperties::ID_RECEPTOR->value);
+		$this->setId(MensajeProperties::ID_MENSAJE->value);
 		$this->checkValidationErrors();
 
 		$query =

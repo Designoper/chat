@@ -17,6 +17,8 @@ final readonly class Contacto extends Helper
 
 	private function obtainContactos(): array
 	{
+		$dateFormat = self::ISO8601_SQL_FORMAT;
+
 		$query =
 			"SELECT *
 			FROM (
@@ -26,7 +28,7 @@ final readonly class Contacto extends Helper
 					u.nombre_usuario AS nombre,
 					'usuario' AS tipo,
 					COUNT(m.id_mensaje) AS num_mensajes,
-					DATE_FORMAT(ult.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+					DATE_FORMAT(ult.fecha_envio, $dateFormat) AS fecha_envio,
 					ult.contenido,
 					ult.id_emisor
 				FROM usuarios u
@@ -59,7 +61,7 @@ final readonly class Contacto extends Helper
 					g.nombre_grupo AS nombre,
 					'grupo' AS tipo,
 					COUNT(mg.id_mensaje) AS num_mensajes,
-					DATE_FORMAT(ultg.fecha_envio, '%Y-%m-%dT%H:%i:%sZ') AS fecha_envio,
+					DATE_FORMAT(ultg.fecha_envio, $dateFormat) AS fecha_envio,
 					ultg.contenido,
 					ultg.id_emisor
 				FROM grupos g
