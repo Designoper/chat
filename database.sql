@@ -6,13 +6,13 @@ SET default_storage_engine=InnoDB;
 
 CREATE TABLE usuarios (
     id_usuario INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
+    nombre_usuario VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE grupos (
     id_grupo INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    nombre_grupo VARCHAR(50) NOT NULL UNIQUE
+    nombre_grupo VARCHAR(20) NOT NULL UNIQUE
 );
 
 CREATE TABLE membresias (

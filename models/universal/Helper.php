@@ -86,9 +86,9 @@ abstract readonly class Helper extends Database
 	protected function setPassword(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío.";
+		$error_message = "El campo $name no puede estar vacío ni superar los 20 carácteres.";
 
-		empty($value)
+		empty($value) || strlen($value) > 20
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
 	}
