@@ -53,6 +53,7 @@ main {
 	min-height: inherit;
 	display: flex;
 	flex-direction: column;
+	gap: 3em;
 
 	> section {
 		display: grid;
