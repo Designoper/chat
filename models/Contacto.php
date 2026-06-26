@@ -30,7 +30,8 @@ final readonly class Contacto extends Helper
 					COUNT(m.id_mensaje) AS num_mensajes,
 					DATE_FORMAT(ult.fecha_envio, $dateFormat) AS fecha_envio,
 					ult.contenido,
-					ult.id_emisor
+					ult.id_emisor,
+					ue.nombre_usuario AS nombre_emisor
 				FROM usuarios u
 				LEFT JOIN ultimos_mensajes_leidos_directos uml
 					ON uml.id_usuario = ?
@@ -50,8 +51,16 @@ final readonly class Contacto extends Helper
 							OR  (m2.id_emisor = u.id_usuario AND m2.id_receptor = ?)
 						)
 					)
+				LEFT JOIN usuarios ue
+					ON ue.id_usuario = ult.id_emisor
 				WHERE u.id_usuario != ?
-				GROUP BY u.id_usuario, u.nombre_usuario, ult.fecha_envio, ult.contenido
+				GROUP BY
+					u.id_usuario,
+					u.nombre_usuario,
+					ult.fecha_envio,
+					ult.contenido,
+					ult.id_emisor,
+					ue.nombre_usuario
 
 				UNION ALL
 
@@ -63,7 +72,8 @@ final readonly class Contacto extends Helper
 					COUNT(mg.id_mensaje) AS num_mensajes,
 					DATE_FORMAT(ultg.fecha_envio, $dateFormat) AS fecha_envio,
 					ultg.contenido,
-					ultg.id_emisor
+					ultg.id_emisor,
+					ue2.nombre_usuario AS nombre_emisor
 				FROM grupos g
 				JOIN membresias mem
 					ON mem.id_grupo = g.id_grupo
@@ -81,9 +91,16 @@ final readonly class Contacto extends Helper
 						FROM mensajes m3
 						WHERE m3.id_grupo = g.id_grupo
 					)
-				GROUP BY g.id_grupo, g.nombre_grupo, ultg.fecha_envio, ultg.contenido
+				LEFT JOIN usuarios ue2
+					ON ue2.id_usuario = ultg.id_emisor
+				GROUP BY
+					g.id_grupo,
+					g.nombre_grupo,
+					ultg.fecha_envio,
+					ultg.contenido,
+					ultg.id_emisor,
+					ue2.nombre_usuario
 			) AS chats
-
 			ORDER BY
 				(fecha_envio IS NULL) ASC,
 				fecha_envio DESC,

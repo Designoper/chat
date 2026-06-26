@@ -42,9 +42,9 @@ export default class Contacto extends Usuario {
 				? `<data>${contacto.num_mensajes}</data>`
 				: '';
 
-			const autorMensaje = contacto.id_emisor === this.usuario.id_usuario
+			const autorMensaje = contacto.nombre_emisor === this.usuario.nombre_usuario
 				? 'Tú'
-				: `<span translate="no">${contacto.nombre}</span>`;
+				: `<span translate="no">${contacto.nombre_emisor}</span>`;
 
 			const lastMessage = contacto.contenido
 				? `<date>${this.compareTime(contacto.fecha_envio, false)}</date>
