@@ -16,6 +16,11 @@ export default class Contacto extends Usuario {
 
 			let id;
 			let imgSrc;
+			let autorMensaje;
+
+			autorMensaje = contacto.nombre_emisor === this.usuario.nombre_usuario
+				? 'Tú: '
+				: `<span translate="no">${contacto.nombre_emisor}: </span>`;
 
 			switch (contacto.tipo) {
 				case 'usuario':
@@ -26,6 +31,7 @@ export default class Contacto extends Usuario {
 							<path d="M.001 823.889c0-220.889 179.111-400 400-400s400 179.111 400 400-179.111 400-400 400-400-179.111-400-400zm212.11-636C212.111 84.132 296.244 0 400 0s187.889 84.132 187.889 187.889S503.756 375.777 400 375.777s-187.888-84.132-187.888-187.889z"/>
 						</svg>
 					`;
+					autorMensaje = '';
 
 					break;
 				case 'grupo':
@@ -42,13 +48,9 @@ export default class Contacto extends Usuario {
 				? `<data>${contacto.num_mensajes}</data>`
 				: '';
 
-			const autorMensaje = contacto.nombre_emisor === this.usuario.nombre_usuario
-				? 'Tú'
-				: `<span translate="no">${contacto.nombre_emisor}</span>`;
-
 			const lastMessage = contacto.contenido
 				? `<date>${this.compareTime(contacto.fecha_envio, false)}</date>
-					<p>${autorMensaje}: ${contacto.contenido}</p>`
+					<p>${autorMensaje}${contacto.contenido}</p>`
 				: '';
 
 			const template =
