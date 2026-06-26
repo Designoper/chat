@@ -115,12 +115,3 @@ CREATE TABLE ultimos_mensajes_leidos_grupales (
         REFERENCES grupos(id_grupo)
         ON DELETE CASCADE
 );
-
--- CREATE TABLE ultimos_mensajes_leidos (
---     id_usuario INT UNSIGNED NOT NULL,
---     tipo ENUM('publico','directo','grupo') NOT NULL,
---     id_objetivo INT UNSIGNED NULL, -- receptor o grupo
---     id_mensaje INT NULL,
-
---     UNIQUE KEY unico (id_usuario, tipo, id_objetivo)
--- );

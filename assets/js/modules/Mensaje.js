@@ -190,7 +190,13 @@ export default class Mensaje extends Grupo {
 	// MARK: CREATE MENSAJES
 
 	async createMensaje(form) {
-		await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR);
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR);
+		if (response.status === 201) {
+			// globalThis.scrollTo({
+			// 	top: document.body.scrollHeight,
+			// 	behavior: "instant"
+			// });
+		}
 	}
 
 	// MARK: DELETE MENSAJES
