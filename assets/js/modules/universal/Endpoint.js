@@ -38,6 +38,8 @@ export default class Endpoint extends Fetch {
 				LOGIN: `${this.ROOT}usuarios/login`,
 				LOGOUT: `${this.ROOT}usuarios/logout`,
 				DELETE: `${this.ROOT}usuarios/delete`,
+				CAMBIAR_NOMBRE: `${this.ROOT}usuarios/nombre`,
+				CAMBIAR_PASSWORD: `${this.ROOT}usuarios/password`,
 			},
 			MENSAJES: {
 				CREAR: `${this.ROOT}mensajes/crear`,
