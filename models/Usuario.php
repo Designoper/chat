@@ -165,4 +165,69 @@ final readonly class Usuario extends Helper
 
 		$this->logout();
 	}
+
+	// MARK: CAMBIAR NOMBRE
+
+	public function cambiarNombre(): void
+	{
+		$this->authEndpoint();
+
+		$this->setNombre('nombre_usuario');
+		$this->checkValidationErrors();
+
+		$query =
+			"UPDATE usuarios
+			SET nombre_usuario = ?
+			WHERE id_usuario = ?";
+
+		try {
+			$this->executeQuery(
+				$query,
+				'si',
+				[
+					$this->nombre_usuario,
+					$this->session_user
+				]
+			);
+		} catch (\mysqli_sql_exception $error) {
+
+			if ($error->getCode() === 1062) {
+				$this->status = 409;
+				$this->errors->setIntegrityError('¡Este nombre de usuario ya existe!');
+				$this->checkIntegrityErrors();
+			}
+
+			throw $error;
+		}
+
+		$this->status = 201;
+		$this->sendResponse();
+	}
+
+	// MARK: CAMBIAR CONTRASEÑA
+
+	public function cambiarPassword(): void
+	{
+		$this->authEndpoint();
+
+		$this->setPassword('password');
+		$this->checkValidationErrors();
+
+		$query =
+			"UPDATE usuarios
+			SET password = ?
+			WHERE id_usuario = ?";
+
+		$this->executeQuery(
+			$query,
+			'si',
+			[
+				password_hash($this->password, PASSWORD_DEFAULT),
+				$this->session_user
+			]
+		);
+
+		$this->status = 201;
+		$this->sendResponse();
+	}
 }

@@ -39,6 +39,8 @@ final readonly class Router
             $this->makeRoute(HTTPMethods::POST, 'usuarios/login', [Usuario::class, 'login']),
             $this->makeRoute(HTTPMethods::POST, 'usuarios/logout', [Usuario::class, 'logout']),
             $this->makeRoute(HTTPMethods::POST, 'usuarios/delete', [Usuario::class, 'deleteUsuario']),
+            $this->makeRoute(HTTPMethods::POST, 'usuarios/nombre', [Usuario::class, 'cambiarNombre']),
+            $this->makeRoute(HTTPMethods::POST, 'usuarios/password', [Usuario::class, 'cambiarPassword']),
 
             $this->makeRoute(HTTPMethods::POST, 'mensajes/crear', [Mensaje::class, 'createMensaje']),
             $this->makeRoute(HTTPMethods::POST, 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),
