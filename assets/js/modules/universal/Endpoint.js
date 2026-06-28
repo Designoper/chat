@@ -87,7 +87,9 @@ export default class Endpoint extends Fetch {
 			const form = input.closest('form');
 			const output = form.querySelector('output');
 
-			output.innerHTML = '';
+			if (output) {
+				output.innerHTML = '';
+			}
 		});
 	}
 }
