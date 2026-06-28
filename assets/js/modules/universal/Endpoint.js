@@ -63,6 +63,7 @@ export default class Endpoint extends Fetch {
 	constructor() {
 		super();
 		this.initFormHandler();
+		this.deleteErrorOutput();
 	}
 
 	initFormHandler() {
@@ -77,6 +78,16 @@ export default class Endpoint extends Fetch {
 			typeof this[name] === 'function'
 				? this[name](form)
 				: console.warn(`No existe la función: ${name}`);
+		});
+	}
+
+	deleteErrorOutput() {
+		document.addEventListener('input', (e) => {
+			const input = e.target;
+			const form = input.closest('form');
+			const output = form.querySelector('output');
+
+			output.innerHTML = '';
 		});
 	}
 }
