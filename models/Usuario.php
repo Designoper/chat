@@ -35,7 +35,7 @@ final readonly class Usuario extends Helper
 
 		while ($intento < $maxIntentos) {
 
-			$codigo = $this->generarCodigo(); // genera código aleatorio
+			$codigo = $this->generarCodigo();
 
 			try {
 				$id_usuario = $this->executeQuery(
@@ -49,31 +49,26 @@ final readonly class Usuario extends Helper
 					SqlReturn::InsertId
 				);
 
-				// Si llega aquí, el INSERT fue exitoso
 				$_SESSION['id_usuario'] = $id_usuario;
 				$this->status = 201;
 				$this->sendResponse();
 			} catch (\mysqli_sql_exception $error) {
 
-				// Si el duplicado es del nombre de usuario → sí es error del usuario
 				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'nombre_usuario')) {
 					$this->status = 409;
 					$this->errors->setIntegrityError('¡Este nombre de usuario ya existe!');
 					$this->checkIntegrityErrors();
 				}
 
-				// Si el duplicado es del código → reintentar
 				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'codigo_contacto')) {
 					$intento++;
-					continue; // generar otro código y reintentar
+					continue;
 				}
 
-				// Otros errores → lanzar
 				throw $error;
 			}
 		}
 
-		// Si fallan todos los intentos (muy improbable)
 		$this->status = 500;
 		$this->errors->setIntegrityError('No se pudo generar un código único. Inténtalo de nuevo.');
 		$this->checkIntegrityErrors();
