@@ -204,7 +204,7 @@ final readonly class Usuario extends Helper
 		$this->sendResponse();
 	}
 
-	// MARK: CAMBIAR CONTRASEÑA
+	// MARK: CAMBIAR PASSWORD
 
 	public function cambiarPassword(): void
 	{
