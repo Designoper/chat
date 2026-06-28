@@ -7,7 +7,8 @@ SET default_storage_engine=InnoDB;
 CREATE TABLE usuarios (
     id_usuario INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     nombre_usuario VARCHAR(20) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    codigo_contacto VARCHAR(8) NOT NULL UNIQUE
 );
 
 CREATE TABLE grupos (
