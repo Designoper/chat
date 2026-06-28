@@ -9,6 +9,7 @@ export default class Endpoint extends Fetch {
 				OTROS: `${this.ROOT}usuarios`,
 				STREAM: `${this.ROOT}usuarios/stream`,
 				CURRENT: `${this.ROOT}usuarios/current`,
+				PENDIENTE: `${this.ROOT}usuarios/pendiente`,
 			},
 			MENSAJES: {
 				TODOS: `${this.ROOT}mensajes`,
@@ -41,6 +42,8 @@ export default class Endpoint extends Fetch {
 				CAMBIAR_NOMBRE: `${this.ROOT}usuarios/nombre`,
 				CAMBIAR_PASSWORD: `${this.ROOT}usuarios/password`,
 				SOLICITAR_CONTACTO: `${this.ROOT}usuarios/contacto`,
+				ACEPTAR: `${this.ROOT}usuarios/aceptar`,
+				RECHAZAR: `${this.ROOT}usuarios/rechazar`,
 			},
 			MENSAJES: {
 				CREAR: `${this.ROOT}mensajes/crear`,

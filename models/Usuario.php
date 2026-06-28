@@ -322,15 +322,14 @@ final readonly class Usuario extends Helper
 			"UPDATE contactos
 			SET estado = 'aceptado'
 			WHERE id_usuario = ?
-			AND id_contacto = ?
-			AND estado = 'pendiente'";
+			AND id_contacto = ?";
 
 		$this->executeQuery(
 			$query,
 			'ii',
 			[
-				$this->session_user,
 				$this->id_contacto,
+				$this->session_user
 			]
 		);
 
@@ -357,12 +356,62 @@ final readonly class Usuario extends Helper
 			$query,
 			'ii',
 			[
-				$this->session_user,
 				$this->id_contacto,
+				$this->session_user
 			]
 		);
 
 		$this->status = 204;
 		$this->sendResponse();
+	}
+
+	private function obtainUsuariosPendiente(): array
+	{
+		$query =
+			"SELECT usuarios.id_usuario, usuarios.nombre_usuario, contactos.estado
+			FROM usuarios
+			LEFT JOIN contactos
+				ON usuarios.id_usuario = contactos.id_usuario
+				WHERE contactos.id_contacto = ?
+				AND contactos.estado = 'pendiente'
+			ORDER BY usuarios.nombre_usuario ASC";
+
+		$usuarios = $this->executeQuery(
+			$query,
+			'i',
+			[
+				$this->session_user
+			],
+			SqlReturn::FetchAll
+		);
+
+		return $usuarios;
+	}
+
+	// MARK: STREAM USUARIOS PENDIENTE
+
+	public function streamUsuariosPendiente(): void
+	{
+		$this->setSSE();
+
+		while (true) {
+
+			if (connection_aborted()) {
+				break;
+			}
+
+			static $usuariosPendientes = [];
+
+			$usuariosPendientesUpdate = $this->obtainUsuariosPendiente();
+
+			if ($usuariosPendientesUpdate !== $usuariosPendientes) {
+				$this->sendEvent('usuario', $usuariosPendientesUpdate);
+				$usuariosPendientes = $usuariosPendientesUpdate;
+			}
+
+			$this->heartbeat();
+
+			usleep(300000); // 0.3s
+		}
 	}
 }

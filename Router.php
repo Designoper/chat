@@ -23,6 +23,7 @@ final readonly class Router
     {
         $this->routes = [
             $this->makeRoute(HTTPMethods::GET, 'usuarios/current', [Usuario::class, 'currentUsuario']),
+            $this->makeRoute(HTTPMethods::GET, 'usuarios/pendiente', [Usuario::class, 'streamUsuariosPendiente']),
 
             $this->makeRoute(HTTPMethods::GET, 'mensajes/stream', [Mensaje::class, 'streamMensajes']),
             $this->makeRoute(HTTPMethods::GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']),
@@ -42,6 +43,8 @@ final readonly class Router
             $this->makeRoute(HTTPMethods::POST, 'usuarios/nombre', [Usuario::class, 'cambiarNombre']),
             $this->makeRoute(HTTPMethods::POST, 'usuarios/password', [Usuario::class, 'cambiarPassword']),
             $this->makeRoute(HTTPMethods::POST, 'usuarios/contacto', [Usuario::class, 'solicitarContacto']),
+            $this->makeRoute(HTTPMethods::POST, 'usuarios/aceptar', [Usuario::class, 'aceptarContacto']),
+            $this->makeRoute(HTTPMethods::POST, 'usuarios/rechazar', [Usuario::class, 'rechazarContacto']),
 
             $this->makeRoute(HTTPMethods::POST, 'mensajes/crear', [Mensaje::class, 'createMensaje']),
             $this->makeRoute(HTTPMethods::POST, 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),

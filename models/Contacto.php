@@ -33,6 +33,11 @@ final readonly class Contacto extends Helper
 					ult.id_emisor,
 					ue.nombre_usuario AS nombre_emisor
 				FROM usuarios u
+
+				LEFT JOIN contactos
+					ON contactos.id_usuario = u.id_usuario
+					AND contactos.estado = 'aceptado'
+
 				LEFT JOIN ultimos_mensajes_leidos_directos uml
 					ON uml.id_usuario = ?
 					AND uml.id_receptor = u.id_usuario
