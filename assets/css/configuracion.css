@@ -25,25 +25,15 @@ header {
 main {
 	display: grid;
 	gap: 1.5em;
-	padding: 0 10vw;
+	padding: 2em 10vw 0;
 
 	svg {
 		width: 1.25em;
 	}
 
 	form {
-		display: grid;
-
-
-		menu {
-			display: flex;
-			gap: 1em;
-
-			li {
-				display: grid;
-				gap: 1em;
-			}
-		}
+		display: flex;
+		gap: 1em;
 
 		input {
 			min-width: 0;
@@ -51,6 +41,14 @@ main {
 			padding: 0.25em 0.75em;
 			border-radius: 0.15em;
 			background-color: white;
+		}
+
+		output {
+			width: 100%;
+
+			&:empty {
+				display: none;
+			}
 		}
 	}
 }
