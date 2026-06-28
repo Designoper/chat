@@ -51,12 +51,12 @@ new Usuario()->sessionRedirect();
 			<menu>
 				<li>
 					<label for="nombre_usuario">Nombre usuario*</label>
-					<input id="nombre_usuario" name="nombre_usuario" minlength="1" maxlength="20" autocomplete="username" required>
+					<input id="nombre_usuario" name="nombre_usuario" autocomplete="username" maxlength="20" required>
 				</li>
 
 				<li>
 					<label for="password">Contraseña*</label>
-					<input id="password" name="password" type="password" minlength="1" maxlength="20" autocomplete="current-password" required>
+					<input id="password" name="password" type="password" autocomplete="current-password" maxlength="20" required>
 				</li>
 
 				<li>
