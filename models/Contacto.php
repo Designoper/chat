@@ -35,8 +35,10 @@ final readonly class Contacto extends Helper
 				FROM usuarios u
 
 				LEFT JOIN contactos
-					ON contactos.id_usuario = u.id_usuario
-					AND contactos.estado = 'aceptado'
+				ON contactos.id_usuario = ?
+				AND contactos.id_contacto = u.id_usuario
+				AND contactos.estado = 'aceptado'
+
 
 				LEFT JOIN ultimos_mensajes_leidos_directos uml
 					ON uml.id_usuario = ?
@@ -59,6 +61,8 @@ final readonly class Contacto extends Helper
 				LEFT JOIN usuarios ue
 					ON ue.id_usuario = ult.id_emisor
 				WHERE u.id_usuario != ?
+				AND contactos.estado = 'aceptado'
+
 				GROUP BY
 					u.id_usuario,
 					u.nombre_usuario,
@@ -113,8 +117,9 @@ final readonly class Contacto extends Helper
 
 		$contactos = $this->executeQuery(
 			$query,
-			'iiiiiii',
+			'iiiiiiii',
 			[
+				$this->session_user,
 				$this->session_user,
 				$this->session_user,
 				$this->session_user,

@@ -7,6 +7,6 @@ const grupo = new Grupo();
 const usuario = new Usuario();
 
 await contacto.sessionCheck();
-// await contacto.streamContactos();
+await contacto.streamContactos();
 // await grupo.streamGruposPendientes();
 await usuario.streamUsuarios();
