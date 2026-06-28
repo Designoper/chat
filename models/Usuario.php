@@ -293,8 +293,8 @@ final readonly class Usuario extends Helper
 		}
 
 		$query2 =
-			"INSERT INTO contactos (id_usuario, id_contacto, estado)
-			VALUES (?, ?, 'pendiente')";
+			"INSERT INTO invitaciones_directas (id_usuario, id_contacto)
+			VALUES (?, ?)";
 
 		$this->executeQuery(
 			$query2,
@@ -319,15 +319,43 @@ final readonly class Usuario extends Helper
 		$this->checkValidationErrors();
 
 		$query =
-			"UPDATE contactos
-			SET estado = 'aceptado'
-			WHERE id_usuario = ?
-			AND id_contacto = ?";
+			"INSERT INTO contactos_directos (id_usuario, id_contacto)
+			VALUES (?, ?)";
 
 		$this->executeQuery(
 			$query,
 			'ii',
 			[
+				$this->id_contacto,
+				$this->session_user
+			]
+		);
+
+		$query2 =
+			"INSERT INTO contactos_directos (id_usuario, id_contacto)
+			VALUES (?, ?)";
+
+		$this->executeQuery(
+			$query2,
+			'ii',
+			[
+				$this->session_user,
+				$this->id_contacto
+			]
+		);
+
+		$query3 =
+			"DELETE FROM invitaciones_directas
+			WHERE (
+				(id_usuario = ? AND id_contacto = ?) OR (id_usuario = ? AND id_contacto = ?)
+			)";
+
+		$this->executeQuery(
+			$query3,
+			'iiii',
+			[
+				$this->session_user,
+				$this->id_contacto,
 				$this->id_contacto,
 				$this->session_user
 			]
@@ -347,10 +375,9 @@ final readonly class Usuario extends Helper
 		$this->checkValidationErrors();
 
 		$query =
-			"DELETE FROM contactos
+			"DELETE FROM invitaciones_directas
 			WHERE id_usuario = ?
-			AND id_contacto = ?
-			AND estado = 'pendiente'";
+			AND id_contacto = ?";
 
 		$this->executeQuery(
 			$query,
@@ -368,12 +395,11 @@ final readonly class Usuario extends Helper
 	private function obtainUsuariosPendiente(): array
 	{
 		$query =
-			"SELECT usuarios.id_usuario, usuarios.nombre_usuario, contactos.estado
+			"SELECT usuarios.id_usuario, usuarios.nombre_usuario
 			FROM usuarios
-			LEFT JOIN contactos
-				ON usuarios.id_usuario = contactos.id_usuario
-				WHERE contactos.id_contacto = ?
-				AND contactos.estado = 'pendiente'
+			LEFT JOIN invitaciones_directas
+				ON usuarios.id_usuario = invitaciones_directas.id_usuario
+				WHERE invitaciones_directas.id_contacto = ?
 			ORDER BY usuarios.nombre_usuario ASC";
 
 		$usuarios = $this->executeQuery(

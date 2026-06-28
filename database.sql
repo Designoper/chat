@@ -32,10 +32,24 @@ CREATE TABLE membresias (
         ON DELETE CASCADE
 );
 
-CREATE TABLE contactos (
+CREATE TABLE invitaciones_directas (
     id_usuario INT UNSIGNED,
     id_contacto INT UNSIGNED,
-    estado ENUM ('aceptado','pendiente') NOT NULL,
+
+    UNIQUE KEY test (id_usuario, id_contacto),
+
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (id_contacto)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE contactos_directos (
+    id_usuario INT UNSIGNED,
+    id_contacto INT UNSIGNED,
 
     UNIQUE KEY test (id_usuario, id_contacto),
 
