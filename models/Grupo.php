@@ -54,13 +54,21 @@ final readonly class Grupo extends Helper
 				SELECT id_usuario
 				FROM membresias
 				WHERE id_grupo = ?
-			)";
+			)
+			AND id_usuario IN
+			(
+				SELECT id_contacto
+				FROM contactos_directos
+				WHERE id_usuario = ?
+			)
+			ORDER BY nombre_usuario ASC";
 
 		$grupos = $this->executeQuery(
 			$query,
-			'i',
+			'ii',
 			[
-				$this->id_grupo
+				$this->id_grupo,
+				$this->session_user
 			],
 			SqlReturn::FetchAll
 		);

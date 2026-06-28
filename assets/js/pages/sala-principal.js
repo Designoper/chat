@@ -4,9 +4,9 @@ import Usuario from '../modules/Usuario.js';
 
 // const contacto = new Contacto();
 const grupo = new Grupo();
-const usuario = new Usuario();
+// const usuario = new Usuario();
 
 await grupo.sessionCheck();
 await grupo.streamContactos();
 await grupo.streamGruposPendientes();
-await usuario.streamUsuarios();
+await grupo.streamUsuarios();
