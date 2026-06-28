@@ -40,6 +40,7 @@ export default class Endpoint extends Fetch {
 				DELETE: `${this.ROOT}usuarios/delete`,
 				CAMBIAR_NOMBRE: `${this.ROOT}usuarios/nombre`,
 				CAMBIAR_PASSWORD: `${this.ROOT}usuarios/password`,
+				SOLICITAR_CONTACTO: `${this.ROOT}usuarios/contacto`,
 			},
 			MENSAJES: {
 				CREAR: `${this.ROOT}mensajes/crear`,
@@ -67,7 +68,7 @@ export default class Endpoint extends Fetch {
 	}
 
 	initFormHandler() {
-		document.addEventListener('submit', (e) => {
+		document.onsubmit = (e) => {
 			const form = e.target;
 			if (form.tagName !== 'FORM') return;
 
@@ -78,18 +79,18 @@ export default class Endpoint extends Fetch {
 			typeof this[name] === 'function'
 				? this[name](form)
 				: console.warn(`No existe la función: ${name}`);
-		});
+		};
 	}
+
 
 	deleteErrorOutput() {
-		document.addEventListener('input', (e) => {
+		document.oninput = (e) => {
 			const input = e.target;
 			const form = input.closest('form');
-			const output = form.querySelector('output');
+			const output = form?.querySelector('output');
 
-			if (output) {
-				output.innerHTML = '';
-			}
-		});
+			if (output) output.innerHTML = '';
+		};
 	}
+
 }

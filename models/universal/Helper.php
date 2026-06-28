@@ -81,6 +81,16 @@ abstract readonly class Helper extends Database
 			: $this->$name = $value;
 	}
 
+	protected function setCodigo(string $name): void
+	{
+		$value = $_POST[$name] ?? null;
+		$error_message = "El campo $name no puede estar vacío y debe contener 6 carácteres.";
+
+		empty($value) || strlen($value) !== 6
+			? $this->errors->setValidationError($error_message)
+			: $this->$name = $value;
+	}
+
 	// MARK: SET PASSWORD
 
 	protected function setPassword(string $name): void

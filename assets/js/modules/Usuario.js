@@ -37,12 +37,18 @@ export default class Usuario extends TemporalAPI {
 
 	async cambiarNombre(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.CAMBIAR_NOMBRE);
-		if (response.status === 201) { }
+		// if (response.status === 201) { }
 	}
 
 	async cambiarPassword(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.CAMBIAR_PASSWORD);
-		if (response.status === 201) { }
+		// if (response.status === 201) { }
+	}
+
+	async solicitarContacto(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.SOLICITAR_CONTACTO);
+		// if (response.status === 201) { }
+		console.log(response);
 	}
 
 	async sessionCheck() {

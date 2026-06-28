@@ -1,4 +1,4 @@
-import Contacto from "./Contacto.js";
+// import Contacto from "./Contacto.js";
 import Usuario from "./Usuario.js";
 
 export default class Grupo extends Usuario {

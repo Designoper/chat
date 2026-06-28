@@ -8,6 +8,8 @@ final readonly class Usuario extends Helper
 {
 	protected string $nombre_usuario;
 	protected string $password;
+	protected string $codigo_contacto;
+	protected int $id_contacto;
 
 	public function __construct()
 	{
@@ -24,34 +26,57 @@ final readonly class Usuario extends Helper
 		$this->checkValidationErrors();
 
 		$query =
-			"INSERT INTO usuarios (nombre_usuario, password)
-            VALUES (?, ?)";
+			"INSERT INTO usuarios (nombre_usuario, password, codigo_contacto)
+        	VALUES (?, ?, ?)";
 
-		try {
-			$id_usuario = $this->executeQuery(
-				$query,
-				'ss',
-				[
-					$this->nombre_usuario,
-					password_hash($this->password, PASSWORD_DEFAULT)
-				],
-				SqlReturn::InsertId
-			);
-		} catch (\mysqli_sql_exception $error) {
+		// Intentos para evitar colisiones de código
+		$maxIntentos = 5;
+		$intento = 0;
 
-			if ($error->getCode() === 1062) {
-				$this->status = 409;
-				$this->errors->setIntegrityError('¡Este nombre de usuario ya existe!');
-				$this->checkIntegrityErrors();
+		while ($intento < $maxIntentos) {
+
+			$codigo = $this->generarCodigo(); // genera código aleatorio
+
+			try {
+				$id_usuario = $this->executeQuery(
+					$query,
+					'sss',
+					[
+						$this->nombre_usuario,
+						password_hash($this->password, PASSWORD_DEFAULT),
+						$codigo
+					],
+					SqlReturn::InsertId
+				);
+
+				// Si llega aquí, el INSERT fue exitoso
+				$_SESSION['id_usuario'] = $id_usuario;
+				$this->status = 201;
+				$this->sendResponse();
+			} catch (\mysqli_sql_exception $error) {
+
+				// Si el duplicado es del nombre de usuario → sí es error del usuario
+				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'nombre_usuario')) {
+					$this->status = 409;
+					$this->errors->setIntegrityError('¡Este nombre de usuario ya existe!');
+					$this->checkIntegrityErrors();
+				}
+
+				// Si el duplicado es del código → reintentar
+				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'codigo_contacto')) {
+					$intento++;
+					continue; // generar otro código y reintentar
+				}
+
+				// Otros errores → lanzar
+				throw $error;
 			}
-
-			throw $error;
 		}
 
-		$_SESSION['id_usuario'] = $id_usuario;
-
-		$this->status = 201;
-		$this->sendResponse();
+		// Si fallan todos los intentos (muy improbable)
+		$this->status = 500;
+		$this->errors->setIntegrityError('No se pudo generar un código único. Inténtalo de nuevo.');
+		$this->checkIntegrityErrors();
 	}
 
 	// MARK: LOGIN
@@ -228,6 +253,121 @@ final readonly class Usuario extends Helper
 		);
 
 		$this->status = 201;
+		$this->sendResponse();
+	}
+
+	// MARK: GENERAR CÓDIGO
+
+	private function generarCodigo($length = 6)
+	{
+		$chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+		$code = '';
+		for ($i = 0; $i < $length; $i++) {
+			$code .= $chars[random_int(0, strlen($chars) - 1)];
+		}
+		return $code;
+	}
+
+	// MARK: SOLICITAR CONTACTO
+
+	public function solicitarContacto(): void
+	{
+		$this->authEndpoint();
+
+		$this->setCodigo('codigo_contacto');
+		$this->checkValidationErrors();
+
+		$query =
+			"SELECT id_usuario
+			FROM usuarios
+			WHERE codigo_contacto = ?";
+
+		$contacto = $this->executeQuery(
+			$query,
+			's',
+			[
+				$this->codigo_contacto
+			],
+			SqlReturn::BindResult
+		);
+
+		if (!$contacto) {
+			$this->status = 404;
+			$this->errors->setIntegrityError('No existe ningún usuario con ese código.');
+			$this->checkIntegrityErrors();
+		}
+
+		$query2 =
+			"INSERT INTO contactos (id_usuario, id_contacto, estado)
+			VALUES (?, ?, 'pendiente')";
+
+		$this->executeQuery(
+			$query2,
+			'ii',
+			[
+				$this->session_user,
+				$contacto
+			]
+		);
+
+		$this->status = 201;
+		$this->sendResponse();
+	}
+
+	// MARK: ACEPTAR CONTACTO
+
+	public function aceptarContacto(): void
+	{
+		$this->authEndpoint();
+
+		$this->setId('id_contacto');
+		$this->checkValidationErrors();
+
+		$query =
+			"UPDATE contactos
+			SET estado = 'aceptado'
+			WHERE id_usuario = ?
+			AND id_contacto = ?
+			AND estado = 'pendiente'";
+
+		$this->executeQuery(
+			$query,
+			'ii',
+			[
+				$this->session_user,
+				$this->id_contacto,
+			]
+		);
+
+		$this->status = 200;
+		$this->sendResponse();
+	}
+
+	// MARK: RECHAZAR CONTACTO
+
+	public function rechazarContacto(): void
+	{
+		$this->authEndpoint();
+
+		$this->setId('id_contacto');
+		$this->checkValidationErrors();
+
+		$query =
+			"DELETE FROM contactos
+			WHERE id_usuario = ?
+			AND id_contacto = ?
+			AND estado = 'pendiente'";
+
+		$this->executeQuery(
+			$query,
+			'ii',
+			[
+				$this->session_user,
+				$this->id_contacto,
+			]
+		);
+
+		$this->status = 204;
 		$this->sendResponse();
 	}
 }
