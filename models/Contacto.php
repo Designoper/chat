@@ -24,54 +24,53 @@ final readonly class Contacto extends Helper
 			FROM (
 				-- CHATS DIRECTOS (usuarios)
 				SELECT
-    u.id_usuario AS id,
-    u.nombre_usuario AS nombre,
-    'usuario' AS tipo,
-    COUNT(m.id_mensaje) AS num_mensajes,
-    DATE_FORMAT(ult.fecha_envio, $dateFormat) AS fecha_envio,
-    ult.contenido,
-    ult.id_emisor,
-    ue.nombre_usuario AS nombre_emisor
-FROM usuarios u
+					u.id_usuario AS id,
+					u.nombre_usuario AS nombre,
+					'usuario' AS tipo,
+					COUNT(m.id_mensaje) AS num_mensajes,
+					DATE_FORMAT(ult.fecha_envio, $dateFormat) AS fecha_envio,
+					ult.contenido,
+					ult.id_emisor,
+					ue.nombre_usuario AS nombre_emisor
+				FROM usuarios u
 
-JOIN contactos_directos cd
-    ON cd.id_usuario = ?
-    AND cd.id_contacto = u.id_usuario
+				JOIN contactos_directos cd
+					ON cd.id_usuario = ?
+					AND cd.id_contacto = u.id_usuario
 
-LEFT JOIN ultimos_mensajes_leidos_directos uml
-    ON uml.id_usuario = ?
-    AND uml.id_receptor = u.id_usuario
+				LEFT JOIN ultimos_mensajes_leidos_directos uml
+					ON uml.id_usuario = ?
+					AND uml.id_receptor = u.id_usuario
 
-LEFT JOIN mensajes m
-    ON m.id_receptor = ?
-    AND m.id_emisor = u.id_usuario
-    AND m.id_grupo IS NULL
-    AND m.id_mensaje > COALESCE(uml.id_mensaje, 0)
+				LEFT JOIN mensajes m
+					ON m.id_receptor = ?
+					AND m.id_emisor = u.id_usuario
+					AND m.id_grupo IS NULL
+					AND m.id_mensaje > COALESCE(uml.id_mensaje, 0)
 
-LEFT JOIN mensajes ult
-    ON ult.id_mensaje = (
-        SELECT MAX(m2.id_mensaje)
-        FROM mensajes m2
-        WHERE m2.id_grupo IS NULL
-        AND (
-                (m2.id_emisor = ? AND m2.id_receptor = u.id_usuario)
-            OR  (m2.id_emisor = u.id_usuario AND m2.id_receptor = ?)
-        )
-    )
+				LEFT JOIN mensajes ult
+					ON ult.id_mensaje = (
+						SELECT MAX(m2.id_mensaje)
+						FROM mensajes m2
+						WHERE m2.id_grupo IS NULL
+						AND (
+								(m2.id_emisor = ? AND m2.id_receptor = u.id_usuario)
+							OR  (m2.id_emisor = u.id_usuario AND m2.id_receptor = ?)
+						)
+					)
 
-LEFT JOIN usuarios ue
-    ON ue.id_usuario = ult.id_emisor
+				LEFT JOIN usuarios ue
+					ON ue.id_usuario = ult.id_emisor
 
-WHERE u.id_usuario != ?
+				WHERE u.id_usuario != ?
 
-GROUP BY
-    u.id_usuario,
-    u.nombre_usuario,
-    ult.fecha_envio,
-    ult.contenido,
-    ult.id_emisor,
-    ue.nombre_usuario
-
+				GROUP BY
+					u.id_usuario,
+					u.nombre_usuario,
+					ult.fecha_envio,
+					ult.contenido,
+					ult.id_emisor,
+					ue.nombre_usuario
 
 				UNION ALL
 

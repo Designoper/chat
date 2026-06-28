@@ -1,9 +1,9 @@
 // import Contacto from "./Contacto.js";
 import Contacto from "./Contacto.js";
-import Usuario from "./Usuario.js";
+// import Usuario from "./Usuario.js";
 
 export default class Grupo extends Contacto {
-	output = document.querySelector('output');
+	// output = document.querySelector('output');
 	invitacionesMenu = this.output.querySelector('menu:nth-of-type(1)');
 
 	constructor() {

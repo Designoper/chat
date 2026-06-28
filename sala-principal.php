@@ -74,25 +74,27 @@ new Usuario()->authBrowser();
 
 		</output>
 
-		<form method="POST" name="createGrupo">
-			<input name="nombre_grupo" id="nombre_grupo" placeholder="Crear grupo" autocomplete="username" maxlength="20" required>
-			<button>
-				<svg viewBox="0 0 800 800">
-					<circle cx="400" cy="400" r="400" />
-					<path d="M420.234 137.001c22.346 0 40.461 18.116 40.461 40.462v161.848h161.848c22.347 0 40.462 18.115 40.462 40.461v40.462c0 22.346-18.115 40.461-40.462 40.461H460.695v161.848c0 22.347-18.115 40.462-40.461 40.462h-40.462c-22.346 0-40.461-18.115-40.461-40.462V460.695H177.463c-22.346 0-40.462-18.115-40.462-40.461v-40.462c0-22.346 18.116-40.461 40.462-40.461H339.31V177.463c0-22.346 18.115-40.462 40.461-40.462h40.462z" />
-				</svg>
-			</button>
-		</form>
+		<section>
+			<form method="POST" name="createGrupo">
+				<input name="nombre_grupo" id="nombre_grupo" placeholder="Crear grupo" autocomplete="username" maxlength="20" required>
+				<button>
+					<svg viewBox="0 0 800 800">
+						<circle cx="400" cy="400" r="400" />
+						<path d="M420.234 137.001c22.346 0 40.461 18.116 40.461 40.462v161.848h161.848c22.347 0 40.462 18.115 40.462 40.461v40.462c0 22.346-18.115 40.461-40.462 40.461H460.695v161.848c0 22.347-18.115 40.462-40.461 40.462h-40.462c-22.346 0-40.461-18.115-40.461-40.462V460.695H177.463c-22.346 0-40.462-18.115-40.462-40.461v-40.462c0-22.346 18.116-40.461 40.462-40.461H339.31V177.463c0-22.346 18.115-40.462 40.461-40.462h40.462z" />
+					</svg>
+				</button>
+			</form>
 
-		<form method="POST" name="solicitarContacto">
-			<input name="codigo_contacto" id="codigo_contacto" placeholder="Código contacto" autocomplete="off" minlength="6" maxlength="6" required>
-			<button>
-				<svg viewBox="0 0 800 800">
-					<circle cx="400" cy="400" r="400" />
-					<path d="M420.234 137.001c22.346 0 40.461 18.116 40.461 40.462v161.848h161.848c22.347 0 40.462 18.115 40.462 40.461v40.462c0 22.346-18.115 40.461-40.462 40.461H460.695v161.848c0 22.347-18.115 40.462-40.461 40.462h-40.462c-22.346 0-40.461-18.115-40.461-40.462V460.695H177.463c-22.346 0-40.462-18.115-40.462-40.461v-40.462c0-22.346 18.116-40.461 40.462-40.461H339.31V177.463c0-22.346 18.115-40.462 40.461-40.462h40.462z" />
-				</svg>
-			</button>
-		</form>
+			<form method="POST" name="solicitarContacto">
+				<input name="codigo_contacto" id="codigo_contacto" placeholder="Código contacto" autocomplete="off" minlength="6" maxlength="6" required>
+				<button>
+					<svg viewBox="0 0 800 800">
+						<circle cx="400" cy="400" r="400" />
+						<path d="M420.234 137.001c22.346 0 40.461 18.116 40.461 40.462v161.848h161.848c22.347 0 40.462 18.115 40.462 40.461v40.462c0 22.346-18.115 40.461-40.462 40.461H460.695v161.848c0 22.347-18.115 40.462-40.461 40.462h-40.462c-22.346 0-40.461-18.115-40.461-40.462V460.695H177.463c-22.346 0-40.462-18.115-40.462-40.461v-40.462c0-22.346 18.116-40.461 40.462-40.461H339.31V177.463c0-22.346 18.115-40.462 40.461-40.462h40.462z" />
+					</svg>
+				</button>
+			</form>
+		</section>
 
 	</main>
 

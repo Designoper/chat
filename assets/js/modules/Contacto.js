@@ -1,7 +1,7 @@
 import Usuario from "./Usuario.js";
 
 export default class Contacto extends Usuario {
-	output = document.querySelector('output');
+	// output = document.querySelector('output');
 	contactosMenu = this.output.querySelector('menu:nth-of-type(3)');
 
 	constructor() {

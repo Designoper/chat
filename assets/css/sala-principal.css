@@ -165,45 +165,48 @@ main {
 		}
 	}
 
-	> form {
-		display: flex;
-		flex-wrap: nowrap;
-		gap: 1em;
-		align-items: center;
-		width: 100%;
-		position: sticky;
-		bottom: 0;
-		padding: 1em 10vw;
+	> section {
 		margin-top: auto;
-		background-color: var(--terciary-bg);
 
-		input {
-			min-width: 0;
-			flex-grow: 1;
-			padding: 0.25em 0.75em;
-			border-radius: 0.15em;
-			background-color: white;
-		}
+		form {
+			display: flex;
+			flex-wrap: nowrap;
+			gap: 1em;
+			align-items: center;
+			width: 100%;
+			position: sticky;
+			bottom: 0;
+			padding: 1em 10vw;
+			background-color: var(--terciary-bg);
 
-		button {
-			svg {
-				width: 1.75em;
+			input {
+				min-width: 0;
+				flex-grow: 1;
+				padding: 0.25em 0.75em;
+				border-radius: 0.15em;
+				background-color: white;
+			}
 
-				path {
-					fill: black;
-				}
+			button {
+				svg {
+					width: 1.75em;
 
-				circle {
-					fill: white;
+					path {
+						fill: black;
+					}
+
+					circle {
+						fill: white;
+					}
 				}
 			}
-		}
 
-		/* &:has(:invalid) {
+			/* &:has(:invalid) {
 			button:not([type="reset"], [type="button"]) {
 				opacity: 25%;
 				cursor: not-allowed;
 			}
 		} */
+		}
 	}
 }
