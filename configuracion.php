@@ -58,7 +58,7 @@ new Usuario()->authBrowser();
 	<main id="main">
 
 		<form method="POST" name="cambiarNombre">
-			<input id="nombre_usuario" name="nombre_usuario" autocomplete="off" required placeholder="Nuevo nombre">
+			<input id="nombre_usuario" name="nombre_usuario" autocomplete="username" maxlength="20" required placeholder="Nuevo nombre">
 			<button>
 				<svg viewBox="0 0 800 667">
 					<path d="M22.25 461.575c-29.668-29.995-29.668-78.989 0-108.984l39.279-39.058c13.297-13.418 31.426-20.975 50.316-20.975 19.439 0 38.045 8.002 51.417 22.109l69.394 71.996a35.43 35.43 0 0 0 51.402 0L637.702 22.122C651.083 8.01 669.698.007 689.145.004a70.91 70.91 0 0 1 50.868 21.517l38.145 38.567c28.922 29.85 28.922 77.933 0 107.783l-469.502 477.11a70.9 70.9 0 0 1-50.948 21.621c-18.882 0-36.999-7.548-50.296-20.953L22.25 461.575z" />
@@ -70,7 +70,7 @@ new Usuario()->authBrowser();
 		</form>
 
 		<form method="POST" name="cambiarPassword">
-			<input id="password" name="password" autocomplete="off" required placeholder="Nueva contraseña">
+			<input id="password" name="password" type="password" autocomplete="new-password" maxlength="20" required placeholder="Nueva contraseña">
 			<button>
 				<svg viewBox="0 0 800 667">
 					<path d="M22.25 461.575c-29.668-29.995-29.668-78.989 0-108.984l39.279-39.058c13.297-13.418 31.426-20.975 50.316-20.975 19.439 0 38.045 8.002 51.417 22.109l69.394 71.996a35.43 35.43 0 0 0 51.402 0L637.702 22.122C651.083 8.01 669.698.007 689.145.004a70.91 70.91 0 0 1 50.868 21.517l38.145 38.567c28.922 29.85 28.922 77.933 0 107.783l-469.502 477.11a70.9 70.9 0 0 1-50.948 21.621c-18.882 0-36.999-7.548-50.296-20.953L22.25 461.575z" />

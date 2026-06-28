@@ -50,12 +50,12 @@ new Usuario()->sessionRedirect();
 				<li>
 					<label for="nombre_usuario">Nombre usuario*</label>
 					<!-- <input id="nombre_usuario" name="nombre_usuario" autocomplete="off" pattern="\w{3,20}" required> -->
-					<input id="nombre_usuario" name="nombre_usuario" autocomplete="off" required>
+					<input id="nombre_usuario" name="nombre_usuario" maxlength="20" autocomplete="username" required>
 				</li>
 
 				<li>
 					<label for="password">Contraseña*</label>
-					<input id="password" name="password" type="password" minlength="1" autocomplete="off" required>
+					<input id="password" name="password" type="password" maxlength="20" autocomplete="new-password" required>
 				</li>
 
 				<li>
