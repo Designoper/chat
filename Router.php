@@ -7,6 +7,7 @@ require_once __DIR__ . '/models/Mensaje.php';
 require_once __DIR__ . '/models/Grupo.php';
 require_once __DIR__ . '/models/Conexion.php';
 require_once __DIR__ . '/models/Contacto.php';
+require_once __DIR__ . '/models/Invitacion.php';
 
 enum HTTPMethods: string
 {
@@ -23,18 +24,20 @@ final readonly class Router
     {
         $this->routes = [
             $this->makeRoute(HTTPMethods::GET, 'usuarios/current', [Usuario::class, 'currentUsuario']),
-            $this->makeRoute(HTTPMethods::GET, 'usuarios/pendiente', [Usuario::class, 'streamUsuariosPendiente']),
 
             $this->makeRoute(HTTPMethods::GET, 'mensajes/stream', [Mensaje::class, 'streamMensajes']),
             $this->makeRoute(HTTPMethods::GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']),
             $this->makeRoute(HTTPMethods::GET, 'mensajes', [Mensaje::class, 'readMensajes']),
 
             $this->makeRoute(HTTPMethods::GET, 'grupos/no-miembro/stream', [Grupo::class, 'streamGruposNoMiembro']),
-            $this->makeRoute(HTTPMethods::GET, 'grupos/stream', [Grupo::class, 'streamGrupos']),
+            $this->makeRoute(HTTPMethods::GET, 'grupos/stream', [Grupo::class, 'streamGruposPendiente']),
 
             $this->makeRoute(HTTPMethods::GET, 'conexion/stream', [Conexion::class, 'streamConexion']),
 
             $this->makeRoute(HTTPMethods::GET, 'contactos/stream', [Contacto::class, 'streamContactos']),
+
+            $this->makeRoute(HTTPMethods::GET, 'invitaciones/usuarios/pendiente', [Invitacion::class, 'streamUsuariosPendiente']),
+
 
             $this->makeRoute(HTTPMethods::POST, 'usuarios/crear', [Usuario::class, 'createUsuario']),
             $this->makeRoute(HTTPMethods::POST, 'usuarios/login', [Usuario::class, 'login']),
@@ -42,22 +45,24 @@ final readonly class Router
             $this->makeRoute(HTTPMethods::POST, 'usuarios/delete', [Usuario::class, 'deleteUsuario']),
             $this->makeRoute(HTTPMethods::POST, 'usuarios/nombre', [Usuario::class, 'cambiarNombre']),
             $this->makeRoute(HTTPMethods::POST, 'usuarios/password', [Usuario::class, 'cambiarPassword']),
-            $this->makeRoute(HTTPMethods::POST, 'usuarios/contacto', [Usuario::class, 'solicitarContacto']),
-            $this->makeRoute(HTTPMethods::POST, 'usuarios/aceptar', [Usuario::class, 'aceptarContacto']),
-            $this->makeRoute(HTTPMethods::POST, 'usuarios/rechazar', [Usuario::class, 'rechazarContacto']),
 
             $this->makeRoute(HTTPMethods::POST, 'mensajes/crear', [Mensaje::class, 'createMensaje']),
             $this->makeRoute(HTTPMethods::POST, 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),
             $this->makeRoute(HTTPMethods::POST, 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdLeido']),
 
             $this->makeRoute(HTTPMethods::POST, 'grupos/crear', [Grupo::class, 'createGrupo']),
-            $this->makeRoute(HTTPMethods::POST, 'grupos/invitar', [Grupo::class, 'invitar']),
-            $this->makeRoute(HTTPMethods::POST, 'grupos/aceptar', [Grupo::class, 'aceptarInvitacion']),
-            $this->makeRoute(HTTPMethods::POST, 'grupos/rechazar', [Grupo::class, 'rechazarInvitacion']),
-            $this->makeRoute(HTTPMethods::POST, 'grupos/abandonar', [Grupo::class, 'abandonarGrupo']),
             $this->makeRoute(HTTPMethods::POST, 'grupos/delete', [Grupo::class, 'deleteGrupo']),
+            $this->makeRoute(HTTPMethods::POST, 'grupos/abandonar', [Grupo::class, 'abandonarGrupo']),
 
             $this->makeRoute(HTTPMethods::POST, 'conexion/estado', [Conexion::class, 'setConexion']),
+
+            $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/invitar', [Invitacion::class, 'solicitarContacto']),
+            $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/aceptar', [Invitacion::class, 'aceptarContacto']),
+            $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/rechazar', [Invitacion::class, 'rechazarContacto']),
+            $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/invitar', [Invitacion::class, 'invitarAGrupo']),
+            $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/aceptar', [Invitacion::class, 'aceptarGrupo']),
+            $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/rechazar', [Invitacion::class, 'rechazarGrupo']),
+
         ];
 
         $this->handleRequest();

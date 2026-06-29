@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/universal/Helper.php';
 
-final readonly class Usuario extends Helper
+readonly class Usuario extends Helper
 {
 	protected string $nombre_usuario;
 	protected string $password;
@@ -14,6 +14,18 @@ final readonly class Usuario extends Helper
 	public function __construct()
 	{
 		parent::__construct();
+	}
+
+	// MARK: GENERAR CÓDIGO
+
+	private function generarCodigo($length = 6)
+	{
+		$chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+		$code = '';
+		for ($i = 0; $i < $length; $i++) {
+			$code .= $chars[random_int(0, strlen($chars) - 1)];
+		}
+		return $code;
 	}
 
 	// MARK: CREATE
@@ -248,195 +260,5 @@ final readonly class Usuario extends Helper
 
 		$this->status = 201;
 		$this->sendResponse();
-	}
-
-	// MARK: GENERAR CÓDIGO
-
-	private function generarCodigo($length = 6)
-	{
-		$chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-		$code = '';
-		for ($i = 0; $i < $length; $i++) {
-			$code .= $chars[random_int(0, strlen($chars) - 1)];
-		}
-		return $code;
-	}
-
-	// MARK: SOLICITAR CONTACTO
-
-	public function solicitarContacto(): void
-	{
-		$this->authEndpoint();
-
-		$this->setCodigo('codigo_contacto');
-		$this->checkValidationErrors();
-
-		$query =
-			"SELECT id_usuario
-			FROM usuarios
-			WHERE codigo_contacto = ?";
-
-		$contacto = $this->executeQuery(
-			$query,
-			's',
-			[
-				$this->codigo_contacto
-			],
-			SqlReturn::BindResult
-		);
-
-		if (!$contacto) {
-			$this->status = 404;
-			$this->errors->setIntegrityError('No existe ningún usuario con ese código.');
-			$this->checkIntegrityErrors();
-		}
-
-		$query2 =
-			"INSERT INTO invitaciones_directas (id_usuario, id_contacto)
-			VALUES (?, ?)";
-
-		$this->executeQuery(
-			$query2,
-			'ii',
-			[
-				$this->session_user,
-				$contacto
-			]
-		);
-
-		$this->status = 201;
-		$this->sendResponse();
-	}
-
-	// MARK: ACEPTAR CONTACTO
-
-	public function aceptarContacto(): void
-	{
-		$this->authEndpoint();
-
-		$this->setId('id_contacto');
-		$this->checkValidationErrors();
-
-		$query =
-			"INSERT INTO contactos_directos (id_usuario, id_contacto)
-			VALUES (?, ?)";
-
-		$this->executeQuery(
-			$query,
-			'ii',
-			[
-				$this->id_contacto,
-				$this->session_user
-			]
-		);
-
-		$query2 =
-			"INSERT INTO contactos_directos (id_usuario, id_contacto)
-			VALUES (?, ?)";
-
-		$this->executeQuery(
-			$query2,
-			'ii',
-			[
-				$this->session_user,
-				$this->id_contacto
-			]
-		);
-
-		$query3 =
-			"DELETE FROM invitaciones_directas
-			WHERE (
-				(id_usuario = ? AND id_contacto = ?) OR (id_usuario = ? AND id_contacto = ?)
-			)";
-
-		$this->executeQuery(
-			$query3,
-			'iiii',
-			[
-				$this->session_user,
-				$this->id_contacto,
-				$this->id_contacto,
-				$this->session_user
-			]
-		);
-
-		$this->status = 200;
-		$this->sendResponse();
-	}
-
-	// MARK: RECHAZAR CONTACTO
-
-	public function rechazarContacto(): void
-	{
-		$this->authEndpoint();
-
-		$this->setId('id_contacto');
-		$this->checkValidationErrors();
-
-		$query =
-			"DELETE FROM invitaciones_directas
-			WHERE id_usuario = ?
-			AND id_contacto = ?";
-
-		$this->executeQuery(
-			$query,
-			'ii',
-			[
-				$this->id_contacto,
-				$this->session_user
-			]
-		);
-
-		$this->status = 204;
-		$this->sendResponse();
-	}
-
-	private function obtainUsuariosPendiente(): array
-	{
-		$query =
-			"SELECT usuarios.id_usuario, usuarios.nombre_usuario
-			FROM usuarios
-			LEFT JOIN invitaciones_directas
-				ON usuarios.id_usuario = invitaciones_directas.id_usuario
-			WHERE invitaciones_directas.id_contacto = ?
-			ORDER BY usuarios.nombre_usuario ASC";
-
-		$usuarios = $this->executeQuery(
-			$query,
-			'i',
-			[
-				$this->session_user
-			],
-			SqlReturn::FetchAll
-		);
-
-		return $usuarios;
-	}
-
-	// MARK: STREAM USUARIOS PENDIENTE
-
-	public function streamUsuariosPendiente(): void
-	{
-		$this->setSSE();
-
-		while (true) {
-
-			if (connection_aborted()) {
-				break;
-			}
-
-			static $usuariosPendientes = [];
-
-			$usuariosPendientesUpdate = $this->obtainUsuariosPendiente();
-
-			if ($usuariosPendientesUpdate !== $usuariosPendientes) {
-				$this->sendEvent('usuario', $usuariosPendientesUpdate);
-				$usuariosPendientes = $usuariosPendientesUpdate;
-			}
-
-			$this->heartbeat();
-
-			usleep(300000); // 0.3s
-		}
 	}
 }
