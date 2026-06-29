@@ -3,7 +3,7 @@ import TemporalAPI from "./universal/TemporalAPI.js";
 export default class Usuario extends TemporalAPI {
 	usuario = {};
 	output = document.querySelector('output');
-	contactosMenu = this.output.querySelector('menu:nth-of-type(2)');
+	invitacionDirectaMenu = this.output.querySelector('menu:nth-of-type(2)');
 
 	constructor() {
 		super();
@@ -106,6 +106,11 @@ export default class Usuario extends TemporalAPI {
 		this.usuario = response.json;
 	}
 
+	imprimirCodigo() {
+		const response = document.querySelector('header p');
+		response.innerHTML = this.usuario.codigo_contacto;
+	}
+
 	// MARK: STREAM CONTACTOS
 
 	streamUsuarios() {
@@ -116,7 +121,7 @@ export default class Usuario extends TemporalAPI {
 			const contactos = JSON.parse(event.data);
 			const content = this.usuariosTemplate(contactos);
 
-			this.contactosMenu.innerHTML = this.sanitize(content);
+			this.invitacionDirectaMenu.innerHTML = this.sanitize(content);
 		});
 	}
 }

@@ -10,3 +10,4 @@ await grupo.sessionCheck();
 await grupo.streamContactos();
 await grupo.streamGruposPendientes();
 await grupo.streamUsuarios();
+grupo.imprimirCodigo();

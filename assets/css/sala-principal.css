@@ -30,7 +30,7 @@ main {
 
 	output {
 		display: grid;
-		/* row-rule: solid 1px var(--primary-bg); */
+		row-rule: solid 1px var(--primary-bg);
 
 		menu {
 			display: grid;
@@ -167,6 +167,8 @@ main {
 
 	> section {
 		margin-top: auto;
+		position: sticky;
+		bottom: 0;
 
 		form {
 			display: flex;
@@ -174,8 +176,6 @@ main {
 			gap: 1em;
 			align-items: center;
 			width: 100%;
-			position: sticky;
-			bottom: 0;
 			padding: 1em 10vw;
 			background-color: var(--terciary-bg);
 
