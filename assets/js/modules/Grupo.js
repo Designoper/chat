@@ -121,7 +121,7 @@ export default class Grupo extends Contacto {
 			const state = JSON.parse(event.data);
 
 			const content = this.gruposNoMiembroTemplate(state);
-			const select = document.getElementById('id_invitado');
+			const select = document.getElementById('id_contacto');
 			select.innerHTML = this.sanitize(content);
 		});
 	}

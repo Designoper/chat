@@ -8,7 +8,6 @@ readonly class Grupo extends Usuario
 {
 	protected int $id_grupo;
 	protected string $nombre_grupo;
-	protected int $id_invitado;
 
 	public function __construct()
 	{

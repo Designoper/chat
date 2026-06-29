@@ -203,8 +203,8 @@ readonly class Invitacion extends Grupo
 
 	public function invitarGrupo(): void
 	{
+		$this->setId('id_contacto');
 		$this->setId('id_grupo');
-		$this->setId('id_invitado');
 
 		$this->checkValidationErrors();
 
@@ -218,7 +218,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ii',
 			[
-				$this->id_invitado,
+				$this->id_contacto,
 				$this->id_grupo,
 			]
 		);

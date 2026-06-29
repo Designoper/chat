@@ -220,7 +220,7 @@ export default class Mensaje extends Grupo {
 					`
 						<form method="POST" name="invitar">
 							<input type="hidden" value="${this.urlSearchParams.get('id_grupo')}" name="id_grupo">
-							<select name="id_invitado" id="id_invitado" required>
+							<select name="id_contacto" id="id_contacto" required>
 								<option value="">Añadir a...</option>
 							</select>
 							<button>Invitar</button>
