@@ -13,7 +13,12 @@ CREATE TABLE usuarios (
 
 CREATE TABLE grupos (
     id_grupo INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    nombre_grupo VARCHAR(20) NOT NULL UNIQUE
+    nombre_grupo VARCHAR(20) NOT NULL UNIQUE,
+    id_fundador INT UNSIGNED,
+
+    FOREIGN KEY (id_fundador)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE membresias (

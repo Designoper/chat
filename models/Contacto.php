@@ -85,24 +85,30 @@ final readonly class Contacto extends Helper
 					ultg.id_emisor,
 					ue2.nombre_usuario AS nombre_emisor
 				FROM grupos g
+
 				JOIN membresias mem
 					ON mem.id_grupo = g.id_grupo
 					AND mem.id_usuario = ?
 					AND mem.rol IN ('fundador','miembro')
+
 				LEFT JOIN ultimos_mensajes_leidos_grupales umlg
 					ON umlg.id_usuario = ?
 					AND umlg.id_grupo = g.id_grupo
+
 				LEFT JOIN mensajes mg
 					ON mg.id_grupo = g.id_grupo
 					AND mg.id_mensaje > COALESCE(umlg.id_mensaje, 0)
+
 				LEFT JOIN mensajes ultg
 					ON ultg.id_mensaje = (
 						SELECT MAX(m3.id_mensaje)
 						FROM mensajes m3
 						WHERE m3.id_grupo = g.id_grupo
 					)
+
 				LEFT JOIN usuarios ue2
 					ON ue2.id_usuario = ultg.id_emisor
+
 				GROUP BY
 					g.id_grupo,
 					g.nombre_grupo,
