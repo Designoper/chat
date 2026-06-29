@@ -191,10 +191,10 @@ export default class Mensaje extends Contacto {
 	async createMensaje(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR);
 		if (response.status === 201) {
-			// globalThis.scrollTo({
-			// 	top: document.body.scrollHeight,
-			// 	behavior: "instant"
-			// });
+			globalThis.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "instant"
+			});
 		}
 	}
 
@@ -217,7 +217,7 @@ export default class Mensaje extends Contacto {
 			if (this.urlSearchParams.has('id_grupo')) {
 				const formInvitar =
 					`
-						<form method="POST" name="invitar">
+						<form method="POST" name="invitarGrupo">
 							<input type="hidden" value="${this.urlSearchParams.get('id_grupo')}" name="id_grupo">
 							<select name="id_contacto" id="id_contacto" required>
 								<option value="">Añadir a...</option>
@@ -227,9 +227,8 @@ export default class Mensaje extends Contacto {
 					`;
 
 				this.dom.header.insertAdjacentHTML('beforeend', this.sanitize(formInvitar));
-				// this.dom.header.appendChild(this.sanitize(formInvitar));
 
-				this.streamNoMiembros(this.urlSearchParams.get('id_grupo'));
+				this.streamContactosInvitables(this.urlSearchParams.get('id_grupo'));
 			}
 		}
 	}

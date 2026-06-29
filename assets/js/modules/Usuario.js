@@ -2,8 +2,6 @@ import TemporalAPI from "./universal/TemporalAPI.js";
 
 export default class Usuario extends TemporalAPI {
 	usuario = {};
-	output = document.querySelector('output');
-	invitacionDirectaMenu = this.output.querySelector('menu:nth-of-type(2)');
 
 	constructor() {
 		super();

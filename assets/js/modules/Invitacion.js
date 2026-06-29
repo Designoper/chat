@@ -1,6 +1,11 @@
 import Grupo from "./Grupo.js";
 
 export default class Invitacion extends Grupo {
+	output = document.querySelector('output');
+	invitacionesContactoMenu = this.output.querySelector('menu:nth-of-type(2)');
+	invitacionesGrupoMenu = this.output.querySelector('menu:nth-of-type(1)');
+
+
 	constructor() {
 		super();
 	}
@@ -15,7 +20,7 @@ export default class Invitacion extends Grupo {
 			const contactos = JSON.parse(event.data);
 			const content = this.invitacionContactoTemplate(contactos);
 
-			this.invitacionDirectaMenu.innerHTML = this.sanitize(content);
+			this.invitacionesContactoMenu.innerHTML = this.sanitize(content);
 		});
 	}
 
@@ -84,7 +89,7 @@ export default class Invitacion extends Grupo {
 			const state = JSON.parse(event.data);
 
 			const content = this.invitacionGrupoTemplate(state);
-			this.invitacionesMenu.innerHTML = this.sanitize(content);
+			this.invitacionesGrupoMenu.innerHTML = this.sanitize(content);
 		});
 	}
 
@@ -126,6 +131,39 @@ export default class Invitacion extends Grupo {
 
 		return grupos.join('');
 	}
+
+	contactosInvitablesTemplate(fetchedGrupos) {
+
+		const noMiembros = fetchedGrupos
+			.map(grupo => `<option translate="no" value="${grupo.id_usuario}">${grupo.nombre_usuario}</option>`)
+			.join('');
+
+		const template =
+			`
+			<option value="">Añadir a...</option>
+			${noMiembros}
+			`;
+
+		return template;
+	}
+
+	// MARK: STREAM CONTACTOS INVITABLES
+
+	streamContactosInvitables(idGrupo) {
+
+		const url = `${this.ENDPOINTS.GET.INVITACIONES.CONTACTOS_INVITABLES}?id_grupo=${idGrupo}`;
+		const evtSource = new EventSource(url);
+
+		evtSource.addEventListener("no miembro", (event) => {
+			const state = JSON.parse(event.data);
+
+			const content = this.contactosInvitablesTemplate(state);
+			const select = document.getElementById('id_contacto');
+			select.innerHTML = this.sanitize(content);
+		});
+	}
+
+
 
 	async invitarGrupo(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.INVITAR_GRUPO);
