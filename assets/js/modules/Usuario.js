@@ -86,6 +86,11 @@ export default class Usuario extends TemporalAPI {
 		// if (response.status === 201) { }
 	}
 
+
+
+
+
+
 	async solicitarContacto(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.SOLICITAR_CONTACTO);
 		// if (response.status === 201) { }

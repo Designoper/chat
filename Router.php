@@ -29,9 +29,6 @@ final readonly class Router
             $this->makeRoute(HTTPMethods::GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']),
             $this->makeRoute(HTTPMethods::GET, 'mensajes', [Mensaje::class, 'readMensajes']),
 
-            // $this->makeRoute(HTTPMethods::GET, 'grupos/no-miembro/stream', [Grupo::class, 'streamGruposNoMiembro']),
-            // $this->makeRoute(HTTPMethods::GET, 'grupos/stream', [Grupo::class, 'streamGruposPendiente']),
-
             $this->makeRoute(HTTPMethods::GET, 'conexion/stream', [Conexion::class, 'streamConexion']),
 
             $this->makeRoute(HTTPMethods::GET, 'contactos/stream', [Contacto::class, 'streamContactos']),
