@@ -16,7 +16,6 @@ readonly class Mensaje extends Contacto
 {
 	protected int $id_mensaje;
 	protected int $id_receptor;
-	protected int $id_grupo;
 	protected string $contenido;
 
 	public function __construct()
