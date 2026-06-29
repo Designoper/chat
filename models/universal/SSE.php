@@ -11,7 +11,7 @@ abstract readonly class SSE extends Response
 		parent::__construct();
 	}
 
-	protected function setSSE(): void
+	protected function setSSE(callable $function): void
 	{
 		if (session_status() === PHP_SESSION_ACTIVE) {
 			session_write_close();
@@ -26,10 +26,7 @@ abstract readonly class SSE extends Response
 
 		header("Content-Type: text/event-stream");
 		header("Cache-Control: no-cache");
-	}
 
-	protected function setWhile(callable $function): void
-	{
 		while (true) {
 
 			if (connection_aborted()) {
@@ -44,7 +41,7 @@ abstract readonly class SSE extends Response
 		}
 	}
 
-	protected function heartbeat(): void
+	private function heartbeat(): void
 	{
 		static $lastPing = 0;
 

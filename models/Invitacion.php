@@ -160,29 +160,21 @@ readonly class Invitacion extends Grupo
 
 	// MARK: STREAM INVITACIONES CONTACTO
 
+	protected function streamInvitacionesContactoLogic(): void
+	{
+		static $invitacionesContacto = [];
+
+		$invitacionesContactoUpdate = $this->readInvitacionesContacto();
+
+		if ($invitacionesContactoUpdate !== $invitacionesContacto) {
+			$this->sendEvent('usuario', $invitacionesContactoUpdate);
+			$invitacionesContacto = $invitacionesContactoUpdate;
+		}
+	}
+
 	public function streamInvitacionesContacto(): void
 	{
-		$this->setSSE();
-
-		while (true) {
-
-			if (connection_aborted()) {
-				break;
-			}
-
-			static $invitacionesContacto = [];
-
-			$invitacionesContactoUpdate = $this->readInvitacionesContacto();
-
-			if ($invitacionesContactoUpdate !== $invitacionesContacto) {
-				$this->sendEvent('usuario', $invitacionesContactoUpdate);
-				$invitacionesContacto = $invitacionesContactoUpdate;
-			}
-
-			$this->heartbeat();
-
-			usleep(300000); // 0.3s
-		}
+		$this->setSSE([$this, "streamInvitacionesContactoLogic"]);
 	}
 
 
@@ -367,32 +359,36 @@ readonly class Invitacion extends Grupo
 
 	// MARK: STREAM INVITACIONES GRUPO
 
-	public function streamInvitacionesGrupo(): void
+	protected function streamInvitacionesGrupoLogic(): void
 	{
-		$this->setSSE();
+		static $invitacionesGrupo = [];
 
-		while (true) {
+		$invitacionesGrupoUpdate = $this->readInvitacionesGrupo();
 
-			if (connection_aborted()) {
-				break;
-			}
-
-			static $invitacionesGrupo = [];
-
-			$invitacionesGrupoUpdate = $this->readInvitacionesGrupo();
-
-			if ($invitacionesGrupoUpdate !== $invitacionesGrupo) {
-				$this->sendEvent('grupo', $invitacionesGrupoUpdate);
-				$invitacionesGrupo = $invitacionesGrupoUpdate;
-			}
-
-			$this->heartbeat();
-
-			usleep(300000); // 0.3s
+		if ($invitacionesGrupoUpdate !== $invitacionesGrupo) {
+			$this->sendEvent('grupo', $invitacionesGrupoUpdate);
+			$invitacionesGrupo = $invitacionesGrupoUpdate;
 		}
 	}
 
+	public function streamInvitacionesGrupo(): void
+	{
+		$this->setSSE([$this, "streamInvitacionesGrupoLogic"]);
+	}
+
 	// MARK: STREAM CONTACTOS INVITABLES
+
+	protected function streamContactosInvitablesLogic(): void
+	{
+		static $contactosInvitables = [];
+
+		$contactosInvitablesUpdate = $this->readContactosInvitables();
+
+		if ($contactosInvitablesUpdate !== $contactosInvitables) {
+			$this->sendEvent('no miembro', $contactosInvitablesUpdate);
+			$contactosInvitables = $contactosInvitablesUpdate;
+		}
+	}
 
 	public function streamContactosInvitables(): void
 	{
@@ -401,26 +397,6 @@ readonly class Invitacion extends Grupo
 		$this->checkValidationErrors();
 		$this->isMiembroGrupo();
 
-		$this->setSSE();
-
-		while (true) {
-
-			if (connection_aborted()) {
-				break;
-			}
-
-			static $contactosInvitables = [];
-
-			$contactosInvitablesUpdate = $this->readContactosInvitables();
-
-			if ($contactosInvitablesUpdate !== $contactosInvitables) {
-				$this->sendEvent('no miembro', $contactosInvitablesUpdate);
-				$contactosInvitables = $contactosInvitablesUpdate;
-			}
-
-			$this->heartbeat();
-
-			usleep(300000); // 0.3s
-		}
+		$this->setSSE([$this, "streamContactosInvitablesLogic"]);
 	}
 }

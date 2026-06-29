@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/Invitacion.php';
 
-final readonly class Contacto extends Invitacion
+readonly class Contacto extends Invitacion
 {
 	public function __construct()
 	{
@@ -156,8 +156,6 @@ final readonly class Contacto extends Invitacion
 
 	public function streamContactos(): void
 	{
-		$this->setSSE();
-
-		$this->setWhile([$this, 'streamContactosLogic']);
+		$this->setSSE([$this, 'streamContactosLogic']);
 	}
 }

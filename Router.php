@@ -29,14 +29,16 @@ final readonly class Router
             $this->makeRoute(HTTPMethods::GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']),
             $this->makeRoute(HTTPMethods::GET, 'mensajes', [Mensaje::class, 'readMensajes']),
 
-            $this->makeRoute(HTTPMethods::GET, 'grupos/no-miembro/stream', [Grupo::class, 'streamGruposNoMiembro']),
-            $this->makeRoute(HTTPMethods::GET, 'grupos/stream', [Grupo::class, 'streamGruposPendiente']),
+            // $this->makeRoute(HTTPMethods::GET, 'grupos/no-miembro/stream', [Grupo::class, 'streamGruposNoMiembro']),
+            // $this->makeRoute(HTTPMethods::GET, 'grupos/stream', [Grupo::class, 'streamGruposPendiente']),
 
             $this->makeRoute(HTTPMethods::GET, 'conexion/stream', [Conexion::class, 'streamConexion']),
 
             $this->makeRoute(HTTPMethods::GET, 'contactos/stream', [Contacto::class, 'streamContactos']),
 
-            $this->makeRoute(HTTPMethods::GET, 'invitaciones/usuarios/pendiente', [Invitacion::class, 'streamUsuariosPendiente']),
+            $this->makeRoute(HTTPMethods::GET, 'invitaciones/contactos-invitables', [Invitacion::class, 'streamContactosInvitables']),
+            $this->makeRoute(HTTPMethods::GET, 'invitaciones/contactos', [Invitacion::class, 'streamInvitacionesContacto']),
+            $this->makeRoute(HTTPMethods::GET, 'invitaciones/grupos', [Invitacion::class, 'streamInvitacionesGrupo']),
 
 
             $this->makeRoute(HTTPMethods::POST, 'usuarios/crear', [Usuario::class, 'createUsuario']),

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/Helper.php';
+require_once __DIR__ . '/Contacto.php';
 
 enum MensajeProperties: string
 {
@@ -12,7 +12,7 @@ enum MensajeProperties: string
 	case CONTENIDO = 'contenido';
 }
 
-readonly class Mensaje extends Helper
+readonly class Mensaje extends Contacto
 {
 	protected int $id_mensaje;
 	protected int $id_receptor;
@@ -289,33 +289,6 @@ readonly class Mensaje extends Helper
 		if ($autor !== $this->session_user) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el autor del mensaje');
-			$this->checkIntegrityErrors();
-		}
-	}
-
-	// MARK: IS MIEMBRO
-
-	private function isMiembroGrupo(): void
-	{
-		$query =
-			"SELECT 1
-			FROM contactos_grupales
-			WHERE id_usuario = ?
-			AND id_grupo = ?";
-
-		$rol = $this->executeQuery(
-			$query,
-			"ii",
-			[
-				$this->session_user,
-				$this->id_grupo
-			],
-			SqlReturn::BindResult
-		);
-
-		if (!$rol) {
-			$this->status = 403;
-			$this->errors->setIntegrityError('No formas parte del grupo');
 			$this->checkIntegrityErrors();
 		}
 	}
