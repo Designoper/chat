@@ -102,7 +102,7 @@ final readonly class Grupo extends Helper
 			SqlReturn::BindResult
 		);
 
-		if ($id_fundador !== $_SESSION['id_usuario']) {
+		if ($id_fundador !== $this->session_user) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el fundador del grupo');
 			$this->checkIntegrityErrors();
