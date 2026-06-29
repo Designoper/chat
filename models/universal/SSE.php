@@ -28,6 +28,22 @@ abstract readonly class SSE extends Response
 		header("Cache-Control: no-cache");
 	}
 
+	protected function setWhile(callable $function): void
+	{
+		while (true) {
+
+			if (connection_aborted()) {
+				break;
+			}
+
+			$function();
+
+			$this->heartbeat();
+
+			usleep(300000);
+		}
+	}
+
 	protected function heartbeat(): void
 	{
 		static $lastPing = 0;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/Helper.php';
+require_once __DIR__ . '/Invitacion.php';
 
-final readonly class Contacto extends Helper
+final readonly class Contacto extends Invitacion
 {
 	public function __construct()
 	{
@@ -140,30 +140,24 @@ final readonly class Contacto extends Helper
 		return $contactos;
 	}
 
+	protected function streamContactosLogic(): void
+	{
+		static $contactos = [];
+
+		$contactosUpdate = $this->obtainContactos();
+
+		if ($contactosUpdate !== $contactos) {
+			$this->sendEvent('new update', $contactosUpdate);
+			$contactos = $contactosUpdate;
+		}
+	}
+
 	// MARK: STREAM CONTACTOS
 
 	public function streamContactos(): void
 	{
 		$this->setSSE();
 
-		while (true) {
-
-			if (connection_aborted()) {
-				break;
-			}
-
-			static $contactos = [];
-
-			$contactosUpdate = $this->obtainContactos();
-
-			if ($contactosUpdate !== $contactos) {
-				$this->sendEvent('new update', $contactosUpdate);
-				$contactos = $contactosUpdate;
-			}
-
-			$this->heartbeat();
-
-			usleep(300000); // 0.3s
-		}
+		$this->setWhile([$this, 'streamContactosLogic']);
 	}
 }
