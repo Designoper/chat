@@ -15,7 +15,7 @@ readonly class Usuario extends Setter
 		parent::__construct();
 	}
 
-	// MARK: GENERAR CÓDIGO
+	// MARK: GENERAR CODIGO
 
 	private function generarCodigo($length = 6)
 	{
