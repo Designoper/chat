@@ -11,14 +11,14 @@ final readonly class Invitacion extends Grupo
 	public function __construct()
 	{
 		parent::__construct();
+
+		$this->authEndpoint();
 	}
 
-	// MARK: SOLICITAR CONTACTO
+	// MARK: INVITAR CONTACTO
 
-	public function solicitarContacto(): void
+	public function invitarContacto(): void
 	{
-		$this->authEndpoint();
-
 		$this->setCodigo('codigo_contacto');
 		$this->checkValidationErrors();
 
@@ -63,8 +63,6 @@ final readonly class Invitacion extends Grupo
 
 	public function aceptarContacto(): void
 	{
-		$this->authEndpoint();
-
 		$this->setId('id_contacto');
 		$this->checkValidationErrors();
 
@@ -115,8 +113,6 @@ final readonly class Invitacion extends Grupo
 
 	public function rechazarContacto(): void
 	{
-		$this->authEndpoint();
-
 		$this->setId('id_contacto');
 		$this->checkValidationErrors();
 
@@ -138,9 +134,9 @@ final readonly class Invitacion extends Grupo
 		$this->sendResponse();
 	}
 
-	// MARK: USUARIOS PENDIENTE
+	// MARK: READ INVITACIONES CONTACTO
 
-	private function obtainUsuariosPendiente(): array
+	private function readInvitacionesContacto(): array
 	{
 		$query =
 			"SELECT usuarios.id_usuario, usuarios.nombre_usuario
@@ -150,7 +146,7 @@ final readonly class Invitacion extends Grupo
 			WHERE invitaciones_directas.id_contacto = ?
 			ORDER BY usuarios.nombre_usuario ASC";
 
-		$usuarios = $this->executeQuery(
+		$invitacionesContacto = $this->executeQuery(
 			$query,
 			'i',
 			[
@@ -159,12 +155,12 @@ final readonly class Invitacion extends Grupo
 			SqlReturn::FetchAll
 		);
 
-		return $usuarios;
+		return $invitacionesContacto;
 	}
 
-	// MARK: STREAM USUARIOS PENDIENTE
+	// MARK: STREAM INVITACIONES CONTACTO
 
-	public function streamUsuariosPendiente(): void
+	public function streamInvitacionesContacto(): void
 	{
 		$this->setSSE();
 
@@ -174,13 +170,13 @@ final readonly class Invitacion extends Grupo
 				break;
 			}
 
-			static $usuariosPendientes = [];
+			static $invitacionesContacto = [];
 
-			$usuariosPendientesUpdate = $this->obtainUsuariosPendiente();
+			$invitacionesContactoUpdate = $this->readInvitacionesContacto();
 
-			if ($usuariosPendientesUpdate !== $usuariosPendientes) {
-				$this->sendEvent('usuario', $usuariosPendientesUpdate);
-				$usuariosPendientes = $usuariosPendientesUpdate;
+			if ($invitacionesContactoUpdate !== $invitacionesContacto) {
+				$this->sendEvent('usuario', $invitacionesContactoUpdate);
+				$invitacionesContacto = $invitacionesContactoUpdate;
 			}
 
 			$this->heartbeat();
@@ -211,9 +207,9 @@ final readonly class Invitacion extends Grupo
 
 
 
-	// MARK: INVITAR A GRUPO
+	// MARK: INVITAR GRUPO
 
-	public function invitarAGrupo(): void
+	public function invitarGrupo(): void
 	{
 		$this->setId('id_grupo');
 		$this->setId('id_invitado');
@@ -304,9 +300,9 @@ final readonly class Invitacion extends Grupo
 		$this->sendResponse();
 	}
 
-	// MARK: OBTAIN GRUPOS PENDIENTE
+	// MARK: READ INVITACIONES GRUPO
 
-	private function obtainGruposPendiente(): array
+	private function readInvitacionesGrupo(): array
 	{
 		$query =
 			"SELECT grupos.id_grupo, grupos.nombre_grupo
@@ -316,7 +312,7 @@ final readonly class Invitacion extends Grupo
 			WHERE invitaciones_grupales.id_usuario = ?
 			ORDER BY grupos.nombre_grupo ASC";
 
-		$grupos = $this->executeQuery(
+		$invitacionesGrupo = $this->executeQuery(
 			$query,
 			'i',
 			[
@@ -325,12 +321,12 @@ final readonly class Invitacion extends Grupo
 			SqlReturn::FetchAll
 		);
 
-		return $grupos;
+		return $invitacionesGrupo;
 	}
 
-	// MARK: READ GRUPOS NO MIEMBRO
+	// MARK: READ CONTACTOS INVITABLES
 
-	private function readGruposNoMiembro(): array
+	private function readContactosInvitables(): array
 	{
 		$query =
 			"SELECT id_usuario, nombre_usuario
@@ -355,7 +351,7 @@ final readonly class Invitacion extends Grupo
 			)
 			ORDER BY nombre_usuario ASC";
 
-		$grupos = $this->executeQuery(
+		$contactosInvitables = $this->executeQuery(
 			$query,
 			'iii',
 			[
@@ -366,12 +362,12 @@ final readonly class Invitacion extends Grupo
 			SqlReturn::FetchAll
 		);
 
-		return $grupos;
+		return $contactosInvitables;
 	}
 
-	// MARK: STREAM GRUPOS PENDIENTE
+	// MARK: STREAM INVITACIONES GRUPO
 
-	public function streamGruposPendiente(): void
+	public function streamInvitacionesGrupo(): void
 	{
 		$this->setSSE();
 
@@ -381,13 +377,13 @@ final readonly class Invitacion extends Grupo
 				break;
 			}
 
-			static $gruposPendientes = [];
+			static $invitacionesGrupo = [];
 
-			$gruposPendientesUpdate = $this->obtainGruposPendiente();
+			$invitacionesGrupoUpdate = $this->readInvitacionesGrupo();
 
-			if ($gruposPendientesUpdate !== $gruposPendientes) {
-				$this->sendEvent('grupo', $gruposPendientesUpdate);
-				$gruposPendientes = $gruposPendientesUpdate;
+			if ($invitacionesGrupoUpdate !== $invitacionesGrupo) {
+				$this->sendEvent('grupo', $invitacionesGrupoUpdate);
+				$invitacionesGrupo = $invitacionesGrupoUpdate;
 			}
 
 			$this->heartbeat();
@@ -396,9 +392,9 @@ final readonly class Invitacion extends Grupo
 		}
 	}
 
-	// MARK: STREAM GRUPOS NO MIEMBRO
+	// MARK: STREAM CONTACTOS INVITABLES
 
-	public function streamGruposNoMiembro(): void
+	public function streamContactosInvitables(): void
 	{
 		$this->setId('id_grupo');
 
@@ -413,13 +409,13 @@ final readonly class Invitacion extends Grupo
 				break;
 			}
 
-			static $noMiembros = [];
+			static $contactosInvitables = [];
 
-			$noMiembrosUpdate = $this->readGruposNoMiembro();
+			$contactosInvitablesUpdate = $this->readContactosInvitables();
 
-			if ($noMiembrosUpdate !== $noMiembros) {
-				$this->sendEvent('no miembro', $noMiembrosUpdate);
-				$noMiembros = $noMiembrosUpdate;
+			if ($contactosInvitablesUpdate !== $contactosInvitables) {
+				$this->sendEvent('no miembro', $contactosInvitablesUpdate);
+				$contactosInvitables = $contactosInvitablesUpdate;
 			}
 
 			$this->heartbeat();

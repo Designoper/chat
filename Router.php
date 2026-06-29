@@ -56,10 +56,10 @@ final readonly class Router
 
             $this->makeRoute(HTTPMethods::POST, 'conexion/estado', [Conexion::class, 'setConexion']),
 
-            $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/invitar', [Invitacion::class, 'solicitarContacto']),
+            $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/invitar', [Invitacion::class, 'invitarContacto']),
             $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/aceptar', [Invitacion::class, 'aceptarContacto']),
             $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/rechazar', [Invitacion::class, 'rechazarContacto']),
-            $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/invitar', [Invitacion::class, 'invitarAGrupo']),
+            $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/invitar', [Invitacion::class, 'invitarGrupo']),
             $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/aceptar', [Invitacion::class, 'aceptarGrupo']),
             $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/rechazar', [Invitacion::class, 'rechazarGrupo']),
 
