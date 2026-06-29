@@ -29,7 +29,6 @@ final readonly class Usuario extends Helper
 			"INSERT INTO usuarios (nombre_usuario, password, codigo_contacto)
         	VALUES (?, ?, ?)";
 
-		// Intentos para evitar colisiones de código
 		$maxIntentos = 5;
 		$intento = 0;
 
@@ -147,7 +146,7 @@ final readonly class Usuario extends Helper
 		$this->authEndpoint();
 
 		$query =
-			"SELECT id_usuario, nombre_usuario
+			"SELECT id_usuario, nombre_usuario, codigo_contacto
 			FROM usuarios
 			WHERE id_usuario = ?";
 
