@@ -86,10 +86,9 @@ final readonly class Contacto extends Helper
 					ue2.nombre_usuario AS nombre_emisor
 				FROM grupos g
 
-				JOIN membresias mem
+				JOIN contactos_grupales mem
 					ON mem.id_grupo = g.id_grupo
 					AND mem.id_usuario = ?
-					AND mem.rol IN ('fundador','miembro')
 
 				LEFT JOIN ultimos_mensajes_leidos_grupales umlg
 					ON umlg.id_usuario = ?

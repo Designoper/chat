@@ -298,8 +298,8 @@ readonly class Mensaje extends Helper
 	private function isMiembroGrupo(): void
 	{
 		$query =
-			"SELECT rol
-			FROM membresias
+			"SELECT 1
+			FROM contactos_grupales
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
@@ -313,7 +313,7 @@ readonly class Mensaje extends Helper
 			SqlReturn::BindResult
 		);
 
-		if ($rol !== 'miembro' && $rol !== 'fundador') {
+		if (!$rol) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No formas parte del grupo');
 			$this->checkIntegrityErrors();

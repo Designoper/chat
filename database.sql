@@ -1,6 +1,6 @@
--- DROP DATABASE IF EXISTS chat;
--- CREATE DATABASE chat CHARACTER SET utf8mb4;
--- USE chat;
+DROP DATABASE IF EXISTS chat;
+CREATE DATABASE chat CHARACTER SET utf8mb4;
+USE chat;
 
 SET default_storage_engine=InnoDB;
 
@@ -11,22 +11,39 @@ CREATE TABLE usuarios (
     codigo_contacto VARCHAR(6) NOT NULL UNIQUE
 );
 
+CREATE INDEX idx_usuario_nombre ON usuarios(nombre_usuario);
+CREATE INDEX idx_usuario_codigo ON usuarios(codigo_contacto);
+
 CREATE TABLE grupos (
     id_grupo INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     nombre_grupo VARCHAR(20) NOT NULL UNIQUE,
-    id_fundador INT UNSIGNED,
+    id_fundador INT UNSIGNED NOT NULL,
 
     FOREIGN KEY (id_fundador)
         REFERENCES usuarios(id_usuario)
         ON DELETE CASCADE
 );
 
-CREATE TABLE membresias (
+CREATE TABLE invitaciones_directas (
+    id_usuario INT UNSIGNED,
+    id_contacto INT UNSIGNED,
+
+    UNIQUE KEY invitacion_directa (id_usuario, id_contacto),
+
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (id_contacto)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE invitaciones_grupales (
     id_usuario INT UNSIGNED,
     id_grupo INT UNSIGNED,
-    rol ENUM ('fundador','miembro','pendiente') NOT NULL,
 
-    PRIMARY KEY (id_usuario, id_grupo),
+    UNIQUE KEY invitacion_grupo (id_usuario, id_grupo),
 
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
@@ -37,11 +54,11 @@ CREATE TABLE membresias (
         ON DELETE CASCADE
 );
 
-CREATE TABLE invitaciones_directas (
+CREATE TABLE contactos_directos (
     id_usuario INT UNSIGNED,
     id_contacto INT UNSIGNED,
 
-    UNIQUE KEY test (id_usuario, id_contacto),
+    UNIQUE KEY contacto_directo (id_usuario, id_contacto),
 
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
@@ -52,18 +69,18 @@ CREATE TABLE invitaciones_directas (
         ON DELETE CASCADE
 );
 
-CREATE TABLE contactos_directos (
+CREATE TABLE contactos_grupales (
     id_usuario INT UNSIGNED,
-    id_contacto INT UNSIGNED,
+    id_grupo INT UNSIGNED,
 
-    UNIQUE KEY test (id_usuario, id_contacto),
+    UNIQUE KEY contacto_grupal (id_usuario, id_grupo),
 
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
         ON DELETE CASCADE,
 
-    FOREIGN KEY (id_contacto)
-        REFERENCES usuarios(id_usuario)
+    FOREIGN KEY (id_grupo)
+        REFERENCES grupos(id_grupo)
         ON DELETE CASCADE
 );
 

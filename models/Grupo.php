@@ -24,10 +24,9 @@ final readonly class Grupo extends Helper
 		$query =
 			"SELECT grupos.id_grupo, grupos.nombre_grupo
 			FROM grupos
-			LEFT JOIN membresias
-				ON membresias.id_grupo = grupos.id_grupo
-			WHERE membresias.id_usuario = ?
-			AND membresias.rol = 'pendiente'
+			LEFT JOIN invitaciones_grupales
+				ON invitaciones_grupales.id_grupo = grupos.id_grupo
+			WHERE invitaciones_grupales.id_usuario = ?
 			ORDER BY grupos.nombre_grupo ASC";
 
 		$grupos = $this->executeQuery(
@@ -52,7 +51,13 @@ final readonly class Grupo extends Helper
 			WHERE id_usuario NOT IN
 			(
 				SELECT id_usuario
-				FROM membresias
+				FROM contactos_grupales
+				WHERE id_grupo = ?
+			)
+			AND id_usuario NOT IN
+			(
+				SELECT id_usuario
+				FROM invitaciones_grupales
 				WHERE id_grupo = ?
 			)
 			AND id_usuario IN
@@ -65,8 +70,9 @@ final readonly class Grupo extends Helper
 
 		$grupos = $this->executeQuery(
 			$query,
-			'ii',
+			'iii',
 			[
+				$this->id_grupo,
 				$this->id_grupo,
 				$this->session_user
 			],
@@ -81,12 +87,12 @@ final readonly class Grupo extends Helper
 	private function isFundadorGrupo(): void
 	{
 		$query =
-			"SELECT rol
-			FROM membresias
+			"SELECT id_fundador
+			FROM grupos
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
-		$rol = $this->executeQuery(
+		$id_fundador = $this->executeQuery(
 			$query,
 			'ii',
 			[
@@ -96,7 +102,7 @@ final readonly class Grupo extends Helper
 			SqlReturn::BindResult
 		);
 
-		if ($rol !== 'fundador') {
+		if ($id_fundador !== $_SESSION['id_usuario']) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el fundador del grupo');
 			$this->checkIntegrityErrors();
@@ -108,8 +114,8 @@ final readonly class Grupo extends Helper
 	private function isMiembroGrupo(): void
 	{
 		$query =
-			"SELECT rol
-			FROM membresias
+			"SELECT 1
+			FROM contactos_grupales
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
@@ -123,7 +129,7 @@ final readonly class Grupo extends Helper
 			SqlReturn::BindResult
 		);
 
-		if ($rol !== 'fundador' && $rol !== 'miembro') {
+		if (!$rol) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres miembro del grupo');
 			$this->checkIntegrityErrors();
@@ -139,15 +145,16 @@ final readonly class Grupo extends Helper
 		$this->checkValidationErrors();
 
 		$query =
-			"INSERT INTO grupos (nombre_grupo)
-		 	VALUES (?)";
+			"INSERT INTO grupos (nombre_grupo, id_fundador)
+		 	VALUES (?, ?)";
 
 		try {
 			$id_grupo = $this->executeQuery(
 				$query,
-				's',
+				'si',
 				[
-					$this->nombre_grupo
+					$this->nombre_grupo,
+					$this->session_user
 				],
 				SqlReturn::InsertId
 			);
@@ -163,8 +170,8 @@ final readonly class Grupo extends Helper
 		}
 
 		$query2 =
-			"INSERT INTO membresias (id_usuario, id_grupo, rol)
-		 	VALUES (?, ?, 'fundador')";
+			"INSERT INTO contactos_grupales (id_usuario, id_grupo)
+		 	VALUES (?, ?)";
 
 		$this->executeQuery(
 			$query2,
@@ -191,8 +198,8 @@ final readonly class Grupo extends Helper
 		$this->isMiembroGrupo();
 
 		$query =
-			"INSERT INTO membresias (id_usuario, id_grupo, rol)
-		 	VALUES (?, ?, 'pendiente')";
+			"INSERT INTO invitaciones_grupales (id_usuario, id_grupo)
+		 	VALUES (?, ?)";
 
 		$this->executeQuery(
 			$query,
@@ -216,14 +223,25 @@ final readonly class Grupo extends Helper
 		$this->checkValidationErrors();
 
 		$query =
-			"UPDATE membresias
-			SET rol = 'miembro'
-			WHERE id_usuario = ?
-			AND id_grupo = ?
-			AND rol = 'pendiente'";
+			"INSERT INTO contactos_grupales (id_usuario, id_grupo)
+			VALUES (?, ?)";
 
 		$this->executeQuery(
 			$query,
+			'ii',
+			[
+				$this->session_user,
+				$this->id_grupo,
+			]
+		);
+
+		$query2 =
+			"DELETE FROM invitaciones_grupales
+			WHERE id_usuario = ?
+			AND id_grupo = ?";
+
+		$this->executeQuery(
+			$query2,
 			'ii',
 			[
 				$this->session_user,
@@ -244,10 +262,9 @@ final readonly class Grupo extends Helper
 		$this->checkValidationErrors();
 
 		$query =
-			"DELETE FROM membresias
+			"DELETE FROM invitaciones_grupales
 			WHERE id_usuario = ?
-			AND id_grupo = ?
-			AND rol = 'pendiente'";
+			AND id_grupo = ?";
 
 		$this->executeQuery(
 			$query,
@@ -273,7 +290,7 @@ final readonly class Grupo extends Helper
 		$this->isMiembroGrupo();
 
 		$query =
-			"DELETE FROM membresias
+			"DELETE FROM contactos_grupales
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
