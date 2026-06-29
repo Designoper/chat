@@ -25,18 +25,17 @@ final readonly class Router
         $this->routes = [
             $this->makeRoute(HTTPMethods::GET, 'usuarios/current', [Usuario::class, 'currentUsuario']),
 
-            $this->makeRoute(HTTPMethods::GET, 'mensajes/stream', [Mensaje::class, 'streamMensajes']),
-            $this->makeRoute(HTTPMethods::GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']),
-            $this->makeRoute(HTTPMethods::GET, 'mensajes', [Mensaje::class, 'readMensajes']),
-
-            $this->makeRoute(HTTPMethods::GET, 'conexion/stream', [Conexion::class, 'streamConexion']),
-
-            $this->makeRoute(HTTPMethods::GET, 'contactos/stream', [Contacto::class, 'streamContactos']),
-
             $this->makeRoute(HTTPMethods::GET, 'invitaciones/contactos-invitables', [Invitacion::class, 'streamContactosInvitables']),
             $this->makeRoute(HTTPMethods::GET, 'invitaciones/contactos', [Invitacion::class, 'streamInvitacionesContacto']),
             $this->makeRoute(HTTPMethods::GET, 'invitaciones/grupos', [Invitacion::class, 'streamInvitacionesGrupo']),
 
+            $this->makeRoute(HTTPMethods::GET, 'contactos/stream', [Contacto::class, 'streamContactos']),
+
+            $this->makeRoute(HTTPMethods::GET, 'conexion/stream', [Conexion::class, 'streamConexion']),
+
+            $this->makeRoute(HTTPMethods::GET, 'mensajes/stream', [Mensaje::class, 'streamMensajes']),
+            $this->makeRoute(HTTPMethods::GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']),
+            $this->makeRoute(HTTPMethods::GET, 'mensajes', [Mensaje::class, 'readMensajes']),
 
             $this->makeRoute(HTTPMethods::POST, 'usuarios/crear', [Usuario::class, 'createUsuario']),
             $this->makeRoute(HTTPMethods::POST, 'usuarios/login', [Usuario::class, 'login']),
@@ -45,15 +44,9 @@ final readonly class Router
             $this->makeRoute(HTTPMethods::POST, 'usuarios/nombre', [Usuario::class, 'cambiarNombre']),
             $this->makeRoute(HTTPMethods::POST, 'usuarios/password', [Usuario::class, 'cambiarPassword']),
 
-            $this->makeRoute(HTTPMethods::POST, 'mensajes/crear', [Mensaje::class, 'createMensaje']),
-            $this->makeRoute(HTTPMethods::POST, 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),
-            $this->makeRoute(HTTPMethods::POST, 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdLeido']),
-
             $this->makeRoute(HTTPMethods::POST, 'grupos/crear', [Grupo::class, 'createGrupo']),
             $this->makeRoute(HTTPMethods::POST, 'grupos/delete', [Grupo::class, 'deleteGrupo']),
             $this->makeRoute(HTTPMethods::POST, 'grupos/abandonar', [Grupo::class, 'abandonarGrupo']),
-
-            $this->makeRoute(HTTPMethods::POST, 'conexion/estado', [Conexion::class, 'setConexion']),
 
             $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/invitar', [Invitacion::class, 'invitarContacto']),
             $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/aceptar', [Invitacion::class, 'aceptarContacto']),
@@ -61,6 +54,12 @@ final readonly class Router
             $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/invitar', [Invitacion::class, 'invitarGrupo']),
             $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/aceptar', [Invitacion::class, 'aceptarGrupo']),
             $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/rechazar', [Invitacion::class, 'rechazarGrupo']),
+
+            $this->makeRoute(HTTPMethods::POST, 'conexion/estado', [Conexion::class, 'setConexion']),
+
+            $this->makeRoute(HTTPMethods::POST, 'mensajes/crear', [Mensaje::class, 'createMensaje']),
+            $this->makeRoute(HTTPMethods::POST, 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),
+            $this->makeRoute(HTTPMethods::POST, 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdLeido']),
 
         ];
 

@@ -1,7 +1,6 @@
-import Grupo from "./Grupo.js";
-import Usuario from "./Usuario.js";
+import Contacto from "./Contacto.js";
 
-export default class Mensaje extends Grupo {
+export default class Mensaje extends Contacto {
 
 	urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
 	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;

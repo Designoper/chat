@@ -6,31 +6,23 @@ export default class Endpoint extends Fetch {
 	ENDPOINTS = {
 		GET: {
 			USUARIOS: {
-				OTROS: `${this.ROOT}usuarios`,
-				STREAM: `${this.ROOT}usuarios/stream`,
 				CURRENT: `${this.ROOT}usuarios/current`,
-				PENDIENTE: `${this.ROOT}usuarios/pendiente`,
+			},
+			INVITACIONES: {
+				CONTACTOS: `${this.ROOT}invitaciones/contactos`,
+				CONTACTOS_INVITABLES: `${this.ROOT}invitaciones/contactos-invitables`,
+				GRUPOS: `${this.ROOT}invitaciones/grupos`,
+			},
+			CONTACTOS: {
+				STREAM: `${this.ROOT}contactos/stream`,
 			},
 			MENSAJES: {
 				TODOS: `${this.ROOT}mensajes`,
 				STREAM: `${this.ROOT}mensajes/stream`,
-				NO_LEIDOS: `${this.ROOT}mensajes/no-leidos`,
 				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`,
-				ULTIMO_MENSAJE: `${this.ROOT}mensajes/ultimo-mensaje`
-			},
-			GRUPOS: {
-				MIEMBRO: `${this.ROOT}grupos/miembro`,
-				PENDIENTE: `${this.ROOT}grupos/pendiente`,
-				NO_MIEMBRO: `${this.ROOT}grupos/no-miembro`,
-				STREAM: `${this.ROOT}grupos/stream`,
-				STREAM_NO_MIEMBRO: `${this.ROOT}grupos/no-miembro/stream`,
 			},
 			CONEXION: {
 				STREAM: `${this.ROOT}conexion/stream`,
-			},
-			CONTACTOS: {
-				TODOS: `${this.ROOT}contactos`,
-				STREAM: `${this.ROOT}contactos/stream`,
 			}
 		},
 		POST: {
@@ -41,22 +33,24 @@ export default class Endpoint extends Fetch {
 				DELETE: `${this.ROOT}usuarios/delete`,
 				CAMBIAR_NOMBRE: `${this.ROOT}usuarios/nombre`,
 				CAMBIAR_PASSWORD: `${this.ROOT}usuarios/password`,
-				SOLICITAR_CONTACTO: `${this.ROOT}usuarios/contacto`,
-				ACEPTAR: `${this.ROOT}usuarios/aceptar`,
-				RECHAZAR: `${this.ROOT}usuarios/rechazar`,
+			},
+			GRUPOS: {
+				CREAR: `${this.ROOT}grupos/crear`,
+				ELIMINAR: `${this.ROOT}grupos/delete`,
+				ABANDONAR: `${this.ROOT}grupos/abandonar`,
+			},
+			INVITACIONES: {
+				INVITAR_CONTACTO: `${this.ROOT}invitaciones/usuarios/invitar`,
+				ACEPTAR_CONTACTO: `${this.ROOT}invitaciones/usuarios/aceptar`,
+				RECHAZAR_CONTACTO: `${this.ROOT}invitaciones/usuarios/rechazar`,
+				INVITAR_GRUPO: `${this.ROOT}invitaciones/grupos/invitar`,
+				ACEPTAR_GRUPO: `${this.ROOT}invitaciones/grupos/aceptar`,
+				RECHAZAR_GRUPO: `${this.ROOT}invitaciones/grupos/rechazar`,
 			},
 			MENSAJES: {
 				CREAR: `${this.ROOT}mensajes/crear`,
 				ELIMINAR: `${this.ROOT}mensajes/delete`,
 				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`
-			},
-			GRUPOS: {
-				CREAR: `${this.ROOT}grupos/crear`,
-				INVITAR: `${this.ROOT}grupos/invitar`,
-				ACEPTAR: `${this.ROOT}grupos/aceptar`,
-				RECHAZAR: `${this.ROOT}grupos/rechazar`,
-				ABANDONAR: `${this.ROOT}grupos/abandonar`,
-				ELIMINAR: `${this.ROOT}grupos/delete`
 			},
 			CONEXION: {
 				ESTADO: `${this.ROOT}conexion/estado`,

@@ -1,13 +1,9 @@
 import Contacto from '../modules/Contacto.js';
-import Grupo from '../modules/Grupo.js';
-import Usuario from '../modules/Usuario.js';
 
-// const contacto = new Contacto();
-const grupo = new Grupo();
-// const usuario = new Usuario();
+const contacto = new Contacto();
 
-await grupo.sessionCheck();
-await grupo.streamContactos();
-await grupo.streamGruposPendientes();
-await grupo.streamUsuarios();
-grupo.imprimirCodigo();
+await contacto.sessionCheck();
+await contacto.streamContactos();
+await contacto.streamInvitacionContacto();
+await contacto.streamInvitacionGrupo();
+contacto.imprimirCodigo();

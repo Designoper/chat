@@ -87,7 +87,7 @@ new Usuario()->authBrowser();
 				</button>
 			</form>
 
-			<form method="POST" name="solicitarContacto">
+			<form method="POST" name="invitarContacto">
 				<input name="codigo_contacto" id="codigo_contacto" placeholder="Código contacto" autocomplete="off" minlength="6" maxlength="6" required>
 				<button>
 					<svg viewBox="0 0 800 800">

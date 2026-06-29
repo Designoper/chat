@@ -1,17 +1,15 @@
-// import Conexion from '../modules/Conexion.js';
 import Mensaje from '../modules/Mensaje.js';
 
-const conexion = new Mensaje();
+const mensaje = new Mensaje();
 
-await conexion.sessionCheck();
-await conexion.writeChat();
-conexion.delete();
-conexion.setForm();
-conexion.setObj();
-await conexion.getUltimoId();
-await conexion.getMensajes();
+await mensaje.sessionCheck();
+await mensaje.writeChat();
+mensaje.delete();
+mensaje.setForm();
+mensaje.setObj();
+await mensaje.getUltimoId();
+await mensaje.getMensajes();
 
-conexion.scrollToCurrent();
+mensaje.scrollToCurrent();
 
-conexion.streamMensajes();
-// conexion.streamConexion();
+mensaje.streamMensajes();
