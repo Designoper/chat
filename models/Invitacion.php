@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/Grupo.php';
 
-final readonly class Invitacion extends Grupo
+readonly class Invitacion extends Grupo
 {
 	protected int $id_contacto;
 
