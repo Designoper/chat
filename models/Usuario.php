@@ -398,7 +398,7 @@ final readonly class Usuario extends Helper
 			FROM usuarios
 			LEFT JOIN invitaciones_directas
 				ON usuarios.id_usuario = invitaciones_directas.id_usuario
-				WHERE invitaciones_directas.id_contacto = ?
+			WHERE invitaciones_directas.id_contacto = ?
 			ORDER BY usuarios.nombre_usuario ASC";
 
 		$usuarios = $this->executeQuery(
