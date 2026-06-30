@@ -68,47 +68,6 @@ main {
 				}
 			}
 
-			/* &:nth-of-type(2) {
-				background-color: var(--terciary-bg);
-
-				li {
-					display: flex;
-					gap: 1em;
-					justify-content: end;
-					align-items: center;
-					padding: 1em 10vw;
-
-					h2 {
-						flex-grow: 1;
-					}
-				}
-
-				button {
-					width: 1.5em;
-
-					svg {
-						path {
-							fill: var(--secondary-bg);
-						}
-
-						circle {
-							fill: black;
-						}
-					}
-				}
-			} */
-
-			/* &:nth-of-type(2) {
-				svg {
-					height: 1em;
-					width: auto;
-
-					path {
-						fill: black;
-					}
-				}
-			} */
-
 			&:nth-of-type(2) {
 				svg {
 					height: 1em;
