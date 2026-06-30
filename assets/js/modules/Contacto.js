@@ -75,8 +75,8 @@ export default class Contacto extends Invitacion {
 		const evtSource = new EventSource(this.ENDPOINTS.GET.CONTACTOS.STREAM);
 
 		evtSource.addEventListener("new update", (event) => {
-			const contactos = JSON.parse(event.data);
-			const content = this.contactosTemplate(contactos);
+			const data = JSON.parse(event.data);
+			const content = this.contactosTemplate(data);
 
 			this.contactosMenu.innerHTML = this.sanitize(content);
 		});
