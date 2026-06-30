@@ -66,7 +66,18 @@ export default class Mensaje extends Contacto {
 	// MARK: GET MENSAJES
 
 	async getMensajes() {
-		const response = await this.fetchWithoutForm(this.endpointMensaje, 'get', this.urlSearchparamsObj);
+
+		let endpoint;
+
+		if (this.urlSearchParams.has('id_receptor')) {
+			endpoint = this.ENDPOINTS.GET.MENSAJES.DIRECTOS;
+		}
+
+		if (this.urlSearchParams.has('id_grupo')) {
+			endpoint = this.ENDPOINTS.GET.MENSAJES.GRUPALES;
+		}
+
+		const response = await this.fetchWithoutForm(endpoint, 'get', this.urlSearchparamsObj);
 
 		if (response.json.length > 0) {
 			this.urlSearchparamsObj.id_mensaje = response.json[response.json.length - 1].id_mensaje;

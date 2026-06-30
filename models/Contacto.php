@@ -156,4 +156,31 @@ readonly class Contacto extends Invitacion
 	{
 		$this->setSSE([$this, 'streamContactosLogic']);
 	}
+
+	// MARK: IS CONTACTO
+
+	protected function isContacto(): void
+	{
+		$query =
+			"SELECT 1
+			FROM contactos_directos
+			WHERE id_usuario = ?
+			AND id_contacto = ?";
+
+		$rol = $this->executeQuery(
+			$query,
+			'ii',
+			[
+				$this->session_user,
+				$this->id_contacto
+			],
+			SqlReturn::BindResult
+		);
+
+		if (!$rol) {
+			$this->status = 403;
+			$this->errors->setIntegrityError('No eres contacto de este usuario');
+			$this->checkIntegrityErrors();
+		}
+	}
 }

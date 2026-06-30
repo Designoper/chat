@@ -167,22 +167,9 @@ readonly class Mensaje extends Contacto
 		$this->sendResponse();
 	}
 
-	// MARK: READ MENSAJES
-
-	public function readMensajes(): void
-	{
-		if (isset($_GET['id_receptor'])) {
-			$this->readMensajesDirectos();
-		}
-
-		if (isset($_GET['id_grupo'])) {
-			$this->readMensajesGrupales();
-		}
-	}
-
 	// MARK: READ MENSAJES DIRECTOS
 
-	private function readMensajesDirectos(): void
+	public function readMensajesDirectos(): void
 	{
 		$this->setId('id_receptor');
 		$this->checkValidationErrors();
@@ -226,7 +213,7 @@ readonly class Mensaje extends Contacto
 
 	// MARK: READ MENSAJES GRUPALES
 
-	private function readMensajesGrupales(): void
+	public function readMensajesGrupales(): void
 	{
 		$this->setId('id_grupo');
 		$this->checkValidationErrors();
