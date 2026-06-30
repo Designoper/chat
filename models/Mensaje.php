@@ -438,53 +438,53 @@ readonly class Mensaje extends Contacto
 		return $mensajes;
 	}
 
-	// MARK: STREAM MENSAJES
+	// MARK: STREAM MENSAJES DIRECTOS
 
-	public function streamMensajes(): void
+	protected function streamMensajesDirectosLogic(): void
 	{
-		$mensajes = null;
+		$mensajesObtenidos = $this->getNuevosMensajesDirectos();
 
-		if (isset($_GET['id_receptor'])) {
-			$this->setId('id_receptor');
-			$this->checkValidationErrors();
+		if (!empty($mensajesObtenidos)) {
 
-			$mensajes = fn() => $this->getNuevosMensajesDirectos();
-		} else if (isset($_GET['id_grupo'])) {
-			$this->setId('id_grupo');
-			$this->checkValidationErrors();
-
-			$this->isMiembroGrupo();
-			$mensajes = fn() => $this->getNuevosMensajesGrupales();
-		}
-
-		if ($mensajes === null) {
-			$this->errors->setValidationError("No se ha especificado un receptor o grupo.");
-			$this->checkValidationErrors();
-		}
-
-		$this->setSSE();
-
-		while (true) {
-
-			if (connection_aborted()) {
-				break;
+			foreach ($mensajesObtenidos as $m) {
+				$ultimo_id = $m["id_mensaje"];
+				$this->sendEvent('mensaje', $m);
 			}
 
-			$mensajesObtenidos = $mensajes();
+			$this->sendEvent('new mensaje', $ultimo_id);
+		}
+	}
 
-			if (!empty($mensajesObtenidos)) {
+	public function streamMensajesDirectos(): void
+	{
+		$this->setId('id_receptor');
+		$this->checkValidationErrors();
 
-				foreach ($mensajesObtenidos as $m) {
-					$ultimo_id = $m["id_mensaje"];
-					$this->sendEvent('mensaje', $m);
-				}
+		$this->setSSE([$this, 'streamMensajesDirectosLogic']);
+	}
 
-				$this->sendEvent('new mensaje', $ultimo_id);
+	// MARK: STREAM MENSAJES GRUPALES
+
+	protected function streamMensajesGrupalesLogic(): void
+	{
+		$mensajesObtenidos = $this->getNuevosMensajesGrupales();
+
+		if (!empty($mensajesObtenidos)) {
+
+			foreach ($mensajesObtenidos as $m) {
+				$ultimo_id = $m["id_mensaje"];
+				$this->sendEvent('mensaje', $m);
 			}
 
-			$this->heartbeat();
-
-			usleep(300000); // 0.3s
+			$this->sendEvent('new mensaje', $ultimo_id);
 		}
+	}
+
+	public function streamMensajesGrupales(): void
+	{
+		$this->setId('id_grupo');
+		$this->checkValidationErrors();
+
+		$this->setSSE([$this, 'streamMensajesGrupalesLogic']);
 	}
 }

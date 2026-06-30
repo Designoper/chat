@@ -2,8 +2,8 @@ import Contacto from "./Contacto.js";
 
 export default class Mensaje extends Contacto {
 
-	urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
-	endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
+	// urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
+	// endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
 
 	urlSearchParams = new URLSearchParams(location.search);
 	ringtone = new Audio("../../../assets/audio/ringtone.mp3");
@@ -92,8 +92,17 @@ export default class Mensaje extends Contacto {
 
 	streamMensajes() {
 
-		this.urlStreamMensajes.search = this.urlSearchParams;
-		const evtSource = new EventSource(this.urlStreamMensajes);
+		let endpoint;
+
+		if (this.urlSearchParams.has('id_receptor')) {
+			endpoint = `${this.ENDPOINTS.GET.MENSAJES.STREAM_DIRECTOS}?id_receptor=${this.urlSearchParams.get('id_receptor')}`;
+		}
+
+		if (this.urlSearchParams.has('id_grupo')) {
+			endpoint = `${this.ENDPOINTS.GET.MENSAJES.STREAM_GRUPALES}?id_grupo=${this.urlSearchParams.get('id_grupo')}`;
+		}
+
+		const evtSource = new EventSource(endpoint);
 		this.mostrado = true;
 
 		evtSource.addEventListener("mensaje", (event) => {
