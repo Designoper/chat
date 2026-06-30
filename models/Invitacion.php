@@ -6,7 +6,7 @@ require_once __DIR__ . '/Grupo.php';
 
 readonly class Invitacion extends Grupo
 {
-	protected string $id_contacto;
+	protected string $ulid_contacto;
 	protected string $codigo_contacto;
 
 	public function __construct()
@@ -22,7 +22,7 @@ readonly class Invitacion extends Grupo
 		$this->checkValidationErrors();
 
 		$query =
-			"SELECT id_usuario
+			"SELECT ulid_usuario
 			FROM usuarios
 			WHERE codigo_contacto = ?";
 
@@ -42,7 +42,7 @@ readonly class Invitacion extends Grupo
 		}
 
 		$query =
-			"INSERT INTO invitaciones_directas (id_usuario, id_contacto)
+			"INSERT INTO invitaciones_directas (ulid_usuario, ulid_contacto)
 			VALUES (?, ?)";
 
 		$this->executeQuery(
@@ -62,18 +62,18 @@ readonly class Invitacion extends Grupo
 
 	public function aceptarContacto(): void
 	{
-		$this->setId('id_contacto');
+		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
 		$query =
-			"INSERT INTO contactos_directos (id_usuario, id_contacto)
+			"INSERT INTO contactos_directos (ulid_usuario, ulid_contacto)
 			VALUES (?, ?)";
 
 		$this->executeQuery(
 			$query,
 			'ss',
 			[
-				$this->id_contacto,
+				$this->ulid_contacto,
 				$this->session_user
 			]
 		);
@@ -83,14 +83,14 @@ readonly class Invitacion extends Grupo
 			'ss',
 			[
 				$this->session_user,
-				$this->id_contacto
+				$this->ulid_contacto
 			]
 		);
 
 		$query =
 			"DELETE FROM invitaciones_directas
 			WHERE (
-				(id_usuario = ? AND id_contacto = ?) OR (id_usuario = ? AND id_contacto = ?)
+				(ulid_usuario = ? AND ulid_contacto = ?) OR (ulid_usuario = ? AND ulid_contacto = ?)
 			)";
 
 		$this->executeQuery(
@@ -98,8 +98,8 @@ readonly class Invitacion extends Grupo
 			'ssss',
 			[
 				$this->session_user,
-				$this->id_contacto,
-				$this->id_contacto,
+				$this->ulid_contacto,
+				$this->ulid_contacto,
 				$this->session_user
 			]
 		);
@@ -112,19 +112,19 @@ readonly class Invitacion extends Grupo
 
 	public function rechazarContacto(): void
 	{
-		$this->setId('id_contacto');
+		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
 		$query =
 			"DELETE FROM invitaciones_directas
-			WHERE id_usuario = ?
-			AND id_contacto = ?";
+			WHERE ulid_usuario = ?
+			AND ulid_contacto = ?";
 
 		$this->executeQuery(
 			$query,
 			'ss',
 			[
-				$this->id_contacto,
+				$this->ulid_contacto,
 				$this->session_user
 			]
 		);
@@ -137,23 +137,23 @@ readonly class Invitacion extends Grupo
 
 	public function invitarGrupo(): void
 	{
-		$this->setId('id_contacto');
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_contacto');
+		$this->setUlid('ulid_grupo');
 
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
 
 		$query =
-			"INSERT INTO invitaciones_grupales (id_usuario, id_grupo)
+			"INSERT INTO invitaciones_grupales (ulid_usuario, ulid_grupo)
 		 	VALUES (?, ?)";
 
 		$this->executeQuery(
 			$query,
 			'ss',
 			[
-				$this->id_contacto,
-				$this->id_grupo,
+				$this->ulid_contacto,
+				$this->ulid_grupo,
 			]
 		);
 
@@ -165,12 +165,12 @@ readonly class Invitacion extends Grupo
 
 	public function aceptarGrupo(): void
 	{
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_grupo');
 
 		$this->checkValidationErrors();
 
 		$query =
-			"INSERT INTO contactos_grupales (id_usuario, id_grupo)
+			"INSERT INTO contactos_grupales (ulid_usuario, ulid_grupo)
 			VALUES (?, ?)";
 
 		$this->executeQuery(
@@ -178,21 +178,21 @@ readonly class Invitacion extends Grupo
 			'ss',
 			[
 				$this->session_user,
-				$this->id_grupo,
+				$this->ulid_grupo,
 			]
 		);
 
 		$query =
 			"DELETE FROM invitaciones_grupales
-			WHERE id_usuario = ?
-			AND id_grupo = ?";
+			WHERE ulid_usuario = ?
+			AND ulid_grupo = ?";
 
 		$this->executeQuery(
 			$query,
 			'ss',
 			[
 				$this->session_user,
-				$this->id_grupo,
+				$this->ulid_grupo,
 			]
 		);
 
@@ -204,21 +204,21 @@ readonly class Invitacion extends Grupo
 
 	public function rechazarGrupo(): void
 	{
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_grupo');
 
 		$this->checkValidationErrors();
 
 		$query =
 			"DELETE FROM invitaciones_grupales
-			WHERE id_usuario = ?
-			AND id_grupo = ?";
+			WHERE ulid_usuario = ?
+			AND ulid_grupo = ?";
 
 		$this->executeQuery(
 			$query,
 			'ss',
 			[
 				$this->session_user,
-				$this->id_grupo,
+				$this->ulid_grupo,
 			]
 		);
 
@@ -234,33 +234,33 @@ readonly class Invitacion extends Grupo
 			"SELECT *
 				FROM (
 					SELECT
-						u.id_usuario AS id,
+						u.ulid_usuario AS id,
 						u.nombre_usuario AS nombre,
 						'usuario' AS tipo
 					FROM usuarios u
 
 					LEFT JOIN invitaciones_directas
-						ON u.id_usuario = invitaciones_directas.id_usuario
-					WHERE invitaciones_directas.id_contacto = ?
+						ON u.ulid_usuario = invitaciones_directas.ulid_usuario
+					WHERE invitaciones_directas.ulid_contacto = ?
 
 					GROUP BY
-						u.id_usuario,
+						u.ulid_usuario,
 						u.nombre_usuario
 
 					UNION ALL
 
 					SELECT
-						g.id_grupo AS id,
+						g.ulid_grupo AS id,
 						g.nombre_grupo AS nombre,
 						'grupo' AS tipo
 					FROM grupos g
 
 					LEFT JOIN invitaciones_grupales
-						ON invitaciones_grupales.id_grupo = g.id_grupo
-					WHERE invitaciones_grupales.id_usuario = ?
+						ON invitaciones_grupales.ulid_grupo = g.ulid_grupo
+					WHERE invitaciones_grupales.ulid_usuario = ?
 
 					GROUP BY
-						g.id_grupo,
+						g.ulid_grupo,
 						g.nombre_grupo
 				) AS invitaciones";
 		// ORDER BY
@@ -305,25 +305,25 @@ readonly class Invitacion extends Grupo
 	private function readContactosInvitables(): array
 	{
 		$query =
-			"SELECT id_usuario, nombre_usuario
+			"SELECT ulid_usuario, nombre_usuario
 			FROM usuarios
-			WHERE id_usuario NOT IN
+			WHERE ulid_usuario NOT IN
 			(
-				SELECT id_usuario
+				SELECT ulid_usuario
 				FROM contactos_grupales
-				WHERE id_grupo = ?
+				WHERE ulid_grupo = ?
 			)
-			AND id_usuario NOT IN
+			AND ulid_usuario NOT IN
 			(
-				SELECT id_usuario
+				SELECT ulid_usuario
 				FROM invitaciones_grupales
-				WHERE id_grupo = ?
+				WHERE ulid_grupo = ?
 			)
-			AND id_usuario IN
+			AND ulid_usuario IN
 			(
-				SELECT id_contacto
+				SELECT ulid_contacto
 				FROM contactos_directos
-				WHERE id_usuario = ?
+				WHERE ulid_usuario = ?
 			)
 			ORDER BY nombre_usuario ASC";
 
@@ -331,8 +331,8 @@ readonly class Invitacion extends Grupo
 			$query,
 			'sss',
 			[
-				$this->id_grupo,
-				$this->id_grupo,
+				$this->ulid_grupo,
+				$this->ulid_grupo,
 				$this->session_user
 			],
 			SqlReturn::FetchAll
@@ -357,7 +357,7 @@ readonly class Invitacion extends Grupo
 
 	public function streamContactosInvitables(): void
 	{
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_grupo');
 
 		$this->checkValidationErrors();
 		$this->isMiembroGrupo();

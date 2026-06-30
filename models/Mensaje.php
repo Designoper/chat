@@ -6,7 +6,7 @@ require_once __DIR__ . '/Contacto.php';
 
 readonly class Mensaje extends Contacto
 {
-	protected string $id_mensaje;
+	protected string $ulid_mensaje;
 	protected string $contenido;
 
 	public function __construct()
@@ -18,11 +18,11 @@ readonly class Mensaje extends Contacto
 
 	public function getUltimoIdMensaje(): void
 	{
-		if (isset($_GET['id_contacto'])) {
+		if (isset($_GET['ulid_contacto'])) {
 			$this->getUltimoIdDirecto();
 		}
 
-		if (isset($_GET['id_grupo'])) {
+		if (isset($_GET['ulid_grupo'])) {
 			$this->getUltimoIdGrupal();
 		}
 	}
@@ -31,25 +31,25 @@ readonly class Mensaje extends Contacto
 
 	private function getUltimoIdDirecto(): void
 	{
-		$this->setId('id_contacto');
+		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
 		$this->isContacto();
 
 		$query =
 			"SELECT COALESCE((
-				SELECT id_mensaje
+				SELECT ulid_mensaje
 				FROM ultimos_mensajes_leidos_directos
-				WHERE id_usuario = ?
-				AND id_contacto = ?
-			), '') AS id_mensaje";
+				WHERE ulid_usuario = ?
+				AND ulid_contacto = ?
+			), '') AS ulid_mensaje";
 
 		$last_id = $this->executeQuery(
 			$query,
 			'ss',
 			[
 				$this->session_user,
-				$this->id_contacto
+				$this->ulid_contacto
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -63,25 +63,25 @@ readonly class Mensaje extends Contacto
 
 	private function getUltimoIdGrupal(): void
 	{
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_grupo');
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
 
 		$query =
 			"SELECT COALESCE((
-				SELECT id_mensaje
+				SELECT ulid_mensaje
 				FROM ultimos_mensajes_leidos_grupales
-				WHERE id_usuario = ?
-				AND id_grupo = ?
-			), '') AS id_mensaje";
+				WHERE ulid_usuario = ?
+				AND ulid_grupo = ?
+			), '') AS ulid_mensaje";
 
 		$last_id = $this->executeQuery(
 			$query,
 			'ss',
 			[
 				$this->session_user,
-				$this->id_grupo
+				$this->ulid_grupo
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -95,11 +95,11 @@ readonly class Mensaje extends Contacto
 
 	public function setultimoIdLeido(): void
 	{
-		if (isset($_POST['id_contacto'])) {
+		if (isset($_POST['ulid_contacto'])) {
 			$this->setUltimoIdDirecto();
 		}
 
-		if (isset($_POST['id_grupo'])) {
+		if (isset($_POST['ulid_grupo'])) {
 			$this->setUltimoIdGrupal();
 		}
 	}
@@ -108,26 +108,26 @@ readonly class Mensaje extends Contacto
 
 	private function setUltimoIdDirecto(): void
 	{
-		$this->setId('id_contacto');
-		$this->setId('id_mensaje');
+		$this->setUlid('ulid_contacto');
+		$this->setUlid('ulid_mensaje');
 		$this->checkValidationErrors();
 
 		$this->isContacto();
 
 		$query =
-			"INSERT INTO ultimos_mensajes_leidos_directos (id_usuario, id_contacto, id_mensaje)
+			"INSERT INTO ultimos_mensajes_leidos_directos (ulid_usuario, ulid_contacto, ulid_mensaje)
 			VALUES (?, ?, ?)
 			ON DUPLICATE KEY
-			UPDATE id_mensaje = ?";
+			UPDATE ulid_mensaje = ?";
 
 		$this->executeQuery(
 			$query,
 			'ssss',
 			[
 				$this->session_user,
-				$this->id_contacto,
-				$this->id_mensaje,
-				$this->id_mensaje
+				$this->ulid_contacto,
+				$this->ulid_mensaje,
+				$this->ulid_mensaje
 			]
 		);
 
@@ -139,26 +139,26 @@ readonly class Mensaje extends Contacto
 
 	private function setUltimoIdGrupal(): void
 	{
-		$this->setId('id_grupo');
-		$this->setId('id_mensaje');
+		$this->setUlid('ulid_grupo');
+		$this->setUlid('ulid_mensaje');
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
 
 		$query =
-			"INSERT INTO ultimos_mensajes_leidos_grupales (id_usuario, id_grupo, id_mensaje)
+			"INSERT INTO ultimos_mensajes_leidos_grupales (ulid_usuario, ulid_grupo, ulid_mensaje)
 			VALUES (?, ?, ?)
 			ON DUPLICATE KEY
-			UPDATE id_mensaje = ?";
+			UPDATE ulid_mensaje = ?";
 
 		$this->executeQuery(
 			$query,
 			'ssss',
 			[
 				$this->session_user,
-				$this->id_grupo,
-				$this->id_mensaje,
-				$this->id_mensaje
+				$this->ulid_grupo,
+				$this->ulid_mensaje,
+				$this->ulid_mensaje
 			]
 		);
 
@@ -170,30 +170,30 @@ readonly class Mensaje extends Contacto
 
 	public function readMensajesDirectos(): void
 	{
-		$this->setId('id_contacto');
+		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
 		$this->isContacto();
 
-		$user_min = min($this->session_user, $this->id_contacto);
-		$user_max = max($this->session_user, $this->id_contacto);
+		$user_min = min($this->session_user, $this->ulid_contacto);
+		$user_max = max($this->session_user, $this->ulid_contacto);
 
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
 		$query =
 			"SELECT
-				mensajes.id_mensaje,
+				mensajes.ulid_mensaje,
 				mensajes.contenido,
 				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
-				mensajes.id_emisor,
+				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
 			LEFT JOIN usuarios
-				ON mensajes.id_emisor = usuarios.id_usuario
-			WHERE mensajes.id_contacto IS NOT NULL
+				ON mensajes.ulid_emisor = usuarios.ulid_usuario
+			WHERE mensajes.ulid_contacto IS NOT NULL
 			AND (
-				LEAST(id_emisor, id_contacto) = ?
-				AND GREATEST(id_emisor, id_contacto) = ?
+				LEAST(ulid_emisor, ulid_contacto) = ?
+				AND GREATEST(ulid_emisor, ulid_contacto) = ?
 			)
 			ORDER BY fecha_envio ASC";
 
@@ -216,7 +216,7 @@ readonly class Mensaje extends Contacto
 
 	public function readMensajesGrupales(): void
 	{
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_grupo');
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
@@ -225,22 +225,22 @@ readonly class Mensaje extends Contacto
 
 		$query =
 			"SELECT
-				mensajes.id_mensaje,
+				mensajes.ulid_mensaje,
 				mensajes.contenido,
 				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
-				mensajes.id_emisor,
+				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
 			LEFT JOIN usuarios
-				ON mensajes.id_emisor = usuarios.id_usuario
-			WHERE mensajes.id_grupo = ?
+				ON mensajes.ulid_emisor = usuarios.ulid_usuario
+			WHERE mensajes.ulid_grupo = ?
 			ORDER BY fecha_envio ASC";
 
 		$mensajes = $this->executeQuery(
 			$query,
 			"s",
 			[
-				$this->id_grupo
+				$this->ulid_grupo
 			],
 			SqlReturn::FetchAll
 		);
@@ -254,16 +254,16 @@ readonly class Mensaje extends Contacto
 
 	public function createMensajeDirecto(): void
 	{
-		$this->setId('id_contacto');
+		$this->setUlid('ulid_contacto');
 		$this->setContenido('contenido');
 		$this->checkValidationErrors();
 
 		$this->isContacto();
 
-		$ulid = $this->ulid();
+		$ulid = $this->generateUlid();
 
 		$query =
-			"INSERT INTO mensajes (id_mensaje, contenido, id_emisor, id_contacto)
+			"INSERT INTO mensajes (ulid_mensaje, contenido, ulid_emisor, ulid_contacto)
 			VALUES (?, ?, ?, ?)";
 
 		$this->executeQuery(
@@ -273,7 +273,7 @@ readonly class Mensaje extends Contacto
 				$ulid,
 				$this->contenido,
 				$this->session_user,
-				$this->id_contacto
+				$this->ulid_contacto
 			]
 		);
 
@@ -285,16 +285,16 @@ readonly class Mensaje extends Contacto
 
 	public function createMensajeGrupal(): void
 	{
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_grupo');
 		$this->setContenido('contenido');
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
 
-		$ulid = $this->ulid();
+		$ulid = $this->generateUlid();
 
 		$query =
-			"INSERT INTO mensajes (id_mensaje, contenido, id_emisor, id_grupo)
+			"INSERT INTO mensajes (ulid_mensaje, contenido, ulid_emisor, ulid_grupo)
 			VALUES (?, ?, ?, ?)";
 
 		$this->executeQuery(
@@ -304,7 +304,7 @@ readonly class Mensaje extends Contacto
 				$ulid,
 				$this->contenido,
 				$this->session_user,
-				$this->id_grupo
+				$this->ulid_grupo
 			]
 		);
 
@@ -316,19 +316,19 @@ readonly class Mensaje extends Contacto
 
 	private function isAutorMensaje(): void
 	{
-		$this->setId('id_mensaje');
+		$this->setUlid('ulid_mensaje');
 		$this->checkValidationErrors();
 
 		$query =
-			"SELECT id_emisor
+			"SELECT ulid_emisor
 			FROM mensajes
-			WHERE id_mensaje = ?";
+			WHERE ulid_mensaje = ?";
 
 		$autor = $this->executeQuery(
 			$query,
 			"s",
 			[
-				$this->id_mensaje
+				$this->ulid_mensaje
 			],
 			SqlReturn::BindResult
 		);
@@ -348,14 +348,14 @@ readonly class Mensaje extends Contacto
 
 		$query =
 			"DELETE FROM mensajes
-			WHERE id_mensaje = ?
-			AND id_emisor = ?";
+			WHERE ulid_mensaje = ?
+			AND ulid_emisor = ?";
 
 		$this->executeQuery(
 			$query,
 			'ss',
 			[
-				$this->id_mensaje,
+				$this->ulid_mensaje,
 				$this->session_user
 			]
 		);
@@ -368,39 +368,39 @@ readonly class Mensaje extends Contacto
 
 	private function getNuevosMensajesDirectos(): array
 	{
-		$user_min = min($this->session_user, $this->id_contacto);
-		$user_max = max($this->session_user, $this->id_contacto);
+		$user_min = min($this->session_user, $this->ulid_contacto);
+		$user_max = max($this->session_user, $this->ulid_contacto);
 
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
 		$query =
-			"SELECT mensajes.id_mensaje,
+			"SELECT mensajes.ulid_mensaje,
 				mensajes.contenido,
 				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
-				mensajes.id_emisor,
+				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
 			LEFT JOIN usuarios
-				ON mensajes.id_emisor = usuarios.id_usuario
-			WHERE mensajes.id_mensaje > COALESCE((
-				SELECT id_mensaje
+				ON mensajes.ulid_emisor = usuarios.ulid_usuario
+			WHERE mensajes.ulid_mensaje > COALESCE((
+				SELECT ulid_mensaje
 				FROM ultimos_mensajes_leidos_directos
-				WHERE id_usuario = ?
-				AND id_contacto = ?
+				WHERE ulid_usuario = ?
+				AND ulid_contacto = ?
 			), '')
 			AND (
-				LEAST(id_emisor, id_contacto) = ?
-				AND GREATEST(id_emisor, id_contacto) = ?
+				LEAST(ulid_emisor, ulid_contacto) = ?
+				AND GREATEST(ulid_emisor, ulid_contacto) = ?
 			)
-			AND mensajes.id_grupo IS NULL
-			ORDER BY mensajes.id_mensaje ASC";
+			AND mensajes.ulid_grupo IS NULL
+			ORDER BY mensajes.ulid_mensaje ASC";
 
 		$mensajes = $this->executeQuery(
 			$query,
 			"ssss",
 			[
 				$this->session_user,
-				$this->id_contacto,
+				$this->ulid_contacto,
 				$user_min,
 				$user_max
 			],
@@ -417,31 +417,31 @@ readonly class Mensaje extends Contacto
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
 		$query =
-			"SELECT mensajes.id_mensaje,
+			"SELECT mensajes.ulid_mensaje,
 				mensajes.contenido,
 				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
-				mensajes.id_emisor,
+				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
 			LEFT JOIN usuarios
-				ON mensajes.id_emisor = usuarios.id_usuario
-	        WHERE mensajes.id_mensaje > COALESCE((
-				SELECT id_mensaje
+				ON mensajes.ulid_emisor = usuarios.ulid_usuario
+	        WHERE mensajes.ulid_mensaje > COALESCE((
+				SELECT ulid_mensaje
 				FROM ultimos_mensajes_leidos_grupales
-				WHERE id_usuario = ?
-				AND id_grupo = ?
+				WHERE ulid_usuario = ?
+				AND ulid_grupo = ?
 			), '')
-	        AND mensajes.id_contacto IS NULL
-			AND mensajes.id_grupo = ?
-	        ORDER BY mensajes.id_mensaje ASC";
+	        AND mensajes.ulid_contacto IS NULL
+			AND mensajes.ulid_grupo = ?
+	        ORDER BY mensajes.ulid_mensaje ASC";
 
 		$mensajes = $this->executeQuery(
 			$query,
 			"sss",
 			[
 				$this->session_user,
-				$this->id_grupo,
-				$this->id_grupo
+				$this->ulid_grupo,
+				$this->ulid_grupo
 			],
 			SqlReturn::FetchAll
 		);
@@ -458,7 +458,7 @@ readonly class Mensaje extends Contacto
 		if (!empty($mensajes)) {
 
 			foreach ($mensajes as $m) {
-				$ultimo_id = $m["id_mensaje"];
+				$ultimo_id = $m["ulid_mensaje"];
 				$this->sendEvent('mensaje', $m);
 			}
 
@@ -468,7 +468,7 @@ readonly class Mensaje extends Contacto
 
 	public function streamMensajesDirectos(): void
 	{
-		$this->setId('id_contacto');
+		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
 		$this->isContacto();
@@ -484,7 +484,7 @@ readonly class Mensaje extends Contacto
 
 	public function streamMensajesGrupales(): void
 	{
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_grupo');
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();

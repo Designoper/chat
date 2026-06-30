@@ -30,14 +30,14 @@ readonly class Usuario extends Setter
 
 	public function createUsuario(): void
 	{
-		$ulid = $this->ulid();
+		$ulid = $this->generateUlid();
 		$this->setNombre('nombre_usuario');
 		$this->setPassword('password');
 
 		$this->checkValidationErrors();
 
 		$query =
-			"INSERT INTO usuarios (id_usuario, nombre_usuario, password, codigo_contacto)
+			"INSERT INTO usuarios (ulid_usuario, nombre_usuario, password, codigo_contacto)
         	VALUES (?, ?, ?, ?)";
 
 		$maxIntentos = 5;
@@ -59,7 +59,7 @@ readonly class Usuario extends Setter
 					]
 				);
 
-				$_SESSION['id_usuario'] = $ulid;
+				$_SESSION['ulid_usuario'] = $ulid;
 				$this->status = 201;
 				$this->sendResponse();
 			} catch (\mysqli_sql_exception $error) {
@@ -92,7 +92,7 @@ readonly class Usuario extends Setter
 		$this->checkValidationErrors();
 
 		$query =
-			"SELECT id_usuario, password
+			"SELECT ulid_usuario, password
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
@@ -111,7 +111,7 @@ readonly class Usuario extends Setter
 			$this->checkIntegrityErrors();
 		}
 
-		$_SESSION['id_usuario'] = $usuario['id_usuario'];
+		$_SESSION['ulid_usuario'] = $usuario['ulid_usuario'];
 
 		$this->status = 200;
 		$this->sendResponse();
@@ -155,9 +155,9 @@ readonly class Usuario extends Setter
 		$this->authEndpoint();
 
 		$query =
-			"SELECT id_usuario, nombre_usuario, codigo_contacto
+			"SELECT ulid_usuario, nombre_usuario, codigo_contacto
 			FROM usuarios
-			WHERE id_usuario = ?";
+			WHERE ulid_usuario = ?";
 
 		$usuario = $this->executeQuery(
 			$query,
@@ -181,7 +181,7 @@ readonly class Usuario extends Setter
 
 		$query =
 			"DELETE FROM usuarios
-			WHERE id_usuario = ?";
+			WHERE ulid_usuario = ?";
 
 		$this->executeQuery(
 			$query,
@@ -206,7 +206,7 @@ readonly class Usuario extends Setter
 		$query =
 			"UPDATE usuarios
 			SET nombre_usuario = ?
-			WHERE id_usuario = ?";
+			WHERE ulid_usuario = ?";
 
 		try {
 			$this->executeQuery(
@@ -242,7 +242,7 @@ readonly class Usuario extends Setter
 		$query =
 			"UPDATE usuarios
 			SET password = ?
-			WHERE id_usuario = ?";
+			WHERE ulid_usuario = ?";
 
 		$this->executeQuery(
 			$query,

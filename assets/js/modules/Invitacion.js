@@ -59,7 +59,7 @@ export default class Invitacion extends Grupo {
 						<h2 translate="no">${usuario.nombre}</h2>
 
 						<form method="POST" name="aceptar${test}">
-							<input type="hidden" value="${usuario.id}" name="id_${test2}">
+							<input type="hidden" value="${usuario.id}" name="ulid_${test2}">
 							<button>
 								<svg viewBox="0 0 800 800">
 									<circle cx="400" cy="400" r="400"/>
@@ -69,7 +69,7 @@ export default class Invitacion extends Grupo {
 						</form>
 
 						<form method="POST" name="rechazar${test}">
-							<input type="hidden" value="${usuario.id}" name="id_${test2}">
+							<input type="hidden" value="${usuario.id}" name="ulid_${test2}">
 							<button>
 								<svg viewBox="0 0 800 800">
 									<circle cx="400" cy="400" r="400"/>
@@ -105,7 +105,7 @@ export default class Invitacion extends Grupo {
 	contactosInvitablesTemplate(fetchedGrupos) {
 
 		const noMiembros = fetchedGrupos
-			.map(grupo => `<option translate="no" value="${grupo.id_usuario}">${grupo.nombre_usuario}</option>`)
+			.map(grupo => `<option translate="no" value="${grupo.ulid_usuario}">${grupo.nombre_usuario}</option>`)
 			.join('');
 
 		const template =
@@ -121,14 +121,14 @@ export default class Invitacion extends Grupo {
 
 	streamContactosInvitables(idGrupo) {
 
-		const url = `${this.ENDPOINTS.GET.INVITACIONES.CONTACTOS_INVITABLES}?id_grupo=${idGrupo}`;
+		const url = `${this.ENDPOINTS.GET.INVITACIONES.CONTACTOS_INVITABLES}?ulid_grupo=${idGrupo}`;
 		const evtSource = new EventSource(url);
 
 		evtSource.addEventListener("no miembro", (event) => {
 			const data = JSON.parse(event.data);
 
 			const content = this.contactosInvitablesTemplate(data);
-			const select = document.getElementById('id_contacto');
+			const select = document.getElementById('ulid_contacto');
 			select.innerHTML = this.sanitize(content);
 		});
 	}

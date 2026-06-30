@@ -4,7 +4,7 @@ const usuario = new Usuario();
 
 const sesion = await usuario.sessionCheck();
 
-const peer = new Peer(usuario.id_usuario);
+const peer = new Peer(usuario.ulid_usuario);
 
 navigator.mediaDevices.getUserMedia({ video: true, audio: true })
 	.then(stream => {

@@ -6,7 +6,7 @@ require_once __DIR__ . '/Usuario.php';
 
 readonly class Grupo extends Usuario
 {
-	protected string $id_grupo;
+	protected string $ulid_grupo;
 	protected string $nombre_grupo;
 
 	public function __construct()
@@ -21,22 +21,22 @@ readonly class Grupo extends Usuario
 	protected function isFundadorGrupo(): void
 	{
 		$query =
-			"SELECT id_fundador
+			"SELECT ulid_fundador
 			FROM grupos
-			WHERE id_usuario = ?
-			AND id_grupo = ?";
+			WHERE ulid_usuario = ?
+			AND ulid_grupo = ?";
 
-		$id_fundador = $this->executeQuery(
+		$ulid_fundador = $this->executeQuery(
 			$query,
 			'ss',
 			[
 				$this->session_user,
-				$this->id_grupo
+				$this->ulid_grupo
 			],
 			SqlReturn::BindResult
 		);
 
-		if ($id_fundador !== $this->session_user) {
+		if ($ulid_fundador !== $this->session_user) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el fundador del grupo');
 			$this->checkIntegrityErrors();
@@ -50,15 +50,15 @@ readonly class Grupo extends Usuario
 		$query =
 			"SELECT 1
 			FROM contactos_grupales
-			WHERE id_usuario = ?
-			AND id_grupo = ?";
+			WHERE ulid_usuario = ?
+			AND ulid_grupo = ?";
 
 		$rol = $this->executeQuery(
 			$query,
 			'ss',
 			[
 				$this->session_user,
-				$this->id_grupo
+				$this->ulid_grupo
 			],
 			SqlReturn::BindResult
 		);
@@ -78,10 +78,10 @@ readonly class Grupo extends Usuario
 
 		$this->checkValidationErrors();
 
-		$ulid = $this->ulid();
+		$ulid = $this->generateUlid();
 
 		$query =
-			"INSERT INTO grupos (id_grupo, nombre_grupo, id_fundador)
+			"INSERT INTO grupos (ulid_grupo, nombre_grupo, ulid_fundador)
 		 	VALUES (?, ?, ?)";
 
 		try {
@@ -104,7 +104,7 @@ readonly class Grupo extends Usuario
 		}
 
 		$query =
-			"INSERT INTO contactos_grupales (id_usuario, id_grupo)
+			"INSERT INTO contactos_grupales (ulid_usuario, ulid_grupo)
 		 	VALUES (?, ?)";
 
 		$this->executeQuery(
@@ -124,7 +124,7 @@ readonly class Grupo extends Usuario
 
 	public function abandonarGrupo(): void
 	{
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_grupo');
 
 		$this->checkValidationErrors();
 
@@ -132,15 +132,15 @@ readonly class Grupo extends Usuario
 
 		$query =
 			"DELETE FROM contactos_grupales
-			WHERE id_usuario = ?
-			AND id_grupo = ?";
+			WHERE ulid_usuario = ?
+			AND ulid_grupo = ?";
 
 		$this->executeQuery(
 			$query,
 			'ss',
 			[
 				$this->session_user,
-				$this->id_grupo,
+				$this->ulid_grupo,
 			]
 		);
 
@@ -152,20 +152,20 @@ readonly class Grupo extends Usuario
 
 	public function deleteGrupo(): void
 	{
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_grupo');
 		$this->checkValidationErrors();
 
 		$this->isFundadorGrupo();
 
 		$query =
 			"DELETE FROM grupos
-			WHERE id_grupo = ?";
+			WHERE ulid_grupo = ?";
 
 		$this->executeQuery(
 			$query,
 			's',
 			[
-				$this->id_grupo
+				$this->ulid_grupo
 			]
 		);
 

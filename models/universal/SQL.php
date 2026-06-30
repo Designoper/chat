@@ -20,6 +20,22 @@ abstract readonly class SQL extends Database
 		parent::__construct();
 	}
 
+	// MARK: GENERATE ULID
+
+	protected function generateUlid(): string
+	{
+		$time = microtime(true) * 1000;
+		$time = base_convert((string) (int) $time, 10, 32);
+		$time = str_pad($time, 10, '0', STR_PAD_LEFT);
+
+		$rand = '';
+		for ($i = 0; $i < 16; $i++) {
+			$rand .= base_convert((string) random_int(0, 31), 10, 32);
+		}
+
+		return strtoupper($time . $rand);
+	}
+
 	// MARK: EXECUTE QUERY
 
 	protected function executeQuery(string $query, string $types, array $variables, ?SqlReturn $type = null): string|int|array|null|false

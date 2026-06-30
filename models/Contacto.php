@@ -22,96 +22,96 @@ readonly class Contacto extends Invitacion
 			FROM (
 				-- CHATS DIRECTOS (usuarios)
 				SELECT
-					u.id_usuario AS id,
+					u.ulid_usuario AS id,
 					u.nombre_usuario AS nombre,
 					'usuario' AS tipo,
-					COUNT(m.id_mensaje) AS num_mensajes,
+					COUNT(m.ulid_mensaje) AS num_mensajes,
 					DATE_FORMAT(ult.fecha_envio, $dateFormat) AS fecha_envio,
 					ult.contenido,
-					ult.id_emisor,
+					ult.ulid_emisor,
 					ue.nombre_usuario AS nombre_emisor
 				FROM usuarios u
 
 				JOIN contactos_directos cd
-					ON cd.id_usuario = ?
-					AND cd.id_contacto = u.id_usuario
+					ON cd.ulid_usuario = ?
+					AND cd.ulid_contacto = u.ulid_usuario
 
 				LEFT JOIN ultimos_mensajes_leidos_directos uml
-					ON uml.id_usuario = ?
-					AND uml.id_contacto = u.id_usuario
+					ON uml.ulid_usuario = ?
+					AND uml.ulid_contacto = u.ulid_usuario
 
 				LEFT JOIN mensajes m
-					ON m.id_contacto = ?
-					AND m.id_emisor = u.id_usuario
-					AND m.id_grupo IS NULL
-					AND m.id_mensaje > COALESCE(uml.id_mensaje, 0)
+					ON m.ulid_contacto = ?
+					AND m.ulid_emisor = u.ulid_usuario
+					AND m.ulid_grupo IS NULL
+					AND m.ulid_mensaje > COALESCE(uml.ulid_mensaje, 0)
 
 				LEFT JOIN mensajes ult
-					ON ult.id_mensaje = (
-						SELECT MAX(m2.id_mensaje)
+					ON ult.ulid_mensaje = (
+						SELECT MAX(m2.ulid_mensaje)
 						FROM mensajes m2
-						WHERE m2.id_grupo IS NULL
+						WHERE m2.ulid_grupo IS NULL
 						AND (
-								(m2.id_emisor = ? AND m2.id_contacto = u.id_usuario)
-							OR  (m2.id_emisor = u.id_usuario AND m2.id_contacto = ?)
+								(m2.ulid_emisor = ? AND m2.ulid_contacto = u.ulid_usuario)
+							OR  (m2.ulid_emisor = u.ulid_usuario AND m2.ulid_contacto = ?)
 						)
 					)
 
 				LEFT JOIN usuarios ue
-					ON ue.id_usuario = ult.id_emisor
+					ON ue.ulid_usuario = ult.ulid_emisor
 
-				WHERE u.id_usuario != ?
+				WHERE u.ulid_usuario != ?
 
 				GROUP BY
-					u.id_usuario,
+					u.ulid_usuario,
 					u.nombre_usuario,
 					ult.fecha_envio,
 					ult.contenido,
-					ult.id_emisor,
+					ult.ulid_emisor,
 					ue.nombre_usuario
 
 				UNION ALL
 
 				-- CHATS GRUPALES (grupos)
 				SELECT
-					g.id_grupo AS id,
+					g.ulid_grupo AS id,
 					g.nombre_grupo AS nombre,
 					'grupo' AS tipo,
-					COUNT(mg.id_mensaje) AS num_mensajes,
+					COUNT(mg.ulid_mensaje) AS num_mensajes,
 					DATE_FORMAT(ultg.fecha_envio, $dateFormat) AS fecha_envio,
 					ultg.contenido,
-					ultg.id_emisor,
+					ultg.ulid_emisor,
 					ue2.nombre_usuario AS nombre_emisor
 				FROM grupos g
 
 				JOIN contactos_grupales mem
-					ON mem.id_grupo = g.id_grupo
-					AND mem.id_usuario = ?
+					ON mem.ulid_grupo = g.ulid_grupo
+					AND mem.ulid_usuario = ?
 
 				LEFT JOIN ultimos_mensajes_leidos_grupales umlg
-					ON umlg.id_usuario = ?
-					AND umlg.id_grupo = g.id_grupo
+					ON umlg.ulid_usuario = ?
+					AND umlg.ulid_grupo = g.ulid_grupo
 
 				LEFT JOIN mensajes mg
-					ON mg.id_grupo = g.id_grupo
-					AND mg.id_mensaje > COALESCE(umlg.id_mensaje, 0)
+					ON mg.ulid_grupo = g.ulid_grupo
+					AND mg.ulid_mensaje > COALESCE(umlg.ulid_mensaje, 0)
 
 				LEFT JOIN mensajes ultg
-					ON ultg.id_mensaje = (
-						SELECT MAX(m3.id_mensaje)
+					ON ultg.ulid_mensaje = (
+						SELECT MAX(m3.ulid_mensaje)
 						FROM mensajes m3
-						WHERE m3.id_grupo = g.id_grupo
+						WHERE m3.ulid_grupo = g.ulid_grupo
 					)
 
 				LEFT JOIN usuarios ue2
-					ON ue2.id_usuario = ultg.id_emisor
+					ON ue2.ulid_usuario = ultg.ulid_emisor
 
 				GROUP BY
-					g.id_grupo,
+					g.ulid_grupo,
 					g.nombre_grupo,
 					ultg.fecha_envio,
 					ultg.contenido,
-					ultg.id_emisor,
+					ultg.ulid_emisor,
 					ue2.nombre_usuario
 			) AS chats
 			ORDER BY
@@ -164,15 +164,15 @@ readonly class Contacto extends Invitacion
 		$query =
 			"SELECT 1
 			FROM contactos_directos
-			WHERE id_usuario = ?
-			AND id_contacto = ?";
+			WHERE ulid_usuario = ?
+			AND ulid_contacto = ?";
 
 		$rol = $this->executeQuery(
 			$query,
 			'ss',
 			[
 				$this->session_user,
-				$this->id_contacto
+				$this->ulid_contacto
 			],
 			SqlReturn::BindResult
 		);

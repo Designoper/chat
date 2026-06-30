@@ -11,9 +11,9 @@ abstract readonly class Setter extends SQL
 		parent::__construct();
 	}
 
-	// MARK: SET ID
+	// MARK: SET ULID
 
-	protected function setId(string $name): void
+	protected function setUlid(string $name): void
 	{
 		$value = $_REQUEST[$name] ?? null;
 		$error_message = "El campo $name no puede estar vacío y debe contener 26 carácteres.";
@@ -69,21 +69,5 @@ abstract readonly class Setter extends SQL
 		empty($value)
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
-	}
-
-	// MARK: GENERATE ULID
-
-	protected function ulid(): string
-	{
-		$time = microtime(true) * 1000;
-		$time = base_convert((string) (int) $time, 10, 32);
-		$time = str_pad($time, 10, '0', STR_PAD_LEFT);
-
-		$rand = '';
-		for ($i = 0; $i < 16; $i++) {
-			$rand .= base_convert((string) random_int(0, 31), 10, 32);
-		}
-
-		return strtoupper($time . $rand);
 	}
 }

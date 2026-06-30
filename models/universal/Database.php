@@ -20,7 +20,7 @@ abstract readonly class Database extends SSE
 
 		parent::__construct();
 
-		$this->session_user = $_SESSION['id_usuario'] ?? null;
+		$this->session_user = $_SESSION['ulid_usuario'] ?? null;
 
 		$this->hostname = getenv('HOSTNAME');
 		$this->username = getenv('USERNAME');

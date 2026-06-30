@@ -15,11 +15,11 @@ final readonly class Conexion extends Mensaje
 
 	public function setConexion(): void
 	{
-		if (isset($_POST['id_contacto'])) {
+		if (isset($_POST['ulid_contacto'])) {
 			$this->setConexionDirecta();
 		}
 
-		if (isset($_POST['id_grupo'])) {
+		if (isset($_POST['ulid_grupo'])) {
 			$this->setConexionGrupal();
 		}
 	}
@@ -28,14 +28,14 @@ final readonly class Conexion extends Mensaje
 
 	private function setConexionDirecta(): void
 	{
-		$this->setId('id_contacto');
+		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
-		$id_contacto = $this->id_contacto;
-		$id_usuario = $this->session_user;
+		$ulid_contacto = $this->ulid_contacto;
+		$ulid_usuario = $this->session_user;
 
 		$query =
-			"INSERT INTO conexion_directa (id_usuario, id_contacto)
+			"INSERT INTO conexion_directa (ulid_usuario, ulid_contacto)
 			VALUES (?, ?)
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
@@ -44,8 +44,8 @@ final readonly class Conexion extends Mensaje
 			$query,
 			'ss',
 			[
-				$id_usuario,
-				$id_contacto,
+				$ulid_usuario,
+				$ulid_contacto,
 			]
 		);
 
@@ -57,14 +57,14 @@ final readonly class Conexion extends Mensaje
 
 	private function setConexionGrupal(): void
 	{
-		$this->setId('id_grupo');
+		$this->setUlid('ulid_grupo');
 		$this->checkValidationErrors();
 
-		$id_grupo = $this->id_grupo;
-		$id_usuario = $this->session_user;
+		$ulid_grupo = $this->ulid_grupo;
+		$ulid_usuario = $this->session_user;
 
 		$query =
-			"INSERT INTO conexion_grupal (id_usuario, id_grupo)
+			"INSERT INTO conexion_grupal (ulid_usuario, ulid_grupo)
 			VALUES (?, ?)
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
@@ -73,8 +73,8 @@ final readonly class Conexion extends Mensaje
 			$query,
 			'ss',
 			[
-				$id_usuario,
-				$id_grupo,
+				$ulid_usuario,
+				$ulid_grupo,
 			]
 		);
 
@@ -92,16 +92,16 @@ final readonly class Conexion extends Mensaje
 				COALESCE(UNIX_TIMESTAMP(conexion_directa.last_seen), 0) AS last_seen_unix
 			FROM usuarios
 			LEFT JOIN conexion_directa
-				ON usuarios.id_usuario = conexion_directa.id_usuario
-				AND conexion_directa.id_contacto = ?
-			WHERE usuarios.id_usuario = ?";
+				ON usuarios.ulid_usuario = conexion_directa.ulid_usuario
+				AND conexion_directa.ulid_contacto = ?
+			WHERE usuarios.ulid_usuario = ?";
 
 		$conexion = $this->executeQuery(
 			$query,
 			'ss',
 			[
 				$this->session_user,
-				$this->id_contacto
+				$this->ulid_contacto
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -119,11 +119,11 @@ final readonly class Conexion extends Mensaje
 				COALESCE(UNIX_TIMESTAMP(conexion_grupal.last_seen), 0) AS last_seen_unix
 			FROM usuarios
 			LEFT JOIN conexion_grupal
-				ON usuarios.id_usuario = conexion_grupal.id_usuario
+				ON usuarios.ulid_usuario = conexion_grupal.ulid_usuario
 			LEFT JOIN membresias
-				ON usuarios.id_usuario = membresias.id_usuario
-			WHERE membresias.id_grupo = ?
-			AND membresias.id_usuario != ?
+				ON usuarios.ulid_usuario = membresias.ulid_usuario
+			WHERE membresias.ulid_grupo = ?
+			AND membresias.ulid_usuario != ?
 			AND membresias.rol IN ('fundador','miembro')
 			ORDER BY usuarios.nombre_usuario ASC";
 
@@ -131,7 +131,7 @@ final readonly class Conexion extends Mensaje
 			$query,
 			'ss',
 			[
-				$this->id_grupo,
+				$this->ulid_grupo,
 				$this->session_user
 			],
 			SqlReturn::FetchAssoc
@@ -144,14 +144,14 @@ final readonly class Conexion extends Mensaje
 
 	public function streamConexion(): void
 	{
-		if (isset($_GET['id_contacto'])) {
-			$this->setId('id_contacto');
+		if (isset($_GET['ulid_contacto'])) {
+			$this->setUlid('ulid_contacto');
 			$getConexion = fn() => $this->getConexionDirecta();
 			$tipo = "directo";
 		}
 
-		if (isset($_GET['id_grupo'])) {
-			$this->setId('id_grupo');
+		if (isset($_GET['ulid_grupo'])) {
+			$this->setUlid('ulid_grupo');
 			$getConexion = fn() => $this->getConexionGrupal();
 			$tipo = "grupal";
 		}
