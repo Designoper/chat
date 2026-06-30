@@ -67,8 +67,8 @@ export default class Invitacion extends Grupo {
 		const evtSource = new EventSource(this.ENDPOINTS.GET.INVITACIONES.CONTACTOS);
 
 		evtSource.addEventListener("usuario", (event) => {
-			const contactos = JSON.parse(event.data);
-			const content = this.invitacionContactoTemplate(contactos);
+			const data = JSON.parse(event.data);
+			const content = this.invitacionContactoTemplate(data);
 
 			this.invitacionesContactoMenu.innerHTML = this.sanitize(content);
 		});
@@ -134,9 +134,9 @@ export default class Invitacion extends Grupo {
 		const evtSource = new EventSource(this.ENDPOINTS.GET.INVITACIONES.GRUPOS);
 
 		evtSource.addEventListener("grupo", (event) => {
-			const state = JSON.parse(event.data);
+			const data = JSON.parse(event.data);
 
-			const content = this.invitacionGrupoTemplate(state);
+			const content = this.invitacionGrupoTemplate(data);
 			this.invitacionesGrupoMenu.innerHTML = this.sanitize(content);
 		});
 	}
@@ -166,9 +166,9 @@ export default class Invitacion extends Grupo {
 		const evtSource = new EventSource(url);
 
 		evtSource.addEventListener("no miembro", (event) => {
-			const state = JSON.parse(event.data);
+			const data = JSON.parse(event.data);
 
-			const content = this.contactosInvitablesTemplate(state);
+			const content = this.contactosInvitablesTemplate(data);
 			const select = document.getElementById('id_contacto');
 			select.innerHTML = this.sanitize(content);
 		});
