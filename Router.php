@@ -28,6 +28,7 @@ final readonly class Router
             $this->makeRoute(HTTPMethods::GET, 'invitaciones/contactos-invitables', [Invitacion::class, 'streamContactosInvitables']),
             $this->makeRoute(HTTPMethods::GET, 'invitaciones/contactos', [Invitacion::class, 'streamInvitacionesContacto']),
             $this->makeRoute(HTTPMethods::GET, 'invitaciones/grupos', [Invitacion::class, 'streamInvitacionesGrupo']),
+            $this->makeRoute(HTTPMethods::GET, 'invitaciones/stream', [Invitacion::class, 'streamInvitaciones']),
 
             $this->makeRoute(HTTPMethods::GET, 'contactos/stream', [Contacto::class, 'streamContactos']),
 

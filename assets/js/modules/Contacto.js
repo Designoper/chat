@@ -1,7 +1,7 @@
 import Invitacion from "./Invitacion.js";
 
 export default class Contacto extends Invitacion {
-	contactosMenu = this.output.querySelector('menu:nth-of-type(3)');
+	contactosMenu = this.output.querySelector('menu:nth-of-type(2)');
 
 	constructor() {
 		super();

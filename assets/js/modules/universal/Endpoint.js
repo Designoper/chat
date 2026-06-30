@@ -12,6 +12,7 @@ export default class Endpoint extends Fetch {
 				CONTACTOS: `${this.ROOT}invitaciones/contactos`,
 				CONTACTOS_INVITABLES: `${this.ROOT}invitaciones/contactos-invitables`,
 				GRUPOS: `${this.ROOT}invitaciones/grupos`,
+				STREAM: `${this.ROOT}invitaciones/stream`,
 			},
 			CONTACTOS: {
 				STREAM: `${this.ROOT}contactos/stream`,

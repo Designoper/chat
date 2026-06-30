@@ -178,7 +178,81 @@ readonly class Invitacion extends Grupo
 
 
 
+	// MARK: READ INVITACIONES
 
+	private function readInvitaciones(): array
+	{
+		$query =
+			"SELECT *
+				FROM (
+					-- CHATS DIRECTOS (usuarios)
+					SELECT
+						u.id_usuario AS id,
+						u.nombre_usuario AS nombre,
+						'usuario' AS tipo
+					FROM usuarios u
+
+					LEFT JOIN invitaciones_directas
+						ON u.id_usuario = invitaciones_directas.id_usuario
+					WHERE invitaciones_directas.id_contacto = ?
+
+					GROUP BY
+						u.id_usuario,
+						u.nombre_usuario
+
+					UNION ALL
+
+					-- CHATS GRUPALES (grupos)
+					SELECT
+						g.id_grupo AS id,
+						g.nombre_grupo AS nombre,
+						'grupo' AS tipo
+					FROM grupos g
+
+					LEFT JOIN invitaciones_grupales
+						ON invitaciones_grupales.id_grupo = g.id_grupo
+					WHERE invitaciones_grupales.id_usuario = ?
+
+					GROUP BY
+						g.id_grupo,
+						g.nombre_grupo
+				) AS invitaciones";
+		// ORDER BY
+		// 	(fecha_envio IS NULL) ASC,
+		// 	fecha_envio DESC,
+		// 	nombre ASC";
+
+		$invitaciones = $this->executeQuery(
+			$query,
+			'ii',
+			[
+				$this->session_user,
+				$this->session_user
+			],
+			SqlReturn::FetchAll
+		);
+
+		return $invitaciones;
+	}
+
+	// MARK: STREAM INVITACIONES
+
+	protected function streamInvitacionesLogic(): void
+	{
+		static $invitacionesGrupo = [];
+
+		$invitacionesGrupoUpdate = $this->readInvitaciones();
+
+		if ($invitacionesGrupoUpdate !== $invitacionesGrupo) {
+			$this->sendEvent('invitacion', $invitacionesGrupoUpdate);
+			$invitacionesGrupo = $invitacionesGrupoUpdate;
+		}
+	}
+
+	public function streamInvitaciones(): void
+	{
+		$this->setSSE([$this, "streamInvitacionesLogic"]);
+	}
 
 
 
