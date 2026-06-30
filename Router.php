@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/models/Conexion.php';
+// require_once __DIR__ . '/models/Conexion.php';
 require_once __DIR__ . '/models/Mensaje.php';
 
 final readonly class Router
@@ -20,7 +20,7 @@ final readonly class Router
 
             $this->setRoute('GET', 'contactos/stream', [Contacto::class, 'streamContactos']),
 
-            $this->setRoute('GET', 'conexion/stream', [Conexion::class, 'streamConexion']),
+            // $this->setRoute('GET', 'conexion/stream', [Conexion::class, 'streamConexion']),
 
             $this->setRoute('GET', 'mensajes/stream/directos', [Mensaje::class, 'streamMensajesDirectos']),
             $this->setRoute('GET', 'mensajes/stream/grupales', [Mensaje::class, 'streamMensajesGrupales']),
