@@ -133,145 +133,6 @@ readonly class Invitacion extends Grupo
 		$this->sendResponse();
 	}
 
-	// MARK: READ INVITACIONES CONTACTO
-
-	private function readInvitacionesContacto(): array
-	{
-		$query =
-			"SELECT usuarios.id_usuario, usuarios.nombre_usuario
-			FROM usuarios
-			LEFT JOIN invitaciones_directas
-				ON usuarios.id_usuario = invitaciones_directas.id_usuario
-			WHERE invitaciones_directas.id_contacto = ?
-			ORDER BY usuarios.nombre_usuario ASC";
-
-		$invitacionesContacto = $this->executeQuery(
-			$query,
-			'i',
-			[
-				$this->session_user
-			],
-			SqlReturn::FetchAll
-		);
-
-		return $invitacionesContacto;
-	}
-
-	// MARK: STREAM INVITACIONES CONTACTO
-
-	protected function streamInvitacionesContactoLogic(): void
-	{
-		static $invitacionesContacto = [];
-
-		$invitacionesContactoUpdate = $this->readInvitacionesContacto();
-
-		if ($invitacionesContactoUpdate !== $invitacionesContacto) {
-			$this->sendEvent('usuario', $invitacionesContactoUpdate);
-			$invitacionesContacto = $invitacionesContactoUpdate;
-		}
-	}
-
-	public function streamInvitacionesContacto(): void
-	{
-		$this->setSSE([$this, "streamInvitacionesContactoLogic"]);
-	}
-
-
-
-	// MARK: READ INVITACIONES
-
-	private function readInvitaciones(): array
-	{
-		$query =
-			"SELECT *
-				FROM (
-					-- CHATS DIRECTOS (usuarios)
-					SELECT
-						u.id_usuario AS id,
-						u.nombre_usuario AS nombre,
-						'usuario' AS tipo
-					FROM usuarios u
-
-					LEFT JOIN invitaciones_directas
-						ON u.id_usuario = invitaciones_directas.id_usuario
-					WHERE invitaciones_directas.id_contacto = ?
-
-					GROUP BY
-						u.id_usuario,
-						u.nombre_usuario
-
-					UNION ALL
-
-					-- CHATS GRUPALES (grupos)
-					SELECT
-						g.id_grupo AS id,
-						g.nombre_grupo AS nombre,
-						'grupo' AS tipo
-					FROM grupos g
-
-					LEFT JOIN invitaciones_grupales
-						ON invitaciones_grupales.id_grupo = g.id_grupo
-					WHERE invitaciones_grupales.id_usuario = ?
-
-					GROUP BY
-						g.id_grupo,
-						g.nombre_grupo
-				) AS invitaciones";
-		// ORDER BY
-		// 	(fecha_envio IS NULL) ASC,
-		// 	fecha_envio DESC,
-		// 	nombre ASC";
-
-		$invitaciones = $this->executeQuery(
-			$query,
-			'ii',
-			[
-				$this->session_user,
-				$this->session_user
-			],
-			SqlReturn::FetchAll
-		);
-
-		return $invitaciones;
-	}
-
-	// MARK: STREAM INVITACIONES
-
-	protected function streamInvitacionesLogic(): void
-	{
-		static $invitacionesGrupo = [];
-
-		$invitacionesGrupoUpdate = $this->readInvitaciones();
-
-		if ($invitacionesGrupoUpdate !== $invitacionesGrupo) {
-			$this->sendEvent('invitacion', $invitacionesGrupoUpdate);
-			$invitacionesGrupo = $invitacionesGrupoUpdate;
-		}
-	}
-
-	public function streamInvitaciones(): void
-	{
-		$this->setSSE([$this, "streamInvitacionesLogic"]);
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	// MARK: INVITAR GRUPO
 
 	public function invitarGrupo(): void
@@ -365,28 +226,78 @@ readonly class Invitacion extends Grupo
 		$this->sendResponse();
 	}
 
-	// MARK: READ INVITACIONES GRUPO
+	// MARK: READ INVITACIONES
 
-	private function readInvitacionesGrupo(): array
+	private function readInvitaciones(): array
 	{
 		$query =
-			"SELECT grupos.id_grupo, grupos.nombre_grupo
-			FROM grupos
-			LEFT JOIN invitaciones_grupales
-				ON invitaciones_grupales.id_grupo = grupos.id_grupo
-			WHERE invitaciones_grupales.id_usuario = ?
-			ORDER BY grupos.nombre_grupo ASC";
+			"SELECT *
+				FROM (
+					SELECT
+						u.id_usuario AS id,
+						u.nombre_usuario AS nombre,
+						'usuario' AS tipo
+					FROM usuarios u
 
-		$invitacionesGrupo = $this->executeQuery(
+					LEFT JOIN invitaciones_directas
+						ON u.id_usuario = invitaciones_directas.id_usuario
+					WHERE invitaciones_directas.id_contacto = ?
+
+					GROUP BY
+						u.id_usuario,
+						u.nombre_usuario
+
+					UNION ALL
+
+					SELECT
+						g.id_grupo AS id,
+						g.nombre_grupo AS nombre,
+						'grupo' AS tipo
+					FROM grupos g
+
+					LEFT JOIN invitaciones_grupales
+						ON invitaciones_grupales.id_grupo = g.id_grupo
+					WHERE invitaciones_grupales.id_usuario = ?
+
+					GROUP BY
+						g.id_grupo,
+						g.nombre_grupo
+				) AS invitaciones";
+		// ORDER BY
+		// 	(fecha_envio IS NULL) ASC,
+		// 	fecha_envio DESC,
+		// 	nombre ASC";
+
+		$invitaciones = $this->executeQuery(
 			$query,
-			'i',
+			'ii',
 			[
+				$this->session_user,
 				$this->session_user
 			],
 			SqlReturn::FetchAll
 		);
 
-		return $invitacionesGrupo;
+		return $invitaciones;
+	}
+
+	// MARK: STREAM INVITACIONES
+
+	protected function streamInvitacionesLogic(): void
+	{
+		static $invitacionesGrupo = [];
+
+		$invitacionesGrupoUpdate = $this->readInvitaciones();
+
+		if ($invitacionesGrupoUpdate !== $invitacionesGrupo) {
+			$this->sendEvent('invitacion', $invitacionesGrupoUpdate);
+			$invitacionesGrupo = $invitacionesGrupoUpdate;
+		}
+	}
+
+	public function streamInvitaciones(): void
+	{
+		$this->setSSE([$this, "streamInvitacionesLogic"]);
 	}
 
 	// MARK: READ CONTACTOS INVITABLES
@@ -428,25 +339,6 @@ readonly class Invitacion extends Grupo
 		);
 
 		return $contactosInvitables;
-	}
-
-	// MARK: STREAM INVITACIONES GRUPO
-
-	protected function streamInvitacionesGrupoLogic(): void
-	{
-		static $invitacionesGrupo = [];
-
-		$invitacionesGrupoUpdate = $this->readInvitacionesGrupo();
-
-		if ($invitacionesGrupoUpdate !== $invitacionesGrupo) {
-			$this->sendEvent('grupo', $invitacionesGrupoUpdate);
-			$invitacionesGrupo = $invitacionesGrupoUpdate;
-		}
-	}
-
-	public function streamInvitacionesGrupo(): void
-	{
-		$this->setSSE([$this, "streamInvitacionesGrupoLogic"]);
 	}
 
 	// MARK: STREAM CONTACTOS INVITABLES

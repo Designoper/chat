@@ -32,11 +32,11 @@ export default class Invitacion extends Grupo {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.RECHAZAR_GRUPO);
 	}
 
-	// MARK: INVITACION CONTACTOS TEMPLATE
+	// MARK: INVITACIONES TEMPLATE
 
-	invitacionContactoTemplate(fetchedContactos) {
+	invitacionesTemplate(fetchedInvitaciones) {
 
-		const invitaciones = fetchedContactos.map(usuario => {
+		const invitaciones = fetchedInvitaciones.map(usuario => {
 
 			let test;
 			let test2;
@@ -86,15 +86,15 @@ export default class Invitacion extends Grupo {
 		return invitaciones.join('');
 	}
 
-	// MARK: STREAM INVITACION CONTACTO
+	// MARK: STREAM INVITACIONES
 
-	streamInvitacionContacto() {
+	streamInvitaciones() {
 
 		const evtSource = new EventSource(this.ENDPOINTS.GET.INVITACIONES.STREAM);
 
 		evtSource.addEventListener("invitacion", (event) => {
 			const data = JSON.parse(event.data);
-			const content = this.invitacionContactoTemplate(data);
+			const content = this.invitacionesTemplate(data);
 
 			this.invitacionesMenu.innerHTML = this.sanitize(content);
 		});
