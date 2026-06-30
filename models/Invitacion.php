@@ -41,12 +41,12 @@ readonly class Invitacion extends Grupo
 			$this->checkIntegrityErrors();
 		}
 
-		$query2 =
+		$query =
 			"INSERT INTO invitaciones_directas (id_usuario, id_contacto)
 			VALUES (?, ?)";
 
 		$this->executeQuery(
-			$query2,
+			$query,
 			'ii',
 			[
 				$this->session_user,
@@ -87,14 +87,14 @@ readonly class Invitacion extends Grupo
 			]
 		);
 
-		$query2 =
+		$query =
 			"DELETE FROM invitaciones_directas
 			WHERE (
 				(id_usuario = ? AND id_contacto = ?) OR (id_usuario = ? AND id_contacto = ?)
 			)";
 
 		$this->executeQuery(
-			$query2,
+			$query,
 			'iiii',
 			[
 				$this->session_user,
@@ -247,13 +247,13 @@ readonly class Invitacion extends Grupo
 			]
 		);
 
-		$query2 =
+		$query =
 			"DELETE FROM invitaciones_grupales
 			WHERE id_usuario = ?
 			AND id_grupo = ?";
 
 		$this->executeQuery(
-			$query2,
+			$query,
 			'ii',
 			[
 				$this->session_user,

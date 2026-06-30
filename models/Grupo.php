@@ -103,12 +103,12 @@ readonly class Grupo extends Usuario
 			throw $error;
 		}
 
-		$query2 =
+		$query =
 			"INSERT INTO contactos_grupales (id_usuario, id_grupo)
 		 	VALUES (?, ?)";
 
 		$this->executeQuery(
-			$query2,
+			$query,
 			'ii',
 			[
 				$this->session_user,
