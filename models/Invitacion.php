@@ -285,13 +285,13 @@ readonly class Invitacion extends Grupo
 
 	protected function streamInvitacionesLogic(): void
 	{
-		static $invitacionesGrupo = [];
+		static $invitaciones = [];
 
-		$invitacionesGrupoUpdate = $this->readInvitaciones();
+		$invitacionesUpdate = $this->readInvitaciones();
 
-		if ($invitacionesGrupoUpdate !== $invitacionesGrupo) {
-			$this->sendEvent('invitacion', $invitacionesGrupoUpdate);
-			$invitacionesGrupo = $invitacionesGrupoUpdate;
+		if ($invitacionesUpdate !== $invitaciones) {
+			$this->sendEvent('invitacion', $invitacionesUpdate);
+			$invitaciones = $invitacionesUpdate;
 		}
 	}
 
