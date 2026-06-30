@@ -11,8 +11,8 @@ CREATE TABLE usuarios (
     codigo_contacto VARCHAR(6) NOT NULL UNIQUE
 );
 
-CREATE INDEX idx_usuario_nombre ON usuarios(nombre_usuario);
-CREATE INDEX idx_usuario_codigo ON usuarios(codigo_contacto);
+-- CREATE INDEX idx_usuario_nombre ON usuarios(nombre_usuario);
+-- CREATE INDEX idx_usuario_codigo ON usuarios(codigo_contacto);
 
 CREATE TABLE grupos (
     id_grupo INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
