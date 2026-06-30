@@ -8,7 +8,6 @@ enum SqlReturn
 {
 	case FetchAll;
 	case FetchAssoc;
-	case InsertId;
 	case BindResult;
 }
 
@@ -36,10 +35,6 @@ abstract readonly class SQL extends Database
 
 			case SqlReturn::FetchAssoc:
 				$result = $mysqli_stmt->get_result()->fetch_assoc();
-				break;
-
-			case SqlReturn::InsertId:
-				$result = (int) $mysqli_stmt->insert_id;
 				break;
 
 			case SqlReturn::BindResult:

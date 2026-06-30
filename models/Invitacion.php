@@ -6,7 +6,7 @@ require_once __DIR__ . '/Grupo.php';
 
 readonly class Invitacion extends Grupo
 {
-	protected int $id_contacto;
+	protected string $id_contacto;
 	protected string $codigo_contacto;
 
 	public function __construct()
@@ -47,7 +47,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$contacto
@@ -71,7 +71,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->id_contacto,
 				$this->session_user
@@ -80,7 +80,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_contacto
@@ -95,7 +95,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery(
 			$query,
-			'iiii',
+			'ssss',
 			[
 				$this->session_user,
 				$this->id_contacto,
@@ -122,7 +122,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->id_contacto,
 				$this->session_user
@@ -150,7 +150,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->id_contacto,
 				$this->id_grupo,
@@ -175,7 +175,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_grupo,
@@ -189,7 +189,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_grupo,
@@ -215,7 +215,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_grupo,
@@ -270,7 +270,7 @@ readonly class Invitacion extends Grupo
 
 		$invitaciones = $this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->session_user
@@ -329,7 +329,7 @@ readonly class Invitacion extends Grupo
 
 		$contactosInvitables = $this->executeQuery(
 			$query,
-			'iii',
+			'sss',
 			[
 				$this->id_grupo,
 				$this->id_grupo,

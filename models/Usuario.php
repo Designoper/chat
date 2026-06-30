@@ -30,14 +30,15 @@ readonly class Usuario extends Setter
 
 	public function createUsuario(): void
 	{
+		$ulid = $this->ulid();
 		$this->setNombre('nombre_usuario');
 		$this->setPassword('password');
 
 		$this->checkValidationErrors();
 
 		$query =
-			"INSERT INTO usuarios (nombre_usuario, password, codigo_contacto)
-        	VALUES (?, ?, ?)";
+			"INSERT INTO usuarios (id_usuario, nombre_usuario, password, codigo_contacto)
+        	VALUES (?, ?, ?, ?)";
 
 		$maxIntentos = 5;
 		$intento = 0;
@@ -47,18 +48,18 @@ readonly class Usuario extends Setter
 			$codigo = $this->generarCodigo();
 
 			try {
-				$id_usuario = $this->executeQuery(
+				$this->executeQuery(
 					$query,
-					'sss',
+					'ssss',
 					[
+						$ulid,
 						$this->nombre_usuario,
 						password_hash($this->password, PASSWORD_DEFAULT),
 						$codigo
-					],
-					SqlReturn::InsertId
+					]
 				);
 
-				$_SESSION['id_usuario'] = $id_usuario;
+				$_SESSION['id_usuario'] = $ulid;
 				$this->status = 201;
 				$this->sendResponse();
 			} catch (\mysqli_sql_exception $error) {
@@ -160,7 +161,7 @@ readonly class Usuario extends Setter
 
 		$usuario = $this->executeQuery(
 			$query,
-			'i',
+			's',
 			[
 				$this->session_user
 			],
@@ -184,7 +185,7 @@ readonly class Usuario extends Setter
 
 		$this->executeQuery(
 			$query,
-			'i',
+			's',
 			[
 				$this->session_user
 			]
@@ -210,7 +211,7 @@ readonly class Usuario extends Setter
 		try {
 			$this->executeQuery(
 				$query,
-				'si',
+				'ss',
 				[
 					$this->nombre_usuario,
 					$this->session_user
@@ -245,7 +246,7 @@ readonly class Usuario extends Setter
 
 		$this->executeQuery(
 			$query,
-			'si',
+			'ss',
 			[
 				password_hash($this->password, PASSWORD_DEFAULT),
 				$this->session_user

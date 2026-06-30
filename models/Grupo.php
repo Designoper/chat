@@ -6,7 +6,7 @@ require_once __DIR__ . '/Usuario.php';
 
 readonly class Grupo extends Usuario
 {
-	protected int $id_grupo;
+	protected string $id_grupo;
 	protected string $nombre_grupo;
 
 	public function __construct()
@@ -28,7 +28,7 @@ readonly class Grupo extends Usuario
 
 		$id_fundador = $this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_grupo
@@ -55,7 +55,7 @@ readonly class Grupo extends Usuario
 
 		$rol = $this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_grupo
@@ -78,19 +78,21 @@ readonly class Grupo extends Usuario
 
 		$this->checkValidationErrors();
 
+		$ulid = $this->ulid();
+
 		$query =
-			"INSERT INTO grupos (nombre_grupo, id_fundador)
-		 	VALUES (?, ?)";
+			"INSERT INTO grupos (id_grupo, nombre_grupo, id_fundador)
+		 	VALUES (?, ?, ?)";
 
 		try {
-			$id_grupo = $this->executeQuery(
+			$this->executeQuery(
 				$query,
-				'si',
+				'sss',
 				[
+					$ulid,
 					$this->nombre_grupo,
 					$this->session_user
-				],
-				SqlReturn::InsertId
+				]
 			);
 		} catch (\mysqli_sql_exception $error) {
 
@@ -99,8 +101,6 @@ readonly class Grupo extends Usuario
 				$this->errors->setIntegrityError('¡Este nombre de grupo ya existe!');
 				$this->checkIntegrityErrors();
 			}
-
-			throw $error;
 		}
 
 		$query =
@@ -109,10 +109,10 @@ readonly class Grupo extends Usuario
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
-				$id_grupo,
+				$ulid,
 			]
 		);
 
@@ -137,7 +137,7 @@ readonly class Grupo extends Usuario
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_grupo,
@@ -163,7 +163,7 @@ readonly class Grupo extends Usuario
 
 		$this->executeQuery(
 			$query,
-			'i',
+			's',
 			[
 				$this->id_grupo
 			]

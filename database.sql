@@ -5,19 +5,16 @@ USE chat;
 SET default_storage_engine=InnoDB;
 
 CREATE TABLE usuarios (
-    id_usuario INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id_usuario CHAR(26) PRIMARY KEY,
     nombre_usuario VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    codigo_contacto VARCHAR(6) NOT NULL UNIQUE
+    codigo_contacto CHAR(6) NOT NULL UNIQUE
 );
 
--- CREATE INDEX idx_usuario_nombre ON usuarios(nombre_usuario);
--- CREATE INDEX idx_usuario_codigo ON usuarios(codigo_contacto);
-
 CREATE TABLE grupos (
-    id_grupo INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id_grupo CHAR(26) PRIMARY KEY,
     nombre_grupo VARCHAR(20) NOT NULL UNIQUE,
-    id_fundador INT UNSIGNED NOT NULL,
+    id_fundador CHAR(26) NOT NULL,
 
     FOREIGN KEY (id_fundador)
         REFERENCES usuarios(id_usuario)
@@ -25,8 +22,8 @@ CREATE TABLE grupos (
 );
 
 CREATE TABLE invitaciones_directas (
-    id_usuario INT UNSIGNED,
-    id_contacto INT UNSIGNED,
+    id_usuario CHAR(26),
+    id_contacto CHAR(26),
 
     UNIQUE KEY invitacion_directa (id_usuario, id_contacto),
 
@@ -40,8 +37,8 @@ CREATE TABLE invitaciones_directas (
 );
 
 CREATE TABLE invitaciones_grupales (
-    id_usuario INT UNSIGNED,
-    id_grupo INT UNSIGNED,
+    id_usuario CHAR(26),
+    id_grupo CHAR(26),
 
     UNIQUE KEY invitacion_grupo (id_usuario, id_grupo),
 
@@ -55,8 +52,8 @@ CREATE TABLE invitaciones_grupales (
 );
 
 CREATE TABLE contactos_directos (
-    id_usuario INT UNSIGNED,
-    id_contacto INT UNSIGNED,
+    id_usuario CHAR(26),
+    id_contacto CHAR(26),
 
     UNIQUE KEY contacto_directo (id_usuario, id_contacto),
 
@@ -70,8 +67,8 @@ CREATE TABLE contactos_directos (
 );
 
 CREATE TABLE contactos_grupales (
-    id_usuario INT UNSIGNED,
-    id_grupo INT UNSIGNED,
+    id_usuario CHAR(26),
+    id_grupo CHAR(26),
 
     UNIQUE KEY contacto_grupal (id_usuario, id_grupo),
 
@@ -85,12 +82,12 @@ CREATE TABLE contactos_grupales (
 );
 
 CREATE TABLE mensajes (
-    id_mensaje INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id_mensaje CHAR(26) PRIMARY KEY,
     contenido TEXT NOT NULL,
     fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    id_emisor INT UNSIGNED NOT NULL,
-    id_contacto INT UNSIGNED NULL,
-    id_grupo INT UNSIGNED NULL,
+    id_emisor CHAR(26) NOT NULL,
+    id_contacto CHAR(26) NULL,
+    id_grupo CHAR(26) NULL,
 
     FOREIGN KEY (id_emisor)
         REFERENCES usuarios(id_usuario)
@@ -103,6 +100,38 @@ CREATE TABLE mensajes (
     FOREIGN KEY (id_grupo)
         REFERENCES grupos(id_grupo)
         ON DELETE SET NULL
+);
+
+CREATE TABLE ultimos_mensajes_leidos_directos (
+    id_usuario CHAR(26) NOT NULL,
+    id_contacto CHAR(26) NOT NULL,
+    id_mensaje CHAR(26) NOT NULL,
+
+    UNIQUE KEY unico_privado (id_usuario, id_contacto),
+
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (id_contacto)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE ultimos_mensajes_leidos_grupales (
+    id_usuario CHAR(26) NOT NULL,
+    id_grupo CHAR(26) NOT NULL,
+    id_mensaje CHAR(26) NULL,
+
+    UNIQUE KEY unico_grupo (id_usuario, id_grupo),
+
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (id_grupo)
+        REFERENCES grupos(id_grupo)
+        ON DELETE CASCADE
 );
 
 -- CREATE TABLE conexion_directa (
@@ -136,35 +165,3 @@ CREATE TABLE mensajes (
 --         REFERENCES grupos(id_grupo)
 --         ON DELETE CASCADE
 -- );
-
-CREATE TABLE ultimos_mensajes_leidos_directos (
-    id_usuario INT UNSIGNED NOT NULL,
-    id_contacto INT UNSIGNED NOT NULL,
-    id_mensaje INT UNSIGNED NULL,
-
-    UNIQUE KEY unico_privado (id_usuario, id_contacto),
-
-    FOREIGN KEY (id_usuario)
-        REFERENCES usuarios(id_usuario)
-        ON DELETE CASCADE,
-
-    FOREIGN KEY (id_contacto)
-        REFERENCES usuarios(id_usuario)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE ultimos_mensajes_leidos_grupales (
-    id_usuario INT UNSIGNED NOT NULL,
-    id_grupo INT UNSIGNED NOT NULL,
-    id_mensaje INT UNSIGNED NULL,
-
-    UNIQUE KEY unico_grupo (id_usuario, id_grupo),
-
-    FOREIGN KEY (id_usuario)
-        REFERENCES usuarios(id_usuario)
-        ON DELETE CASCADE,
-
-    FOREIGN KEY (id_grupo)
-        REFERENCES grupos(id_grupo)
-        ON DELETE CASCADE
-);

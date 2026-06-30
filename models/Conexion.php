@@ -42,7 +42,7 @@ final readonly class Conexion extends Mensaje
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$id_usuario,
 				$id_contacto,
@@ -71,7 +71,7 @@ final readonly class Conexion extends Mensaje
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$id_usuario,
 				$id_grupo,
@@ -98,7 +98,7 @@ final readonly class Conexion extends Mensaje
 
 		$conexion = $this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_contacto
@@ -129,7 +129,7 @@ final readonly class Conexion extends Mensaje
 
 		$conexion = $this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->id_grupo,
 				$this->session_user

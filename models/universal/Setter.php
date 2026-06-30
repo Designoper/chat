@@ -16,12 +16,11 @@ abstract readonly class Setter extends SQL
 	protected function setId(string $name): void
 	{
 		$value = $_REQUEST[$name] ?? null;
-		$min_range = 1;
-		$error_message = "El campo $name debe ser un número entero superior o igual a $min_range y solo contener números.";
+		$error_message = "El campo $name no puede estar vacío y debe contener 26 carácteres.";
 
-		filter_var($value, FILTER_VALIDATE_INT, ["options" => ["min_range" => $min_range]])
-			? $this->$name = (int) $value
-			: $this->errors->setValidationError($error_message);
+		strlen($value) !== 26
+			? $this->errors->setValidationError($error_message)
+			: $this->$name = $value;
 	}
 
 	// MARK: SET NOMBRE
@@ -70,5 +69,21 @@ abstract readonly class Setter extends SQL
 		empty($value)
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
+	}
+
+	// MARK: GENERATE ULID
+
+	protected function ulid(): string
+	{
+		$time = microtime(true) * 1000;
+		$time = base_convert((string) (int) $time, 10, 32);
+		$time = str_pad($time, 10, '0', STR_PAD_LEFT);
+
+		$rand = '';
+		for ($i = 0; $i < 16; $i++) {
+			$rand .= base_convert((string) random_int(0, 31), 10, 32);
+		}
+
+		return strtoupper($time . $rand);
 	}
 }

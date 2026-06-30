@@ -121,7 +121,7 @@ readonly class Contacto extends Invitacion
 
 		$contactos = $this->executeQuery(
 			$query,
-			'iiiiiiii',
+			'ssssssss',
 			[
 				$this->session_user,
 				$this->session_user,
@@ -169,7 +169,7 @@ readonly class Contacto extends Invitacion
 
 		$rol = $this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_contacto

@@ -12,7 +12,7 @@ abstract readonly class Database extends SSE
 	private string $database;
 	protected mysqli $connection;
 	protected string $domain;
-	protected ?int $session_user;
+	protected ?string $session_user;
 
 	protected function __construct()
 	{

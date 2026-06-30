@@ -6,7 +6,7 @@ require_once __DIR__ . '/Contacto.php';
 
 readonly class Mensaje extends Contacto
 {
-	protected int $id_mensaje;
+	protected string $id_mensaje;
 	protected string $contenido;
 
 	public function __construct()
@@ -42,11 +42,11 @@ readonly class Mensaje extends Contacto
 				FROM ultimos_mensajes_leidos_directos
 				WHERE id_usuario = ?
 				AND id_contacto = ?
-			), 0) AS id_mensaje";
+			), '') AS id_mensaje";
 
 		$last_id = $this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_contacto
@@ -74,11 +74,11 @@ readonly class Mensaje extends Contacto
 				FROM ultimos_mensajes_leidos_grupales
 				WHERE id_usuario = ?
 				AND id_grupo = ?
-			), 0) AS id_mensaje";
+			), '') AS id_mensaje";
 
 		$last_id = $this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->session_user,
 				$this->id_grupo
@@ -122,7 +122,7 @@ readonly class Mensaje extends Contacto
 
 		$this->executeQuery(
 			$query,
-			'iiii',
+			'ssss',
 			[
 				$this->session_user,
 				$this->id_contacto,
@@ -153,7 +153,7 @@ readonly class Mensaje extends Contacto
 
 		$this->executeQuery(
 			$query,
-			'iiii',
+			'ssss',
 			[
 				$this->session_user,
 				$this->id_grupo,
@@ -199,7 +199,7 @@ readonly class Mensaje extends Contacto
 
 		$mensajes = $this->executeQuery(
 			$query,
-			"ii",
+			"ss",
 			[
 				$user_min,
 				$user_max
@@ -238,7 +238,7 @@ readonly class Mensaje extends Contacto
 
 		$mensajes = $this->executeQuery(
 			$query,
-			"i",
+			"s",
 			[
 				$this->id_grupo
 			],
@@ -260,14 +260,17 @@ readonly class Mensaje extends Contacto
 
 		$this->isContacto();
 
+		$ulid = $this->ulid();
+
 		$query =
-			"INSERT INTO mensajes (contenido, id_emisor, id_contacto)
-			VALUES (?, ?, ?)";
+			"INSERT INTO mensajes (id_mensaje, contenido, id_emisor, id_contacto)
+			VALUES (?, ?, ?, ?)";
 
 		$this->executeQuery(
 			$query,
-			'sii',
+			'ssss',
 			[
+				$ulid,
 				$this->contenido,
 				$this->session_user,
 				$this->id_contacto
@@ -288,14 +291,17 @@ readonly class Mensaje extends Contacto
 
 		$this->isMiembroGrupo();
 
+		$ulid = $this->ulid();
+
 		$query =
-			"INSERT INTO mensajes (contenido, id_emisor, id_grupo)
-			VALUES (?, ?, ?)";
+			"INSERT INTO mensajes (id_mensaje, contenido, id_emisor, id_grupo)
+			VALUES (?, ?, ?, ?)";
 
 		$this->executeQuery(
 			$query,
-			'sii',
+			'ssss',
 			[
+				$ulid,
 				$this->contenido,
 				$this->session_user,
 				$this->id_grupo
@@ -320,7 +326,7 @@ readonly class Mensaje extends Contacto
 
 		$autor = $this->executeQuery(
 			$query,
-			"i",
+			"s",
 			[
 				$this->id_mensaje
 			],
@@ -347,7 +353,7 @@ readonly class Mensaje extends Contacto
 
 		$this->executeQuery(
 			$query,
-			'ii',
+			'ss',
 			[
 				$this->id_mensaje,
 				$this->session_user
@@ -381,7 +387,7 @@ readonly class Mensaje extends Contacto
 				FROM ultimos_mensajes_leidos_directos
 				WHERE id_usuario = ?
 				AND id_contacto = ?
-			), 0)
+			), '')
 			AND (
 				LEAST(id_emisor, id_contacto) = ?
 				AND GREATEST(id_emisor, id_contacto) = ?
@@ -391,7 +397,7 @@ readonly class Mensaje extends Contacto
 
 		$mensajes = $this->executeQuery(
 			$query,
-			"iiii",
+			"ssss",
 			[
 				$this->session_user,
 				$this->id_contacto,
@@ -424,14 +430,14 @@ readonly class Mensaje extends Contacto
 				FROM ultimos_mensajes_leidos_grupales
 				WHERE id_usuario = ?
 				AND id_grupo = ?
-			), 0)
+			), '')
 	        AND mensajes.id_contacto IS NULL
 			AND mensajes.id_grupo = ?
 	        ORDER BY mensajes.id_mensaje ASC";
 
 		$mensajes = $this->executeQuery(
 			$query,
-			"iii",
+			"sss",
 			[
 				$this->session_user,
 				$this->id_grupo,
