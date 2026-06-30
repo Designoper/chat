@@ -123,7 +123,7 @@ export default class Mensaje extends Contacto {
 
 	// MARK: MENSAJES TEMPLATE
 
-	mensajesTemplate(fetchedMensajes = new Array) {
+	mensajesTemplate(fetchedMensajes) {
 
 		const mensajes = fetchedMensajes.map(mensaje => {
 
