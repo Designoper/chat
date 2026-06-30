@@ -59,7 +59,7 @@ export default class Invitacion extends Grupo {
 						<h2 translate="no">${usuario.nombre}</h2>
 
 						<form method="POST" name="aceptar${test}">
-							<input type="hidden" value="${usuario.id}" name="ulid_${test2}">
+							<input type="hidden" value="${usuario.ulid}" name="ulid_${test2}">
 							<button>
 								<svg viewBox="0 0 800 800">
 									<circle cx="400" cy="400" r="400"/>
@@ -69,7 +69,7 @@ export default class Invitacion extends Grupo {
 						</form>
 
 						<form method="POST" name="rechazar${test}">
-							<input type="hidden" value="${usuario.id}" name="ulid_${test2}">
+							<input type="hidden" value="${usuario.ulid}" name="ulid_${test2}">
 							<button>
 								<svg viewBox="0 0 800 800">
 									<circle cx="400" cy="400" r="400"/>

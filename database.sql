@@ -14,16 +14,16 @@ CREATE TABLE usuarios (
 CREATE TABLE grupos (
     ulid_grupo CHAR(26) PRIMARY KEY,
     nombre_grupo VARCHAR(20) NOT NULL UNIQUE,
-    ulid_fundador CHAR(26) NOT NULL,
+    ulid_fundador CHAR(26) NULL,
 
     FOREIGN KEY (ulid_fundador)
         REFERENCES usuarios(ulid_usuario)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
 );
 
 CREATE TABLE invitaciones_directas (
-    ulid_usuario CHAR(26),
-    ulid_contacto CHAR(26),
+    ulid_usuario CHAR(26) NOT NULL,
+    ulid_contacto CHAR(26) NOT NULL,
 
     UNIQUE KEY invitacion_directa (ulid_usuario, ulid_contacto),
 
@@ -37,8 +37,8 @@ CREATE TABLE invitaciones_directas (
 );
 
 CREATE TABLE invitaciones_grupales (
-    ulid_usuario CHAR(26),
-    ulid_grupo CHAR(26),
+    ulid_usuario CHAR(26) NOT NULL,
+    ulid_grupo CHAR(26) NOT NULL,
 
     UNIQUE KEY invitacion_grupo (ulid_usuario, ulid_grupo),
 
@@ -51,24 +51,39 @@ CREATE TABLE invitaciones_grupales (
         ON DELETE CASCADE
 );
 
+-- CREATE TABLE contactos_directos (
+--     ulid_usuario CHAR(26) NOT NULL,
+--     ulid_contacto CHAR(26) NOT NULL,
+
+--     UNIQUE KEY contacto_directo (ulid_usuario, ulid_contacto),
+
+--     UNIQUE (LEAST(ulid_usuario, ulid_contacto), GREATEST(ulid_usuario, ulid_contacto)),
+
+--     FOREIGN KEY (ulid_usuario)
+--         REFERENCES usuarios(ulid_usuario)
+--         ON DELETE CASCADE,
+
+--     FOREIGN KEY (ulid_contacto)
+--         REFERENCES usuarios(ulid_usuario)
+--         ON DELETE CASCADE
+-- );
+
 CREATE TABLE contactos_directos (
-    ulid_usuario CHAR(26),
-    ulid_contacto CHAR(26),
+    ulid_a CHAR(26) NOT NULL,
+    ulid_b CHAR(26) NOT NULL,
 
-    UNIQUE KEY contacto_directo (ulid_usuario, ulid_contacto),
+    CHECK (ulid_a < ulid_b),
 
-    FOREIGN KEY (ulid_usuario)
-        REFERENCES usuarios(ulid_usuario)
-        ON DELETE CASCADE,
+    UNIQUE (ulid_a, ulid_b),
 
-    FOREIGN KEY (ulid_contacto)
-        REFERENCES usuarios(ulid_usuario)
-        ON DELETE CASCADE
+    FOREIGN KEY (ulid_a) REFERENCES usuarios(ulid_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (ulid_b) REFERENCES usuarios(ulid_usuario) ON DELETE CASCADE
 );
 
+
 CREATE TABLE contactos_grupales (
-    ulid_usuario CHAR(26),
-    ulid_grupo CHAR(26),
+    ulid_usuario CHAR(26) NOT NULL,
+    ulid_grupo CHAR(26) NOT NULL,
 
     UNIQUE KEY contacto_grupal (ulid_usuario, ulid_grupo),
 
@@ -85,13 +100,13 @@ CREATE TABLE mensajes (
     ulid_mensaje CHAR(26) PRIMARY KEY,
     contenido TEXT NOT NULL,
     fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    ulid_emisor CHAR(26) NOT NULL,
+    ulid_emisor CHAR(26) NULL,
     ulid_contacto CHAR(26) NULL,
     ulid_grupo CHAR(26) NULL,
 
     FOREIGN KEY (ulid_emisor)
         REFERENCES usuarios(ulid_usuario)
-        ON DELETE CASCADE,
+        ON DELETE SET NULL,
 
     FOREIGN KEY (ulid_contacto)
         REFERENCES usuarios(ulid_usuario)
@@ -121,7 +136,7 @@ CREATE TABLE ultimos_mensajes_leidos_directos (
 CREATE TABLE ultimos_mensajes_leidos_grupales (
     ulid_usuario CHAR(26) NOT NULL,
     ulid_grupo CHAR(26) NOT NULL,
-    ulid_mensaje CHAR(26) NULL,
+    ulid_mensaje CHAR(26) NOT NULL,
 
     UNIQUE KEY unico_grupo (ulid_usuario, ulid_grupo),
 

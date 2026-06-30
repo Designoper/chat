@@ -32,9 +32,13 @@ readonly class Contacto extends Invitacion
 					ue.nombre_usuario AS nombre_emisor
 				FROM usuarios u
 
+				-- JOIN contactos_directos cd
+				-- 	ON cd.ulid_usuario = ?
+				-- 	AND cd.ulid_contacto = u.ulid_usuario
+
 				JOIN contactos_directos cd
-					ON cd.ulid_usuario = ?
-					AND cd.ulid_contacto = u.ulid_usuario
+					ON cd.ulid_a = LEAST(?, u.ulid_usuario)
+					AND cd.ulid_b = GREATEST(?, u.ulid_usuario)
 
 				LEFT JOIN ultimos_mensajes_leidos_directos uml
 					ON uml.ulid_usuario = ?
@@ -121,8 +125,9 @@ readonly class Contacto extends Invitacion
 
 		$contactos = $this->executeQuery(
 			$query,
-			'ssssssss',
+			'sssssssss',
 			[
+				$this->session_user,
 				$this->session_user,
 				$this->session_user,
 				$this->session_user,

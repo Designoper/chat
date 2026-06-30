@@ -125,7 +125,6 @@ readonly class Grupo extends Usuario
 	public function abandonarGrupo(): void
 	{
 		$this->setUlid('ulid_grupo');
-
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
