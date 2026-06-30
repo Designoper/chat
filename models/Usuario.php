@@ -73,8 +73,6 @@ readonly class Usuario extends Setter
 					$intento++;
 					continue;
 				}
-
-				throw $error;
 			}
 		}
 
@@ -225,8 +223,6 @@ readonly class Usuario extends Setter
 				$this->errors->setIntegrityError('¡Este nombre de usuario ya existe!');
 				$this->checkIntegrityErrors();
 			}
-
-			throw $error;
 		}
 
 		$this->status = 201;

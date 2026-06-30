@@ -241,34 +241,6 @@ readonly class Mensaje extends Contacto
 		$this->sendResponse();
 	}
 
-	// MARK: IS AUTOR MENSAJE
-
-	private function isAutorMensaje(): void
-	{
-		$this->setId('id_mensaje');
-		$this->checkValidationErrors();
-
-		$query =
-			"SELECT id_emisor
-			FROM mensajes
-			WHERE id_mensaje = ?";
-
-		$autor = $this->executeQuery(
-			$query,
-			"i",
-			[
-				$this->id_mensaje
-			],
-			SqlReturn::BindResult
-		);
-
-		if ($autor !== $this->session_user) {
-			$this->status = 403;
-			$this->errors->setIntegrityError('No eres el autor del mensaje');
-			$this->checkIntegrityErrors();
-		}
-	}
-
 	// MARK: CREATE MENSAJE DIRECTO
 
 	public function createMensajeDirecto(): void
@@ -321,6 +293,34 @@ readonly class Mensaje extends Contacto
 
 		$this->status = 201;
 		$this->sendResponse();
+	}
+
+	// MARK: IS AUTOR MENSAJE
+
+	private function isAutorMensaje(): void
+	{
+		$this->setId('id_mensaje');
+		$this->checkValidationErrors();
+
+		$query =
+			"SELECT id_emisor
+			FROM mensajes
+			WHERE id_mensaje = ?";
+
+		$autor = $this->executeQuery(
+			$query,
+			"i",
+			[
+				$this->id_mensaje
+			],
+			SqlReturn::BindResult
+		);
+
+		if ($autor !== $this->session_user) {
+			$this->status = 403;
+			$this->errors->setIntegrityError('No eres el autor del mensaje');
+			$this->checkIntegrityErrors();
+		}
 	}
 
 	// MARK: DELETE MENSAJE
@@ -465,6 +465,8 @@ readonly class Mensaje extends Contacto
 	{
 		$this->setId('id_grupo');
 		$this->checkValidationErrors();
+
+		$this->isMiembroGrupo();
 
 		$this->setSSE(
 			fn() =>
