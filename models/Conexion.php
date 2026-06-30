@@ -31,9 +31,6 @@ final readonly class Conexion extends Mensaje
 		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
-		$ulid_contacto = $this->ulid_contacto;
-		$ulid_usuario = $this->session_user;
-
 		$query =
 			"INSERT INTO conexion_directa (ulid_usuario, ulid_contacto)
 			VALUES (?, ?)
@@ -44,8 +41,8 @@ final readonly class Conexion extends Mensaje
 			$query,
 			'ss',
 			[
-				$ulid_usuario,
-				$ulid_contacto,
+				$this->session_user,
+				$this->ulid_contacto
 			]
 		);
 
@@ -60,9 +57,6 @@ final readonly class Conexion extends Mensaje
 		$this->setUlid('ulid_grupo');
 		$this->checkValidationErrors();
 
-		$ulid_grupo = $this->ulid_grupo;
-		$ulid_usuario = $this->session_user;
-
 		$query =
 			"INSERT INTO conexion_grupal (ulid_usuario, ulid_grupo)
 			VALUES (?, ?)
@@ -73,8 +67,8 @@ final readonly class Conexion extends Mensaje
 			$query,
 			'ss',
 			[
-				$ulid_usuario,
-				$ulid_grupo,
+				$this->session_user,
+				$this->ulid_grupo
 			]
 		);
 
