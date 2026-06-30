@@ -58,7 +58,8 @@ final readonly class Router
 
             $this->makeRoute(HTTPMethods::POST, 'conexion/estado', [Conexion::class, 'setConexion']),
 
-            $this->makeRoute(HTTPMethods::POST, 'mensajes/crear', [Mensaje::class, 'createMensaje']),
+            $this->makeRoute(HTTPMethods::POST, 'mensajes/crear/directo', [Mensaje::class, 'createMensajeDirecto']),
+            $this->makeRoute(HTTPMethods::POST, 'mensajes/crear/grupal', [Mensaje::class, 'createMensajeGrupal']),
             $this->makeRoute(HTTPMethods::POST, 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),
             $this->makeRoute(HTTPMethods::POST, 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdLeido']),
 

@@ -49,7 +49,8 @@ export default class Endpoint extends Fetch {
 				RECHAZAR_GRUPO: `${this.ROOT}invitaciones/grupos/rechazar`,
 			},
 			MENSAJES: {
-				CREAR: `${this.ROOT}mensajes/crear`,
+				CREAR_DIRECTO: `${this.ROOT}mensajes/crear/directo`,
+				CREAR_GRUPAL: `${this.ROOT}mensajes/crear/grupal`,
 				ELIMINAR: `${this.ROOT}mensajes/delete`,
 				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`
 			},

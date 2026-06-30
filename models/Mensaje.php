@@ -290,39 +290,16 @@ readonly class Mensaje extends Contacto
 		}
 	}
 
-	// MARK: CREATE MENSAJE
+	// MARK: CREATE MENSAJE DIRECTO
 
-	public function createMensaje(): void
+	public function createMensajeDirecto(): void
 	{
-		$columna = null;
-		$id_objetivo = null;
-
-		if (isset($_POST['id_receptor'])) {
-			$this->setId('id_receptor');
-			$this->checkValidationErrors();
-
-			$columna = 'id_receptor';
-			$id_objetivo = $this->id_receptor;
-		}
-
-		if (isset($_POST['id_grupo'])) {
-			$this->setId('id_grupo');
-			$this->checkValidationErrors();
-
-			$columna = 'id_grupo';
-			$id_objetivo = $this->id_grupo;
-		}
-
-		if ($columna === null || $id_objetivo === null) {
-			$this->errors->setValidationError("No se ha especificado un id_receptor o id_grupo.");
-			$this->checkValidationErrors();
-		}
-
+		$this->setId('id_receptor');
 		$this->setContenido('contenido');
 		$this->checkValidationErrors();
 
 		$query =
-			"INSERT INTO mensajes (contenido, id_emisor, $columna)
+			"INSERT INTO mensajes (contenido, id_emisor, id_receptor)
 			VALUES (?, ?, ?)";
 
 		$this->executeQuery(
@@ -331,7 +308,33 @@ readonly class Mensaje extends Contacto
 			[
 				$this->contenido,
 				$this->session_user,
-				$id_objetivo
+				$this->id_receptor
+			]
+		);
+
+		$this->status = 201;
+		$this->sendResponse();
+	}
+
+	// MARK: CREATE MENSAJE GRUPAL
+
+	public function createMensajeGrupal(): void
+	{
+		$this->setId('id_grupo');
+		$this->setContenido('contenido');
+		$this->checkValidationErrors();
+
+		$query =
+			"INSERT INTO mensajes (contenido, id_emisor, id_grupo)
+			VALUES (?, ?, ?)";
+
+		$this->executeQuery(
+			$query,
+			'sii',
+			[
+				$this->contenido,
+				$this->session_user,
+				$this->id_grupo
 			]
 		);
 

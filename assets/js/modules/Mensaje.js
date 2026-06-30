@@ -188,8 +188,18 @@ export default class Mensaje extends Contacto {
 
 	// MARK: CREATE MENSAJES
 
-	async createMensaje(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR);
+	async createMensajeDirecto(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_DIRECTO);
+		if (response.status === 201) {
+			globalThis.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "instant"
+			});
+		}
+	}
+
+	async createMensajeGrupal(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_GRUPAL);
 		if (response.status === 201) {
 			globalThis.scrollTo({
 				top: document.body.scrollHeight,
@@ -229,6 +239,12 @@ export default class Mensaje extends Contacto {
 				this.dom.header.insertAdjacentHTML('beforeend', this.sanitize(formInvitar));
 
 				this.streamContactosInvitables(this.urlSearchParams.get('id_grupo'));
+
+				this.dom.form.name = 'createMensajeGrupal';
+			}
+
+			if (this.urlSearchParams.has('id_receptor')) {
+				this.dom.form.name = 'createMensajeDirecto';
 			}
 		}
 	}
