@@ -79,7 +79,6 @@ export default class Endpoint extends Fetch {
 		};
 	}
 
-
 	deleteErrorOutput() {
 		document.oninput = (e) => {
 			const input = e.target;
@@ -89,5 +88,4 @@ export default class Endpoint extends Fetch {
 			if (output) output.innerHTML = '';
 		};
 	}
-
 }
