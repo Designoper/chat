@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/models/Conexion.php';
+// require_once __DIR__ . '/models/Conexion.php';
 require_once __DIR__ . '/models/Mensaje.php';
 
 final readonly class Router
