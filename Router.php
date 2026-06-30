@@ -2,18 +2,8 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/models/Usuario.php';
-require_once __DIR__ . '/models/Mensaje.php';
-require_once __DIR__ . '/models/Grupo.php';
 require_once __DIR__ . '/models/Conexion.php';
-require_once __DIR__ . '/models/Contacto.php';
-require_once __DIR__ . '/models/Invitacion.php';
-
-enum HTTPMethods: string
-{
-    case GET = 'GET';
-    case POST = 'POST';
-}
+require_once __DIR__ . '/models/Mensaje.php';
 
 final readonly class Router
 {
@@ -23,54 +13,54 @@ final readonly class Router
     public function __construct()
     {
         $this->routes = [
-            $this->makeRoute(HTTPMethods::GET, 'usuarios/current', [Usuario::class, 'currentUsuario']),
+            $this->setRoute('GET', 'usuarios/current', [Usuario::class, 'currentUsuario']),
 
-            $this->makeRoute(HTTPMethods::GET, 'invitaciones/contactos-invitables', [Invitacion::class, 'streamContactosInvitables']),
-            $this->makeRoute(HTTPMethods::GET, 'invitaciones/contactos', [Invitacion::class, 'streamInvitacionesContacto']),
-            $this->makeRoute(HTTPMethods::GET, 'invitaciones/grupos', [Invitacion::class, 'streamInvitacionesGrupo']),
-            $this->makeRoute(HTTPMethods::GET, 'invitaciones/stream', [Invitacion::class, 'streamInvitaciones']),
+            $this->setRoute('GET', 'invitaciones/contactos-invitables', [Invitacion::class, 'streamContactosInvitables']),
+            $this->setRoute('GET', 'invitaciones/stream', [Invitacion::class, 'streamInvitaciones']),
 
-            $this->makeRoute(HTTPMethods::GET, 'contactos/stream', [Contacto::class, 'streamContactos']),
+            $this->setRoute('GET', 'contactos/stream', [Contacto::class, 'streamContactos']),
 
-            $this->makeRoute(HTTPMethods::GET, 'conexion/stream', [Conexion::class, 'streamConexion']),
+            $this->setRoute('GET', 'conexion/stream', [Conexion::class, 'streamConexion']),
 
-            $this->makeRoute(HTTPMethods::GET, 'mensajes/stream/directos', [Mensaje::class, 'streamMensajesDirectos']),
-            $this->makeRoute(HTTPMethods::GET, 'mensajes/stream/grupales', [Mensaje::class, 'streamMensajesGrupales']),
-            $this->makeRoute(HTTPMethods::GET, 'mensajes/directos', [Mensaje::class, 'readMensajesDirectos']),
-            $this->makeRoute(HTTPMethods::GET, 'mensajes/grupales', [Mensaje::class, 'readMensajesGrupales']),
-            $this->makeRoute(HTTPMethods::GET, 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']),
+            $this->setRoute('GET', 'mensajes/stream/directos', [Mensaje::class, 'streamMensajesDirectos']),
+            $this->setRoute('GET', 'mensajes/stream/grupales', [Mensaje::class, 'streamMensajesGrupales']),
+            $this->setRoute('GET', 'mensajes/directos', [Mensaje::class, 'readMensajesDirectos']),
+            $this->setRoute('GET', 'mensajes/grupales', [Mensaje::class, 'readMensajesGrupales']),
+            $this->setRoute('GET', 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']),
 
-            $this->makeRoute(HTTPMethods::POST, 'usuarios/crear', [Usuario::class, 'createUsuario']),
-            $this->makeRoute(HTTPMethods::POST, 'usuarios/login', [Usuario::class, 'login']),
-            $this->makeRoute(HTTPMethods::POST, 'usuarios/logout', [Usuario::class, 'logout']),
-            $this->makeRoute(HTTPMethods::POST, 'usuarios/delete', [Usuario::class, 'deleteUsuario']),
-            $this->makeRoute(HTTPMethods::POST, 'usuarios/nombre', [Usuario::class, 'cambiarNombre']),
-            $this->makeRoute(HTTPMethods::POST, 'usuarios/password', [Usuario::class, 'cambiarPassword']),
+            $this->setRoute('POST', 'usuarios/crear', [Usuario::class, 'createUsuario']),
+            $this->setRoute('POST', 'usuarios/login', [Usuario::class, 'login']),
+            $this->setRoute('POST', 'usuarios/logout', [Usuario::class, 'logout']),
+            $this->setRoute('POST', 'usuarios/delete', [Usuario::class, 'deleteUsuario']),
+            $this->setRoute('POST', 'usuarios/nombre', [Usuario::class, 'cambiarNombre']),
+            $this->setRoute('POST', 'usuarios/password', [Usuario::class, 'cambiarPassword']),
 
-            $this->makeRoute(HTTPMethods::POST, 'grupos/crear', [Grupo::class, 'createGrupo']),
-            $this->makeRoute(HTTPMethods::POST, 'grupos/delete', [Grupo::class, 'deleteGrupo']),
-            $this->makeRoute(HTTPMethods::POST, 'grupos/abandonar', [Grupo::class, 'abandonarGrupo']),
+            $this->setRoute('POST', 'grupos/crear', [Grupo::class, 'createGrupo']),
+            $this->setRoute('POST', 'grupos/delete', [Grupo::class, 'deleteGrupo']),
+            $this->setRoute('POST', 'grupos/abandonar', [Grupo::class, 'abandonarGrupo']),
 
-            $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/invitar', [Invitacion::class, 'invitarContacto']),
-            $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/aceptar', [Invitacion::class, 'aceptarContacto']),
-            $this->makeRoute(HTTPMethods::POST, 'invitaciones/usuarios/rechazar', [Invitacion::class, 'rechazarContacto']),
-            $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/invitar', [Invitacion::class, 'invitarGrupo']),
-            $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/aceptar', [Invitacion::class, 'aceptarGrupo']),
-            $this->makeRoute(HTTPMethods::POST, 'invitaciones/grupos/rechazar', [Invitacion::class, 'rechazarGrupo']),
+            $this->setRoute('POST', 'invitaciones/usuarios/invitar', [Invitacion::class, 'invitarContacto']),
+            $this->setRoute('POST', 'invitaciones/usuarios/aceptar', [Invitacion::class, 'aceptarContacto']),
+            $this->setRoute('POST', 'invitaciones/usuarios/rechazar', [Invitacion::class, 'rechazarContacto']),
+            $this->setRoute('POST', 'invitaciones/grupos/invitar', [Invitacion::class, 'invitarGrupo']),
+            $this->setRoute('POST', 'invitaciones/grupos/aceptar', [Invitacion::class, 'aceptarGrupo']),
+            $this->setRoute('POST', 'invitaciones/grupos/rechazar', [Invitacion::class, 'rechazarGrupo']),
 
-            $this->makeRoute(HTTPMethods::POST, 'conexion/estado', [Conexion::class, 'setConexion']),
+            $this->setRoute('POST', 'conexion/estado', [Conexion::class, 'setConexion']),
 
-            $this->makeRoute(HTTPMethods::POST, 'mensajes/crear/directo', [Mensaje::class, 'createMensajeDirecto']),
-            $this->makeRoute(HTTPMethods::POST, 'mensajes/crear/grupal', [Mensaje::class, 'createMensajeGrupal']),
-            $this->makeRoute(HTTPMethods::POST, 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),
-            $this->makeRoute(HTTPMethods::POST, 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdLeido']),
+            $this->setRoute('POST', 'mensajes/crear/directo', [Mensaje::class, 'createMensajeDirecto']),
+            $this->setRoute('POST', 'mensajes/crear/grupal', [Mensaje::class, 'createMensajeGrupal']),
+            $this->setRoute('POST', 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),
+            $this->setRoute('POST', 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdLeido']),
 
         ];
 
-        $this->handleRequest();
+        $this->executeRoute();
     }
 
-    private function makeRoute(HTTPMethods $method, string $path, array $action): array
+    // MARK: SET ROUTE
+
+    private function setRoute(string $method, string $path, array $action): array
     {
         [$class, $methodName] = $action;
 
@@ -81,14 +71,16 @@ final readonly class Router
         ];
     }
 
-    private function handleRequest(): void
+    // MARK: EXECUTE ROUTE
+
+    private function executeRoute(): void
     {
-        $method = HTTPMethods::from($_SERVER['REQUEST_METHOD']);
+        $method = $_SERVER['REQUEST_METHOD'];
         $requestUri = $_SERVER['REQUEST_URI'];
 
         switch ($method) {
-            case HTTPMethods::GET:
-            case HTTPMethods::POST:
+            case 'GET':
+            case 'POST':
 
                 foreach ($this->routes as $route) {
                     if ($route['method'] === $method && preg_match("#^{$route['path']}#", $requestUri)) {
