@@ -13,7 +13,7 @@ export default class Contacto extends Invitacion {
 
 		const contactos = fetchedContactos.map(contacto => {
 
-			let id;
+			let ulid;
 			let imgSrc;
 			let autorMensaje;
 
@@ -23,7 +23,7 @@ export default class Contacto extends Invitacion {
 
 			switch (contacto.tipo) {
 				case 'usuario':
-					id = 'ulid_contacto';
+					ulid = 'ulid_contacto';
 					imgSrc =
 						`
 						<svg viewBox="0 0 800 800">
@@ -34,7 +34,7 @@ export default class Contacto extends Invitacion {
 
 					break;
 				case 'grupo':
-					id = 'ulid_grupo';
+					ulid = 'ulid_grupo';
 					imgSrc =
 						`
 						<svg viewBox="0 0 3544 1772">
@@ -54,7 +54,7 @@ export default class Contacto extends Invitacion {
 
 			const template =
 				`<li>
-					<a href="./chat.php?${id}=${contacto.id}&nombre=${contacto.nombre}">
+					<a href="./chat.php?${ulid}=${contacto.ulid}&nombre=${contacto.nombre}">
 						${imgSrc}
 						<h2 translate="no">${contacto.nombre}</h2>
 						${badge}
