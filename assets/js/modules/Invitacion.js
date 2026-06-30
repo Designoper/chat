@@ -2,26 +2,23 @@ import Grupo from "./Grupo.js";
 
 export default class Invitacion extends Grupo {
 	output = document.querySelector('output');
-	invitacionesContactoMenu = this.output.querySelector('menu:nth-of-type(2)');
 	invitacionesGrupoMenu = this.output.querySelector('menu:nth-of-type(1)');
-
+	invitacionesContactoMenu = this.output.querySelector('menu:nth-of-type(2)');
 
 	constructor() {
 		super();
 	}
 
-	// MARK: STREAM INVITACION CONTACTO
+	async invitarContacto(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.INVITAR_CONTACTO);
+	}
 
-	streamInvitacionContacto() {
+	async aceptarContacto(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.ACEPTAR_CONTACTO);
+	}
 
-		const evtSource = new EventSource(this.ENDPOINTS.GET.INVITACIONES.CONTACTOS);
-
-		evtSource.addEventListener("usuario", (event) => {
-			const contactos = JSON.parse(event.data);
-			const content = this.invitacionContactoTemplate(contactos);
-
-			this.invitacionesContactoMenu.innerHTML = this.sanitize(content);
-		});
+	async rechazarContacto(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.RECHAZAR_CONTACTO);
 	}
 
 	// MARK: INVITACION CONTACTOS TEMPLATE
@@ -63,34 +60,32 @@ export default class Invitacion extends Grupo {
 		return usuarios.join('');
 	}
 
-	async invitarContacto(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.INVITAR_CONTACTO);
-	}
+	// MARK: STREAM INVITACION CONTACTO
 
-	async aceptarContacto(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.ACEPTAR_CONTACTO);
-	}
+	streamInvitacionContacto() {
 
-	async rechazarContacto(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.RECHAZAR_CONTACTO);
-	}
+		const evtSource = new EventSource(this.ENDPOINTS.GET.INVITACIONES.CONTACTOS);
 
+		evtSource.addEventListener("usuario", (event) => {
+			const contactos = JSON.parse(event.data);
+			const content = this.invitacionContactoTemplate(contactos);
 
-
-
-
-	// MARK: STREAM GRUPOS PENDIENTES
-
-	streamInvitacionGrupo() {
-
-		const evtSource = new EventSource(this.ENDPOINTS.GET.INVITACIONES.GRUPOS);
-
-		evtSource.addEventListener("grupo", (event) => {
-			const state = JSON.parse(event.data);
-
-			const content = this.invitacionGrupoTemplate(state);
-			this.invitacionesGrupoMenu.innerHTML = this.sanitize(content);
+			this.invitacionesContactoMenu.innerHTML = this.sanitize(content);
 		});
+	}
+
+
+
+	async invitarGrupo(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.INVITAR_GRUPO);
+	}
+
+	async aceptarGrupo(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.ACEPTAR_GRUPO);
+	}
+
+	async rechazarGrupo(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.RECHAZAR_GRUPO);
 	}
 
 	// MARK: INVITACION GRUPOS TEMPLATE
@@ -132,6 +127,22 @@ export default class Invitacion extends Grupo {
 		return grupos.join('');
 	}
 
+	// MARK: STREAM GRUPOS PENDIENTES
+
+	streamInvitacionGrupo() {
+
+		const evtSource = new EventSource(this.ENDPOINTS.GET.INVITACIONES.GRUPOS);
+
+		evtSource.addEventListener("grupo", (event) => {
+			const state = JSON.parse(event.data);
+
+			const content = this.invitacionGrupoTemplate(state);
+			this.invitacionesGrupoMenu.innerHTML = this.sanitize(content);
+		});
+	}
+
+	// MARK: CONTACTOS INVITABLES TEMPLATE
+
 	contactosInvitablesTemplate(fetchedGrupos) {
 
 		const noMiembros = fetchedGrupos
@@ -161,19 +172,5 @@ export default class Invitacion extends Grupo {
 			const select = document.getElementById('id_contacto');
 			select.innerHTML = this.sanitize(content);
 		});
-	}
-
-
-
-	async invitarGrupo(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.INVITAR_GRUPO);
-	}
-
-	async aceptarGrupo(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.ACEPTAR_GRUPO);
-	}
-
-	async rechazarGrupo(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.RECHAZAR_GRUPO);
 	}
 }
