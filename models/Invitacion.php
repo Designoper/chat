@@ -7,12 +7,11 @@ require_once __DIR__ . '/Grupo.php';
 readonly class Invitacion extends Grupo
 {
 	protected int $id_contacto;
+	protected string $codigo_contacto;
 
 	public function __construct()
 	{
 		parent::__construct();
-
-		$this->authEndpoint();
 	}
 
 	// MARK: INVITAR CONTACTO

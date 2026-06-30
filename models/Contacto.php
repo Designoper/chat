@@ -9,8 +9,6 @@ readonly class Contacto extends Invitacion
 	public function __construct()
 	{
 		parent::__construct();
-
-		$this->authEndpoint();
 	}
 
 	// MARK: OBTAIN CONTACTOS

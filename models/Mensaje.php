@@ -21,8 +21,6 @@ readonly class Mensaje extends Contacto
 	public function __construct()
 	{
 		parent::__construct();
-
-		$this->authEndpoint();
 	}
 
 	// MARK: GET ULTIMO ID

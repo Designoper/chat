@@ -86,9 +86,6 @@ final readonly class Conexion extends Mensaje
 
 	private function getConexionDirecta(): array
 	{
-		$id_receptor = $this->id_receptor;
-		$id_usuario = $this->session_user;
-
 		$query =
 			"SELECT nombre_usuario,
 				COALESCE(DATE_FORMAT(conexion_directa.last_seen, '%Y-%m-%dT%H:%i:%sZ'), 0) AS last_seen,
@@ -103,8 +100,8 @@ final readonly class Conexion extends Mensaje
 			$query,
 			'ii',
 			[
-				$id_usuario,
-				$id_receptor
+				$this->session_user,
+				$this->id_receptor
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -116,9 +113,6 @@ final readonly class Conexion extends Mensaje
 
 	private function getConexionGrupal(): array
 	{
-		$id_grupo = $this->id_grupo;
-		$id_usuario = $this->session_user;
-
 		$query =
 			"SELECT usuarios.nombre_usuario,
 				COALESCE(DATE_FORMAT(conexion_grupal.last_seen, '%Y-%m-%dT%H:%i:%sZ'), 0) AS last_seen,
@@ -137,8 +131,8 @@ final readonly class Conexion extends Mensaje
 			$query,
 			'ii',
 			[
-				$id_grupo,
-				$id_usuario
+				$this->id_grupo,
+				$this->session_user
 			],
 			SqlReturn::FetchAssoc
 		);

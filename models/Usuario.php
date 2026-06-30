@@ -8,7 +8,6 @@ readonly class Usuario extends Setter
 {
 	protected string $nombre_usuario;
 	protected string $password;
-	protected string $codigo_contacto;
 
 	public function __construct()
 	{
