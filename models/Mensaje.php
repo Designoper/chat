@@ -34,6 +34,8 @@ readonly class Mensaje extends Contacto
 		$this->setId('id_contacto');
 		$this->checkValidationErrors();
 
+		$this->isContacto();
+
 		$query =
 			"SELECT COALESCE((
 				SELECT id_mensaje
@@ -63,6 +65,8 @@ readonly class Mensaje extends Contacto
 	{
 		$this->setId('id_grupo');
 		$this->checkValidationErrors();
+
+		$this->isMiembroGrupo();
 
 		$query =
 			"SELECT COALESCE((
@@ -438,6 +442,8 @@ readonly class Mensaje extends Contacto
 
 		return $mensajes;
 	}
+
+	// MARK: STREAM MENSAJES
 
 	protected function streamMensajesGeneric(callable $getter): void
 	{
