@@ -22,7 +22,7 @@ readonly class Contacto extends Invitacion
 			FROM (
 				-- CHATS DIRECTOS (usuarios)
 				SELECT
-					u.ulid_usuario AS id,
+					u.ulid_usuario AS ulid,
 					u.nombre_usuario AS nombre,
 					'usuario' AS tipo,
 					COUNT(m.ulid_mensaje) AS num_mensajes,
@@ -74,7 +74,7 @@ readonly class Contacto extends Invitacion
 
 				-- CHATS GRUPALES (grupos)
 				SELECT
-					g.ulid_grupo AS id,
+					g.ulid_grupo AS ulid,
 					g.nombre_grupo AS nombre,
 					'grupo' AS tipo,
 					COUNT(mg.ulid_mensaje) AS num_mensajes,
