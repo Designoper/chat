@@ -2,7 +2,7 @@ import Mensaje from '../modules/Mensaje.js';
 
 const mensaje = new Mensaje();
 
-await mensaje.sessionCheck();
+await mensaje.currentUsuario();
 await mensaje.writeChat();
 mensaje.delete();
 mensaje.setForm();

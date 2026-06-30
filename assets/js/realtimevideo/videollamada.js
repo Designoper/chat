@@ -2,7 +2,7 @@ import Usuario from "../modules/Usuario.js";
 
 const usuario = new Usuario();
 
-const sesion = await usuario.sessionCheck();
+const sesion = await usuario.currentUsuario();
 
 const peer = new Peer(usuario.ulid_usuario);
 
