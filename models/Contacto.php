@@ -38,10 +38,10 @@ readonly class Contacto extends Invitacion
 
 				LEFT JOIN ultimos_mensajes_leidos_directos uml
 					ON uml.id_usuario = ?
-					AND uml.id_receptor = u.id_usuario
+					AND uml.id_contacto = u.id_usuario
 
 				LEFT JOIN mensajes m
-					ON m.id_receptor = ?
+					ON m.id_contacto = ?
 					AND m.id_emisor = u.id_usuario
 					AND m.id_grupo IS NULL
 					AND m.id_mensaje > COALESCE(uml.id_mensaje, 0)
@@ -52,8 +52,8 @@ readonly class Contacto extends Invitacion
 						FROM mensajes m2
 						WHERE m2.id_grupo IS NULL
 						AND (
-								(m2.id_emisor = ? AND m2.id_receptor = u.id_usuario)
-							OR  (m2.id_emisor = u.id_usuario AND m2.id_receptor = ?)
+								(m2.id_emisor = ? AND m2.id_contacto = u.id_usuario)
+							OR  (m2.id_emisor = u.id_usuario AND m2.id_contacto = ?)
 						)
 					)
 

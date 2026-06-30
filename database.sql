@@ -89,14 +89,14 @@ CREATE TABLE mensajes (
     contenido TEXT NOT NULL,
     fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     id_emisor INT UNSIGNED NOT NULL,
-    id_receptor INT UNSIGNED NULL,
+    id_contacto INT UNSIGNED NULL,
     id_grupo INT UNSIGNED NULL,
 
     FOREIGN KEY (id_emisor)
         REFERENCES usuarios(id_usuario)
         ON DELETE CASCADE,
 
-    FOREIGN KEY (id_receptor)
+    FOREIGN KEY (id_contacto)
         REFERENCES usuarios(id_usuario)
         ON DELETE SET NULL,
 
@@ -107,16 +107,16 @@ CREATE TABLE mensajes (
 
 -- CREATE TABLE conexion_directa (
 --     id_usuario INT UNSIGNED NOT NULL,
---     id_receptor INT UNSIGNED NOT NULL,
+--     id_contacto INT UNSIGNED NOT NULL,
 --     last_seen TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
---     UNIQUE KEY conect_directo (id_usuario, id_receptor),
+--     UNIQUE KEY conect_directo (id_usuario, id_contacto),
 
 --     FOREIGN KEY (id_usuario)
 --         REFERENCES usuarios(id_usuario)
 --         ON DELETE CASCADE,
 
---     FOREIGN KEY (id_receptor)
+--     FOREIGN KEY (id_contacto)
 --         REFERENCES usuarios(id_usuario)
 --         ON DELETE CASCADE
 -- );
@@ -139,16 +139,16 @@ CREATE TABLE mensajes (
 
 CREATE TABLE ultimos_mensajes_leidos_directos (
     id_usuario INT UNSIGNED NOT NULL,
-    id_receptor INT UNSIGNED NOT NULL,
+    id_contacto INT UNSIGNED NOT NULL,
     id_mensaje INT UNSIGNED NULL,
 
-    UNIQUE KEY unico_privado (id_usuario, id_receptor),
+    UNIQUE KEY unico_privado (id_usuario, id_contacto),
 
     FOREIGN KEY (id_usuario)
         REFERENCES usuarios(id_usuario)
         ON DELETE CASCADE,
 
-    FOREIGN KEY (id_receptor)
+    FOREIGN KEY (id_contacto)
         REFERENCES usuarios(id_usuario)
         ON DELETE CASCADE
 );

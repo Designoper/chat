@@ -69,7 +69,7 @@ export default class Mensaje extends Contacto {
 
 		let endpoint;
 
-		if (this.urlSearchParams.has('id_receptor')) {
+		if (this.urlSearchParams.has('id_contacto')) {
 			endpoint = this.ENDPOINTS.GET.MENSAJES.DIRECTOS;
 		}
 
@@ -94,8 +94,8 @@ export default class Mensaje extends Contacto {
 
 		let endpoint;
 
-		if (this.urlSearchParams.has('id_receptor')) {
-			endpoint = `${this.ENDPOINTS.GET.MENSAJES.STREAM_DIRECTOS}?id_receptor=${this.urlSearchParams.get('id_receptor')}`;
+		if (this.urlSearchParams.has('id_contacto')) {
+			endpoint = `${this.ENDPOINTS.GET.MENSAJES.STREAM_DIRECTOS}?id_contacto=${this.urlSearchParams.get('id_contacto')}`;
 		}
 
 		if (this.urlSearchParams.has('id_grupo')) {
@@ -263,7 +263,7 @@ export default class Mensaje extends Contacto {
 				this.dom.form.name = 'createMensajeGrupal';
 			}
 
-			if (this.urlSearchParams.has('id_receptor')) {
+			if (this.urlSearchParams.has('id_contacto')) {
 				this.dom.form.name = 'createMensajeDirecto';
 			}
 		}

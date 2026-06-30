@@ -7,7 +7,6 @@ require_once __DIR__ . '/Contacto.php';
 readonly class Mensaje extends Contacto
 {
 	protected int $id_mensaje;
-	protected int $id_receptor;
 	protected string $contenido;
 
 	public function __construct()
@@ -19,7 +18,7 @@ readonly class Mensaje extends Contacto
 
 	public function getUltimoIdMensaje(): void
 	{
-		if (isset($_GET['id_receptor'])) {
+		if (isset($_GET['id_contacto'])) {
 			$this->getUltimoIdDirecto();
 		}
 
@@ -32,7 +31,7 @@ readonly class Mensaje extends Contacto
 
 	private function getUltimoIdDirecto(): void
 	{
-		$this->setId('id_receptor');
+		$this->setId('id_contacto');
 		$this->checkValidationErrors();
 
 		$query =
@@ -40,7 +39,7 @@ readonly class Mensaje extends Contacto
 				SELECT id_mensaje
 				FROM ultimos_mensajes_leidos_directos
 				WHERE id_usuario = ?
-				AND id_receptor = ?
+				AND id_contacto = ?
 			), 0) AS id_mensaje";
 
 		$last_id = $this->executeQuery(
@@ -48,7 +47,7 @@ readonly class Mensaje extends Contacto
 			'ii',
 			[
 				$this->session_user,
-				$this->id_receptor
+				$this->id_contacto
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -92,7 +91,7 @@ readonly class Mensaje extends Contacto
 
 	public function setultimoIdLeido(): void
 	{
-		if (isset($_POST['id_receptor'])) {
+		if (isset($_POST['id_contacto'])) {
 			$this->setUltimoIdDirecto();
 		}
 
@@ -105,12 +104,14 @@ readonly class Mensaje extends Contacto
 
 	private function setUltimoIdDirecto(): void
 	{
-		$this->setId('id_receptor');
+		$this->setId('id_contacto');
 		$this->setId('id_mensaje');
 		$this->checkValidationErrors();
 
+		$this->isContacto();
+
 		$query =
-			"INSERT INTO ultimos_mensajes_leidos_directos (id_usuario, id_receptor, id_mensaje)
+			"INSERT INTO ultimos_mensajes_leidos_directos (id_usuario, id_contacto, id_mensaje)
 			VALUES (?, ?, ?)
 			ON DUPLICATE KEY
 			UPDATE id_mensaje = ?";
@@ -120,7 +121,7 @@ readonly class Mensaje extends Contacto
 			'iiii',
 			[
 				$this->session_user,
-				$this->id_receptor,
+				$this->id_contacto,
 				$this->id_mensaje,
 				$this->id_mensaje
 			]
@@ -137,6 +138,8 @@ readonly class Mensaje extends Contacto
 		$this->setId('id_grupo');
 		$this->setId('id_mensaje');
 		$this->checkValidationErrors();
+
+		$this->isMiembroGrupo();
 
 		$query =
 			"INSERT INTO ultimos_mensajes_leidos_grupales (id_usuario, id_grupo, id_mensaje)
@@ -163,11 +166,13 @@ readonly class Mensaje extends Contacto
 
 	public function readMensajesDirectos(): void
 	{
-		$this->setId('id_receptor');
+		$this->setId('id_contacto');
 		$this->checkValidationErrors();
 
-		$user_min = min($this->session_user, $this->id_receptor);
-		$user_max = max($this->session_user, $this->id_receptor);
+		$this->isContacto();
+
+		$user_min = min($this->session_user, $this->id_contacto);
+		$user_max = max($this->session_user, $this->id_contacto);
 
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
@@ -181,10 +186,10 @@ readonly class Mensaje extends Contacto
 			FROM mensajes
 			LEFT JOIN usuarios
 				ON mensajes.id_emisor = usuarios.id_usuario
-			WHERE mensajes.id_receptor IS NOT NULL
+			WHERE mensajes.id_contacto IS NOT NULL
 			AND (
-				LEAST(id_emisor, id_receptor) = ?
-				AND GREATEST(id_emisor, id_receptor) = ?
+				LEAST(id_emisor, id_contacto) = ?
+				AND GREATEST(id_emisor, id_contacto) = ?
 			)
 			ORDER BY fecha_envio ASC";
 
@@ -245,14 +250,14 @@ readonly class Mensaje extends Contacto
 
 	public function createMensajeDirecto(): void
 	{
-		$this->setId('id_receptor');
+		$this->setId('id_contacto');
 		$this->setContenido('contenido');
 		$this->checkValidationErrors();
 
 		$this->isContacto();
 
 		$query =
-			"INSERT INTO mensajes (contenido, id_emisor, id_receptor)
+			"INSERT INTO mensajes (contenido, id_emisor, id_contacto)
 			VALUES (?, ?, ?)";
 
 		$this->executeQuery(
@@ -261,7 +266,7 @@ readonly class Mensaje extends Contacto
 			[
 				$this->contenido,
 				$this->session_user,
-				$this->id_receptor
+				$this->id_contacto
 			]
 		);
 
@@ -353,8 +358,8 @@ readonly class Mensaje extends Contacto
 
 	private function getNuevosMensajesDirectos(): array
 	{
-		$user_min = min($this->session_user, $this->id_receptor);
-		$user_max = max($this->session_user, $this->id_receptor);
+		$user_min = min($this->session_user, $this->id_contacto);
+		$user_max = max($this->session_user, $this->id_contacto);
 
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
@@ -371,11 +376,11 @@ readonly class Mensaje extends Contacto
 				SELECT id_mensaje
 				FROM ultimos_mensajes_leidos_directos
 				WHERE id_usuario = ?
-				AND id_receptor = ?
+				AND id_contacto = ?
 			), 0)
 			AND (
-				LEAST(id_emisor, id_receptor) = ?
-				AND GREATEST(id_emisor, id_receptor) = ?
+				LEAST(id_emisor, id_contacto) = ?
+				AND GREATEST(id_emisor, id_contacto) = ?
 			)
 			AND mensajes.id_grupo IS NULL
 			ORDER BY mensajes.id_mensaje ASC";
@@ -385,7 +390,7 @@ readonly class Mensaje extends Contacto
 			"iiii",
 			[
 				$this->session_user,
-				$this->id_receptor,
+				$this->id_contacto,
 				$user_min,
 				$user_max
 			],
@@ -416,7 +421,7 @@ readonly class Mensaje extends Contacto
 				WHERE id_usuario = ?
 				AND id_grupo = ?
 			), 0)
-	        AND mensajes.id_receptor IS NULL
+	        AND mensajes.id_contacto IS NULL
 			AND mensajes.id_grupo = ?
 	        ORDER BY mensajes.id_mensaje ASC";
 
@@ -451,8 +456,10 @@ readonly class Mensaje extends Contacto
 
 	public function streamMensajesDirectos(): void
 	{
-		$this->setId('id_receptor');
+		$this->setId('id_contacto');
 		$this->checkValidationErrors();
+
+		$this->isContacto();
 
 		$this->setSSE(
 			fn() =>

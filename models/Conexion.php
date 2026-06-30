@@ -15,7 +15,7 @@ final readonly class Conexion extends Mensaje
 
 	public function setConexion(): void
 	{
-		if (isset($_POST['id_receptor'])) {
+		if (isset($_POST['id_contacto'])) {
 			$this->setConexionDirecta();
 		}
 
@@ -28,14 +28,14 @@ final readonly class Conexion extends Mensaje
 
 	private function setConexionDirecta(): void
 	{
-		$this->setId('id_receptor');
+		$this->setId('id_contacto');
 		$this->checkValidationErrors();
 
-		$id_receptor = $this->id_receptor;
+		$id_contacto = $this->id_contacto;
 		$id_usuario = $this->session_user;
 
 		$query =
-			"INSERT INTO conexion_directa (id_usuario, id_receptor)
+			"INSERT INTO conexion_directa (id_usuario, id_contacto)
 			VALUES (?, ?)
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
@@ -45,7 +45,7 @@ final readonly class Conexion extends Mensaje
 			'ii',
 			[
 				$id_usuario,
-				$id_receptor,
+				$id_contacto,
 			]
 		);
 
@@ -93,7 +93,7 @@ final readonly class Conexion extends Mensaje
 			FROM usuarios
 			LEFT JOIN conexion_directa
 				ON usuarios.id_usuario = conexion_directa.id_usuario
-				AND conexion_directa.id_receptor = ?
+				AND conexion_directa.id_contacto = ?
 			WHERE usuarios.id_usuario = ?";
 
 		$conexion = $this->executeQuery(
@@ -101,7 +101,7 @@ final readonly class Conexion extends Mensaje
 			'ii',
 			[
 				$this->session_user,
-				$this->id_receptor
+				$this->id_contacto
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -144,8 +144,8 @@ final readonly class Conexion extends Mensaje
 
 	public function streamConexion(): void
 	{
-		if (isset($_GET['id_receptor'])) {
-			$this->setId('id_receptor');
+		if (isset($_GET['id_contacto'])) {
+			$this->setId('id_contacto');
 			$getConexion = fn() => $this->getConexionDirecta();
 			$tipo = "directo";
 		}

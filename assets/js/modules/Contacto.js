@@ -23,7 +23,7 @@ export default class Contacto extends Invitacion {
 
 			switch (contacto.tipo) {
 				case 'usuario':
-					id = 'id_receptor';
+					id = 'id_contacto';
 					imgSrc =
 						`
 						<svg viewBox="0 0 800 800">
