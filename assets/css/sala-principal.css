@@ -10,7 +10,7 @@ header {
 	background-color: var(--quartery-bg);
 
 	svg {
-		width: 1.25em;
+		width: 1.5em;
 	}
 
 	h1 {
@@ -43,7 +43,7 @@ main {
 
 				li {
 					display: flex;
-					gap: 1em;
+					gap: 0.75em;
 					justify-content: end;
 					align-items: center;
 					padding: 1em 10vw;
@@ -131,7 +131,7 @@ main {
 
 		form {
 			display: flex;
-			flex-wrap: nowrap;
+			/* flex-wrap: nowrap; */
 			gap: 1em;
 			align-items: center;
 			width: 100%;
@@ -161,6 +161,14 @@ main {
 					circle {
 						fill: white;
 					}
+				}
+			}
+
+			output {
+				flex-grow: 1;
+
+				&:empty {
+					display: none;
 				}
 			}
 

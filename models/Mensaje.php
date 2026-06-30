@@ -249,6 +249,8 @@ readonly class Mensaje extends Contacto
 		$this->setContenido('contenido');
 		$this->checkValidationErrors();
 
+		$this->isContacto();
+
 		$query =
 			"INSERT INTO mensajes (contenido, id_emisor, id_receptor)
 			VALUES (?, ?, ?)";
