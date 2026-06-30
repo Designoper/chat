@@ -4,14 +4,6 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/Contacto.php';
 
-enum MensajeProperties: string
-{
-	case ID_MENSAJE = 'id_mensaje';
-	case ID_RECEPTOR = 'id_receptor';
-	case ID_GRUPO = 'id_grupo';
-	case CONTENIDO = 'contenido';
-}
-
 readonly class Mensaje extends Contacto
 {
 	protected int $id_mensaje;
@@ -40,7 +32,7 @@ readonly class Mensaje extends Contacto
 
 	private function getUltimoIdDirecto(): void
 	{
-		$this->setId(MensajeProperties::ID_RECEPTOR->value);
+		$this->setId('id_receptor');
 		$this->checkValidationErrors();
 
 		$query =
@@ -70,7 +62,7 @@ readonly class Mensaje extends Contacto
 
 	private function getUltimoIdGrupal(): void
 	{
-		$this->setId(MensajeProperties::ID_GRUPO->value);
+		$this->setId('id_grupo');
 		$this->checkValidationErrors();
 
 		$query =
@@ -100,11 +92,11 @@ readonly class Mensaje extends Contacto
 
 	public function setultimoIdLeido(): void
 	{
-		if (isset($_POST[MensajeProperties::ID_RECEPTOR->value])) {
+		if (isset($_POST['id_receptor'])) {
 			$this->setUltimoIdDirecto();
 		}
 
-		if (isset($_POST[MensajeProperties::ID_GRUPO->value])) {
+		if (isset($_POST['id_grupo'])) {
 			$this->setUltimoIdGrupal();
 		}
 	}
@@ -113,8 +105,8 @@ readonly class Mensaje extends Contacto
 
 	private function setUltimoIdDirecto(): void
 	{
-		$this->setId(MensajeProperties::ID_RECEPTOR->value);
-		$this->setId(MensajeProperties::ID_MENSAJE->value);
+		$this->setId('id_receptor');
+		$this->setId('id_mensaje');
 		$this->checkValidationErrors();
 
 		$query =
@@ -311,6 +303,8 @@ readonly class Mensaje extends Contacto
 		$this->setContenido('contenido');
 		$this->checkValidationErrors();
 
+		$this->isMiembroGrupo();
+
 		$query =
 			"INSERT INTO mensajes (contenido, id_emisor, id_grupo)
 			VALUES (?, ?, ?)";
@@ -438,15 +432,13 @@ readonly class Mensaje extends Contacto
 		return $mensajes;
 	}
 
-	// MARK: STREAM MENSAJES DIRECTOS
-
-	protected function streamMensajesDirectosLogic(): void
+	protected function streamMensajesGeneric(callable $getter): void
 	{
-		$mensajesObtenidos = $this->getNuevosMensajesDirectos();
+		$mensajes = $getter();
 
-		if (!empty($mensajesObtenidos)) {
+		if (!empty($mensajes)) {
 
-			foreach ($mensajesObtenidos as $m) {
+			foreach ($mensajes as $m) {
 				$ultimo_id = $m["id_mensaje"];
 				$this->sendEvent('mensaje', $m);
 			}
@@ -460,24 +452,13 @@ readonly class Mensaje extends Contacto
 		$this->setId('id_receptor');
 		$this->checkValidationErrors();
 
-		$this->setSSE([$this, 'streamMensajesDirectosLogic']);
-	}
-
-	// MARK: STREAM MENSAJES GRUPALES
-
-	protected function streamMensajesGrupalesLogic(): void
-	{
-		$mensajesObtenidos = $this->getNuevosMensajesGrupales();
-
-		if (!empty($mensajesObtenidos)) {
-
-			foreach ($mensajesObtenidos as $m) {
-				$ultimo_id = $m["id_mensaje"];
-				$this->sendEvent('mensaje', $m);
-			}
-
-			$this->sendEvent('new mensaje', $ultimo_id);
-		}
+		$this->setSSE(
+			fn() =>
+			$this->streamMensajesGeneric(
+				fn() =>
+				$this->getNuevosMensajesDirectos()
+			)
+		);
 	}
 
 	public function streamMensajesGrupales(): void
@@ -485,6 +466,12 @@ readonly class Mensaje extends Contacto
 		$this->setId('id_grupo');
 		$this->checkValidationErrors();
 
-		$this->setSSE([$this, 'streamMensajesGrupalesLogic']);
+		$this->setSSE(
+			fn() =>
+			$this->streamMensajesGeneric(
+				fn() =>
+				$this->getNuevosMensajesGrupales()
+			)
+		);
 	}
 }
