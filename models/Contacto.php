@@ -162,7 +162,7 @@ readonly class Contacto extends Invitacion
 		$this->setSSE([$this, 'streamContactosLogic']);
 	}
 
-	// MARK: IS CONTACTO
+	// MARK: IS CONTACTO FIX
 
 	protected function isContacto(): void
 	{
