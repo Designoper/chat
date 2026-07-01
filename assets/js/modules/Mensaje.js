@@ -14,7 +14,7 @@ export default class Mensaje extends Contacto {
 		header: document.querySelector('header'),
 		h1: document.querySelector('h1'),
 		output: document.querySelector('output'),
-		form: document.querySelector('form'),
+		form: document.querySelectorAll('form'),
 	};
 
 	mensaje = {};
@@ -43,7 +43,9 @@ export default class Mensaje extends Contacto {
 	setForm() {
 		for (const [key, value] of this.urlSearchParams.entries()) {
 			const hiddenInput = `<input type="hidden" name="${key}" value="${value}">`;
-			this.dom.form.insertAdjacentHTML('afterbegin', this.sanitize(hiddenInput));
+			this.dom.form.forEach(form => {
+				form.insertAdjacentHTML('afterbegin', this.sanitize(hiddenInput));
+			});
 		}
 	}
 
@@ -172,6 +174,10 @@ export default class Mensaje extends Contacto {
 				? 'class="mensaje-propio"'
 				: '';
 
+			const tipoMensaje = mensaje.portada
+				? `<img src="${mensaje.portada}" alt="">`
+				: `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
+
 			const formDelete = isAutor
 				? `<form method="POST" name="deleteMensaje">
 						<input type="hidden" name="ulid_mensaje" value="${mensaje.ulid_mensaje}">
@@ -190,7 +196,7 @@ export default class Mensaje extends Contacto {
 					<article ${classArticle}>
 						${nombreAutor}
 						<div>
-							<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
+							${tipoMensaje}
 							<date>${fechaEnvio}</date>
 						</div>
 						${formDelete}
@@ -270,11 +276,13 @@ export default class Mensaje extends Contacto {
 
 				this.streamContactosInvitables(this.urlSearchParams.get('ulid_grupo'));
 
-				this.dom.form.name = 'createMensajeGrupal';
+				this.dom.form[0].name = 'createMensajeGrupal';
+				this.dom.form[1].name = 'createMensajeGrupalImagen';
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
-				this.dom.form.name = 'createMensajeDirecto';
+				this.dom.form[0].name = 'createMensajeDirecto';
+				this.dom.form[1].name = 'createMensajeDirectoImagen';
 			}
 		}
 	}

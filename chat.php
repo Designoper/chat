@@ -76,10 +76,10 @@ new Usuario()->authBrowser();
 
 			</form>
 
-			<form method="POST" name="createMensajeDirectoImagen">
+			<form method="POST">
 
 				<input type="file" name="imagen" accept="image/*">
-				<input type="hidden" name="ulid_contacto" value="01JSEA9ON9H387QGF8C5CTM69M">
+				<!-- <input type="hidden" name="ulid_contacto" value="01JSEA9ON9H387QGF8C5CTM69M"> -->
 
 				<!-- <label for="soundfile">Audio</label>
 				<input type="file" id="soundfile" name="audio" capture="user" accept="audio/*">

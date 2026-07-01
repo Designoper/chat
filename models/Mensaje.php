@@ -191,6 +191,7 @@ readonly class Mensaje extends Contacto
 			"SELECT
 				mensajes.ulid_mensaje,
 				mensajes.contenido,
+				mensajes.portada,
 				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
@@ -296,7 +297,7 @@ readonly class Mensaje extends Contacto
 		$this->setImagen('imagen');
 		$this->checkValidationErrors();
 
-		$this->isContacto();
+		// $this->isContacto();
 
 		$ulid = $this->generateUlid();
 
@@ -462,6 +463,7 @@ readonly class Mensaje extends Contacto
 		$query =
 			"SELECT mensajes.ulid_mensaje,
 				mensajes.contenido,
+				mensajes.portada,
 				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
@@ -514,7 +516,7 @@ readonly class Mensaje extends Contacto
 		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
-		$this->isContacto();
+		// $this->isContacto();
 
 		$this->setSSE(
 			fn() =>
