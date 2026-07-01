@@ -70,4 +70,36 @@ abstract readonly class Setter extends SQL
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
 	}
+
+	// MARK: SET IMAGEN
+
+	protected function setImagen(string $name): void
+	{
+		$filesUploaded = FileManager::flattenFilesArray($name);
+
+		if (count($filesUploaded) === 0) {
+			$this->$name = null;
+			return;
+		}
+
+		if (count($filesUploaded) > 1) {
+			$this->errors->setValidationError('Solo se puede subir una imagen.');
+			return;
+		}
+
+		$imagen = $filesUploaded[0];
+
+		$file_type = exif_imagetype($imagen['tmp_name']);
+		$allowed_types = [IMAGETYPE_JPEG, IMAGETYPE_PNG];
+
+		if (!in_array($file_type, $allowed_types)) {
+			$this->errors->setValidationError("Solo se permiten imágenes JPEG y PNG.");
+		}
+
+		if ($imagen['size'] > 1048576) {
+			$this->errors->setValidationError('La imagen no puede superar 1MB.');
+		}
+
+		$this->$name = $imagen;
+	}
 }
