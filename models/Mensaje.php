@@ -420,6 +420,7 @@ readonly class Mensaje extends Contacto
 		$query =
 			"SELECT mensajes.ulid_mensaje,
 				mensajes.contenido,
+				mensajes.portada,
 				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
