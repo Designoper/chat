@@ -33,7 +33,9 @@ abstract readonly class SQL extends Database
 			$rand .= self::BASE32_ALPHABET[random_int(0, 31)];
 		}
 
-		return $time32 . $rand;
+		$ulid = $time32 . $rand;
+
+		return $ulid;
 	}
 
 	// MARK: ENCODE BASE 32

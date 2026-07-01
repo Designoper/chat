@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/SQL.php';
 
-readonly class FileManager extends SQL
+abstract readonly class FileManager extends SQL
 {
     private const string IMAGE_PATH = '/assets/img/';
-    public const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
+    protected const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
 
-    public string $extraDirectories;
-    public string $uniqueFilename;
+    protected string $extraDirectories;
+    protected string $uniqueFilename;
 
-    public ?array $file;
-    public bool $deleteCheckbox;
+    protected ?array $file;
+    protected bool $deleteCheckbox;
 
-    public function __construct()
+    protected function __construct()
     {
         parent::__construct();
     }
