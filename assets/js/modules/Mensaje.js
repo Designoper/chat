@@ -218,6 +218,16 @@ export default class Mensaje extends Contacto {
 		}
 	}
 
+	async createMensajeDirectoImagen(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_IMAGEN_DIRECTO);
+		if (response.status === 201) {
+			globalThis.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "instant"
+			});
+		}
+	}
+
 	async createMensajeGrupal(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_GRUPAL);
 		if (response.status === 201) {

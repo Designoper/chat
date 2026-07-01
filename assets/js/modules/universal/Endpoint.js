@@ -52,6 +52,7 @@ export default class Endpoint extends Fetch {
 			},
 			MENSAJES: {
 				CREAR_DIRECTO: `${this.ROOT}mensajes/crear/directo`,
+				CREAR_IMAGEN_DIRECTO: `${this.ROOT}mensajes/crear/imagen-directo`,
 				CREAR_GRUPAL: `${this.ROOT}mensajes/crear/grupal`,
 				ELIMINAR: `${this.ROOT}mensajes/delete`,
 				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`

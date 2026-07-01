@@ -76,7 +76,7 @@ new Usuario()->authBrowser();
 
 			</form>
 
-			<form method="POST">
+			<form method="POST" name="createMensajeDirectoImagen">
 
 				<input type="file" name="imagen" accept="image/*">
 
