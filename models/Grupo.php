@@ -33,7 +33,7 @@ readonly class Grupo extends Usuario
 				$this->session_user,
 				$this->ulid_grupo
 			],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if ($ulid_fundador !== $this->session_user) {
@@ -60,7 +60,7 @@ readonly class Grupo extends Usuario
 				$this->session_user,
 				$this->ulid_grupo
 			],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if (!$rol) {

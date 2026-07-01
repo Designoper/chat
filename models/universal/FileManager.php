@@ -158,7 +158,7 @@ readonly class FileManager extends SQL
             [
                 $primaryKeyValue
             ],
-            SqlReturn::BindResult
+            SqlReturn::FetchColumn
         );
 
         return $fileUrl;

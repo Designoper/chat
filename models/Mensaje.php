@@ -411,7 +411,7 @@ readonly class Mensaje extends Contacto
 			[
 				$this->ulid_mensaje
 			],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if ($autor !== $this->session_user) {

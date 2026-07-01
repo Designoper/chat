@@ -31,7 +31,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			's',
 			[$this->codigo_contacto],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if (!$contacto) {
@@ -62,7 +62,7 @@ readonly class Invitacion extends Grupo
 				$this->session_user,
 				$contacto
 			],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if ($yaSonContactos) {
@@ -85,7 +85,7 @@ readonly class Invitacion extends Grupo
 				$this->session_user,
 				$contacto
 			],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if ($yaInvitado) {
@@ -108,7 +108,7 @@ readonly class Invitacion extends Grupo
 				$contacto,
 				$this->session_user
 			],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if ($invitacionCruzada) {
@@ -255,7 +255,7 @@ readonly class Invitacion extends Grupo
 
 		// 2. Validar que el usuario existe
 		$query = "SELECT 1 FROM usuarios WHERE ulid_usuario = ?";
-		$existeUsuario = $this->executeQuery($query, 's', [$contacto], SqlReturn::BindResult);
+		$existeUsuario = $this->executeQuery($query, 's', [$contacto], SqlReturn::FetchColumn);
 
 		if (!$existeUsuario) {
 			$this->status = 404;
@@ -265,7 +265,7 @@ readonly class Invitacion extends Grupo
 
 		// 3. Validar que el grupo existe
 		$query = "SELECT 1 FROM grupos WHERE ulid_grupo = ?";
-		$existeGrupo = $this->executeQuery($query, 's', [$grupo], SqlReturn::BindResult);
+		$existeGrupo = $this->executeQuery($query, 's', [$grupo], SqlReturn::FetchColumn);
 
 		if (!$existeGrupo) {
 			$this->status = 404;
@@ -287,7 +287,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ss',
 			[$contacto, $grupo],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if ($esMiembro) {
@@ -307,7 +307,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ss',
 			[$contacto, $grupo],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if ($yaInvitado) {
@@ -327,7 +327,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ssss',
 			[$usuario, $contacto, $usuario, $contacto],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if (!$esContacto) {
@@ -407,7 +407,7 @@ readonly class Invitacion extends Grupo
 
 		// 1. Validar que el grupo existe
 		$query = "SELECT 1 FROM grupos WHERE ulid_grupo = ?";
-		$existeGrupo = $this->executeQuery($query, 's', [$grupo], SqlReturn::BindResult);
+		$existeGrupo = $this->executeQuery($query, 's', [$grupo], SqlReturn::FetchColumn);
 
 		if (!$existeGrupo) {
 			$this->status = 404;
@@ -426,7 +426,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ss',
 			[$usuario, $grupo],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if (!$existeInvitacion) {
@@ -446,7 +446,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ss',
 			[$usuario, $grupo],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if ($esMiembro) {

@@ -183,7 +183,7 @@ readonly class Contacto extends Invitacion
 				$this->session_user,
 				$this->ulid_contacto
 			],
-			SqlReturn::BindResult
+			SqlReturn::FetchColumn
 		);
 
 		if (!$rol) {

@@ -8,7 +8,7 @@ enum SqlReturn
 {
 	case FetchAll;
 	case FetchAssoc;
-	case BindResult;
+	case FetchColumn;
 }
 
 abstract readonly class SQL extends Database
@@ -96,9 +96,8 @@ abstract readonly class SQL extends Database
 				$result = $mysqli_stmt->get_result()->fetch_assoc();
 				break;
 
-			case SqlReturn::BindResult:
-				$mysqli_stmt->bind_result($result);
-				$mysqli_stmt->fetch();
+			case SqlReturn::FetchColumn:
+				$result = $mysqli_stmt->get_result()->fetch_column();
 				break;
 
 			default:
