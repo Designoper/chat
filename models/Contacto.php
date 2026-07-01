@@ -29,6 +29,7 @@ readonly class Contacto extends Invitacion
 					DATE_FORMAT(ult.fecha_envio, $dateFormat) AS fecha_envio,
 					ult.contenido,
 					ult.ulid_emisor,
+					ult.portada,
 					ue.nombre_usuario AS nombre_emisor
 				FROM usuarios u
 
@@ -72,6 +73,7 @@ readonly class Contacto extends Invitacion
 					ult.fecha_envio,
 					ult.contenido,
 					ult.ulid_emisor,
+					ult.portada,
 					ue.nombre_usuario
 
 				UNION ALL
@@ -84,6 +86,7 @@ readonly class Contacto extends Invitacion
 					COUNT(mg.ulid_mensaje) AS num_mensajes,
 					DATE_FORMAT(ultg.fecha_envio, $dateFormat) AS fecha_envio,
 					ultg.contenido,
+					ultg.portada,
 					ultg.ulid_emisor,
 					ue2.nombre_usuario AS nombre_emisor
 				FROM grupos g
@@ -116,6 +119,7 @@ readonly class Contacto extends Invitacion
 					ultg.fecha_envio,
 					ultg.contenido,
 					ultg.ulid_emisor,
+					ultg.portada,
 					ue2.nombre_usuario
 			) AS chats
 			ORDER BY

@@ -30,7 +30,7 @@ export default class Contacto extends Invitacion {
 							<path d="M.001 823.889c0-220.889 179.111-400 400-400s400 179.111 400 400-179.111 400-400 400-400-179.111-400-400zm212.11-636C212.111 84.132 296.244 0 400 0s187.889 84.132 187.889 187.889S503.756 375.777 400 375.777s-187.888-84.132-187.888-187.889z"/>
 						</svg>
 					`;
-					autorMensaje = '';
+					// autorMensaje = '';
 
 					break;
 				case 'grupo':
@@ -47,9 +47,13 @@ export default class Contacto extends Invitacion {
 				? `<data>${contacto.num_mensajes}</data>`
 				: '';
 
-			const lastMessage = contacto.contenido
+			const tipoMensaje = contacto.portada === null
+				? `${contacto.contenido}`
+				: `Imagen`;
+
+			const lastMessage = contacto.contenido !== null || contacto.portada !== null
 				? `<date>${this.compareTime(contacto.fecha_envio, false)}</date>
-					<p>${autorMensaje}${contacto.contenido}</p>`
+					<p>${autorMensaje}${tipoMensaje}</p>`
 				: '';
 
 			const template =

@@ -61,8 +61,8 @@ button {
 	cursor: pointer;
 }
 
-:is(input, datalist, select, textarea) {
-	/* width: 100%; */
+:is(input, datalist, textarea) {
+	width: 100%;
 	text-box: initial;
 }
 
@@ -76,4 +76,8 @@ textarea {
 
 :is(select, select::picker(select)) {
 	appearance: base-select;
+}
+
+input::file-selector-button {
+	font: inherit;
 }

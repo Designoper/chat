@@ -71,6 +71,14 @@ main {
 			gap: 1.25em;
 			align-content: center;
 			grid-template-columns: 1fr auto;
+
+			/* input[type="file"]:empty {
+				label {
+					display: none;
+				}
+
+				display: none;
+			} */
 		}
 
 		textarea {
@@ -153,6 +161,11 @@ main {
 				opacity: 70%;
 				margin-left: 1em;
 				justify-self: end;
+			}
+
+			img {
+				max-width: 200px;
+				max-height: 200px;
 			}
 		}
 

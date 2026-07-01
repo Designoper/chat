@@ -63,6 +63,8 @@ new Usuario()->authBrowser();
 
 		<section>
 
+			<!-- <details open name="message"> -->
+			<!-- <summary>Opciones</summary> -->
 			<form method="POST">
 
 				<textarea placeholder="Mensaje" name="contenido" autocomplete="off" minlength="1" maxlength="255" required></textarea>
@@ -75,11 +77,15 @@ new Usuario()->authBrowser();
 				</button>
 
 			</form>
+			<!-- </details> -->
+
+			<!-- <details name="message"> -->
+			<!-- <summary>Opciones</summary> -->
 
 			<form method="POST">
 
-				<input type="file" name="imagen" accept="image/*">
-				<!-- <input type="hidden" name="ulid_contacto" value="01JSEA9ON9H387QGF8C5CTM69M"> -->
+				<!-- <label for="imagen">Imagen</label> -->
+				<input type="file" id="imagen" name="imagen" accept="image/*">
 
 				<!-- <label for="soundfile">Audio</label>
 				<input type="file" id="soundfile" name="audio" capture="user" accept="audio/*">
@@ -98,7 +104,7 @@ new Usuario()->authBrowser();
 				</button>
 
 			</form>
-
+			<!-- </details> -->
 		</section>
 
 	</main>
