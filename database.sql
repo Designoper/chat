@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS chat;
-CREATE DATABASE chat CHARACTER SET utf8mb4;
-USE chat;
+-- DROP DATABASE IF EXISTS chat;
+-- CREATE DATABASE chat CHARACTER SET utf8mb4;
+-- USE chat;
 
 SET default_storage_engine=InnoDB;
 
