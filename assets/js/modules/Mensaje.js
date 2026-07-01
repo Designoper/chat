@@ -174,7 +174,7 @@ export default class Mensaje extends Contacto {
 				? 'class="mensaje-propio"'
 				: '';
 
-			const tipoMensaje = mensaje.portada
+			const tipoMensaje = mensaje.portada !== null
 				? `<img src="${mensaje.portada}" loading="lazy">`
 				: `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
 

@@ -85,7 +85,7 @@ new Usuario()->authBrowser();
 			<form method="POST">
 
 				<!-- <label for="imagen">Imagen</label> -->
-				<input type="file" id="imagen" name="imagen" accept="image/*">
+				<input type="file" id="imagen" name="imagen" accept="image/*" required>
 
 				<!-- <label for="soundfile">Audio</label>
 				<input type="file" id="soundfile" name="audio" capture="user" accept="audio/*">

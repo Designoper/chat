@@ -235,6 +235,7 @@ readonly class Mensaje extends Contacto
 			"SELECT
 				mensajes.ulid_mensaje,
 				mensajes.contenido,
+				mensajes.portada,
 				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
@@ -352,6 +353,42 @@ readonly class Mensaje extends Contacto
 			]
 		);
 
+		$this->status = 201;
+		$this->sendResponse();
+	}
+
+	// MARK: CREATE MENSAJE GRUPAL IMAGEN
+
+	public function createMensajeGrupalImagen(): void
+	{
+		$this->setUlid('ulid_grupo');
+		$this->setImagen('imagen');
+		$this->checkValidationErrors();
+
+		// $this->isContacto();
+
+		$ulid = $this->generateUlid();
+
+		$this->file = $this->imagen;
+		$this->extraDirectories = self::FOLDER;
+		$imagenName = $this->uploadFileName();
+
+		$query =
+			"INSERT INTO mensajes (ulid_mensaje, portada, ulid_emisor, ulid_grupo)
+			VALUES (?, ?, ?, ?)";
+
+		$this->executeQuery(
+			$query,
+			'ssss',
+			[
+				$ulid,
+				$imagenName,
+				$this->session_user,
+				$this->ulid_grupo
+			]
+		);
+
+		$this->uploadFile();
 		$this->status = 201;
 		$this->sendResponse();
 	}
