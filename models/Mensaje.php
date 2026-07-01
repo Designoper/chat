@@ -13,8 +13,8 @@ readonly class Mensaje extends Contacto
 	private const string FOLDER = 'mensajes/';
 
 	private const string SQL_COLUMN = 'portada';
-	private const string SQL_TABLE = 'libros';
-	private const string SQL_PRIMARY_KEY = 'id_libro';
+	private const string SQL_TABLE = 'mensajes';
+	private const string SQL_PRIMARY_KEY = 'ulid_mensaje';
 
 	public function __construct()
 	{
@@ -427,21 +427,23 @@ readonly class Mensaje extends Contacto
 	{
 		$this->isAutorMensaje();
 
+		$ulidMensaje = $this->ulid_mensaje;
+		$fileUrl = $this->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $ulidMensaje);
+
 		$query =
 			"DELETE FROM mensajes
-			WHERE ulid_mensaje = ?
-			AND ulid_emisor = ?";
+			WHERE ulid_mensaje = ?";
 
 		$this->executeQuery(
 			$query,
-			'ss',
+			's',
 			[
-				$this->ulid_mensaje,
-				$this->session_user
+				$this->ulid_mensaje
 			]
 		);
 
 		$this->status = 204;
+		$this->deleteFile($fileUrl);
 		$this->sendResponse();
 	}
 

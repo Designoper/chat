@@ -90,7 +90,7 @@ readonly class FileManager extends Database
         move_uploaded_file($this->file['tmp_name'], $finalDestination);
     }
 
-    protected function updateFileName(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
+    protected function updateFileName(string $column, string $table, string $primaryKey, string $primaryKeyValue): ?string
     {
         if ($this->file === null) {
             if ($this->deleteCheckbox === true) {
@@ -145,7 +145,7 @@ readonly class FileManager extends Database
         }
     }
 
-    protected function getFileUrl(string $column, string $table, string $primaryKey, int $primaryKeyValue): string|null|false
+    protected function getFileUrl(string $column, string $table, string $primaryKey, string $primaryKeyValue): string|null|false
     {
         $query =
             "SELECT $column
@@ -155,7 +155,7 @@ readonly class FileManager extends Database
         $mysqli_stmt = $this->connection->prepare($query);
 
         $mysqli_stmt->bind_param(
-            "i",
+            "s",
             $primaryKeyValue
         );
 
