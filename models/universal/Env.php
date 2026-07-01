@@ -9,6 +9,8 @@ abstract readonly class Env
         $this->setEnvVariables();
     }
 
+    // MARK: SET ENVIRONMENT VARIABLES
+
     private function setEnvVariables(): void
     {
         $file = __DIR__ . '/../../.env';

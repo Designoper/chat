@@ -52,7 +52,7 @@ abstract readonly class Response extends Sanitizer
         $this->response = [];
     }
 
-    // MARK: CHECKERS
+    // MARK: CHECK VALIDATIONS ERRORS
 
     protected function checkValidationErrors(): void
     {
@@ -61,6 +61,8 @@ abstract readonly class Response extends Sanitizer
             $this->sendResponse();
         }
     }
+
+    // MARK: CHECK INTEGRITY ERRORS
 
     protected function checkIntegrityErrors(): void
     {

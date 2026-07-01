@@ -30,7 +30,7 @@ abstract readonly class Database extends SSE
 		$this->setDomain();
 	}
 
-	// MARK: SETTERS
+	// MARK: SET CONNECTION
 
 	private function setConnection(): void
 	{
@@ -44,6 +44,8 @@ abstract readonly class Database extends SSE
 		$this->connection->set_charset('utf8');
 	}
 
+	// MARK: SET DOMAIN
+
 	private function setDomain(): void
 	{
 		$protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
@@ -51,7 +53,7 @@ abstract readonly class Database extends SSE
 		$this->domain = $protocol . '://' . $host;
 	}
 
-	// MARK: AUTHENTICATION
+	// MARK: AUTH BROWSER
 
 	public function authBrowser(): void
 	{
@@ -61,6 +63,8 @@ abstract readonly class Database extends SSE
 		}
 	}
 
+	// MARK: SESSION REDIRECT
+
 	public function sessionRedirect(): void
 	{
 		if ($this->session_user !== null) {
@@ -68,6 +72,8 @@ abstract readonly class Database extends SSE
 			exit;
 		}
 	}
+
+	// MARK: AUTH ENDPOINT
 
 	protected function authEndpoint(): void
 	{

@@ -11,6 +11,8 @@ abstract readonly class SSE extends Response
 		parent::__construct();
 	}
 
+	// MARK: SET SSE
+
 	protected function setSSE(callable $function): void
 	{
 		if (session_status() === PHP_SESSION_ACTIVE) {
@@ -41,6 +43,8 @@ abstract readonly class SSE extends Response
 		}
 	}
 
+	// MARK: HEARTBEAT
+
 	private function heartbeat(): void
 	{
 		static $lastPing = 0;
@@ -51,6 +55,8 @@ abstract readonly class SSE extends Response
 			flush();
 		}
 	}
+
+	// MARK: SEND EVENT
 
 	protected function sendEvent(string $event, mixed $data): void
 	{

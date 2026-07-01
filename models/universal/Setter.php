@@ -16,9 +16,10 @@ abstract readonly class Setter extends FileManager
 	protected function setUlid(string $name): void
 	{
 		$value = $_REQUEST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío y debe contener 26 carácteres.";
+		$ulid_length = 26;
+		$error_message = "El campo $name no puede estar vacío y debe contener $ulid_length carácteres.";
 
-		strlen($value) !== 26
+		strlen($value) !== $ulid_length
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
 	}
@@ -28,21 +29,10 @@ abstract readonly class Setter extends FileManager
 	protected function setNombre(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío ni superar los 20 carácteres.";
+		$max_length = 20;
+		$error_message = "El campo $name no puede estar vacío ni superar los $max_length carácteres.";
 
-		empty($value) || strlen($value) > 20
-			? $this->errors->setValidationError($error_message)
-			: $this->$name = $value;
-	}
-
-	// MARK: SET CODIGO
-
-	protected function setCodigo(string $name): void
-	{
-		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío y debe contener 6 carácteres.";
-
-		empty($value) || strlen($value) !== 6
+		empty($value) || strlen($value) > $max_length
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
 	}
@@ -52,9 +42,23 @@ abstract readonly class Setter extends FileManager
 	protected function setPassword(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
-		$error_message = "El campo $name no puede estar vacío ni superar los 20 carácteres.";
+		$max_length = 20;
+		$error_message = "El campo $name no puede estar vacío ni superar los $max_length carácteres.";
 
-		empty($value) || strlen($value) > 20
+		empty($value) || strlen($value) > $max_length
+			? $this->errors->setValidationError($error_message)
+			: $this->$name = $value;
+	}
+
+	// MARK: SET CODIGO
+
+	protected function setCodigo(string $name): void
+	{
+		$value = $_POST[$name] ?? null;
+		$codigo_length = 6;
+		$error_message = "El campo $name no puede estar vacío y debe contener $codigo_length carácteres.";
+
+		empty($value) || strlen($value) !== $codigo_length
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
 	}
