@@ -6,7 +6,7 @@ require_once __DIR__ . '/SQL.php';
 
 abstract readonly class File extends SQL
 {
-    private const string IMAGE_PATH = '/assets/img/';
+    private const string IMAGE_PATH = '/private/';
     protected const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
 
     protected string $extraDirectories;
@@ -14,6 +14,8 @@ abstract readonly class File extends SQL
 
     protected ?array $file;
     protected bool $deleteCheckbox;
+
+    private string $fileUrl;
 
     protected function __construct()
     {
@@ -162,5 +164,35 @@ abstract readonly class File extends SQL
         );
 
         return $fileUrl;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function showFile(): void
+    {
+        // $base = __DIR__ . "/private/mensajes/";
+        // $archivo = $base . basename($_GET['f']);
+        $archivo = $_SERVER['DOCUMENT_ROOT'] . $_GET['f'];
+
+        if (!file_exists($archivo)) {
+            http_response_code(404);
+            exit("Archivo no encontrado");
+        }
+
+        $mime = mime_content_type($archivo);
+        header("Content-Type: $mime");
+        readfile($archivo);
     }
 }

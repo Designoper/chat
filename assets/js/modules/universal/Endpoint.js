@@ -24,6 +24,9 @@ export default class Endpoint extends Fetch {
 				STREAM_GRUPALES: `${this.ROOT}mensajes/stream/grupales`,
 				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`,
 			},
+			FILES: {
+				IMAGENES: `${this.ROOT}imagenes`,
+			},
 			CONEXION: {
 				STREAM: `${this.ROOT}conexion/stream`,
 			}
