@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/SQL.php';
 
-abstract readonly class FileManager extends SQL
+abstract readonly class File extends SQL
 {
     private const string IMAGE_PATH = '/assets/img/';
     protected const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';

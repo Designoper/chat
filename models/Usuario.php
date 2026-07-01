@@ -26,7 +26,7 @@ readonly class Usuario extends Setter
 		return $code;
 	}
 
-	// MARK: CREATE
+	// MARK: CREATE USUARIO
 
 	public function createUsuario(): void
 	{
@@ -173,7 +173,7 @@ readonly class Usuario extends Setter
 		$this->sendResponse();
 	}
 
-	// MARK: DELETE
+	// MARK: DELETE USUARIO
 
 	public function deleteUsuario(): void
 	{

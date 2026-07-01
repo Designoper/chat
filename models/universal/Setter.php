@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/FileManager.php';
+require_once __DIR__ . '/File.php';
 
-abstract readonly class Setter extends FileManager
+abstract readonly class Setter extends File
 {
 	protected function __construct()
 	{
