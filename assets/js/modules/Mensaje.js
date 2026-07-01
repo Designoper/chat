@@ -63,7 +63,6 @@ export default class Mensaje extends Contacto {
 				top: document.documentElement.scrollHeight,
 				behavior: "instant"
 			});
-
 	}
 
 	// MARK: GET MENSAJES
