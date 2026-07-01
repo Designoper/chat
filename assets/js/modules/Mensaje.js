@@ -288,11 +288,13 @@ export default class Mensaje extends Contacto {
 
 				this.dom.form[0].name = 'createMensajeGrupal';
 				this.dom.form[1].name = 'createMensajeGrupalImagen';
+				this.dom.form[2].name = 'createMensajeGrupalImagen';
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
 				this.dom.form[0].name = 'createMensajeDirecto';
 				this.dom.form[1].name = 'createMensajeDirectoImagen';
+				this.dom.form[2].name = 'createMensajeDirectoImagen';
 			}
 		}
 	}
