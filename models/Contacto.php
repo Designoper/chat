@@ -26,10 +26,10 @@ readonly class Contacto extends Invitacion
 					u.nombre_usuario AS nombre,
 					'usuario' AS tipo,
 					COUNT(m.ulid_mensaje) AS num_mensajes,
-					DATE_FORMAT(ult.fecha_envio, $dateFormat) AS fecha_envio,
+					DATE_FORMAT(ult.fecha_creacion, $dateFormat) AS fecha_creacion,
 					ult.contenido,
 					ult.ulid_emisor,
-					ult.portada,
+					ult.imagen,
 					ue.nombre_usuario AS nombre_emisor
 				FROM usuarios u
 
@@ -70,10 +70,10 @@ readonly class Contacto extends Invitacion
 				GROUP BY
 					u.ulid_usuario,
 					u.nombre_usuario,
-					ult.fecha_envio,
+					ult.fecha_creacion,
 					ult.contenido,
 					ult.ulid_emisor,
-					ult.portada,
+					ult.imagen,
 					ue.nombre_usuario
 
 				UNION ALL
@@ -84,9 +84,9 @@ readonly class Contacto extends Invitacion
 					g.nombre_grupo AS nombre,
 					'grupo' AS tipo,
 					COUNT(mg.ulid_mensaje) AS num_mensajes,
-					DATE_FORMAT(ultg.fecha_envio, $dateFormat) AS fecha_envio,
+					DATE_FORMAT(ultg.fecha_creacion, $dateFormat) AS fecha_creacion,
 					ultg.contenido,
-					ultg.portada,
+					ultg.imagen,
 					ultg.ulid_emisor,
 					ue2.nombre_usuario AS nombre_emisor
 				FROM grupos g
@@ -116,15 +116,15 @@ readonly class Contacto extends Invitacion
 				GROUP BY
 					g.ulid_grupo,
 					g.nombre_grupo,
-					ultg.fecha_envio,
+					ultg.fecha_creacion,
 					ultg.contenido,
 					ultg.ulid_emisor,
-					ultg.portada,
+					ultg.imagen,
 					ue2.nombre_usuario
 			) AS chats
 			ORDER BY
-				(fecha_envio IS NULL) ASC,
-				fecha_envio DESC,
+				(fecha_creacion IS NULL) ASC,
+				fecha_creacion DESC,
 				nombre ASC";
 
 		$contactos = $this->executeQuery(

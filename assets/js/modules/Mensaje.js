@@ -156,13 +156,13 @@ export default class Mensaje extends Contacto {
 				this.mostrado = true; // ← ya no se vuelve a mostrar
 			}
 
-			const fechaEnvio = this.hoursMinutes(mensaje.fecha_envio);
-			const fechaMensajeActual = this.formatearFecha(mensaje.fecha_envio);
+			const fechaEnvio = this.hoursMinutes(mensaje.fecha_creacion);
+			const fechaMensajeActual = this.formatearFecha(mensaje.fecha_creacion);
 			const fechaMensajeAnterior = this.mensaje.fecha;
 
 			const cambioFecha = fechaMensajeAnterior?.dayOfYear === fechaMensajeActual.dayOfYear
 				? ""
-				: `<date datetime="${this.yearMonthDay(mensaje.fecha_envio)}">${this.compareTime(mensaje.fecha_envio)}</date>`;
+				: `<date datetime="${this.yearMonthDay(mensaje.fecha_creacion)}">${this.compareTime(mensaje.fecha_creacion)}</date>`;
 
 			const nombreAutor = mensaje.nombre_usuario === this.mensaje?.autor
 				? ""
@@ -174,8 +174,8 @@ export default class Mensaje extends Contacto {
 				? 'class="mensaje-propio"'
 				: '';
 
-			const tipoMensaje = mensaje.portada !== null
-				? `<img src="${mensaje.portada}" loading="lazy">`
+			const tipoMensaje = mensaje.imagen !== null
+				? `<img src="${mensaje.imagen}" loading="lazy">`
 				: `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
 
 			const formDelete = isAutor
@@ -204,7 +204,7 @@ export default class Mensaje extends Contacto {
 				`;
 
 			this.mensaje.autor = mensaje.nombre_usuario;
-			this.mensaje.fecha = this.formatearFecha(mensaje.fecha_envio);
+			this.mensaje.fecha = this.formatearFecha(mensaje.fecha_creacion);
 
 			return template;
 		});

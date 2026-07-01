@@ -510,8 +510,8 @@ readonly class Invitacion extends Grupo
 						g.nombre_grupo
 				) AS invitaciones";
 		// ORDER BY
-		// 	(fecha_envio IS NULL) ASC,
-		// 	fecha_envio DESC,
+		// 	(fecha_creacion IS NULL) ASC,
+		// 	fecha_creacion DESC,
 		// 	nombre ASC";
 
 		$invitaciones = $this->executeQuery(

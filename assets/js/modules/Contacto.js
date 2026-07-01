@@ -47,12 +47,12 @@ export default class Contacto extends Invitacion {
 				? `<data>${contacto.num_mensajes}</data>`
 				: '';
 
-			const tipoMensaje = contacto.portada === null
+			const tipoMensaje = contacto.imagen === null
 				? `${contacto.contenido}`
 				: `Imagen`;
 
-			const lastMessage = contacto.contenido !== null || contacto.portada !== null
-				? `<date>${this.compareTime(contacto.fecha_envio, false)}</date>
+			const lastMessage = contacto.contenido !== null || contacto.imagen !== null
+				? `<date>${this.compareTime(contacto.fecha_creacion, false)}</date>
 					<p>${autorMensaje}${tipoMensaje}</p>`
 				: '';
 

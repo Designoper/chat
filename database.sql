@@ -8,13 +8,15 @@ CREATE TABLE usuarios (
     ulid_usuario CHAR(26) PRIMARY KEY,
     nombre_usuario VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    codigo_contacto CHAR(6) NOT NULL UNIQUE
+    codigo_contacto CHAR(6) NOT NULL UNIQUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE grupos (
     ulid_grupo CHAR(26) PRIMARY KEY,
     nombre_grupo VARCHAR(20) NOT NULL UNIQUE,
     ulid_fundador CHAR(26) NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 
     FOREIGN KEY (ulid_fundador)
         REFERENCES usuarios(ulid_usuario)
@@ -99,8 +101,8 @@ CREATE TABLE contactos_grupales (
 CREATE TABLE mensajes (
     ulid_mensaje CHAR(26) PRIMARY KEY,
     contenido TEXT NULL,
-    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    portada VARCHAR(255) NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    imagen VARCHAR(255) NULL,
     ulid_emisor CHAR(26) NULL,
     ulid_contacto CHAR(26) NULL,
     ulid_grupo CHAR(26) NULL,

@@ -12,7 +12,7 @@ readonly class Mensaje extends Contacto
 
 	private const string FOLDER = 'mensajes/';
 
-	private const string SQL_COLUMN = 'portada';
+	private const string SQL_COLUMN = 'imagen';
 	private const string SQL_TABLE = 'mensajes';
 	private const string SQL_PRIMARY_KEY = 'ulid_mensaje';
 
@@ -191,8 +191,8 @@ readonly class Mensaje extends Contacto
 			"SELECT
 				mensajes.ulid_mensaje,
 				mensajes.contenido,
-				mensajes.portada,
-				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
+				mensajes.imagen,
+				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
@@ -203,7 +203,7 @@ readonly class Mensaje extends Contacto
 				LEAST(ulid_emisor, ulid_contacto) = ?
 				AND GREATEST(ulid_emisor, ulid_contacto) = ?
 			)
-			ORDER BY fecha_envio ASC";
+			ORDER BY fecha_creacion ASC";
 
 		$mensajes = $this->executeQuery(
 			$query,
@@ -235,15 +235,15 @@ readonly class Mensaje extends Contacto
 			"SELECT
 				mensajes.ulid_mensaje,
 				mensajes.contenido,
-				mensajes.portada,
-				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
+				mensajes.imagen,
+				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
 			LEFT JOIN usuarios
 				ON mensajes.ulid_emisor = usuarios.ulid_usuario
 			WHERE mensajes.ulid_grupo = ?
-			ORDER BY fecha_envio ASC";
+			ORDER BY fecha_creacion ASC";
 
 		$mensajes = $this->executeQuery(
 			$query,
@@ -307,7 +307,7 @@ readonly class Mensaje extends Contacto
 		$imagenName = $this->uploadFileName();
 
 		$query =
-			"INSERT INTO mensajes (ulid_mensaje, portada, ulid_emisor, ulid_contacto)
+			"INSERT INTO mensajes (ulid_mensaje, imagen, ulid_emisor, ulid_contacto)
 			VALUES (?, ?, ?, ?)";
 
 		$this->executeQuery(
@@ -374,7 +374,7 @@ readonly class Mensaje extends Contacto
 		$imagenName = $this->uploadFileName();
 
 		$query =
-			"INSERT INTO mensajes (ulid_mensaje, portada, ulid_emisor, ulid_grupo)
+			"INSERT INTO mensajes (ulid_mensaje, imagen, ulid_emisor, ulid_grupo)
 			VALUES (?, ?, ?, ?)";
 
 		$this->executeQuery(
@@ -459,8 +459,8 @@ readonly class Mensaje extends Contacto
 		$query =
 			"SELECT mensajes.ulid_mensaje,
 				mensajes.contenido,
-				mensajes.portada,
-				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
+				mensajes.imagen,
+				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
@@ -503,8 +503,8 @@ readonly class Mensaje extends Contacto
 		$query =
 			"SELECT mensajes.ulid_mensaje,
 				mensajes.contenido,
-				mensajes.portada,
-				DATE_FORMAT(mensajes.fecha_envio, $dateFormat) AS fecha_envio,
+				mensajes.imagen,
+				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
