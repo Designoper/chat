@@ -29,7 +29,7 @@ readonly class FileManager extends SQL
         $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
-    // MARK: FILE OPERATIONS
+    // MARK: FLATTEN FILES ARRAY
 
     protected function flattenFilesArray(string $inputFileName): array
     {
