@@ -72,6 +72,14 @@ main {
 			align-content: center;
 			grid-template-columns: 1fr auto;
 
+			output {
+				padding: 0;
+
+				&:empty {
+					display: none;
+				}
+			}
+
 			/* input[type="file"]:empty {
 				label {
 					display: none;
@@ -130,6 +138,8 @@ main {
 				width: 1.5em;
 				fill: var(--quartery-bg);
 			}
+
+
 		}
 
 		article {

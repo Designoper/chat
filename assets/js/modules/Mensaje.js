@@ -57,12 +57,13 @@ export default class Mensaje extends Contacto {
 		marcador
 			? marcador.scrollIntoView({
 				behavior: "instant",
-				block: "center"
+				block: "start"
 			})
 			: globalThis.scrollTo({
-				top: document.body.scrollHeight,
+				top: document.documentElement.scrollHeight,
 				behavior: "instant"
 			});
+
 	}
 
 	// MARK: GET MENSAJES
