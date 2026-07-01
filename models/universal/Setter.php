@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/SQL.php';
+require_once __DIR__ . '/FileManager.php';
 
-abstract readonly class Setter extends SQL
+abstract readonly class Setter extends FileManager
 {
 	protected function __construct()
 	{
@@ -92,13 +92,13 @@ abstract readonly class Setter extends SQL
 		$file_type = exif_imagetype($imagen['tmp_name']);
 		$allowed_types = [IMAGETYPE_JPEG, IMAGETYPE_PNG];
 
-		if (!in_array($file_type, $allowed_types)) {
-			$this->errors->setValidationError("Solo se permiten imágenes JPEG y PNG.");
-		}
+		// if (!in_array($file_type, $allowed_types)) {
+		// 	$this->errors->setValidationError("Solo se permiten imágenes JPEG y PNG.");
+		// }
 
-		if ($imagen['size'] > 1048576) {
-			$this->errors->setValidationError('La imagen no puede superar 1MB.');
-		}
+		// if ($imagen['size'] > 1048576) {
+		// 	$this->errors->setValidationError('La imagen no puede superar 1MB.');
+		// }
 
 		$this->$name = $imagen;
 	}

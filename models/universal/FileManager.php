@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/SQL.php';
 
-readonly class FileManager extends Database
+readonly class FileManager extends SQL
 {
     private const string IMAGE_PATH = '/assets/img/';
     public const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
@@ -152,16 +152,14 @@ readonly class FileManager extends Database
             FROM $table
             WHERE $primaryKey = ?";
 
-        $mysqli_stmt = $this->connection->prepare($query);
-
-        $mysqli_stmt->bind_param(
+        $fileUrl = $this->executeQuery(
+            $query,
             "s",
-            $primaryKeyValue
+            [
+                $primaryKeyValue
+            ],
+            SqlReturn::BindResult
         );
-
-        $mysqli_stmt->execute();
-        $fileUrl = $mysqli_stmt->get_result()->fetch_column();
-        $mysqli_stmt->close();
 
         return $fileUrl;
     }
