@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/Database.php';
 
-final readonly class FileManager extends Database
+readonly class FileManager extends Database
 {
     private const string IMAGE_PATH = '/assets/img/';
     public const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
@@ -31,7 +31,7 @@ final readonly class FileManager extends Database
 
     // MARK: FILE OPERATIONS
 
-    static public function flattenFilesArray(string $inputFileName): array
+    protected function flattenFilesArray(string $inputFileName): array
     {
         if (!isset($_FILES[$inputFileName])) {
             return [];
@@ -62,7 +62,7 @@ final readonly class FileManager extends Database
         return $newArray;
     }
 
-    public function uploadFileName(): ?string
+    protected function uploadFileName(): ?string
     {
         if ($this->file === null) {
             return null;
@@ -73,7 +73,7 @@ final readonly class FileManager extends Database
         return self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
     }
 
-    public function uploadFile(): void
+    protected function uploadFile(): void
     {
         if ($this->file === null) {
             return;
@@ -90,7 +90,7 @@ final readonly class FileManager extends Database
         move_uploaded_file($this->file['tmp_name'], $finalDestination);
     }
 
-    public function updateFileName(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
+    protected function updateFileName(string $column, string $table, string $primaryKey, int $primaryKeyValue): ?string
     {
         if ($this->file === null) {
             if ($this->deleteCheckbox === true) {
@@ -107,7 +107,7 @@ final readonly class FileManager extends Database
         return $imagePath;
     }
 
-    public function updateFile(?string $filePath): void
+    protected function updateFile(?string $filePath): void
     {
         if ($this->file === null) {
             if ($this->deleteCheckbox === true) {
@@ -121,14 +121,14 @@ final readonly class FileManager extends Database
         $this->uploadFile();
     }
 
-    public function deleteFile(?string $filePath): void
+    protected function deleteFile(?string $filePath): void
     {
         if ($filePath !== null) {
             unlink($_SERVER['DOCUMENT_ROOT'] . $filePath);
         }
     }
 
-    public function deleteAllFiles(): void
+    protected function deleteAllFiles(): void
     {
         $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories;
 
@@ -145,7 +145,7 @@ final readonly class FileManager extends Database
         }
     }
 
-    public function getFileUrl(string $column, string $table, string $primaryKey, int $primaryKeyValue): string|null|false
+    protected function getFileUrl(string $column, string $table, string $primaryKey, int $primaryKeyValue): string|null|false
     {
         $query =
             "SELECT $column

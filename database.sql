@@ -98,8 +98,9 @@ CREATE TABLE contactos_grupales (
 
 CREATE TABLE mensajes (
     ulid_mensaje CHAR(26) PRIMARY KEY,
-    contenido TEXT NOT NULL,
+    contenido TEXT NULL,
     fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    portada VARCHAR(255) NULL,
     ulid_emisor CHAR(26) NULL,
     ulid_contacto CHAR(26) NULL,
     ulid_grupo CHAR(26) NULL,

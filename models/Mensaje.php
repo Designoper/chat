@@ -8,6 +8,13 @@ readonly class Mensaje extends Contacto
 {
 	protected string $ulid_mensaje;
 	protected string $contenido;
+	protected array $imagen;
+
+	private const string FOLDER = 'mensajes/';
+
+	private const string SQL_COLUMN = 'portada';
+	private const string SQL_TABLE = 'libros';
+	private const string SQL_PRIMARY_KEY = 'id_libro';
 
 	public function __construct()
 	{
@@ -277,6 +284,42 @@ readonly class Mensaje extends Contacto
 			]
 		);
 
+		$this->status = 201;
+		$this->sendResponse();
+	}
+
+	// MARK: CREATE MENSAJE DIRECTO IMAGEN
+
+	public function createMensajeDirectoImagen(): void
+	{
+		$this->setUlid('ulid_contacto');
+		$this->setImagen('imagen');
+		$this->checkValidationErrors();
+
+		$this->isContacto();
+
+		$ulid = $this->generateUlid();
+
+		$this->file = $this->imagen;
+		$this->extraDirectories = self::FOLDER;
+		$imagenName = $this->uploadFileName();
+
+		$query =
+			"INSERT INTO mensajes (ulid_mensaje, portada, ulid_emisor, ulid_contacto)
+			VALUES (?, ?, ?, ?)";
+
+		$this->executeQuery(
+			$query,
+			'ssss',
+			[
+				$ulid,
+				$imagenName,
+				$this->session_user,
+				$this->ulid_contacto
+			]
+		);
+
+		$this->uploadFile();
 		$this->status = 201;
 		$this->sendResponse();
 	}

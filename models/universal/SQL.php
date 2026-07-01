@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/FileManager.php';
 
 enum SqlReturn
 {
@@ -11,7 +11,7 @@ enum SqlReturn
 	case BindResult;
 }
 
-abstract readonly class SQL extends Database
+abstract readonly class SQL extends FileManager
 {
 	protected const string ISO8601_SQL_FORMAT = "'%Y-%m-%dT%H:%i:%sZ'";
 	private const string BASE32_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUV';

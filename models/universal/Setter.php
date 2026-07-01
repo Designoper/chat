@@ -75,7 +75,7 @@ abstract readonly class Setter extends SQL
 
 	protected function setImagen(string $name): void
 	{
-		$filesUploaded = FileManager::flattenFilesArray($name);
+		$filesUploaded = $this->flattenFilesArray($name);
 
 		if (count($filesUploaded) === 0) {
 			$this->$name = null;
