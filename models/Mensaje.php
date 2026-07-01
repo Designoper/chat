@@ -224,8 +224,8 @@ readonly class Mensaje extends Contacto
 
 	public function readImagenMensajeDirecto(): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->checkValidationErrors();
+		// $this->setUlid('ulid_contacto');
+		// $this->checkValidationErrors();
 
 		// $this->isContacto();
 

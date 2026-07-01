@@ -182,17 +182,25 @@ abstract readonly class File extends SQL
 
     public function showFile(): void
     {
-        // $base = __DIR__ . "/private/mensajes/";
-        // $archivo = $base . basename($_GET['f']);
-        $archivo = $_SERVER['DOCUMENT_ROOT'] . $_GET['f'];
+        // Ruta base absoluta de la carpeta private
+        $base = realpath($_SERVER['DOCUMENT_ROOT'] . '/private');
 
-        if (!file_exists($archivo)) {
+        // Normalizar la ruta solicitada
+        $rutaSolicitada = realpath($_SERVER['DOCUMENT_ROOT'] . $_GET['f']);
+
+        // Validación: el archivo debe estar dentro de /private
+        if (!$rutaSolicitada || !str_starts_with($rutaSolicitada, $base)) {
+            http_response_code(403);
+            exit("Acceso no permitido");
+        }
+
+        if (!file_exists($rutaSolicitada)) {
             http_response_code(404);
             exit("Archivo no encontrado");
         }
 
-        $mime = mime_content_type($archivo);
+        $mime = mime_content_type($rutaSolicitada);
         header("Content-Type: $mime");
-        readfile($archivo);
+        readfile($rutaSolicitada);
     }
 }
