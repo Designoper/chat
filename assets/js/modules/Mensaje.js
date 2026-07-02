@@ -154,6 +154,20 @@ export default class Mensaje extends Contacto {
 		const mensajes = fetchedMensajes.map(mensaje => {
 
 			let marcador = "";
+			let fileHref;
+
+			switch (mensaje.tipo_mensaje) {
+				case 'imagen':
+					fileHref = `<img src="${this.endpointImagen}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">`;
+					break;
+				case 'audio':
+					fileHref = `<audio controls><source src="${this.endpointAudio}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" type="audio/mpeg"></audio>`;
+					break;
+				case 'texto':
+					fileHref = `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
+					break;
+
+			}
 
 			if (!this.mostrado && mensaje.ulid_mensaje > this.ultimoIdLeido) {
 				marcador = "<p id='marcador'>Nuevos mensajes</p>";
@@ -178,10 +192,6 @@ export default class Mensaje extends Contacto {
 				? 'class="mensaje-propio"'
 				: '';
 
-			const tipoMensaje = mensaje.imagen !== null
-				? `<img src="${this.endpointImagen}?f=${mensaje.imagen}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">`
-				: `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
-
 			const formDelete = isAutor
 				? `<form method="POST" name="deleteMensaje">
 						<input type="hidden" name="ulid_mensaje" value="${mensaje.ulid_mensaje}">
@@ -200,7 +210,7 @@ export default class Mensaje extends Contacto {
 					<article ${classArticle}>
 						${nombreAutor}
 						<div>
-							${tipoMensaje}
+							${fileHref}
 							<date>${fechaEnvio}</date>
 						</div>
 						${formDelete}
@@ -230,6 +240,16 @@ export default class Mensaje extends Contacto {
 
 	async createMensajeDirectoImagen(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_IMAGEN_DIRECTO);
+		if (response.status === 201) {
+			globalThis.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "instant"
+			});
+		}
+	}
+
+	async createMensajeDirectoAudio(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_AUDIO_DIRECTO);
 		if (response.status === 201) {
 			globalThis.scrollTo({
 				top: document.body.scrollHeight,
@@ -297,6 +317,7 @@ export default class Mensaje extends Contacto {
 				this.dom.form[0].name = 'createMensajeGrupal';
 				this.dom.form[1].name = 'createMensajeGrupalImagen';
 				this.dom.form[2].name = 'createMensajeGrupalImagen';
+				this.dom.form[3].name = 'createMensajeGrupalAudio';
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
@@ -307,6 +328,7 @@ export default class Mensaje extends Contacto {
 				this.dom.form[0].name = 'createMensajeDirecto';
 				this.dom.form[1].name = 'createMensajeDirectoImagen';
 				this.dom.form[2].name = 'createMensajeDirectoImagen';
+				this.dom.form[3].name = 'createMensajeDirectoAudio';
 			}
 		}
 	}

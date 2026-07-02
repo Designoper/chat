@@ -8,11 +8,11 @@ readonly class Mensaje extends Contacto
 {
 	protected string $ulid_mensaje;
 	protected string $contenido;
-	protected array $imagen;
+	protected array $archivo;
 
 	private const string FOLDER = '/mensajes/';
 
-	private const string SQL_COLUMN = 'imagen';
+	private const string SQL_COLUMN = 'ruta_archivo';
 	private const string SQL_TABLE = 'mensajes';
 	private const string SQL_PRIMARY_KEY = 'ulid_mensaje';
 
@@ -251,8 +251,9 @@ readonly class Mensaje extends Contacto
 		$query =
 			"SELECT
 				mensajes.ulid_mensaje,
+				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				mensajes.imagen,
+				mensajes.ruta_archivo,
 				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
@@ -309,8 +310,9 @@ readonly class Mensaje extends Contacto
 		$query =
 			"SELECT
 				mensajes.ulid_mensaje,
+				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				mensajes.imagen,
+				mensajes.ruta_archivo,
 				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
@@ -385,26 +387,64 @@ readonly class Mensaje extends Contacto
 	public function createMensajeDirectoImagen(): void
 	{
 		$this->setUlid('ulid_contacto');
-		$this->setImagen('imagen');
+		$this->setArchivo('archivo');
 		$this->checkValidationErrors();
 
 		$this->isContacto();
 
 		$ulid_mensaje = $this->generateUlid();
 
-		$this->file = $this->imagen;
+		$this->file = $this->archivo;
 		$this->extraDirectories = self::FOLDER;
 		$file_name = $this->uploadFileName();
 
 		$query =
-			"INSERT INTO mensajes (ulid_mensaje, imagen, ulid_emisor, ulid_contacto)
-			VALUES (?, ?, ?, ?)";
+			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_contacto)
+			VALUES (?, ?, ?, ?, ?)";
 
 		$this->executeQuery(
 			$query,
-			'ssss',
+			'sssss',
 			[
 				$ulid_mensaje,
+				'imagen',
+				$file_name,
+				$this->session_ulid,
+				$this->ulid_contacto
+			]
+		);
+
+		$this->uploadFile();
+		$this->status = 201;
+		$this->sendResponse();
+	}
+
+	// MARK: CREATE MENSAJE DIRECTO AUDIO
+
+	public function createMensajeDirectoAudio(): void
+	{
+		$this->setUlid('ulid_contacto');
+		$this->setArchivo('archivo');
+		$this->checkValidationErrors();
+
+		$this->isContacto();
+
+		$ulid_mensaje = $this->generateUlid();
+
+		$this->file = $this->archivo;
+		$this->extraDirectories = self::FOLDER;
+		$file_name = $this->uploadFileName();
+
+		$query =
+			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_contacto)
+			VALUES (?, ?, ?, ?, ?)";
+
+		$this->executeQuery(
+			$query,
+			'sssss',
+			[
+				$ulid_mensaje,
+				'audio',
 				$file_name,
 				$this->session_ulid,
 				$this->ulid_contacto
@@ -452,26 +492,27 @@ readonly class Mensaje extends Contacto
 	public function createMensajeGrupalImagen(): void
 	{
 		$this->setUlid('ulid_grupo');
-		$this->setImagen('imagen');
+		$this->setArchivo('archivo');
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
 
 		$ulid_mensaje = $this->generateUlid();
 
-		$this->file = $this->imagen;
+		$this->file = $this->archivo;
 		$this->extraDirectories = self::FOLDER;
 		$file_name = $this->uploadFileName();
 
 		$query =
-			"INSERT INTO mensajes (ulid_mensaje, imagen, ulid_emisor, ulid_grupo)
-			VALUES (?, ?, ?, ?)";
+			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_grupo)
+			VALUES (?, ?, ?, ?, ?)";
 
 		$this->executeQuery(
 			$query,
-			'ssss',
+			'sssss',
 			[
 				$ulid_mensaje,
+				'imagen',
 				$file_name,
 				$this->session_ulid,
 				$this->ulid_grupo
@@ -546,8 +587,9 @@ readonly class Mensaje extends Contacto
 
 		$query =
 			"SELECT mensajes.ulid_mensaje,
+				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				mensajes.imagen,
+				mensajes.ruta_archivo,
 				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
@@ -590,8 +632,9 @@ readonly class Mensaje extends Contacto
 
 		$query =
 			"SELECT mensajes.ulid_mensaje,
+				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				mensajes.imagen,
+				mensajes.ruta_archivo,
 				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario

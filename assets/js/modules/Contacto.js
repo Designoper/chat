@@ -16,6 +16,19 @@ export default class Contacto extends Invitacion {
 			let ulid;
 			let imgSrc;
 			let autorMensaje;
+			let tipoMensaje;
+
+			switch (contacto.tipo_mensaje) {
+				case 'texto':
+					tipoMensaje = `${contacto.contenido}`;
+					break;
+				case 'imagen':
+					tipoMensaje = `Imagen`;
+					break;
+				case 'audio':
+					tipoMensaje = `Audio`;
+					break;
+			}
 
 			autorMensaje = contacto.nombre_emisor === this.usuario.nombre_usuario
 				? 'Tú: '
@@ -30,6 +43,7 @@ export default class Contacto extends Invitacion {
 							<path d="M.001 823.889c0-220.889 179.111-400 400-400s400 179.111 400 400-179.111 400-400 400-400-179.111-400-400zm212.11-636C212.111 84.132 296.244 0 400 0s187.889 84.132 187.889 187.889S503.756 375.777 400 375.777s-187.888-84.132-187.888-187.889z"/>
 						</svg>
 					`;
+
 					// autorMensaje = '';
 
 					break;
@@ -47,14 +61,14 @@ export default class Contacto extends Invitacion {
 				? `<data>${contacto.num_mensajes}</data>`
 				: '';
 
-			const tipoMensaje = contacto.imagen === null
-				? `${contacto.contenido}`
-				: `Imagen`;
+			// const tipoMensaje = contacto.imagen === null
+			// 	? `${contacto.contenido}`
+			// 	: `Imagen`;
 
-			const lastMessage = contacto.contenido !== null || contacto.imagen !== null
-				? `<date>${this.compareTime(contacto.fecha_creacion, false)}</date>
-					<p>${autorMensaje}${tipoMensaje}</p>`
-				: '';
+			const lastMessage = contacto.tipo_mensaje === null
+				? ''
+				: `<date>${this.compareTime(contacto.fecha_creacion, false)}</date>
+					<p>${autorMensaje}${tipoMensaje}</p>`;
 
 			const template =
 				`<li>

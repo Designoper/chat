@@ -205,7 +205,7 @@ abstract readonly class File extends SQL
 
         // Opcional: limitar extensiones
         $ext = strtolower(pathinfo($rutaSolicitada, PATHINFO_EXTENSION));
-        $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
+        $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'mp3', 'wav', 'ogg', 'mp4', 'webm'];
 
         if (!in_array($ext, $permitidas)) {
             http_response_code(403);

@@ -77,7 +77,7 @@ abstract readonly class Setter extends File
 
 	// MARK: SET IMAGEN
 
-	protected function setImagen(string $name): void
+	protected function setArchivo(string $name): void
 	{
 		$filesUploaded = $this->flattenFilesArray($name);
 
@@ -87,13 +87,13 @@ abstract readonly class Setter extends File
 		}
 
 		if (count($filesUploaded) > 1) {
-			$this->errors->setValidationError('Solo se puede subir una imagen.');
+			$this->errors->setValidationError('Solo se puede subir un archivo.');
 			return;
 		}
 
-		$imagen = $filesUploaded[0];
+		$archivo = $filesUploaded[0];
 
-		$file_type = exif_imagetype($imagen['tmp_name']);
+		$file_type = exif_imagetype($archivo['tmp_name']);
 		$allowed_types = [IMAGETYPE_JPEG, IMAGETYPE_PNG];
 
 		// if (!in_array($file_type, $allowed_types)) {
@@ -104,6 +104,6 @@ abstract readonly class Setter extends File
 		// 	$this->errors->setValidationError('La imagen no puede superar 1MB.');
 		// }
 
-		$this->$name = $imagen;
+		$this->$name = $archivo;
 	}
 }

@@ -26,6 +26,10 @@ export default class Endpoint extends Fetch {
 				IMAGENES: {
 					DIRECTO: `${this.ROOT}mensajes/imagenes/directo`,
 					GRUPAL: `${this.ROOT}mensajes/imagenes/grupal`,
+				},
+				AUDIOS: {
+					DIRECTO: `${this.ROOT}mensajes/audios/directo`,
+					GRUPAL: `${this.ROOT}mensajes/audios/grupal`,
 				}
 			},
 			CONEXION: {
@@ -57,8 +61,10 @@ export default class Endpoint extends Fetch {
 			MENSAJES: {
 				CREAR_DIRECTO: `${this.ROOT}mensajes/crear/directo`,
 				CREAR_IMAGEN_DIRECTO: `${this.ROOT}mensajes/crear/imagen-directo`,
-				CREAR_IMAGEN_GRUPAL: `${this.ROOT}mensajes/crear/imagen-grupal`,
+				CREAR_AUDIO_DIRECTO: `${this.ROOT}mensajes/crear/audio-directo`,
 				CREAR_GRUPAL: `${this.ROOT}mensajes/crear/grupal`,
+				CREAR_IMAGEN_GRUPAL: `${this.ROOT}mensajes/crear/imagen-grupal`,
+				CREAR_AUDIO_GRUPAL: `${this.ROOT}mensajes/crear/audio-grupal`,
 				ELIMINAR: `${this.ROOT}mensajes/delete`,
 				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`
 			},
