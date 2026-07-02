@@ -163,10 +163,11 @@ export default class Mensaje extends Contacto {
 				case 'audio':
 					fileHref = `<audio controls><source src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy"></audio>`;
 					break;
+				case 'video':
+					fileHref = `<video controls><source src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy"></video>`;
+					break;
 				case 'texto':
 					fileHref = `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
-					break;
-
 			}
 
 			if (!this.mostrado && mensaje.ulid_mensaje > this.ultimoIdLeido) {
@@ -258,6 +259,16 @@ export default class Mensaje extends Contacto {
 		}
 	}
 
+	async createMensajeDirectoVideo(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_VIDEO_DIRECTO);
+		if (response.status === 201) {
+			globalThis.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "instant"
+			});
+		}
+	}
+
 	async createMensajeGrupal(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_GRUPAL);
 		if (response.status === 201) {
@@ -280,6 +291,16 @@ export default class Mensaje extends Contacto {
 
 	async createMensajeGrupalAudio(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_AUDIO_GRUPAL);
+		if (response.status === 201) {
+			globalThis.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "instant"
+			});
+		}
+	}
+
+	async createMensajeGrupalVideo(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_VIDEO_GRUPAL);
 		if (response.status === 201) {
 			globalThis.scrollTo({
 				top: document.body.scrollHeight,
@@ -328,6 +349,8 @@ export default class Mensaje extends Contacto {
 				this.dom.form[1].name = 'createMensajeGrupalImagen';
 				this.dom.form[2].name = 'createMensajeGrupalImagen';
 				this.dom.form[3].name = 'createMensajeGrupalAudio';
+				this.dom.form[4].name = 'createMensajeGrupalVideo';
+				this.dom.form[5].name = 'createMensajeGrupalVideo';
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
@@ -339,6 +362,8 @@ export default class Mensaje extends Contacto {
 				this.dom.form[1].name = 'createMensajeDirectoImagen';
 				this.dom.form[2].name = 'createMensajeDirectoImagen';
 				this.dom.form[3].name = 'createMensajeDirectoAudio';
+				this.dom.form[4].name = 'createMensajeDirectoVideo';
+				this.dom.form[5].name = 'createMensajeDirectoVideo';
 			}
 		}
 	}

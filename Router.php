@@ -54,9 +54,11 @@ final readonly class Router
             $this->setRoute('POST', 'mensajes/crear/directo', [Mensaje::class, 'createMensajeDirecto']),
             $this->setRoute('POST', 'mensajes/crear/imagen-directo', [Mensaje::class, 'createMensajeDirectoImagen']),
             $this->setRoute('POST', 'mensajes/crear/audio-directo', [Mensaje::class, 'createMensajeDirectoAudio']),
+            $this->setRoute('POST', 'mensajes/crear/video-directo', [Mensaje::class, 'createMensajeDirectoVideo']),
             $this->setRoute('POST', 'mensajes/crear/grupal', [Mensaje::class, 'createMensajeGrupal']),
             $this->setRoute('POST', 'mensajes/crear/imagen-grupal', [Mensaje::class, 'createMensajeGrupalImagen']),
             $this->setRoute('POST', 'mensajes/crear/audio-grupal', [Mensaje::class, 'createMensajeGrupalAudio']),
+            $this->setRoute('POST', 'mensajes/crear/video-grupal', [Mensaje::class, 'createMensajeGrupalVideo']),
             $this->setRoute('POST', 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),
             $this->setRoute('POST', 'mensajes/ultimo-id', [Mensaje::class, 'setUltimoIdLeido']),
 

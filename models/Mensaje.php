@@ -456,6 +456,43 @@ readonly class Mensaje extends Contacto
 		$this->sendResponse();
 	}
 
+	// MARK: CREATE MENSAJE DIRECTO VIDEO
+
+	public function createMensajeDirectoVideo(): void
+	{
+		$this->setUlid('ulid_contacto');
+		$this->setArchivo('archivo', FileTypes::Video);
+		$this->checkValidationErrors();
+
+		$this->isContacto();
+
+		$ulid_mensaje = $this->generateUlid();
+
+		$this->file = $this->archivo;
+		$this->extraDirectories = self::FOLDER;
+		$file_name = $this->uploadFileName();
+
+		$query =
+			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_contacto)
+			VALUES (?, ?, ?, ?, ?)";
+
+		$this->executeQuery(
+			$query,
+			'sssss',
+			[
+				$ulid_mensaje,
+				'video',
+				$file_name,
+				$this->session_ulid,
+				$this->ulid_contacto
+			]
+		);
+
+		$this->uploadFile();
+		$this->status = 201;
+		$this->sendResponse();
+	}
+
 	// MARK: CREATE MENSAJE GRUPAL
 
 	public function createMensajeGrupal(): void
@@ -550,6 +587,43 @@ readonly class Mensaje extends Contacto
 			[
 				$ulid_mensaje,
 				'audio',
+				$file_name,
+				$this->session_ulid,
+				$this->ulid_grupo
+			]
+		);
+
+		$this->uploadFile();
+		$this->status = 201;
+		$this->sendResponse();
+	}
+
+	// MARK: CREATE MENSAJE GRUPAL VIDEO
+
+	public function createMensajeGrupalVideo(): void
+	{
+		$this->setUlid('ulid_grupo');
+		$this->setArchivo('archivo', FileTypes::Video);
+		$this->checkValidationErrors();
+
+		$this->isMiembroGrupo();
+
+		$ulid_mensaje = $this->generateUlid();
+
+		$this->file = $this->archivo;
+		$this->extraDirectories = self::FOLDER;
+		$file_name = $this->uploadFileName();
+
+		$query =
+			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_grupo)
+			VALUES (?, ?, ?, ?, ?)";
+
+		$this->executeQuery(
+			$query,
+			'sssss',
+			[
+				$ulid_mensaje,
+				'video',
 				$file_name,
 				$this->session_ulid,
 				$this->ulid_grupo
