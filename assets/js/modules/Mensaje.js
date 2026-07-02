@@ -8,6 +8,10 @@ export default class Mensaje extends Contacto {
 	urlSearchParams = new URLSearchParams(location.search);
 	ringtone = new Audio("../../../assets/audio/ringtone.mp3");
 
+	endpointImagen;
+	ulid_type;
+	ulid_value;
+
 	mostrado = false;
 
 	dom = {
@@ -175,7 +179,7 @@ export default class Mensaje extends Contacto {
 				: '';
 
 			const tipoMensaje = mensaje.imagen !== null
-				? `<img src="${this.ENDPOINTS.GET.MENSAJES.IMAGENES.DIRECTO}?f=${mensaje.imagen}&ulid_mensaje=${mensaje.ulid_mensaje}&ulid_contacto=${this.urlSearchParams.get('ulid_contacto')}" loading="lazy">`
+				? `<img src="${this.endpointImagen}?f=${mensaje.imagen}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">`
 				: `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
 
 			const formDelete = isAutor
@@ -271,6 +275,10 @@ export default class Mensaje extends Contacto {
 			this.dom.h1.textContent = this.urlSearchParams.get('nombre');
 
 			if (this.urlSearchParams.has('ulid_grupo')) {
+				this.endpointImagen = this.ENDPOINTS.GET.MENSAJES.IMAGENES.GRUPAL;
+				this.ulid_type = 'ulid_grupo';
+				this.ulid_value = this.urlSearchParams.get('ulid_grupo');
+
 				const formInvitar =
 					`
 						<form method="POST" name="invitarGrupo">
@@ -292,6 +300,10 @@ export default class Mensaje extends Contacto {
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
+				this.endpointImagen = this.ENDPOINTS.GET.MENSAJES.IMAGENES.DIRECTO;
+				this.ulid_type = 'ulid_contacto';
+				this.ulid_value = this.urlSearchParams.get('ulid_contacto');
+
 				this.dom.form[0].name = 'createMensajeDirecto';
 				this.dom.form[1].name = 'createMensajeDirectoImagen';
 				this.dom.form[2].name = 'createMensajeDirectoImagen';
