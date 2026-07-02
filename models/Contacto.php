@@ -166,29 +166,89 @@ readonly class Contacto extends Invitacion
 		$this->setSSE([$this, 'streamContactosLogic']);
 	}
 
-	// MARK: IS CONTACTO FIX
+	// MARK: IS CONTACTO
 
 	protected function isContacto(): void
 	{
+		// Ordenar los ULIDs según la normalización de la tabla
+		$a = min($this->session_user, $this->ulid_contacto);
+		$b = max($this->session_user, $this->ulid_contacto);
+
 		$query =
 			"SELECT 1
 			FROM contactos_directos
-			WHERE ulid_usuario = ?
-			AND ulid_contacto = ?";
+			WHERE ulid_a = ?
+			AND ulid_b = ?";
 
 		$rol = $this->executeQuery(
 			$query,
 			'ss',
-			[
-				$this->session_user,
-				$this->ulid_contacto
-			],
+			[$a, $b],
 			SqlReturn::FetchColumn
 		);
 
 		if (!$rol) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres contacto de este usuario');
+			$this->checkIntegrityErrors();
+		}
+	}
+
+	protected function canViewMensaje(string $ulid_mensaje): void
+	{
+		// Normalizar ULIDs
+		$a = min($this->session_user, $this->ulid_contacto);
+		$b = max($this->session_user, $this->ulid_contacto);
+
+		// 1. Comprobar que son contactos
+		$queryContacto = "
+        SELECT 1
+        FROM contactos_directos
+        WHERE ulid_a = ?
+        AND ulid_b = ?
+    ";
+
+		$esContacto = $this->executeQuery(
+			$queryContacto,
+			'ss',
+			[$a, $b],
+			SqlReturn::FetchColumn
+		);
+
+		if (!$esContacto) {
+			$this->status = 403;
+			$this->errors->setIntegrityError('No eres contacto de este usuario');
+			$this->checkIntegrityErrors();
+		}
+
+		// 2. Comprobar que el mensaje pertenece a esta conversación
+		$queryMensaje = "
+        SELECT 1
+        FROM mensajes
+        WHERE ulid_mensaje = ?
+        AND (
+            (ulid_emisor = ? AND ulid_contacto = ?)
+            OR
+            (ulid_emisor = ? AND ulid_contacto = ?)
+        )
+    ";
+
+		$esDeLaConversacion = $this->executeQuery(
+			$queryMensaje,
+			'sssss',
+			[
+				$ulid_mensaje,
+				$this->session_user,
+				$this->ulid_contacto,
+				$this->ulid_contacto,
+				$this->session_user
+			],
+			SqlReturn::FetchColumn
+		);
+
+		if (!$esDeLaConversacion) {
+			$this->status = 403;
+			$this->errors->setIntegrityError('Este mensaje no pertenece a esta conversación');
 			$this->checkIntegrityErrors();
 		}
 	}

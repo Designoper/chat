@@ -114,6 +114,10 @@ new Usuario()->authBrowser();
 				<!-- <label for="imagefile">Image</label> -->
 				<input type="file" id="imagefile" name="imagen" capture="user" accept="image/png, image/jpeg" required>
 
+				<!-- <input type="file" accept="video/*;capture=camcorder">
+				<input type="file" accept="audio/*;capture=microphone"> -->
+
+
 				<!-- <input type="file" id="archivo" />
 				<label for="archivo" class="btn-upload">Seleccionar archivo</label>
 				<span id="nombre"></span>

@@ -72,7 +72,7 @@ abstract readonly class File extends SQL
 
         $this->setUniqueFilename($this->file['name']);
 
-        return self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
+        return $this->extraDirectories . $this->uniqueFilename;
     }
 
     protected function uploadFile(): void
@@ -180,13 +180,15 @@ abstract readonly class File extends SQL
 
 
 
-    public function showFile(): void
+    protected function showFile(): void
     {
         // Ruta base absoluta de la carpeta private
         $base = realpath($_SERVER['DOCUMENT_ROOT'] . '/private');
 
         // Normalizar la ruta solicitada
-        $rutaSolicitada = realpath($_SERVER['DOCUMENT_ROOT'] . $_GET['f']);
+        $rutaSolicitada = realpath($_SERVER['DOCUMENT_ROOT'] . '/private' . $_GET['f']);
+
+        // $rutaSolicitada = realpath($base . '/' . basename($_GET['f']));
 
         // Validación: el archivo debe estar dentro de /private
         if (!$rutaSolicitada || !str_starts_with($rutaSolicitada, $base)) {
@@ -194,9 +196,18 @@ abstract readonly class File extends SQL
             exit("Acceso no permitido");
         }
 
-        if (!file_exists($rutaSolicitada)) {
+        if (!is_file($rutaSolicitada)) {
             http_response_code(404);
             exit("Archivo no encontrado");
+        }
+
+        // Opcional: limitar extensiones
+        $ext = strtolower(pathinfo($rutaSolicitada, PATHINFO_EXTENSION));
+        $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        if (!in_array($ext, $permitidas)) {
+            http_response_code(403);
+            exit("Tipo de archivo no permitido");
         }
 
         $mime = mime_content_type($rutaSolicitada);
