@@ -83,15 +83,15 @@ abstract readonly class Setter extends File
 
 		if (count($filesUploaded) === 0) {
 			$this->errors->setValidationError('No has subido ningún archivo.');
+			$this->checkValidationErrors();
 		}
 
 		if (count($filesUploaded) > 1) {
 			$this->errors->setValidationError('Solo se puede subir un archivo.');
+			$this->checkValidationErrors();
 		}
 
 		$archivo = $filesUploaded[0];
-
-		$this->checkValidationErrors();
 
 		$this->validarArchivoSeguro($archivo['tmp_name'], $tipoEsperado);
 
