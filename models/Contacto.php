@@ -170,7 +170,6 @@ readonly class Contacto extends Invitacion
 
 	protected function isContacto(): void
 	{
-		// Ordenar los ULIDs según la normalización de la tabla
 		$a = min($this->session_ulid, $this->ulid_contacto);
 		$b = max($this->session_ulid, $this->ulid_contacto);
 
@@ -180,14 +179,14 @@ readonly class Contacto extends Invitacion
 			WHERE ulid_a = ?
 			AND ulid_b = ?";
 
-		$rol = $this->executeQuery(
+		$contacto = $this->executeQuery(
 			$query,
 			'ss',
 			[$a, $b],
 			SqlReturn::FetchColumn
 		);
 
-		if (!$rol) {
+		if (!$contacto) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres contacto de este usuario');
 			$this->checkIntegrityErrors();
@@ -196,20 +195,18 @@ readonly class Contacto extends Invitacion
 
 	protected function canViewMensaje(string $ulid_mensaje): void
 	{
-		// Normalizar ULIDs
 		$a = min($this->session_ulid, $this->ulid_contacto);
 		$b = max($this->session_ulid, $this->ulid_contacto);
 
 		// 1. Comprobar que son contactos
-		$queryContacto = "
-        SELECT 1
-        FROM contactos_directos
-        WHERE ulid_a = ?
-        AND ulid_b = ?
-    ";
+		$query =
+			"SELECT 1
+			FROM contactos_directos
+			WHERE ulid_a = ?
+			AND ulid_b = ?";
 
 		$esContacto = $this->executeQuery(
-			$queryContacto,
+			$query,
 			'ss',
 			[$a, $b],
 			SqlReturn::FetchColumn
@@ -222,19 +219,18 @@ readonly class Contacto extends Invitacion
 		}
 
 		// 2. Comprobar que el mensaje pertenece a esta conversación
-		$queryMensaje = "
-        SELECT 1
-        FROM mensajes
-        WHERE ulid_mensaje = ?
-        AND (
-            (ulid_emisor = ? AND ulid_contacto = ?)
-            OR
-            (ulid_emisor = ? AND ulid_contacto = ?)
-        )
-    ";
+		$query =
+			"SELECT 1
+			FROM mensajes
+			WHERE ulid_mensaje = ?
+			AND (
+				(ulid_emisor = ? AND ulid_contacto = ?)
+				OR
+				(ulid_emisor = ? AND ulid_contacto = ?)
+			)";
 
 		$esDeLaConversacion = $this->executeQuery(
-			$queryMensaje,
+			$query,
 			'sssss',
 			[
 				$ulid_mensaje,

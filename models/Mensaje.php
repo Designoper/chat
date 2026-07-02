@@ -312,11 +312,11 @@ readonly class Mensaje extends Contacto
 
 		// $this->isContacto();
 
-		$ulid = $this->generateUlid();
+		$ulid_mensaje = $this->generateUlid();
 
 		$this->file = $this->imagen;
 		$this->extraDirectories = self::FOLDER;
-		$imagenName = $this->uploadFileName();
+		$file_name = $this->uploadFileName();
 
 		$query =
 			"INSERT INTO mensajes (ulid_mensaje, imagen, ulid_emisor, ulid_contacto)
@@ -326,8 +326,8 @@ readonly class Mensaje extends Contacto
 			$query,
 			'ssss',
 			[
-				$ulid,
-				$imagenName,
+				$ulid_mensaje,
+				$file_name,
 				$this->session_ulid,
 				$this->ulid_contacto
 			]
@@ -379,11 +379,11 @@ readonly class Mensaje extends Contacto
 
 		// $this->isContacto();
 
-		$ulid = $this->generateUlid();
+		$ulid_mensaje = $this->generateUlid();
 
 		$this->file = $this->imagen;
 		$this->extraDirectories = self::FOLDER;
-		$imagenName = $this->uploadFileName();
+		$file_name = $this->uploadFileName();
 
 		$query =
 			"INSERT INTO mensajes (ulid_mensaje, imagen, ulid_emisor, ulid_grupo)
@@ -393,8 +393,8 @@ readonly class Mensaje extends Contacto
 			$query,
 			'ssss',
 			[
-				$ulid,
-				$imagenName,
+				$ulid_mensaje,
+				$file_name,
 				$this->session_ulid,
 				$this->ulid_grupo
 			]

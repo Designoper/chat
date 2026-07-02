@@ -180,18 +180,6 @@ abstract readonly class File extends SQL
         return $fileUrl;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     // MARK: SHOW FILE
 
     protected function showFile(): void
