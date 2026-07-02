@@ -119,12 +119,9 @@ abstract readonly class Setter extends File
 		// }
 
 		if ($tipoDetectado !== strtolower($tipoEsperado->name)) {
-			$this->errors->setValidationError(
-				"Se esperaba un archivo de tipo {$tipoEsperado->name}, pero se recibió {$tipoDetectado}."
-			);
+			$this->errors->setValidationError("Se esperaba un archivo de tipo {$tipoEsperado->name}, pero se recibió {$tipoDetectado}.");
 			$this->checkValidationErrors();
 		}
-
 
 		// Validación por categoría detectada
 		switch ($tipoDetectado) {
