@@ -93,56 +93,182 @@ abstract readonly class Setter extends File
 
 		$archivo = $filesUploaded[0];
 
-		$this->validarArchivoSeguro($archivo['tmp_name'], $tipoEsperado);
+		$tipoDetectado = $this->detectarTipoArchivo($archivo['tmp_name'], $archivo['name']);
+
+		$this->validarArchivoSeguro($archivo['tmp_name'], $tipoDetectado, $tipoEsperado);
 
 		$this->$name = $archivo;
 	}
 
 	// MARK: VALIDAR ARCHIVO SEGURO
 
-	private function validarArchivoSeguro(string $ruta, FileTypes $tipoEsperado)
+	private function validarArchivoSeguro(string $ruta, ?string $tipoDetectado, FileTypes $tipoEsperado)
 	{
+		if ($tipoDetectado === null) {
+			$this->errors->setValidationError('No se pudo determinar el tipo de archivo.');
+			$this->checkValidationErrors();
+		}
+
+		// Bloqueo de SVG por seguridad
+		// $finfo = new finfo(FILEINFO_MIME_TYPE);
+		// $mime = $finfo->file($ruta);
+
+		// if ($mime === 'image/svg+xml') {
+		// 	$this->errors->setValidationError('Los archivos SVG no están permitidos por razones de seguridad.');
+		// 	$this->checkValidationErrors();
+		// }
+
+		if ($tipoDetectado !== strtolower($tipoEsperado->name)) {
+			$this->errors->setValidationError(
+				"Se esperaba un archivo de tipo {$tipoEsperado->name}, pero se recibió {$tipoDetectado}."
+			);
+			$this->checkValidationErrors();
+		}
+
+
+		// Validación por categoría detectada
+		switch ($tipoDetectado) {
+
+			case 'image':
+				$info = @getimagesize($ruta);
+				if ($info === false) {
+					$this->errors->setValidationError('La imagen no es válida o está corrupta.');
+					$this->checkValidationErrors();
+				}
+				break;
+
+			case 'audio':
+			case 'video':
+				if (filesize($ruta) < 1024) {
+					$this->errors->setValidationError('El archivo multimedia es demasiado pequeño para ser válido.');
+					$this->checkValidationErrors();
+				}
+				break;
+
+			default:
+				$this->errors->setValidationError('Tipo de archivo no permitido.');
+				$this->checkValidationErrors();
+		}
+	}
+
+
+	// MARK: DETECTAR TIPO DE ARCHIVO
+
+	private function detectarTipoArchivo(string $ruta, ?string $nombreOriginal = null): ?string
+	{
+		// 1. MIME real detectado por finfo
 		$finfo = new finfo(FILEINFO_MIME_TYPE);
 		$mime = $finfo->file($ruta);
 
-		if ($mime === 'image/svg+xml') {
+		// 2. Extensión (si se proporciona el nombre original)
+		$extension = $nombreOriginal
+			? strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION))
+			: null;
+
+		// Corrección rápida para M4A
+		if ($extension === 'm4a') {
+			return 'audio';
+		}
+
+		// Correcciones basadas en extensión
+		$mapExt = [
+			'jpg' => 'image',
+			'jpeg' => 'image',
+			'png' => 'image',
+			'gif' => 'image',
+			'webp' => 'image',
+			'svg' => 'image',
+			'avif' => 'image',
+
+			'mp3' => 'audio',
+			'wav' => 'audio',
+			'ogg' => 'audio',
+			'm4a' => 'audio',
+
+			'mp4' => 'video',
+			'mov' => 'video',
+			'avi' => 'video',
+			'mkv' => 'video',
+			'webm' => 'video',
+		];
+
+		$tipoPorExtension = $extension && isset($mapExt[$extension])
+			? $mapExt[$extension]
+			: null;
+
+		// 3. Cabeceras mágicas (magic numbers)
+		$fh = fopen($ruta, 'rb');
+		$bytes = fread($fh, 32); // AVIF necesita más bytes
+		fclose($fh);
+
+		$magic = bin2hex($bytes);
+
+		// Detectar imágenes por cabecera
+		if (str_starts_with($magic, 'ffd8ff')) {
+			return 'image'; // JPEG
+		}
+		if (str_starts_with($magic, '89504e47')) {
+			return 'image'; // PNG
+		}
+		if (str_starts_with($magic, '47494638')) {
+			return 'image'; // GIF
+		}
+		if (str_starts_with($magic, '52494646') && strpos($magic, '57454250') !== false) {
+			return 'image'; // WebP
+		}
+
+		// Detectar SVG (texto XML)
+		if ($mime === 'image/svg+xml' || $extension === 'svg') {
 			$this->errors->setValidationError('Los archivos SVG no están permitidos por razones de seguridad.');
 			$this->checkValidationErrors();
+			// return 'image';
 		}
 
-		$categoria = null;
+		// Detectar AVIF (formato basado en ISOBMFF)
+		// Cabecera típica: ftypavif o ftypavis
+		if (
+			strpos($magic, '6674797061766966') !== false ||  // ftypavif
+			strpos($magic, '6674797061766973') !== false
+		) {  // ftypavis
+			return 'image';
+		}
 
+		// Detectar audio por cabecera
+		if (str_starts_with($magic, '494433')) {
+			return 'audio'; // MP3 con ID3
+		}
+		if (str_starts_with($magic, '4f676753')) {
+			return 'audio'; // OGG
+		}
+		if (str_starts_with($magic, '52494646') && strpos($magic, '57415645') !== false) {
+			return 'audio'; // WAV
+		}
+
+		// Detectar MP4/M4A/MOV (comparten cabecera)
+		if (strpos($magic, '667479706d7034') !== false) { // ftypmp4
+			if ($extension === 'm4a') {
+				return 'audio';
+			}
+			return 'video';
+		}
+
+		// Si MIME empieza por image/audio/video, usarlo
 		if (str_starts_with($mime, 'image/')) {
-			$categoria = FileTypes::Image;
-		} elseif (str_starts_with($mime, 'video/')) {
-			$categoria = FileTypes::Video;
-		} elseif (str_starts_with($mime, 'audio/')) {
-			$categoria = FileTypes::Audio;
-		} else {
-			$this->errors->setValidationError('Tipo de archivo no permitido.');
-			$this->checkValidationErrors();
+			return 'image';
+		}
+		if (str_starts_with($mime, 'audio/')) {
+			return 'audio';
+		}
+		if (str_starts_with($mime, 'video/')) {
+			return 'video';
 		}
 
-		if ($categoria !== $tipoEsperado) {
-			$this->errors->setValidationError("Se esperaba un archivo de tipo {$tipoEsperado->name}, pero se recibió {$categoria->name}.");
-			$this->checkValidationErrors();
+		// Si extensión conocida pero MIME no ayuda
+		if ($tipoPorExtension) {
+			return $tipoPorExtension;
 		}
 
-		switch ($categoria) {
-
-			case FileTypes::Image:
-				$info = @getimagesize($ruta);
-				if ($info === false) {
-					$this->errors->setValidationError('La imagen no es válida o está corrupta');
-					$this->checkValidationErrors();
-				}
-
-			case FileTypes::Audio:
-			case FileTypes::Video:
-				if (filesize($ruta) < 1024) {
-					$this->errors->setValidationError('El archivo multimedia es demasiado pequeño para ser válido');
-					$this->checkValidationErrors();
-				}
-		}
+		// No se pudo determinar
+		return null;
 	}
 }
