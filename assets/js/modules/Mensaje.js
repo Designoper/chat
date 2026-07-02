@@ -175,7 +175,7 @@ export default class Mensaje extends Contacto {
 				: '';
 
 			const tipoMensaje = mensaje.imagen !== null
-				? `<img src="${this.ENDPOINTS.GET.FILES.IMAGENES}?f=${mensaje.imagen}&ulid_contacto=${this.urlSearchParams.get('ulid_contacto')}" loading="lazy">`
+				? `<img src="${this.ENDPOINTS.GET.MENSAJES.IMAGENES.DIRECTO}?f=${mensaje.imagen}&ulid_mensaje=${mensaje.ulid_mensaje}&ulid_contacto=${this.urlSearchParams.get('ulid_contacto')}" loading="lazy">`
 				: `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
 
 			const formDelete = isAutor

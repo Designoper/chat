@@ -271,6 +271,18 @@ readonly class Mensaje extends Contacto
 		$this->sendResponse();
 	}
 
+	// MARK: READ IMAGEN MENSAJE GRUPAL
+
+	public function readImagenMensajeGrupal(): void
+	{
+		$this->setUlid('ulid_grupo');
+		$this->checkValidationErrors();
+
+		$this->isMiembroGrupo();
+
+		$this->showFile();
+	}
+
 	// MARK: CREATE MENSAJE DIRECTO
 
 	public function createMensajeDirecto(): void
