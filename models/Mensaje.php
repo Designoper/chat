@@ -524,6 +524,43 @@ readonly class Mensaje extends Contacto
 		$this->sendResponse();
 	}
 
+	// MARK: CREATE MENSAJE GRUPAL AUDIO
+
+	public function createMensajeGrupalAudio(): void
+	{
+		$this->setUlid('ulid_grupo');
+		$this->setArchivo('archivo');
+		$this->checkValidationErrors();
+
+		$this->isMiembroGrupo();
+
+		$ulid_mensaje = $this->generateUlid();
+
+		$this->file = $this->archivo;
+		$this->extraDirectories = self::FOLDER;
+		$file_name = $this->uploadFileName();
+
+		$query =
+			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_grupo)
+			VALUES (?, ?, ?, ?, ?)";
+
+		$this->executeQuery(
+			$query,
+			'sssss',
+			[
+				$ulid_mensaje,
+				'audio',
+				$file_name,
+				$this->session_ulid,
+				$this->ulid_grupo
+			]
+		);
+
+		$this->uploadFile();
+		$this->status = 201;
+		$this->sendResponse();
+	}
+
 	// MARK: IS AUTOR MENSAJE
 
 	private function isAutorMensaje(): void

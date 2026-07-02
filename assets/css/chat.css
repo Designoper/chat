@@ -126,6 +126,10 @@ main {
 			margin-bottom: 0;
 		}
 
+		> date {
+			text-align: center;
+		}
+
 		a {
 			color: revert;
 			text-decoration: underline;
@@ -138,8 +142,6 @@ main {
 				width: 1.5em;
 				fill: var(--quartery-bg);
 			}
-
-
 		}
 
 		article {
@@ -177,23 +179,28 @@ main {
 				max-width: 200px;
 				max-height: 200px;
 			}
-		}
 
-		#marcador {
-			text-align: center;
-			font-size: 0.8em;
-			margin: 1.5em 0;
-		}
-
-		.mensaje-propio {
-			justify-self: right;
-			background-color: var(--secondary-bg);
-		}
-
-		> date {
-			text-align: center;
-			font-size: 0.8em;
-			margin: 1.5em 0;
+			audio {
+				/* width: 250px; */
+			}
 		}
 	}
+
+	#marcador {
+		text-align: center;
+		font-size: 0.8em;
+		margin: 1.5em 0;
+	}
+
+	.mensaje-propio {
+		justify-self: right;
+		background-color: var(--secondary-bg);
+	}
+
+	> date {
+		text-align: center;
+		font-size: 0.8em;
+		margin: 1.5em 0;
+	}
+}
 }

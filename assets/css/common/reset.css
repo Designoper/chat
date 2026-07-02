@@ -49,6 +49,11 @@ li {
 	height: auto;
 }
 
+audio {
+	display: block;
+	max-width: 100%;
+}
+
 img {
 	object-fit: cover;
 }

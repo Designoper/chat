@@ -161,7 +161,7 @@ export default class Mensaje extends Contacto {
 					fileHref = `<img src="${this.endpointImagen}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">`;
 					break;
 				case 'audio':
-					fileHref = `<audio controls><source src="${this.endpointAudio}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" type="audio/mpeg"></audio>`;
+					fileHref = `<audio controls><source src="${this.endpointImagen}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy"></audio>`;
 					break;
 				case 'texto':
 					fileHref = `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
@@ -258,6 +258,16 @@ export default class Mensaje extends Contacto {
 		}
 	}
 
+	async createMensajeGrupal(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_GRUPAL);
+		if (response.status === 201) {
+			globalThis.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "instant"
+			});
+		}
+	}
+
 	async createMensajeGrupalImagen(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_IMAGEN_GRUPAL);
 		if (response.status === 201) {
@@ -268,8 +278,8 @@ export default class Mensaje extends Contacto {
 		}
 	}
 
-	async createMensajeGrupal(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_GRUPAL);
+	async createMensajeGrupalAudio(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_AUDIO_GRUPAL);
 		if (response.status === 201) {
 			globalThis.scrollTo({
 				top: document.body.scrollHeight,
