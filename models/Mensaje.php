@@ -102,7 +102,7 @@ readonly class Mensaje extends Contacto
 		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
-		// $this->isContacto();
+		$this->isContacto();
 
 		$query =
 			"SELECT COALESCE((
@@ -180,7 +180,7 @@ readonly class Mensaje extends Contacto
 		$this->setUlid('ulid_mensaje');
 		$this->checkValidationErrors();
 
-		// $this->isContacto();
+		$this->isContacto();
 
 		$query =
 			"INSERT INTO ultimos_mensajes_leidos_directos (ulid_usuario, ulid_contacto, ulid_mensaje)
@@ -241,7 +241,7 @@ readonly class Mensaje extends Contacto
 		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
-		// $this->isContacto();
+		$this->isContacto();
 
 		$user_min = min($this->session_ulid, $this->ulid_contacto);
 		$user_max = max($this->session_ulid, $this->ulid_contacto);
