@@ -55,7 +55,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_contacto
 			],
 			SqlReturn::FetchAssoc
@@ -87,7 +87,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo
 			],
 			SqlReturn::FetchAssoc
@@ -131,7 +131,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'ssss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_contacto,
 				$this->ulid_mensaje,
 				$this->ulid_mensaje
@@ -162,7 +162,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'ssss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo,
 				$this->ulid_mensaje,
 				$this->ulid_mensaje
@@ -182,8 +182,8 @@ readonly class Mensaje extends Contacto
 
 		// $this->isContacto();
 
-		$user_min = min($this->session_user, $this->ulid_contacto);
-		$user_max = max($this->session_user, $this->ulid_contacto);
+		$user_min = min($this->session_ulid, $this->ulid_contacto);
+		$user_max = max($this->session_ulid, $this->ulid_contacto);
 
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
@@ -293,7 +293,7 @@ readonly class Mensaje extends Contacto
 			[
 				$ulid,
 				$this->contenido,
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_contacto
 			]
 		);
@@ -328,7 +328,7 @@ readonly class Mensaje extends Contacto
 			[
 				$ulid,
 				$imagenName,
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_contacto
 			]
 		);
@@ -360,7 +360,7 @@ readonly class Mensaje extends Contacto
 			[
 				$ulid,
 				$this->contenido,
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo
 			]
 		);
@@ -395,7 +395,7 @@ readonly class Mensaje extends Contacto
 			[
 				$ulid,
 				$imagenName,
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo
 			]
 		);
@@ -426,7 +426,7 @@ readonly class Mensaje extends Contacto
 			SqlReturn::FetchColumn
 		);
 
-		if ($autor !== $this->session_user) {
+		if ($autor !== $this->session_ulid) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el autor del mensaje');
 			$this->checkIntegrityErrors();
@@ -463,8 +463,8 @@ readonly class Mensaje extends Contacto
 
 	private function getNuevosMensajesDirectos(): array
 	{
-		$user_min = min($this->session_user, $this->ulid_contacto);
-		$user_max = max($this->session_user, $this->ulid_contacto);
+		$user_min = min($this->session_ulid, $this->ulid_contacto);
+		$user_max = max($this->session_ulid, $this->ulid_contacto);
 
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
@@ -495,7 +495,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			"ssss",
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_contacto,
 				$user_min,
 				$user_max
@@ -536,7 +536,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			"sss",
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo,
 				$this->ulid_grupo
 			],

@@ -41,7 +41,7 @@ final readonly class Conexion extends Mensaje
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_contacto
 			]
 		);
@@ -67,7 +67,7 @@ final readonly class Conexion extends Mensaje
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo
 			]
 		);
@@ -94,7 +94,7 @@ final readonly class Conexion extends Mensaje
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_contacto
 			],
 			SqlReturn::FetchAssoc
@@ -126,7 +126,7 @@ final readonly class Conexion extends Mensaje
 			'ss',
 			[
 				$this->ulid_grupo,
-				$this->session_user
+				$this->session_ulid
 			],
 			SqlReturn::FetchAssoc
 		);

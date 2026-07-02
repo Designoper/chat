@@ -131,15 +131,15 @@ readonly class Contacto extends Invitacion
 			$query,
 			'sssssssss',
 			[
-				$this->session_user,
-				$this->session_user,
-				$this->session_user,
-				$this->session_user,
-				$this->session_user,
-				$this->session_user,
-				$this->session_user,
-				$this->session_user,
-				$this->session_user
+				$this->session_ulid,
+				$this->session_ulid,
+				$this->session_ulid,
+				$this->session_ulid,
+				$this->session_ulid,
+				$this->session_ulid,
+				$this->session_ulid,
+				$this->session_ulid,
+				$this->session_ulid
 			],
 			SqlReturn::FetchAll
 		);
@@ -171,8 +171,8 @@ readonly class Contacto extends Invitacion
 	protected function isContacto(): void
 	{
 		// Ordenar los ULIDs según la normalización de la tabla
-		$a = min($this->session_user, $this->ulid_contacto);
-		$b = max($this->session_user, $this->ulid_contacto);
+		$a = min($this->session_ulid, $this->ulid_contacto);
+		$b = max($this->session_ulid, $this->ulid_contacto);
 
 		$query =
 			"SELECT 1
@@ -197,8 +197,8 @@ readonly class Contacto extends Invitacion
 	protected function canViewMensaje(string $ulid_mensaje): void
 	{
 		// Normalizar ULIDs
-		$a = min($this->session_user, $this->ulid_contacto);
-		$b = max($this->session_user, $this->ulid_contacto);
+		$a = min($this->session_ulid, $this->ulid_contacto);
+		$b = max($this->session_ulid, $this->ulid_contacto);
 
 		// 1. Comprobar que son contactos
 		$queryContacto = "
@@ -238,10 +238,10 @@ readonly class Contacto extends Invitacion
 			'sssss',
 			[
 				$ulid_mensaje,
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_contacto,
 				$this->ulid_contacto,
-				$this->session_user
+				$this->session_ulid
 			],
 			SqlReturn::FetchColumn
 		);

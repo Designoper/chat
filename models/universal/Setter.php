@@ -29,10 +29,10 @@ abstract readonly class Setter extends File
 	protected function setNombre(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
-		$max_length = 20;
-		$error_message = "El campo $name no puede estar vacío ni superar los $max_length carácteres.";
+		$nombre_max_length = 20;
+		$error_message = "El campo $name no puede estar vacío ni superar los $nombre_max_length carácteres.";
 
-		empty($value) || strlen($value) > $max_length
+		empty($value) || strlen($value) > $nombre_max_length
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
 	}
@@ -42,10 +42,10 @@ abstract readonly class Setter extends File
 	protected function setPassword(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
-		$max_length = 20;
-		$error_message = "El campo $name no puede estar vacío ni superar los $max_length carácteres.";
+		$password_max_length = 20;
+		$error_message = "El campo $name no puede estar vacío ni superar los $password_max_length carácteres.";
 
-		empty($value) || strlen($value) > $max_length
+		empty($value) || strlen($value) > $password_max_length
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
 	}

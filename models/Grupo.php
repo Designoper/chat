@@ -30,13 +30,13 @@ readonly class Grupo extends Usuario
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo
 			],
 			SqlReturn::FetchColumn
 		);
 
-		if ($ulid_fundador !== $this->session_user) {
+		if ($ulid_fundador !== $this->session_ulid) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres el fundador del grupo');
 			$this->checkIntegrityErrors();
@@ -57,7 +57,7 @@ readonly class Grupo extends Usuario
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo
 			],
 			SqlReturn::FetchColumn
@@ -91,7 +91,7 @@ readonly class Grupo extends Usuario
 				[
 					$ulid,
 					$this->nombre_grupo,
-					$this->session_user
+					$this->session_ulid
 				]
 			);
 		} catch (\mysqli_sql_exception $error) {
@@ -111,7 +111,7 @@ readonly class Grupo extends Usuario
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$ulid,
 			]
 		);
@@ -138,7 +138,7 @@ readonly class Grupo extends Usuario
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo,
 			]
 		);

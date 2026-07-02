@@ -12,7 +12,7 @@ abstract readonly class Database extends SSE
 	private string $database;
 	protected mysqli $connection;
 	protected string $domain;
-	protected ?string $session_user;
+	protected ?string $session_ulid;
 
 	protected function __construct()
 	{
@@ -20,7 +20,7 @@ abstract readonly class Database extends SSE
 
 		parent::__construct();
 
-		$this->session_user = $_SESSION['ulid_usuario'] ?? null;
+		$this->session_ulid = $_SESSION['ulid_usuario'] ?? null;
 
 		$this->hostname = getenv('HOSTNAME');
 		$this->username = getenv('USERNAME');
@@ -57,7 +57,7 @@ abstract readonly class Database extends SSE
 
 	public function authBrowser(): void
 	{
-		if ($this->session_user === null) {
+		if ($this->session_ulid === null) {
 			header("Location: index.php");
 			exit;
 		}
@@ -67,7 +67,7 @@ abstract readonly class Database extends SSE
 
 	public function sessionRedirect(): void
 	{
-		if ($this->session_user !== null) {
+		if ($this->session_ulid !== null) {
 			header("Location: sala-principal.php");
 			exit;
 		}
@@ -77,7 +77,7 @@ abstract readonly class Database extends SSE
 
 	protected function authEndpoint(): void
 	{
-		if ($this->session_user === null) {
+		if ($this->session_ulid === null) {
 			$this->status = 401;
 			$this->errors->setIntegrityError('No hay sesión');
 			$this->checkIntegrityErrors();

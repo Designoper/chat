@@ -148,7 +148,7 @@ readonly class Usuario extends Setter
 		$this->sendResponse();
 	}
 
-	// MARK: CURRENT
+	// MARK: CURRENT USUARIO
 
 	public function currentUsuario(): void
 	{
@@ -163,7 +163,7 @@ readonly class Usuario extends Setter
 			$query,
 			's',
 			[
-				$this->session_user
+				$this->session_ulid
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -187,7 +187,7 @@ readonly class Usuario extends Setter
 			$query,
 			's',
 			[
-				$this->session_user
+				$this->session_ulid
 			]
 		);
 
@@ -214,7 +214,7 @@ readonly class Usuario extends Setter
 				'ss',
 				[
 					$this->nombre_usuario,
-					$this->session_user
+					$this->session_ulid
 				]
 			);
 		} catch (\mysqli_sql_exception $error) {
@@ -249,7 +249,7 @@ readonly class Usuario extends Setter
 			'ss',
 			[
 				password_hash($this->password, PASSWORD_DEFAULT),
-				$this->session_user
+				$this->session_ulid
 			]
 		);
 

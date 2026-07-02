@@ -40,7 +40,7 @@ readonly class Invitacion extends Grupo
 			$this->checkIntegrityErrors();
 		}
 
-		if ($contacto === $this->session_user) {
+		if ($contacto === $this->session_ulid) {
 			$this->status = 409;
 			$this->errors->setIntegrityError('No puedes invitarte a ti mismo.');
 			$this->checkIntegrityErrors();
@@ -57,9 +57,9 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ssss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$contacto,
-				$this->session_user,
+				$this->session_ulid,
 				$contacto
 			],
 			SqlReturn::FetchColumn
@@ -82,7 +82,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$contacto
 			],
 			SqlReturn::FetchColumn
@@ -106,7 +106,7 @@ readonly class Invitacion extends Grupo
 			'ss',
 			[
 				$contacto,
-				$this->session_user
+				$this->session_ulid
 			],
 			SqlReturn::FetchColumn
 		);
@@ -114,8 +114,8 @@ readonly class Invitacion extends Grupo
 		if ($invitacionCruzada) {
 
 			// Crear contacto normalizado
-			$a = min($this->session_user, $contacto);
-			$b = max($this->session_user, $contacto);
+			$a = min($this->session_ulid, $contacto);
+			$b = max($this->session_ulid, $contacto);
 
 			$query =
 				"INSERT IGNORE INTO contactos_directos (ulid_a, ulid_b)
@@ -137,10 +137,10 @@ readonly class Invitacion extends Grupo
 				$query,
 				'ssss',
 				[
-					$this->session_user,
+					$this->session_ulid,
 					$contacto,
 					$contacto,
-					$this->session_user
+					$this->session_ulid
 				]
 			);
 
@@ -157,7 +157,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$contacto
 			]
 		);
@@ -174,8 +174,8 @@ readonly class Invitacion extends Grupo
 		$this->checkValidationErrors();
 
 		// Normalización del par
-		$a = min($this->ulid_contacto, $this->session_user);
-		$b = max($this->ulid_contacto, $this->session_user);
+		$a = min($this->ulid_contacto, $this->session_ulid);
+		$b = max($this->ulid_contacto, $this->session_ulid);
 
 		// Insertar contacto normalizado
 		$query =
@@ -198,10 +198,10 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ssss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_contacto,
 				$this->ulid_contacto,
-				$this->session_user
+				$this->session_ulid
 			]
 		);
 
@@ -226,7 +226,7 @@ readonly class Invitacion extends Grupo
 			'ss',
 			[
 				$this->ulid_contacto,
-				$this->session_user
+				$this->session_ulid
 			]
 		);
 
@@ -244,7 +244,7 @@ readonly class Invitacion extends Grupo
 
 		$contacto = $this->ulid_contacto;
 		$grupo    = $this->ulid_grupo;
-		$usuario  = $this->session_user;
+		$usuario  = $this->session_ulid;
 
 		// 1. No puedes invitarte a ti mismo
 		if ($contacto === $usuario) {
@@ -372,7 +372,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo,
 			]
 		);
@@ -386,7 +386,7 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ss',
 			[
-				$this->session_user,
+				$this->session_ulid,
 				$this->ulid_grupo,
 			]
 		);
@@ -403,7 +403,7 @@ readonly class Invitacion extends Grupo
 		$this->checkValidationErrors();
 
 		$grupo   = $this->ulid_grupo;
-		$usuario = $this->session_user;
+		$usuario = $this->session_ulid;
 
 		// 1. Validar que el grupo existe
 		$query = "SELECT 1 FROM grupos WHERE ulid_grupo = ?";
@@ -518,8 +518,8 @@ readonly class Invitacion extends Grupo
 			$query,
 			'ss',
 			[
-				$this->session_user,
-				$this->session_user
+				$this->session_ulid,
+				$this->session_ulid
 			],
 			SqlReturn::FetchAll
 		);
@@ -580,8 +580,8 @@ readonly class Invitacion extends Grupo
 			[
 				$this->ulid_grupo,
 				$this->ulid_grupo,
-				$this->session_user,
-				$this->session_user
+				$this->session_ulid,
+				$this->session_ulid
 			],
 			SqlReturn::FetchAll
 		);
