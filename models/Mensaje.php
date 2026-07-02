@@ -351,6 +351,7 @@ readonly class Mensaje extends Contacto
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
+		$this->canViewMensajeGrupal();
 
 		$this->showFile();
 	}
