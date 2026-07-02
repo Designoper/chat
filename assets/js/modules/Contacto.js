@@ -30,7 +30,6 @@ export default class Contacto extends Invitacion {
 					break;
 				case 'video':
 					tipoMensaje = `Video`;
-					break;
 			}
 
 			autorMensaje = contacto.nombre_emisor === this.usuario.nombre_usuario
