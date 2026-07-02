@@ -93,15 +93,17 @@ abstract readonly class Setter extends File
 
 		$archivo = $filesUploaded[0];
 
-		$this->validarArchivoSeguro($archivo['tmp_name'], $tipoEsperado);
+		$compressed = $this->validarArchivoSeguro($tipoEsperado, $archivo);
 
-		$this->$name = $archivo;
+		$this->$name = $compressed ? $compressed : $archivo;
 	}
 
 	// MARK: VALIDAR ARCHIVO SEGURO
 
-	private function validarArchivoSeguro(string $ruta, FileTypes $tipoEsperado)
+	private function validarArchivoSeguro(FileTypes $tipoEsperado, array $archivo): ?array
 	{
+		$ruta = $archivo['tmp_name'];
+
 		$finfo = new finfo(FILEINFO_MIME_TYPE);
 		$mime = $finfo->file($ruta);
 
@@ -137,6 +139,9 @@ abstract readonly class Setter extends File
 					$this->checkValidationErrors();
 				}
 
+				$this->optimizarImagen($ruta);
+
+
 			case FileTypes::Audio:
 			case FileTypes::Video:
 				if (filesize($ruta) < 1024) {
@@ -144,5 +149,43 @@ abstract readonly class Setter extends File
 					$this->checkValidationErrors();
 				}
 		}
+	}
+
+	// private function optimizarImagen(string $ruta): void
+	// {
+	// 	$img = new Imagick($ruta);
+	// 	$img->setImageFormat('webp');
+	// 	$img->setImageCompressionQuality(80);
+	// 	$img->writeImage($ruta);
+	// }
+
+	private function optimizarImagen(string $ruta): void
+	{
+		$img = new Imagick($ruta);
+
+		// Eliminar metadatos (EXIF, perfiles ICC, etc.)
+		$img->stripImage();
+
+		// Reescalar si es demasiado grande
+		$maxWidth = 1920;
+		$maxHeight = 1920;
+
+		$width = $img->getImageWidth();
+		$height = $img->getImageHeight();
+
+		if ($width > $maxWidth || $height > $maxHeight) {
+			$img->resizeImage($maxWidth, $maxHeight, Imagick::FILTER_LANCZOS, 1, true);
+		}
+
+		// Convertir a WebP con compresión agresiva pero de alta calidad
+		$img->setImageFormat('webp');
+		$img->setImageCompressionQuality(80);
+
+		// Guardar optimizado
+		// $img->writeImage($ruta);
+
+		$this->file = $img->writeImage($ruta);
+
+		// $img->destroy();
 	}
 }

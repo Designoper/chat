@@ -29,6 +29,62 @@ abstract readonly class File extends SQL
         parent::__construct();
     }
 
+    private function optimizarSiEsImagen(string $ruta): void
+    {
+        // Detectar MIME real
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($ruta);
+
+        // Solo optimizar imágenes reales
+        if (!str_starts_with($mime, 'image/')) {
+            return;
+        }
+
+        // Bloquear SVG
+        if ($mime === 'image/svg+xml') {
+            return;
+        }
+
+        // Si Imagick está disponible, usarlo
+        if (class_exists('Imagick')) {
+            $this->optimizarImagenImagick($ruta);
+            return;
+        }
+
+        // Si no, fallback a GD
+        // $this->optimizarImagenGD($ruta);
+    }
+
+    private function optimizarImagenImagick(string $ruta): void
+    {
+        $img = new Imagick($ruta);
+
+        // Eliminar metadatos
+        $img->stripImage();
+
+        // Reescalar si es grande
+        $maxWidth = 1920;
+        $maxHeight = 1920;
+
+        $width = $img->getImageWidth();
+        $height = $img->getImageHeight();
+
+        if ($width > $maxWidth || $height > $maxHeight) {
+            $img->resizeImage($maxWidth, $maxHeight, Imagick::FILTER_LANCZOS, 1, true);
+        }
+
+        // Convertir a WebP
+        $img->setImageFormat('webp');
+        $img->setImageCompressionQuality(80);
+
+        // Guardar optimizado en la misma ruta temporal
+        $img->writeImage($ruta);
+
+        $img->destroy();
+    }
+
+
+
     // MARK: FLATTEN FILES ARRAY
 
     protected function flattenFilesArray(string $inputFileName): array
@@ -99,6 +155,8 @@ abstract readonly class File extends SQL
         }
 
         $finalDestination = $folderDestination . $this->uniqueFilename;
+
+        $this->optimizarSiEsImagen($this->file['tmp_name']);
 
         move_uploaded_file($this->file['tmp_name'], $finalDestination);
     }
