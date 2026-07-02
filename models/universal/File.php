@@ -6,8 +6,8 @@ require_once __DIR__ . '/SQL.php';
 
 abstract readonly class File extends SQL
 {
-    private const string IMAGE_PATH = '/private/';
-    protected const string DEFAULT_IMAGE = self::IMAGE_PATH . 'default/default.jpg';
+    private const string IMAGE_PATH = '/private';
+    protected const string DEFAULT_IMAGE = self::IMAGE_PATH . '/default/default.jpg';
 
     protected string $extraDirectories;
     protected string $uniqueFilename;
@@ -20,15 +20,6 @@ abstract readonly class File extends SQL
     protected function __construct()
     {
         parent::__construct();
-    }
-
-    // MARK: SETTERS
-
-    private function setUniqueFilename(string $originalFilename): void
-    {
-        $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
-        $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
-        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
     // MARK: FLATTEN FILES ARRAY
@@ -64,6 +55,17 @@ abstract readonly class File extends SQL
         return $newArray;
     }
 
+    // MARK: SET UNIQUE FILENAME
+
+    private function setUniqueFilename(string $originalFilename): void
+    {
+        $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+        $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
+        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
+    }
+
+    // MARK: UPLOAD FILENAME
+
     protected function uploadFileName(): ?string
     {
         if ($this->file === null) {
@@ -74,6 +76,8 @@ abstract readonly class File extends SQL
 
         return $this->extraDirectories . $this->uniqueFilename;
     }
+
+    // MARK: UPLOAD FILE
 
     protected function uploadFile(): void
     {
@@ -92,6 +96,8 @@ abstract readonly class File extends SQL
         move_uploaded_file($this->file['tmp_name'], $finalDestination);
     }
 
+    // MARK: UPDATE FILENAME
+
     protected function updateFileName(string $column, string $table, string $primaryKey, string $primaryKeyValue): ?string
     {
         if ($this->file === null) {
@@ -109,6 +115,8 @@ abstract readonly class File extends SQL
         return $imagePath;
     }
 
+    // MARK: UPDATE FILE
+
     protected function updateFile(?string $filePath): void
     {
         if ($this->file === null) {
@@ -123,12 +131,16 @@ abstract readonly class File extends SQL
         $this->uploadFile();
     }
 
+    // MARK: DELETE FILE
+
     protected function deleteFile(?string $filePath): void
     {
         if ($filePath !== null) {
-            unlink($_SERVER['DOCUMENT_ROOT'] . $filePath);
+            unlink($_SERVER['DOCUMENT_ROOT'] . '/private' . $filePath);
         }
     }
+
+    // MARK: DELETE ALL FILES
 
     protected function deleteAllFiles(): void
     {
@@ -146,6 +158,8 @@ abstract readonly class File extends SQL
             }
         }
     }
+
+    // MARK: GET FILE URL
 
     protected function getFileUrl(string $column, string $table, string $primaryKey, string $primaryKeyValue): string|null|false
     {
@@ -178,7 +192,7 @@ abstract readonly class File extends SQL
 
 
 
-
+    // MARK: SHOW FILE
 
     protected function showFile(): void
     {
@@ -203,7 +217,7 @@ abstract readonly class File extends SQL
 
         // Opcional: limitar extensiones
         $ext = strtolower(pathinfo($rutaSolicitada, PATHINFO_EXTENSION));
-        $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
 
         if (!in_array($ext, $permitidas)) {
             http_response_code(403);
