@@ -142,7 +142,8 @@ main {
 				background-color: var(--quartery-bg);
 			}
 
-			input {
+			input,
+			textarea {
 				min-width: 0;
 				flex-grow: 1;
 				padding: 0.25em 0.75em;

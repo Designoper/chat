@@ -61,8 +61,8 @@ button {
 	cursor: pointer;
 }
 
-:is(input, datalist, textarea) {
-	/* width: 100%; */
+:is(input[type="file"], datalist, textarea) {
+	width: 100%;
 	text-box: initial;
 }
 
