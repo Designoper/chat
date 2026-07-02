@@ -363,7 +363,7 @@ readonly class Mensaje extends Contacto
 		$this->setContenido('contenido');
 		$this->checkValidationErrors();
 
-		// $this->isContacto();
+		$this->isContacto();
 
 		$ulid = $this->generateUlid();
 
@@ -394,7 +394,7 @@ readonly class Mensaje extends Contacto
 		$this->setImagen('imagen');
 		$this->checkValidationErrors();
 
-		// $this->isContacto();
+		$this->isContacto();
 
 		$ulid_mensaje = $this->generateUlid();
 
@@ -461,7 +461,7 @@ readonly class Mensaje extends Contacto
 		$this->setImagen('imagen');
 		$this->checkValidationErrors();
 
-		// $this->isContacto();
+		$this->isMiembroGrupo();
 
 		$ulid_mensaje = $this->generateUlid();
 
