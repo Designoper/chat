@@ -21,6 +21,74 @@ readonly class Mensaje extends Contacto
 		parent::__construct();
 	}
 
+	// MARK: CAN VIEW MENSAJE DIRECTO
+
+	protected function canViewMensajeDirecto(): void
+	{
+		$query =
+			"SELECT 1
+			FROM mensajes
+			WHERE ulid_mensaje = ?
+			AND (
+				(ulid_emisor = ? AND ulid_contacto = ?)
+				OR
+				(ulid_emisor = ? AND ulid_contacto = ?)
+			)";
+
+		$esDeLaConversacion = $this->executeQuery(
+			$query,
+			'sssss',
+			[
+				$this->ulid_mensaje,
+				$this->session_ulid,
+				$this->ulid_contacto,
+				$this->ulid_contacto,
+				$this->session_ulid
+			],
+			SqlReturn::FetchColumn
+		);
+
+		if (!$esDeLaConversacion) {
+			$this->status = 403;
+			$this->errors->setIntegrityError('Este mensaje no pertenece a esta conversación');
+			$this->checkIntegrityErrors();
+		}
+	}
+
+	// MARK: CAN VIEW MENSAJE GRUPAL
+
+	protected function canViewMensajeGrupal(): void
+	{
+		$query =
+			"SELECT 1
+			FROM mensajes
+			WHERE ulid_mensaje = ?
+			AND (
+				(ulid_emisor = ? AND ulid_contacto = ?)
+				OR
+				(ulid_emisor = ? AND ulid_contacto = ?)
+			)";
+
+		$esDeLaConversacion = $this->executeQuery(
+			$query,
+			'sssss',
+			[
+				$this->ulid_mensaje,
+				$this->session_ulid,
+				$this->ulid_contacto,
+				$this->ulid_contacto,
+				$this->session_ulid
+			],
+			SqlReturn::FetchColumn
+		);
+
+		if (!$esDeLaConversacion) {
+			$this->status = 403;
+			$this->errors->setIntegrityError('Este mensaje no pertenece a esta conversación');
+			$this->checkIntegrityErrors();
+		}
+	}
+
 	// MARK: GET ULTIMO ID
 
 	public function getUltimoIdMensaje(): void
@@ -225,9 +293,11 @@ readonly class Mensaje extends Contacto
 	public function readImagenMensajeDirecto(): void
 	{
 		$this->setUlid('ulid_contacto');
+		$this->setUlid('ulid_mensaje');
 		$this->checkValidationErrors();
 
 		$this->isContacto();
+		$this->canViewMensajeDirecto();
 
 		$this->showFile();
 	}
@@ -276,6 +346,8 @@ readonly class Mensaje extends Contacto
 	public function readImagenMensajeGrupal(): void
 	{
 		$this->setUlid('ulid_grupo');
+		$this->setUlid('ulid_mensaje');
+
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
@@ -421,9 +493,6 @@ readonly class Mensaje extends Contacto
 
 	private function isAutorMensaje(): void
 	{
-		$this->setUlid('ulid_mensaje');
-		$this->checkValidationErrors();
-
 		$query =
 			"SELECT ulid_emisor
 			FROM mensajes
@@ -449,10 +518,11 @@ readonly class Mensaje extends Contacto
 
 	public function deleteMensaje(): void
 	{
+		$this->setUlid('ulid_mensaje');
+		$this->checkValidationErrors();
 		$this->isAutorMensaje();
 
-		$ulidMensaje = $this->ulid_mensaje;
-		$fileUrl = $this->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $ulidMensaje);
+		$fileUrl = $this->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $this->ulid_mensaje);
 
 		$query =
 			"DELETE FROM mensajes
@@ -580,7 +650,7 @@ readonly class Mensaje extends Contacto
 		$this->setUlid('ulid_contacto');
 		$this->checkValidationErrors();
 
-		// $this->isContacto();
+		$this->isContacto();
 
 		$this->setSSE(
 			fn() =>
