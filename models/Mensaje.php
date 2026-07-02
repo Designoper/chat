@@ -282,9 +282,9 @@ readonly class Mensaje extends Contacto
 		$this->sendResponse();
 	}
 
-	// MARK: READ IMAGEN MENSAJE DIRECTO
+	// MARK: READ ARCHIVO MENSAJE DIRECTO
 
-	public function readImagenMensajeDirecto(): void
+	public function readArchivoMensajeDirecto(): void
 	{
 		$this->setUlid('ulid_contacto');
 		$this->setUlid('ulid_mensaje');
@@ -336,9 +336,9 @@ readonly class Mensaje extends Contacto
 		$this->sendResponse();
 	}
 
-	// MARK: READ IMAGEN MENSAJE GRUPAL
+	// MARK: READ ARCHIVO MENSAJE GRUPAL
 
-	public function readImagenMensajeGrupal(): void
+	public function readArchivoMensajeGrupal(): void
 	{
 		$this->setUlid('ulid_grupo');
 		$this->setUlid('ulid_mensaje');
@@ -387,7 +387,7 @@ readonly class Mensaje extends Contacto
 	public function createMensajeDirectoImagen(): void
 	{
 		$this->setUlid('ulid_contacto');
-		$this->setArchivo('archivo');
+		$this->setArchivo('archivo', FileTypes::Image);
 		$this->checkValidationErrors();
 
 		$this->isContacto();
@@ -424,7 +424,7 @@ readonly class Mensaje extends Contacto
 	public function createMensajeDirectoAudio(): void
 	{
 		$this->setUlid('ulid_contacto');
-		$this->setArchivo('archivo');
+		$this->setArchivo('archivo', FileTypes::Audio);
 		$this->checkValidationErrors();
 
 		$this->isContacto();
@@ -492,7 +492,7 @@ readonly class Mensaje extends Contacto
 	public function createMensajeGrupalImagen(): void
 	{
 		$this->setUlid('ulid_grupo');
-		$this->setArchivo('archivo');
+		$this->setArchivo('archivo', FileTypes::Image);
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
@@ -529,7 +529,7 @@ readonly class Mensaje extends Contacto
 	public function createMensajeGrupalAudio(): void
 	{
 		$this->setUlid('ulid_grupo');
-		$this->setArchivo('archivo');
+		$this->setArchivo('archivo', FileTypes::Audio);
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();

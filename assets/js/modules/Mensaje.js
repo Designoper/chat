@@ -8,7 +8,7 @@ export default class Mensaje extends Contacto {
 	urlSearchParams = new URLSearchParams(location.search);
 	ringtone = new Audio("../../../assets/audio/ringtone.mp3");
 
-	endpointImagen;
+	endpointArchivo;
 	ulid_type;
 	ulid_value;
 
@@ -158,10 +158,10 @@ export default class Mensaje extends Contacto {
 
 			switch (mensaje.tipo_mensaje) {
 				case 'imagen':
-					fileHref = `<img src="${this.endpointImagen}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">`;
+					fileHref = `<img src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">`;
 					break;
 				case 'audio':
-					fileHref = `<audio controls><source src="${this.endpointImagen}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy"></audio>`;
+					fileHref = `<audio controls><source src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy"></audio>`;
 					break;
 				case 'texto':
 					fileHref = `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
@@ -305,7 +305,7 @@ export default class Mensaje extends Contacto {
 			this.dom.h1.textContent = this.urlSearchParams.get('nombre');
 
 			if (this.urlSearchParams.has('ulid_grupo')) {
-				this.endpointImagen = this.ENDPOINTS.GET.MENSAJES.IMAGENES.GRUPAL;
+				this.endpointArchivo = this.ENDPOINTS.GET.MENSAJES.ARCHIVOS.GRUPAL;
 				this.ulid_type = 'ulid_grupo';
 				this.ulid_value = this.urlSearchParams.get('ulid_grupo');
 
@@ -331,7 +331,7 @@ export default class Mensaje extends Contacto {
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
-				this.endpointImagen = this.ENDPOINTS.GET.MENSAJES.IMAGENES.DIRECTO;
+				this.endpointArchivo = this.ENDPOINTS.GET.MENSAJES.ARCHIVOS.DIRECTO;
 				this.ulid_type = 'ulid_contacto';
 				this.ulid_value = this.urlSearchParams.get('ulid_contacto');
 

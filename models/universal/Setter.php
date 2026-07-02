@@ -75,35 +75,74 @@ abstract readonly class Setter extends File
 			: $this->$name = $value;
 	}
 
-	// MARK: SET IMAGEN
+	// MARK: SET ARCHIVO
 
-	protected function setArchivo(string $name): void
+	protected function setArchivo(string $name, FileTypes $tipoEsperado): void
 	{
 		$filesUploaded = $this->flattenFilesArray($name);
 
 		if (count($filesUploaded) === 0) {
-			$this->$name = null;
-			return;
+			$this->errors->setValidationError('No has subido ningún archivo.');
 		}
 
 		if (count($filesUploaded) > 1) {
 			$this->errors->setValidationError('Solo se puede subir un archivo.');
-			return;
 		}
 
 		$archivo = $filesUploaded[0];
 
-		$file_type = exif_imagetype($archivo['tmp_name']);
-		$allowed_types = [IMAGETYPE_JPEG, IMAGETYPE_PNG];
+		$this->checkValidationErrors();
 
-		// if (!in_array($file_type, $allowed_types)) {
-		// 	$this->errors->setValidationError("Solo se permiten imágenes JPEG y PNG.");
-		// }
-
-		// if ($imagen['size'] > 1048576) {
-		// 	$this->errors->setValidationError('La imagen no puede superar 1MB.');
-		// }
+		$this->validarArchivoSeguro($archivo['tmp_name'], $tipoEsperado);
 
 		$this->$name = $archivo;
+	}
+
+	// MARK: VALIDAR ARCHIVO SEGURO
+
+	private function validarArchivoSeguro(string $ruta, FileTypes $tipoEsperado)
+	{
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
+		$mime = $finfo->file($ruta);
+
+		if ($mime === 'image/svg+xml') {
+			$this->errors->setValidationError('Los archivos SVG no están permitidos por razones de seguridad.');
+			$this->checkValidationErrors();
+		}
+
+		$categoria = null;
+
+		if (str_starts_with($mime, 'image/')) {
+			$categoria = FileTypes::Image;
+		} elseif (str_starts_with($mime, 'video/')) {
+			$categoria = FileTypes::Video;
+		} elseif (str_starts_with($mime, 'audio/')) {
+			$categoria = FileTypes::Audio;
+		} else {
+			$this->errors->setValidationError('Tipo de archivo no permitido.');
+			$this->checkValidationErrors();
+		}
+
+		if ($categoria !== $tipoEsperado) {
+			$this->errors->setValidationError("Se esperaba un archivo de tipo {$tipoEsperado->name}, pero se recibió {$categoria->name}.");
+			$this->checkValidationErrors();
+		}
+
+		switch ($categoria) {
+
+			case FileTypes::Image:
+				$info = @getimagesize($ruta);
+				if ($info === false) {
+					$this->errors->setValidationError('La imagen no es válida o está corrupta');
+					$this->checkValidationErrors();
+				}
+
+			case FileTypes::Audio:
+			case FileTypes::Video:
+				if (filesize($ruta) < 1024) {
+					$this->errors->setValidationError('El archivo multimedia es demasiado pequeño para ser válido');
+					$this->checkValidationErrors();
+				}
+		}
 	}
 }

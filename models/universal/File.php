@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/SQL.php';
 
+enum FileTypes
+{
+    case Image;
+    case Audio;
+    case Video;
+}
+
 abstract readonly class File extends SQL
 {
     private const string IMAGE_PATH = '/private';
@@ -190,8 +197,6 @@ abstract readonly class File extends SQL
         // Normalizar la ruta solicitada
         $rutaSolicitada = realpath($_SERVER['DOCUMENT_ROOT'] . '/private' . $_GET['f']);
 
-        // $rutaSolicitada = realpath($base . '/' . basename($_GET['f']));
-
         // Validación: el archivo debe estar dentro de /private
         if (!$rutaSolicitada || !str_starts_with($rutaSolicitada, $base)) {
             http_response_code(403);
@@ -203,16 +208,21 @@ abstract readonly class File extends SQL
             exit("Archivo no encontrado");
         }
 
-        // Opcional: limitar extensiones
-        $ext = strtolower(pathinfo($rutaSolicitada, PATHINFO_EXTENSION));
-        $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'mp3', 'wav', 'ogg', 'm4a', 'mp4', 'webm'];
+        // Validar MIME real
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($rutaSolicitada);
 
-        if (!in_array($ext, $permitidas)) {
+        // Permitir solo imagen/audio/video
+        if (
+            !str_starts_with($mime, 'image/') &&
+            !str_starts_with($mime, 'audio/') &&
+            !str_starts_with($mime, 'video/')
+        ) {
             http_response_code(403);
             exit("Tipo de archivo no permitido");
         }
 
-        $mime = mime_content_type($rutaSolicitada);
+        // Enviar archivo
         header("Content-Type: $mime");
         readfile($rutaSolicitada);
     }

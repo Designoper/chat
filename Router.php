@@ -28,8 +28,8 @@ final readonly class Router
             $this->setRoute('GET', 'mensajes/grupales', [Mensaje::class, 'readMensajesGrupales']),
             $this->setRoute('GET', 'mensajes/ultimo-id', [Mensaje::class, 'getUltimoIdMensaje']),
 
-            $this->setRoute('GET', 'mensajes/imagenes/directo', [Mensaje::class, 'readImagenMensajeDirecto']),
-            $this->setRoute('GET', 'mensajes/imagenes/grupal', [Mensaje::class, 'readImagenMensajeGrupal']),
+            $this->setRoute('GET', 'mensajes/archivos/directo', [Mensaje::class, 'readArchivoMensajeDirecto']),
+            $this->setRoute('GET', 'mensajes/archivos/grupal', [Mensaje::class, 'readArchivoMensajeGrupal']),
 
             $this->setRoute('POST', 'usuarios/crear', [Usuario::class, 'createUsuario']),
             $this->setRoute('POST', 'usuarios/login', [Usuario::class, 'login']),

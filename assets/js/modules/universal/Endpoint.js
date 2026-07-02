@@ -23,14 +23,10 @@ export default class Endpoint extends Fetch {
 				STREAM_DIRECTOS: `${this.ROOT}mensajes/stream/directos`,
 				STREAM_GRUPALES: `${this.ROOT}mensajes/stream/grupales`,
 				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`,
-				IMAGENES: {
-					DIRECTO: `${this.ROOT}mensajes/imagenes/directo`,
-					GRUPAL: `${this.ROOT}mensajes/imagenes/grupal`,
+				ARCHIVOS: {
+					DIRECTO: `${this.ROOT}mensajes/archivos/directo`,
+					GRUPAL: `${this.ROOT}mensajes/archivos/grupal`,
 				},
-				AUDIOS: {
-					DIRECTO: `${this.ROOT}mensajes/audios/directo`,
-					GRUPAL: `${this.ROOT}mensajes/audios/grupal`,
-				}
 			},
 			CONEXION: {
 				STREAM: `${this.ROOT}conexion/stream`,
