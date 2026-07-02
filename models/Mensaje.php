@@ -50,7 +50,7 @@ readonly class Mensaje extends Contacto
 
 		if (!$esDeLaConversacion) {
 			$this->status = 403;
-			$this->errors->setIntegrityError('Este mensaje no pertenece a esta conversación');
+			$this->errors->setIntegrityError('Este archivo no pertenece a esta conversación');
 			$this->checkIntegrityErrors();
 		}
 	}
@@ -63,28 +63,21 @@ readonly class Mensaje extends Contacto
 			"SELECT 1
 			FROM mensajes
 			WHERE ulid_mensaje = ?
-			AND (
-				(ulid_emisor = ? AND ulid_contacto = ?)
-				OR
-				(ulid_emisor = ? AND ulid_contacto = ?)
-			)";
+			AND ulid_grupo = ?";
 
 		$esDeLaConversacion = $this->executeQuery(
 			$query,
-			'sssss',
+			'ss',
 			[
 				$this->ulid_mensaje,
-				$this->session_ulid,
-				$this->ulid_contacto,
-				$this->ulid_contacto,
-				$this->session_ulid
+				$this->ulid_grupo
 			],
 			SqlReturn::FetchColumn
 		);
 
 		if (!$esDeLaConversacion) {
 			$this->status = 403;
-			$this->errors->setIntegrityError('Este mensaje no pertenece a esta conversación');
+			$this->errors->setIntegrityError('No pertences al grupo de este archivo.');
 			$this->checkIntegrityErrors();
 		}
 	}
