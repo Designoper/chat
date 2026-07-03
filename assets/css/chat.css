@@ -175,7 +175,7 @@ main {
 
 		> date {
 			text-align: center;
-			margin-bottom: 1em;
+			margin: 1em 0;
 		}
 
 		a {
