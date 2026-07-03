@@ -202,7 +202,7 @@ abstract readonly class File extends SQL
         }
 
         // Normalizar la ruta solicitada
-        $rutaSolicitada = realpath($base . $_GET['f']);
+        $rutaSolicitada = realpath($base . '/' . $_GET['f']);
 
         // Validación: el archivo debe estar dentro de /private
         if (!$rutaSolicitada || !str_starts_with($rutaSolicitada, $base)) {
