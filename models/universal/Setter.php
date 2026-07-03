@@ -102,7 +102,7 @@ abstract readonly class Setter extends File
 
 	// MARK: VALIDAR ARCHIVO SEGURO
 
-	private function validarArchivoSeguro(string $ruta, ?string $tipoDetectado, FileTypes $tipoEsperado)
+	private function validarArchivoSeguro(string $ruta, ?string $tipoDetectado, FileTypes $tipoEsperado): void
 	{
 		if ($tipoDetectado === null) {
 			$this->errors->setValidationError('No se pudo determinar el tipo de archivo.');
