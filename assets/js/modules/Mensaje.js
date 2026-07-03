@@ -349,9 +349,9 @@ export default class Mensaje extends Contacto {
 				this.dom.form[1].name = 'createMensajeGrupalImagen';
 				this.dom.form[2].name = 'createMensajeGrupalImagen';
 				this.dom.form[3].name = 'createMensajeGrupalAudio';
-				this.dom.form[4].name = 'createMensajeGrupalAudio';
+				// this.dom.form[4].name = 'createMensajeGrupalAudio';
+				this.dom.form[4].name = 'createMensajeGrupalVideo';
 				this.dom.form[5].name = 'createMensajeGrupalVideo';
-				this.dom.form[6].name = 'createMensajeGrupalVideo';
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
@@ -363,9 +363,9 @@ export default class Mensaje extends Contacto {
 				this.dom.form[1].name = 'createMensajeDirectoImagen';
 				this.dom.form[2].name = 'createMensajeDirectoImagen';
 				this.dom.form[3].name = 'createMensajeDirectoAudio';
-				this.dom.form[4].name = 'createMensajeDirectoAudio';
+				// this.dom.form[4].name = 'createMensajeDirectoAudio';
+				this.dom.form[4].name = 'createMensajeDirectoVideo';
 				this.dom.form[5].name = 'createMensajeDirectoVideo';
-				this.dom.form[6].name = 'createMensajeDirectoVideo';
 			}
 		}
 	}

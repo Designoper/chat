@@ -63,14 +63,75 @@ new Usuario()->authBrowser();
 
 		<section>
 
-			<!-- <menu>
-				<button type="button" value="Texto">Texto</button>
-				<button type="button" value="Imagen">Imagen</button>
-				<button type="button" value="Foto">Foto</button>
-				<button type="button" value="Audio">Audio</button>
-				<button type="button" value="Video">Video</button>
-				<button type="button" value="Grabación video">Grabación video</button>
-			</menu> -->
+			<menu>
+
+				<li>
+					<details open name="test">
+						<summary>
+							<svg viewBox="0 0 800 800">
+								<path d="M0 0h800v800H0z" fill="#fff" />
+								<path d="M116.667 116.667c0-18.4 14.933-33.333 33.333-33.333h500c18.4 0 33.333 14.933 33.333 33.333v100c0 18.4-14.933 33.333-33.333 33.333h-33.333c-18.4 0-33.333-14.933-33.333-33.333v-33.333H450v433.333h66.667c18.4 0 33.333 14.933 33.333 33.333v33.333c0 18.4-14.933 33.333-33.333 33.333H283.333c-18.4 0-33.333-14.933-33.333-33.333v-33.333c0-18.4 14.933-33.333 33.333-33.333H350V183.333H216.666v33.333c0 18.4-14.933 33.333-33.333 33.333H150c-18.4 0-33.333-14.933-33.333-33.333v-100z" fill-rule="nonzero" />
+							</svg>
+						</summary>
+					</details>
+				</li>
+
+				<li>
+					<details name="test">
+						<summary>
+							<svg viewBox="0 0 800 800">
+								<path d="M0 0h800v800H0z" fill="#fff" />
+								<path d="M359.269 175.875c0 55.868-46.007 101.875-101.875 101.875s-101.875-46.007-101.875-101.875S201.525 74 257.394 74s101.875 46.007 101.875 101.875zm172.169 165.16c-7.824-3.912-17.319-2.363-23.513 3.79L356.742 536.757 248.347 423.798c-8.028-5.338-18.827-4.279-25.672 2.527L74.1 603.75v81.5c0 22.372 18.378 40.75 40.75 40.75h570.5c22.372 0 40.75-18.378 40.75-40.75V501.875l-194.663-160.84z" fill-rule="nonzero" />
+							</svg>
+						</summary>
+					</details>
+				</li>
+
+				<li>
+					<details name="test">
+						<summary>
+							<svg viewBox="0 0 800 800">
+								<path d="M0 0h800v800H0z" fill="#fff" />
+								<path d="M653.5 188.755h-63.375L569 146.505c-12.443-24.568-18.928-42.25-42.25-42.25h-253.5c-23.322 0-31.054 20.153-42.25 42.25l-21.125 42.25H146.5c-46.665 0-84.5 37.835-84.5 84.5v338c0 46.665 37.835 84.5 84.5 84.5h507c46.665 0 84.5-37.835 84.5-84.5v-338c0-46.665-37.835-84.5-84.5-84.5zM400 611.255c-93.33 0-169-75.67-169-169s75.67-169 169-169 169 75.67 169 169-75.67 169-169 169zm0-295.75c-69.987 0-126.75 56.763-126.75 126.75s56.763 126.75 126.75 126.75 126.75-56.763 126.75-126.75-56.763-126.75-126.75-126.75z" />
+							</svg>
+						</summary>
+					</details>
+				</li>
+
+				<li>
+					<details name="test">
+						<summary>
+							<svg viewBox="0 0 800 800">
+								<path d="M0 0h800v800H0z" fill="#fff" />
+								<path d="M274 190c0-69.594 56.406-126 126-126s126 56.406 126 126v168c0 69.594-56.406 126-126 126s-126-56.406-126-126V190zm168 459.018V736h-84v-86.982C215.536 628.648 106 506.134 106 358v-42h84v42c0 115.962 94.038 210 210 210s210-94.038 210-210v-42h84v42c0 148.134-109.536 270.648-252 291.018z" />
+							</svg>
+						</summary>
+					</details>
+				</li>
+
+				<li>
+					<details name="test">
+						<summary>
+							<svg viewBox="0 0 800 800">
+								<path d="M0 0h800v800H0z" fill="#fff" />
+								<path d="M678.702 367.954L170.325 96.782c-30.16-13.445-64.708-12.049-64.708 36.214v533.973c0 44.121 37.064 51.076 64.708 36.214L678.702 432.01c20.927-17.697 20.927-46.358 0-64.055" />
+							</svg>
+						</summary>
+					</details>
+				</li>
+
+				<li>
+					<details name="test">
+						<summary>
+							<svg viewBox="0 0 800 800">
+								<path d="M0 0h800v800H0z" fill="#fff" />
+								<path d="M66.667 384.145v31.708c0 104.257 0 156.354 30.267 191.455 5.533 6.405 11.733 12.303 18.467 17.566 36.9 28.791 91.7 28.791 201.266 28.791 109.6 0 164.367 0 201.266-28.791 6.733-5.264 12.933-11.161 18.467-17.566 23.4-27.111 28.7-64.4 29.9-128.038l22.3 10.432c64.867 30.852 97.3 46.294 121.033 32.342 23.7-13.952 23.7-48.419 23.7-117.416v-9.259c0-68.966 0-103.464-23.7-117.416-23.733-13.952-56.167 1.49-121.033 32.342l-22.3 10.432c-1.2-63.639-6.5-100.928-29.9-128.038-5.533-6.405-11.733-12.303-18.467-17.566-36.9-28.791-91.667-28.791-201.266-28.791-109.567 0-164.367 0-201.266 28.791-6.733 5.264-12.933 11.161-18.467 17.566-30.267 35.101-30.267 87.23-30.267 191.455z" fill-rule="nonzero" />
+							</svg>
+						</summary>
+					</details>
+				</li>
+
+			</menu>
 
 			<form method="POST">
 
@@ -89,7 +150,7 @@ new Usuario()->authBrowser();
 
 			<form method="POST">
 
-				<input type="file" name="archivo" accept="image/*" required>
+				<input type="file" id="imagen" name="archivo" accept="image/*" required>
 
 				<button>
 					<svg viewBox="0 0 512 512">
@@ -103,6 +164,7 @@ new Usuario()->authBrowser();
 			</form>
 
 			<form method="POST">
+
 
 				<input type="file" name="archivo" capture="user" accept="image/*" required>
 
@@ -117,7 +179,7 @@ new Usuario()->authBrowser();
 
 			</form>
 
-			<form method="POST">
+			<!-- <form method="POST">
 
 				<input type="file" name="archivo" accept="audio/*" required>
 
@@ -130,7 +192,7 @@ new Usuario()->authBrowser();
 
 				<output></output>
 
-			</form>
+			</form> -->
 
 			<form method="POST">
 
@@ -150,6 +212,21 @@ new Usuario()->authBrowser();
 			<form method="POST">
 
 				<input type="file" name="archivo" accept="video/*" required>
+
+				<button>
+					<svg viewBox="0 0 512 512">
+						<path
+							d="M5.091 175.195c-2.418-.846-4.092-3.522-4.091-6.54V7.202c0-2.279.949-4.402 2.53-5.664S7.113.043 8.866.913l499.636 249.199c2.114 1.053 3.498 3.54 3.498 6.283s-1.384 5.229-3.498 6.282L8.866 511.876c-1.753.87-3.758.635-5.337-.625S1 507.866 1 505.587V344.134c-.001-3.018 1.673-5.694 4.091-6.54l213.958-74.667c2.426-.844 4.098-3.508 4.098-6.533s-1.671-5.69-4.098-6.533L5.091 175.195z" />
+					</svg>
+				</button>
+
+				<output></output>
+
+			</form>
+
+			<form method="POST">
+
+				<input type="file" name="archivo" capture accept="video/*" required>
 
 				<button>
 					<svg viewBox="0 0 512 512">
@@ -193,21 +270,6 @@ new Usuario()->authBrowser();
 			<!-- <output></output>
 
 			</form> -->
-
-			<form method="POST">
-
-				<input type="file" name="archivo" capture accept="video/*" required>
-
-				<button>
-					<svg viewBox="0 0 512 512">
-						<path
-							d="M5.091 175.195c-2.418-.846-4.092-3.522-4.091-6.54V7.202c0-2.279.949-4.402 2.53-5.664S7.113.043 8.866.913l499.636 249.199c2.114 1.053 3.498 3.54 3.498 6.283s-1.384 5.229-3.498 6.282L8.866 511.876c-1.753.87-3.758.635-5.337-.625S1 507.866 1 505.587V344.134c-.001-3.018 1.673-5.694 4.091-6.54l213.958-74.667c2.426-.844 4.098-3.508 4.098-6.533s-1.671-5.69-4.098-6.533L5.091 175.195z" />
-					</svg>
-				</button>
-
-				<output></output>
-
-			</form>
 
 		</section>
 
