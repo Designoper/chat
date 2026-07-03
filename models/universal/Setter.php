@@ -109,15 +109,6 @@ abstract readonly class Setter extends File
 			$this->checkValidationErrors();
 		}
 
-		// Bloqueo de SVG por seguridad
-		// $finfo = new finfo(FILEINFO_MIME_TYPE);
-		// $mime = $finfo->file($ruta);
-
-		// if ($mime === 'image/svg+xml') {
-		// 	$this->errors->setValidationError('Los archivos SVG no están permitidos por razones de seguridad.');
-		// 	$this->checkValidationErrors();
-		// }
-
 		if ($tipoDetectado !== strtolower($tipoEsperado->name)) {
 			$this->errors->setValidationError("Se esperaba un archivo de tipo {$tipoEsperado->name}, pero se recibió {$tipoDetectado}.");
 			$this->checkValidationErrors();
@@ -147,7 +138,6 @@ abstract readonly class Setter extends File
 				$this->checkValidationErrors();
 		}
 	}
-
 
 	// MARK: DETECTAR TIPO DE ARCHIVO
 
@@ -214,11 +204,9 @@ abstract readonly class Setter extends File
 			return 'image'; // WebP
 		}
 
-		// Detectar SVG (texto XML)
 		if ($mime === 'image/svg+xml' || $extension === 'svg') {
 			$this->errors->setValidationError('Los archivos SVG no están permitidos por razones de seguridad.');
 			$this->checkValidationErrors();
-			// return 'image';
 		}
 
 		// Detectar AVIF (formato basado en ISOBMFF)
