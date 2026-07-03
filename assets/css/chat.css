@@ -62,8 +62,6 @@ main {
 			content: '';
 		}
 
-		summary {}
-
 		&:has(li:nth-of-type(1) details:open) {
 			form:nth-of-type(1) {
 				display: grid;
@@ -227,10 +225,6 @@ main {
 				max-width: 200px;
 				max-height: 200px;
 			}
-
-			audio {
-				/* width: 250px; */
-			}
 		}
 	}
 
@@ -250,5 +244,4 @@ main {
 		font-size: 0.8em;
 		margin: 1.5em 0;
 	}
-}
 }
