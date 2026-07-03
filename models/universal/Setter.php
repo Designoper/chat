@@ -110,7 +110,7 @@ abstract readonly class Setter extends File
 		}
 
 		if ($tipoDetectado !== strtolower($tipoEsperado->name)) {
-			$this->errors->setValidationError("Se esperaba un archivo de tipo {$tipoEsperado->name}, pero se recibió {$tipoDetectado}.");
+			$this->errors->setValidationError("Se esperaba un archivo de tipo $tipoEsperado->name, pero se recibió $tipoDetectado.");
 			$this->checkValidationErrors();
 		}
 
@@ -143,26 +143,61 @@ abstract readonly class Setter extends File
 
 	private function detectarTipoArchivo(string $ruta, string $nombreOriginal): ?string
 	{
-		// 1. MIME real detectado por finfo
-		$finfo = new finfo(FILEINFO_MIME_TYPE);
-		$mime = $finfo->file($ruta);
-
-		// 2. Extensión (si se proporciona el nombre original)
+		// --- 0. Extensión ---
 		$extension = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
+
+		// Bloqueo inmediato de SVG
+		if ($extension === 'svg') {
+			$this->errors->setValidationError('Los archivos SVG no están permitidos por razones de seguridad.');
+			$this->checkValidationErrors();
+		}
 
 		// Corrección rápida para M4A
 		if ($extension === 'm4a') {
 			return 'audio';
 		}
 
-		// Correcciones basadas en extensión
+		// --- 1. Magic numbers ---
+		$fh = fopen($ruta, 'rb');
+		$bytes = fread($fh, 32);
+		fclose($fh);
+
+		$magic = bin2hex($bytes);
+
+		// Imágenes
+		if (str_starts_with($magic, 'ffd8ff')) return 'image'; // JPEG
+		if (str_starts_with($magic, '89504e47')) return 'image'; // PNG
+		if (str_starts_with($magic, '47494638')) return 'image'; // GIF
+		if (str_starts_with($magic, '52494646') && strpos($magic, '57454250') !== false) return 'image'; // WebP
+
+		// AVIF (ftypavif / ftypavis)
+		if (
+			strpos($magic, '6674797061766966') !== false ||
+			strpos($magic, '6674797061766973') !== false
+		) return 'image';
+
+		// Audio
+		if (str_starts_with($magic, '494433')) return 'audio'; // MP3 ID3
+		if (str_starts_with($magic, '4f676753')) return 'audio'; // OGG
+		if (str_starts_with($magic, '52494646') && strpos($magic, '57415645') !== false) return 'audio'; // WAV
+
+		// MP4 / MOV / M4A
+		if (strpos($magic, '667479706d7034') !== false) {
+			return 'video';
+		}
+
+		// WEBM / MKV (cabecera EBML)
+		if (str_starts_with($magic, '1a45dfa3')) {
+			return 'video';
+		}
+
+		// --- 2. Extensión ---
 		$mapExt = [
 			'jpg' => 'image',
 			'jpeg' => 'image',
 			'png' => 'image',
 			'gif' => 'image',
 			'webp' => 'image',
-			'svg' => 'image',
 			'avif' => 'image',
 
 			'mp3' => 'audio',
@@ -177,77 +212,19 @@ abstract readonly class Setter extends File
 			'webm' => 'video',
 		];
 
-		$tipoPorExtension = $mapExt[$extension] ?? null;
-
-		// 3. Cabeceras mágicas (magic numbers)
-		$fh = fopen($ruta, 'rb');
-		$bytes = fread($fh, 32); // AVIF necesita más bytes
-		fclose($fh);
-
-		$magic = bin2hex($bytes);
-
-		// Detectar imágenes por cabecera
-		if (str_starts_with($magic, 'ffd8ff')) {
-			return 'image'; // JPEG
-		}
-		if (str_starts_with($magic, '89504e47')) {
-			return 'image'; // PNG
-		}
-		if (str_starts_with($magic, '47494638')) {
-			return 'image'; // GIF
-		}
-		if (str_starts_with($magic, '52494646') && strpos($magic, '57454250') !== false) {
-			return 'image'; // WebP
+		if (isset($mapExt[$extension])) {
+			return $mapExt[$extension];
 		}
 
-		// Detectar AVIF (formato basado en ISOBMFF)
-		// Cabecera típica: ftypavif o ftypavis
-		if (
-			strpos($magic, '6674797061766966') !== false ||  // ftypavif
-			strpos($magic, '6674797061766973') !== false
-		) {  // ftypavis
-			return 'image';
-		}
+		// --- 3. MIME ---
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
+		$mime = $finfo->file($ruta);
 
-		if ($mime === 'image/svg+xml' || $extension === 'svg') {
-			$this->errors->setValidationError('Los archivos SVG no están permitidos por razones de seguridad.');
-			$this->checkValidationErrors();
-		}
+		if (str_starts_with($mime, 'image/')) return 'image';
+		if (str_starts_with($mime, 'audio/')) return 'audio';
+		if (str_starts_with($mime, 'video/')) return 'video';
 
-		// Detectar audio por cabecera
-		if (str_starts_with($magic, '494433')) {
-			return 'audio'; // MP3 con ID3
-		}
-		if (str_starts_with($magic, '4f676753')) {
-			return 'audio'; // OGG
-		}
-		if (str_starts_with($magic, '52494646') && strpos($magic, '57415645') !== false) {
-			return 'audio'; // WAV
-		}
-
-		// Detectar MP4/M4A/MOV (comparten cabecera)
-		if (strpos($magic, '667479706d7034') !== false) { // ftypmp4
-			if ($extension === 'm4a') {
-				return 'audio';
-			}
-			return 'video';
-		}
-
-		// Si MIME empieza por image/audio/video, usarlo
-		if (str_starts_with($mime, 'image/')) {
-			return 'image';
-		}
-		if (str_starts_with($mime, 'audio/')) {
-			return 'audio';
-		}
-		if (str_starts_with($mime, 'video/')) {
-			return 'video';
-		}
-
-		// Si extensión conocida pero MIME no ayuda
-		if ($tipoPorExtension) return $tipoPorExtension;
-
-		// No se pudo determinar
+		// --- 4. No se pudo determinar ---
 		return null;
 	}
 }

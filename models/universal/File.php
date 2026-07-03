@@ -13,8 +13,8 @@ enum FileTypes
 
 abstract readonly class File extends SQL
 {
-    private const string IMAGE_PATH = '/private';
-    protected const string DEFAULT_IMAGE = self::IMAGE_PATH . '/default/default.jpg';
+    private const string COMMON_FILE_PATH = '/private';
+    protected const string DEFAULT_IMAGE = self::COMMON_FILE_PATH . '/default/default.jpg';
 
     protected string $extraDirectories;
     protected string $uniqueFilename;
@@ -38,6 +38,7 @@ abstract readonly class File extends SQL
         }
 
         $files = $_FILES[$inputFileName];
+
         $newArray = [];
 
         if (is_array($files['name'])) {
@@ -54,7 +55,7 @@ abstract readonly class File extends SQL
                 }
             }
         } else {
-            if ((int)$files['error'] === 0) {
+            if ((int) $files['error'] === 0) {
                 $newArray[] = $files;
             }
         }
@@ -92,7 +93,7 @@ abstract readonly class File extends SQL
             return;
         }
 
-        $folderDestination = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories;
+        $folderDestination = $_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH . $this->extraDirectories;
 
         if (!file_exists($folderDestination)) {
             mkdir($folderDestination, 0755, true);
@@ -117,7 +118,7 @@ abstract readonly class File extends SQL
 
         $this->setUniqueFilename($this->file['name']);
 
-        $imagePath = self::IMAGE_PATH . $this->extraDirectories . $this->uniqueFilename;
+        $imagePath = self::COMMON_FILE_PATH . $this->extraDirectories . $this->uniqueFilename;
 
         return $imagePath;
     }
@@ -143,7 +144,7 @@ abstract readonly class File extends SQL
     protected function deleteFile(?string $filePath): void
     {
         if ($filePath !== null) {
-            unlink($_SERVER['DOCUMENT_ROOT'] . '/private' . $filePath);
+            unlink($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH . $filePath);
         }
     }
 
@@ -151,7 +152,7 @@ abstract readonly class File extends SQL
 
     protected function deleteAllFiles(): void
     {
-        $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::IMAGE_PATH . $this->extraDirectories;
+        $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH . $this->extraDirectories;
 
         if (!is_dir($folderPath)) {
             return;
@@ -192,20 +193,22 @@ abstract readonly class File extends SQL
     protected function showFile(): void
     {
         // Ruta base absoluta de la carpeta private
-        $base = realpath($_SERVER['DOCUMENT_ROOT'] . '/private');
+        $base = realpath($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH);
 
         // Normalizar la ruta solicitada
-        $rutaSolicitada = realpath($_SERVER['DOCUMENT_ROOT'] . '/private' . $_GET['f']);
+        $rutaSolicitada = realpath($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH . $_GET['f']);
 
         // Validación: el archivo debe estar dentro de /private
         if (!$rutaSolicitada || !str_starts_with($rutaSolicitada, $base)) {
-            http_response_code(403);
-            exit("Acceso no permitido");
+            $this->status = 403;
+            $this->errors->setIntegrityError("Acceso no permitido");
+            $this->checkIntegrityErrors();
         }
 
         if (!is_file($rutaSolicitada)) {
-            http_response_code(404);
-            exit("Archivo no encontrado");
+            $this->status = 404;
+            $this->errors->setIntegrityError("Archivo no encontrado");
+            $this->checkIntegrityErrors();
         }
 
         // Validar MIME real
@@ -218,8 +221,9 @@ abstract readonly class File extends SQL
             !str_starts_with($mime, 'audio/') &&
             !str_starts_with($mime, 'video/')
         ) {
-            http_response_code(403);
-            exit("Tipo de archivo no permitido");
+            $this->status = 403;
+            $this->errors->setIntegrityError("Tipo de archivo no permitido");
+            $this->checkIntegrityErrors();
         }
 
         // Enviar archivo
