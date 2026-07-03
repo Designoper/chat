@@ -13,8 +13,8 @@ enum FileTypes
 
 abstract readonly class File extends SQL
 {
-    private const string COMMON_FILE_PATH = '/private';
-    protected const string DEFAULT_IMAGE = self::COMMON_FILE_PATH . '/default/default.jpg';
+    private const string COMMON_FILE_PATH = '/private/';
+    protected const string DEFAULT_IMAGE = self::COMMON_FILE_PATH . 'default/default.jpg';
 
     protected string $extraDirectories;
     protected string $uniqueFilename;
@@ -195,8 +195,14 @@ abstract readonly class File extends SQL
         // Ruta base absoluta de la carpeta private
         $base = realpath($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH);
 
+        if ($base === false) {
+            $this->status = 500;
+            $this->errors->setIntegrityError("Tenemos problemas técnicos para encontrar esa ruta");
+            $this->checkIntegrityErrors();
+        }
+
         // Normalizar la ruta solicitada
-        $rutaSolicitada = realpath($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH . $_GET['f']);
+        $rutaSolicitada = realpath($base . $_GET['f']);
 
         // Validación: el archivo debe estar dentro de /private
         if (!$rutaSolicitada || !str_starts_with($rutaSolicitada, $base)) {
@@ -206,8 +212,8 @@ abstract readonly class File extends SQL
         }
 
         if (!is_file($rutaSolicitada)) {
-            $this->status = 404;
-            $this->errors->setIntegrityError("Archivo no encontrado");
+            $this->status = 403;
+            $this->errors->setIntegrityError("No puedes acceder a directorios");
             $this->checkIntegrityErrors();
         }
 
@@ -228,7 +234,11 @@ abstract readonly class File extends SQL
 
         // Enviar archivo
         header("Content-Type: $mime");
+        header("Content-Length: " . filesize($rutaSolicitada));
+        header("X-Content-Type-Options: nosniff");
+
         readfile($rutaSolicitada);
+
         exit;
     }
 }

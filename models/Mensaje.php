@@ -10,7 +10,7 @@ readonly class Mensaje extends Contacto
 	protected string $contenido;
 	protected array $archivo;
 
-	private const string FOLDER = '/mensajes/';
+	private const string FOLDER = 'mensajes/';
 
 	private const string SQL_COLUMN = 'ruta_archivo';
 	private const string SQL_TABLE = 'mensajes';
