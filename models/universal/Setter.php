@@ -102,7 +102,7 @@ abstract readonly class Setter extends File
 
 	// MARK: VALIDAR ARCHIVO SEGURO
 
-	private function validarArchivoSeguro(string $ruta, ?string $tipoDetectado, FileTypes $tipoEsperado): void
+	private function validarArchivoSeguro(string $ruta, string $tipoDetectado, FileTypes $tipoEsperado): void
 	{
 		if ($tipoDetectado === null) {
 			$this->errors->setValidationError('No se pudo determinar el tipo de archivo.');
@@ -141,16 +141,14 @@ abstract readonly class Setter extends File
 
 	// MARK: DETECTAR TIPO DE ARCHIVO
 
-	private function detectarTipoArchivo(string $ruta, ?string $nombreOriginal = null): ?string
+	private function detectarTipoArchivo(string $ruta, string $nombreOriginal): ?string
 	{
 		// 1. MIME real detectado por finfo
 		$finfo = new finfo(FILEINFO_MIME_TYPE);
 		$mime = $finfo->file($ruta);
 
 		// 2. Extensión (si se proporciona el nombre original)
-		$extension = $nombreOriginal
-			? strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION))
-			: null;
+		$extension = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
 
 		// Corrección rápida para M4A
 		if ($extension === 'm4a') {
@@ -179,9 +177,7 @@ abstract readonly class Setter extends File
 			'webm' => 'video',
 		];
 
-		$tipoPorExtension = $extension && isset($mapExt[$extension])
-			? $mapExt[$extension]
-			: null;
+		$tipoPorExtension = $mapExt[$extension] ?? null;
 
 		// 3. Cabeceras mágicas (magic numbers)
 		$fh = fopen($ruta, 'rb');
@@ -249,9 +245,7 @@ abstract readonly class Setter extends File
 		}
 
 		// Si extensión conocida pero MIME no ayuda
-		if ($tipoPorExtension) {
-			return $tipoPorExtension;
-		}
+		if ($tipoPorExtension) return $tipoPorExtension;
 
 		// No se pudo determinar
 		return null;
