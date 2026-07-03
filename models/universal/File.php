@@ -229,5 +229,6 @@ abstract readonly class File extends SQL
         // Enviar archivo
         header("Content-Type: $mime");
         readfile($rutaSolicitada);
+        exit;
     }
 }

@@ -27,7 +27,7 @@ abstract readonly class Response extends Sanitizer
         http_response_code($this->status);
         header('Content-Type: application/json');
         echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        exit();
+        exit;
     }
 
     // MARK: BUILD RESPONSE
