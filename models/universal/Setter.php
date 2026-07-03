@@ -204,11 +204,6 @@ abstract readonly class Setter extends File
 			return 'image'; // WebP
 		}
 
-		if ($mime === 'image/svg+xml' || $extension === 'svg') {
-			$this->errors->setValidationError('Los archivos SVG no están permitidos por razones de seguridad.');
-			$this->checkValidationErrors();
-		}
-
 		// Detectar AVIF (formato basado en ISOBMFF)
 		// Cabecera típica: ftypavif o ftypavis
 		if (
@@ -216,6 +211,11 @@ abstract readonly class Setter extends File
 			strpos($magic, '6674797061766973') !== false
 		) {  // ftypavis
 			return 'image';
+		}
+
+		if ($mime === 'image/svg+xml' || $extension === 'svg') {
+			$this->errors->setValidationError('Los archivos SVG no están permitidos por razones de seguridad.');
+			$this->checkValidationErrors();
 		}
 
 		// Detectar audio por cabecera
