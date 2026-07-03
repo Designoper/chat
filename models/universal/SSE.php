@@ -30,6 +30,7 @@ abstract readonly class SSE extends Response
 		header("Cache-Control: no-cache");
 		header('Content-Encoding: none');
 		header('X-Accel-Buffering: no');
+		header("Connection: keep-alive");
 
 		while (true) {
 
@@ -40,6 +41,9 @@ abstract readonly class SSE extends Response
 			$function();
 
 			$this->heartbeat();
+
+			ob_flush();
+			flush();
 
 			usleep(300000);
 		}
@@ -54,6 +58,7 @@ abstract readonly class SSE extends Response
 		if (time() - $lastPing > 10) {
 			$lastPing = time();
 			echo ": keepalive\n\n";
+			ob_flush();
 			flush();
 		}
 	}
@@ -64,6 +69,7 @@ abstract readonly class SSE extends Response
 	{
 		echo "event: $event\n";
 		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
+		ob_flush();
 		flush();
 	}
 }
