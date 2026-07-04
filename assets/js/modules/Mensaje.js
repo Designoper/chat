@@ -25,6 +25,8 @@ export default class Mensaje extends Contacto {
 
 	ultimoIdLeido;
 
+	counter = 0;
+
 	constructor() {
 		super();
 	}
@@ -111,6 +113,16 @@ export default class Mensaje extends Contacto {
 		const evtSource = new EventSource(endpoint);
 		this.mostrado = true;
 
+		// 🔥 Cada vez que se abre (incluye reconexiones)
+		evtSource.onopen = async () => {
+
+			await this.getMensajes();   // <--- tu impresión inicial
+			if (this.counter === 0) {
+				this.scrollToCurrent();
+			}
+			this.counter++;
+		};
+
 		evtSource.addEventListener("mensaje", (event) => {
 			const mensaje = JSON.parse(event.data);
 			const content = this.mensajesTemplate([mensaje]);
@@ -161,10 +173,10 @@ export default class Mensaje extends Contacto {
 					fileHref = `<img src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">`;
 					break;
 				case 'audio':
-					fileHref = `<audio controls><source src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy"></audio>`;
+					fileHref = `<audio src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></audio>`;
 					break;
 				case 'video':
-					fileHref = `<video controls><source src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy"></video>`;
+					fileHref = `<video src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></video>`;
 					break;
 				case 'texto':
 					fileHref = `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
