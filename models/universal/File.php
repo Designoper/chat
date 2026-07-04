@@ -232,13 +232,23 @@ abstract readonly class File extends SQL
             $this->checkIntegrityErrors();
         }
 
+        $mtime = filemtime($rutaSolicitada);
+        $size  = filesize($rutaSolicitada);
+
         // Enviar archivo
         header("Content-Type: $mime");
-        header("Content-Length: " . filesize($rutaSolicitada));
+        header("Content-Length: $size");
         header("X-Content-Type-Options: nosniff");
 
-        readfile($rutaSolicitada);
+        header("Cache-Control: public, max-age=31536000, immutable");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s", $mtime) . " GMT");
 
+        header("ETag: \"" . md5($rutaSolicitada . $mtime . $size) . "\"");
+        header("Expires: " . gmdate("D, d M Y H:i:s", time() + 31536000) . " GMT");
+
+        header("Accept-Ranges: bytes");
+
+        readfile($rutaSolicitada);
         exit;
     }
 }

@@ -13,6 +13,9 @@ RewriteEngine On
 # # No reescribir JS/CSS
 # RewriteRule ^(js|css)/ - [L]
 
+# # No reescribir contenido usuario
+RewriteRule ^private/ - [L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /Router.php [QSA,L]
@@ -57,8 +60,27 @@ RewriteRule ^(\.git|\.svn|config|private|backups|models)(/|$) - [F,L]
     ExpiresDefault "access plus 5 minutes"
     ExpiresByType text/css "access plus 5 minutes"
     ExpiresByType text/javascript "access plus 5 minutes"
-    ExpiresByType image/png "access plus 5 minutes"
+
     ExpiresByType font/woff2 "access plus 5 minutes"
+
+    # Cache multimedia for 10 minutes
+    ExpiresByType audio/mpeg "access plus 10 minutes"
+    ExpiresByType audio/mp3 "access plus 10 minutes"
+    ExpiresByType audio/wav "access plus 10 minutes"
+    ExpiresByType audio/ogg "access plus 10 minutes"
+    ExpiresByType audio/m4a "access plus 10 minutes"
+
+    ExpiresByType video/mp4 "access plus 10 minutes"
+    ExpiresByType video/webm "access plus 10 minutes"
+    ExpiresByType video/ogg "access plus 10 minutes"
+    ExpiresByType video/m4a "access plus 10 minutes"
+
+    ExpiresByType image/jpeg "access plus 10 minutes"
+    ExpiresByType image/jpg "access plus 10 minutes"
+    ExpiresByType image/png "access plus 5 minutes"
+    ExpiresByType image/gif "access plus 10 minutes"
+    ExpiresByType image/webp "access plus 10 minutes"
+    ExpiresByType image/avif "access plus 10 minutes"
 
 </IfModule>
 
