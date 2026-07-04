@@ -344,53 +344,44 @@ readonly class Mensaje extends Contacto
 
 	private function createMensajeTemplate(FileTypes $filetype, string $tipo_contacto): void
 	{
-		$security_function = null;
-		$ulid = null;
+		$contacto = match ($tipo_contacto) {
+			'contacto' => [
+				'ulid' => 'ulid_contacto',
+				'security' => fn() => $this->isContacto(),
+			],
+			'grupo' => [
+				'ulid' => 'ulid_grupo',
+				'security' => fn() => $this->isMiembroGrupo(),
+			]
+		};
 
-		switch ($tipo_contacto) {
-			case 'contacto':
-				$ulid = 'ulid_contacto';
-				$security_function = fn() => $this->isContacto();
-				break;
-
-			case 'grupo':
-				$ulid = 'ulid_grupo';
-				$security_function = fn() => $this->isMiembroGrupo();
-		}
-
-		switch ($filetype) {
-			case FileTypes::Text:
-				$fileExtraSteps = function (): string {
-					return $this->contenido;
-				};
-				$set = fn() => $this->setContenido('contenido');
-				$upload = fn() => null;
-				break;
-
-			default:
-				$fileExtraSteps = function (): string {
+		$archivo = match ($filetype) {
+			FileTypes::Text => [
+				'set' => fn() => $this->setContenido('contenido'),
+				'upload' => fn() => null,
+				'extra' => fn() => $this->contenido,
+			],
+			default => [
+				'set' => fn() => $this->setArchivo('archivo', $filetype),
+				'upload' => fn() => $this->uploadFile(),
+				'extra' => function () {
 					$this->file = $this->archivo;
 					$this->extraDirectories = self::FOLDER;
-					$file_name = $this->uploadFileName();
-					return $file_name;
-				};
-				$set = fn() => $this->setArchivo('archivo', $filetype);
-				$upload = fn() => $this->uploadFile();;
-		}
+					return $this->uploadFileName();
+				},
+			]
+		};
 
-		$this->setUlid($ulid);
-		$set();
-
+		$this->setUlid($contacto['ulid']);
+		$archivo['set']();
 		$this->checkValidationErrors();
-
-		$security_function();
+		$contacto['security']();
 
 		$this->ulid_mensaje = $this->generateUlid();
-
-		$contenido = $fileExtraSteps();
+		$contenido = $archivo['extra']();
 
 		$query =
-			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, contenido, ulid_emisor, $ulid)
+			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, contenido, ulid_emisor, {$contacto['ulid']})
 			VALUES (?, ?, ?, ?, ?)";
 
 		$this->executeQuery(
@@ -401,11 +392,12 @@ readonly class Mensaje extends Contacto
 				$filetype->value,
 				$contenido,
 				$this->session_ulid,
-				$this->$ulid
+				$this->{$contacto['ulid']}
 			]
 		);
 
-		$upload();
+		$archivo['upload']();
+
 		$this->status = 201;
 		$this->sendResponse();
 	}
