@@ -19,10 +19,10 @@ export default class Contacto extends Invitacion {
 			let tipoMensaje;
 
 			switch (contacto.tipo_mensaje) {
-				case 'texto':
+				case 'text':
 					tipoMensaje = `${contacto.contenido}`;
 					break;
-				case 'imagen':
+				case 'image':
 					tipoMensaje = `Imagen`;
 					break;
 				case 'audio':

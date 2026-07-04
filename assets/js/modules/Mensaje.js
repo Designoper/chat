@@ -169,16 +169,16 @@ export default class Mensaje extends Contacto {
 			let fileHref;
 
 			switch (mensaje.tipo_mensaje) {
-				case 'imagen':
-					fileHref = `<img src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">`;
+				case 'image':
+					fileHref = `<img src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">`;
 					break;
 				case 'audio':
-					fileHref = `<audio src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></audio>`;
+					fileHref = `<audio src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></audio>`;
 					break;
 				case 'video':
-					fileHref = `<video src="${this.endpointArchivo}?f=${mensaje.ruta_archivo}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></video>`;
+					fileHref = `<video src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></video>`;
 					break;
-				case 'texto':
+				case 'text':
 					fileHref = `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
 			}
 

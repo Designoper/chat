@@ -1,6 +1,6 @@
--- DROP DATABASE IF EXISTS chat;
--- CREATE DATABASE chat CHARACTER SET utf8mb4;
--- USE chat;
+DROP DATABASE IF EXISTS chat;
+CREATE DATABASE chat CHARACTER SET utf8mb4;
+USE chat;
 
 SET default_storage_engine=InnoDB;
 
@@ -96,10 +96,9 @@ CREATE TABLE contactos_grupales (
 
 CREATE TABLE mensajes (
     ulid_mensaje CHAR(26) PRIMARY KEY,
-    contenido TEXT NULL,
+    contenido TEXT NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    tipo_mensaje ENUM('texto', 'imagen', 'audio', 'video') NOT NULL DEFAULT 'texto',
-    ruta_archivo VARCHAR(255) NULL,
+    tipo_mensaje ENUM('text', 'image', 'audio', 'video') NOT NULL,
     ulid_emisor CHAR(26) NULL,
     ulid_contacto CHAR(26) NULL,
     ulid_grupo CHAR(26) NULL,

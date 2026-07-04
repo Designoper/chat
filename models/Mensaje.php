@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Dom\Text;
+
 require_once __DIR__ . '/Contacto.php';
 
 readonly class Mensaje extends Contacto
@@ -12,7 +14,7 @@ readonly class Mensaje extends Contacto
 
 	private const string FOLDER = 'mensajes/';
 
-	private const string SQL_COLUMN = 'ruta_archivo';
+	private const string SQL_COLUMN = 'contenido';
 	private const string SQL_TABLE = 'mensajes';
 	private const string SQL_PRIMARY_KEY = 'ulid_mensaje';
 
@@ -253,7 +255,6 @@ readonly class Mensaje extends Contacto
 				mensajes.ulid_mensaje,
 				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				mensajes.ruta_archivo,
 				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
@@ -312,7 +313,6 @@ readonly class Mensaje extends Contacto
 				mensajes.ulid_mensaje,
 				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				mensajes.ruta_archivo,
 				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
@@ -351,288 +351,130 @@ readonly class Mensaje extends Contacto
 		$this->showFile();
 	}
 
-	// MARK: CREATE MENSAJE DIRECTO
+	// MARK: CREATE MENSAJE TEMPLATE
 
-	public function createMensajeDirecto(): void
+	private function createMensajeTemplate(FileTypes $filetype, string $tipo_contacto): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->setContenido('contenido');
+		$security_function = null;
+		$ulid = null;
+
+		switch ($tipo_contacto) {
+			case 'contacto':
+				$ulid = 'ulid_contacto';
+				$security_function = fn() => $this->isContacto();
+				break;
+
+			case 'grupo':
+				$ulid = 'ulid_grupo';
+				$security_function = fn() => $this->isMiembroGrupo();
+		}
+
+		switch ($filetype) {
+			case FileTypes::Text:
+				$fileExtraSteps = function (): string {
+					return $this->contenido;
+				};
+				$set = fn() => $this->setContenido('contenido');
+				$upload = fn() => null;
+				break;
+
+			default:
+				$fileExtraSteps = function (): string {
+					$this->file = $this->archivo;
+					$this->extraDirectories = self::FOLDER;
+					$file_name = $this->uploadFileName();
+					return $file_name;
+				};
+				$set = fn() => $this->setArchivo('archivo', $filetype);
+				$upload = fn() => $this->uploadFile();;
+		}
+
+		$this->setUlid($ulid);
+		$set();
+
 		$this->checkValidationErrors();
 
-		$this->isContacto();
+		$security_function();
 
 		$this->ulid_mensaje = $this->generateUlid();
 
+		$contenido = $fileExtraSteps();
+
 		$query =
-			"INSERT INTO mensajes (ulid_mensaje, contenido, ulid_emisor, ulid_contacto)
-			VALUES (?, ?, ?, ?)";
+			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, contenido, ulid_emisor, $ulid)
+			VALUES (?, ?, ?, ?, ?)";
 
 		$this->executeQuery(
 			$query,
-			'ssss',
+			'sssss',
 			[
 				$this->ulid_mensaje,
-				$this->contenido,
+				$filetype->value,
+				$contenido,
 				$this->session_ulid,
-				$this->ulid_contacto
+				$this->$ulid
 			]
 		);
 
+		$upload();
 		$this->status = 201;
 		$this->sendResponse();
+	}
+
+	// MARK: CREATE MENSAJE DIRECTO TEXTO
+
+	public function createMensajeDirecto(): void
+	{
+		$this->createMensajeTemplate(FileTypes::Text, 'contacto');
 	}
 
 	// MARK: CREATE MENSAJE DIRECTO IMAGEN
 
 	public function createMensajeDirectoImagen(): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->setArchivo('archivo', FileTypes::Image);
-		$this->checkValidationErrors();
-
-		$this->isContacto();
-
-		$this->ulid_mensaje = $this->generateUlid();
-
-		$this->file = $this->archivo;
-		$this->extraDirectories = self::FOLDER;
-		$file_name = $this->uploadFileName();
-
-		$query =
-			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_contacto)
-			VALUES (?, ?, ?, ?, ?)";
-
-		$this->executeQuery(
-			$query,
-			'sssss',
-			[
-				$this->ulid_mensaje,
-				'imagen',
-				$file_name,
-				$this->session_ulid,
-				$this->ulid_contacto
-			]
-		);
-
-		$this->uploadFile();
-		$this->status = 201;
-		$this->sendResponse();
+		$this->createMensajeTemplate(FileTypes::Image, 'contacto');
 	}
 
 	// MARK: CREATE MENSAJE DIRECTO AUDIO
 
 	public function createMensajeDirectoAudio(): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->setArchivo('archivo', FileTypes::Audio);
-		$this->checkValidationErrors();
-
-		$this->isContacto();
-
-		$this->ulid_mensaje = $this->generateUlid();
-
-		$this->file = $this->archivo;
-		$this->extraDirectories = self::FOLDER;
-		$file_name = $this->uploadFileName();
-
-		$query =
-			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_contacto)
-			VALUES (?, ?, ?, ?, ?)";
-
-		$this->executeQuery(
-			$query,
-			'sssss',
-			[
-				$this->ulid_mensaje,
-				'audio',
-				$file_name,
-				$this->session_ulid,
-				$this->ulid_contacto
-			]
-		);
-
-		$this->uploadFile();
-		$this->status = 201;
-		$this->sendResponse();
+		$this->createMensajeTemplate(FileTypes::Audio, 'contacto');
 	}
 
 	// MARK: CREATE MENSAJE DIRECTO VIDEO
 
 	public function createMensajeDirectoVideo(): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->setArchivo('archivo', FileTypes::Video);
-		$this->checkValidationErrors();
-
-		$this->isContacto();
-
-		$this->ulid_mensaje = $this->generateUlid();
-
-		$this->file = $this->archivo;
-		$this->extraDirectories = self::FOLDER;
-		$file_name = $this->uploadFileName();
-
-		$query =
-			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_contacto)
-			VALUES (?, ?, ?, ?, ?)";
-
-		$this->executeQuery(
-			$query,
-			'sssss',
-			[
-				$this->ulid_mensaje,
-				'video',
-				$file_name,
-				$this->session_ulid,
-				$this->ulid_contacto
-			]
-		);
-
-		$this->uploadFile();
-		$this->status = 201;
-		$this->sendResponse();
+		$this->createMensajeTemplate(FileTypes::Video, 'contacto');
 	}
 
-	// MARK: CREATE MENSAJE GRUPAL
+	// MARK: CREATE MENSAJE GRUPAL TEXTTO
 
 	public function createMensajeGrupal(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->setContenido('contenido');
-		$this->checkValidationErrors();
-
-		$this->isMiembroGrupo();
-
-		$this->ulid_mensaje = $this->generateUlid();
-
-		$query =
-			"INSERT INTO mensajes (ulid_mensaje, contenido, ulid_emisor, ulid_grupo)
-			VALUES (?, ?, ?, ?)";
-
-		$this->executeQuery(
-			$query,
-			'ssss',
-			[
-				$this->ulid_mensaje,
-				$this->contenido,
-				$this->session_ulid,
-				$this->ulid_grupo
-			]
-		);
-
-		$this->status = 201;
-		$this->sendResponse();
+		$this->createMensajeTemplate(FileTypes::Text, 'grupo');
 	}
 
 	// MARK: CREATE MENSAJE GRUPAL IMAGEN
 
 	public function createMensajeGrupalImagen(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->setArchivo('archivo', FileTypes::Image);
-		$this->checkValidationErrors();
-
-		$this->isMiembroGrupo();
-
-		$this->ulid_mensaje = $this->generateUlid();
-
-		$this->file = $this->archivo;
-		$this->extraDirectories = self::FOLDER;
-		$file_name = $this->uploadFileName();
-
-		$query =
-			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_grupo)
-			VALUES (?, ?, ?, ?, ?)";
-
-		$this->executeQuery(
-			$query,
-			'sssss',
-			[
-				$this->ulid_mensaje,
-				'imagen',
-				$file_name,
-				$this->session_ulid,
-				$this->ulid_grupo
-			]
-		);
-
-		$this->uploadFile();
-		$this->status = 201;
-		$this->sendResponse();
+		$this->createMensajeTemplate(FileTypes::Image, 'grupo');
 	}
 
 	// MARK: CREATE MENSAJE GRUPAL AUDIO
 
 	public function createMensajeGrupalAudio(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->setArchivo('archivo', FileTypes::Audio);
-		$this->checkValidationErrors();
-
-		$this->isMiembroGrupo();
-
-		$this->ulid_mensaje = $this->generateUlid();
-
-		$this->file = $this->archivo;
-		$this->extraDirectories = self::FOLDER;
-		$file_name = $this->uploadFileName();
-
-		$query =
-			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_grupo)
-			VALUES (?, ?, ?, ?, ?)";
-
-		$this->executeQuery(
-			$query,
-			'sssss',
-			[
-				$this->ulid_mensaje,
-				'audio',
-				$file_name,
-				$this->session_ulid,
-				$this->ulid_grupo
-			]
-		);
-
-		$this->uploadFile();
-		$this->status = 201;
-		$this->sendResponse();
+		$this->createMensajeTemplate(FileTypes::Audio, 'grupo');
 	}
 
 	// MARK: CREATE MENSAJE GRUPAL VIDEO
 
 	public function createMensajeGrupalVideo(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->setArchivo('archivo', FileTypes::Video);
-		$this->checkValidationErrors();
-
-		$this->isMiembroGrupo();
-
-		$this->ulid_mensaje = $this->generateUlid();
-
-		$this->file = $this->archivo;
-		$this->extraDirectories = self::FOLDER;
-		$file_name = $this->uploadFileName();
-
-		$query =
-			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, ruta_archivo, ulid_emisor, ulid_grupo)
-			VALUES (?, ?, ?, ?, ?)";
-
-		$this->executeQuery(
-			$query,
-			'sssss',
-			[
-				$this->ulid_mensaje,
-				'video',
-				$file_name,
-				$this->session_ulid,
-				$this->ulid_grupo
-			]
-		);
-
-		$this->uploadFile();
-		$this->status = 201;
-		$this->sendResponse();
+		$this->createMensajeTemplate(FileTypes::Video, 'grupo');
 	}
 
 	// MARK: IS AUTOR MENSAJE
@@ -700,7 +542,6 @@ readonly class Mensaje extends Contacto
 			"SELECT mensajes.ulid_mensaje,
 				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				mensajes.ruta_archivo,
 				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
@@ -745,7 +586,6 @@ readonly class Mensaje extends Contacto
 			"SELECT mensajes.ulid_mensaje,
 				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				mensajes.ruta_archivo,
 				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario

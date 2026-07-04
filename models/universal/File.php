@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/SQL.php';
 
-enum FileTypes
+enum FileTypes: string
 {
-    case Image;
-    case Audio;
-    case Video;
+    case Image = 'image';
+    case Audio = 'audio';
+    case Video = 'video';
+    case Text = 'text';
 }
 
 abstract readonly class File extends SQL
