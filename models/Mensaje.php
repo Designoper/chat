@@ -84,6 +84,67 @@ readonly class Mensaje extends Contacto
 		}
 	}
 
+	// MARK: GET ULTIMO ID TEMPLATE
+
+	private function getUltimoIdTemplate(string $tipo_contacto): void
+	{
+		$config = match ($tipo_contacto) {
+			'contacto' => [
+				'ulid' => 'ulid_contacto',
+				'tipo' => 'directos',
+				'security' => fn() => $this->isContacto(),
+			],
+			'grupo' => [
+				'ulid' => 'ulid_grupo',
+				'tipo' => 'grupales',
+				'security' => fn() => $this->isMiembroGrupo(),
+			]
+		};
+
+		$this->setUlid($config['ulid']);
+		$this->checkValidationErrors();
+
+		$config['security']();
+
+		$query =
+			"SELECT COALESCE(
+				(
+					SELECT ulid_mensaje
+					FROM ultimos_mensajes_leidos_{$config['tipo']}
+					WHERE ulid_usuario = ?
+					AND {$config['ulid']} = ?
+				),
+			'') AS ulid_mensaje";
+
+		$last_id = $this->executeQuery(
+			$query,
+			'ss',
+			[
+				$this->session_ulid,
+				$this->{$config['ulid']}
+			],
+			SqlReturn::FetchAssoc
+		);
+
+		$this->status = 200;
+		$this->content = $last_id;
+		$this->sendResponse();
+	}
+
+	// MARK: GET ULTIMO ID DIRECTO
+
+	private function getUltimoIdDirecto(): void
+	{
+		$this->getUltimoIdTemplate('contacto');
+	}
+
+	// MARK: GET ULTIMO ID GRUPAL
+
+	private function getUltimoIdGrupal(): void
+	{
+		$this->getUltimoIdTemplate('grupo');
+	}
+
 	// MARK: GET ULTIMO ID
 
 	public function getUltimoIdMensaje(): void
@@ -97,124 +158,38 @@ readonly class Mensaje extends Contacto
 		}
 	}
 
-	// MARK: GET ULTIMO ID DIRECTO
-
-	private function getUltimoIdDirecto(): void
-	{
-		$this->setUlid('ulid_contacto');
-		$this->checkValidationErrors();
-
-		$this->isContacto();
-
-		$query =
-			"SELECT COALESCE(
-				(
-					SELECT ulid_mensaje
-					FROM ultimos_mensajes_leidos_directos
-					WHERE ulid_usuario = ?
-					AND ulid_contacto = ?
-				),
-			'') AS ulid_mensaje";
-
-		$last_id = $this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$this->ulid_contacto
-			],
-			SqlReturn::FetchAssoc
-		);
-
-		$this->status = 200;
-		$this->content = $last_id;
-		$this->sendResponse();
-	}
-
-	// MARK: GET ULTIMO ID GRUPAL
-
-	private function getUltimoIdGrupal(): void
-	{
-		$this->setUlid('ulid_grupo');
-		$this->checkValidationErrors();
-
-		$this->isMiembroGrupo();
-
-		$query =
-			"SELECT COALESCE((
-				SELECT ulid_mensaje
-				FROM ultimos_mensajes_leidos_grupales
-				WHERE ulid_usuario = ?
-				AND ulid_grupo = ?
-			), '') AS ulid_mensaje";
-
-		$last_id = $this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$this->ulid_grupo
-			],
-			SqlReturn::FetchAssoc
-		);
-
-		$this->status = 200;
-		$this->content = $last_id;
-		$this->sendResponse();
-	}
-
-	// MARK: SET ULTIMO ID
-
-	public function setultimoIdLeido(): void
-	{
-		if (isset($_POST['ulid_contacto'])) {
-			$this->setUltimoIdDirecto();
-		}
-
-		if (isset($_POST['ulid_grupo'])) {
-			$this->setUltimoIdGrupal();
-		}
-	}
-
-	// MARK: SET ULTIMO ID TEMPLATE
-
 	private function setUltimoIdTemplate(string $tipo_contacto): void
 	{
-		$ulid = null;
-		$tipo = null;
-		$security_function = null;
+		$config = match ($tipo_contacto) {
+			'contacto' => [
+				'ulid' => 'ulid_contacto',
+				'tipo' => 'directos',
+				'security' => fn() => $this->isContacto(),
+			],
+			'grupo' => [
+				'ulid' => 'ulid_grupo',
+				'tipo' => 'grupales',
+				'security' => fn() => $this->isMiembroGrupo(),
+			]
+		};
 
-		switch ($tipo_contacto) {
-			case 'contacto':
-				$ulid = 'ulid_contacto';
-				$tipo = 'directos';
-				$security_function = fn() => $this->isContacto();
-				break;
-
-			case 'grupo':
-				$ulid = 'ulid_grupo';
-				$tipo = 'grupales';
-				$security_function = fn() => $this->isMiembroGrupo();
-		}
-
-		$this->setUlid($ulid);
+		$this->setUlid($config['ulid']);
 		$this->setUlid('ulid_mensaje');
 		$this->checkValidationErrors();
 
-		$security_function();
+		$config['security']();
 
 		$query =
-			"INSERT INTO ultimos_mensajes_leidos_$tipo (ulid_usuario, $ulid, ulid_mensaje)
+			"INSERT INTO ultimos_mensajes_leidos_{$config['tipo']} (ulid_usuario, {$config['ulid']}, ulid_mensaje)
 			VALUES (?, ?, ?)
-			ON DUPLICATE KEY
-			UPDATE ulid_mensaje = ?";
+			ON DUPLICATE KEY UPDATE ulid_mensaje = ?";
 
 		$this->executeQuery(
 			$query,
 			'ssss',
 			[
 				$this->session_ulid,
-				$this->$ulid,
+				$this->{$config['ulid']},
 				$this->ulid_mensaje,
 				$this->ulid_mensaje
 			]
@@ -223,6 +198,7 @@ readonly class Mensaje extends Contacto
 		$this->status = 201;
 		$this->sendResponse();
 	}
+
 
 	// MARK: SET ULTIMO ID DIRECTO
 
@@ -236,6 +212,19 @@ readonly class Mensaje extends Contacto
 	private function setUltimoIdGrupal(): void
 	{
 		$this->setUltimoIdTemplate('grupo');
+	}
+
+	// MARK: SET ULTIMO ID
+
+	public function setultimoIdLeido(): void
+	{
+		if (isset($_POST['ulid_contacto'])) {
+			$this->setUltimoIdDirecto();
+		}
+
+		if (isset($_POST['ulid_grupo'])) {
+			$this->setUltimoIdGrupal();
+		}
 	}
 
 	// MARK: READ MENSAJES DIRECTOS
