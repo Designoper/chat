@@ -2,15 +2,16 @@ import Contacto from "./Contacto.js";
 
 export default class Mensaje extends Contacto {
 
-	// urlStreamMensajes = new URL(this.ENDPOINTS.GET.MENSAJES.STREAM);
-	// endpointMensaje = this.ENDPOINTS.GET.MENSAJES.TODOS;
-
-	urlSearchParams = new URLSearchParams(location.search);
-	ringtone = new Audio("../../../assets/audio/ringtone.mp3");
-
+	endpointGetUltimoId;
+	endpointSetUltimoId;
+	endpointGetMensajes;
+	endpointStreamMensajes;
 	endpointArchivo;
 	ulid_type;
 	ulid_value;
+
+	urlSearchParams = new URLSearchParams(location.search);
+	ringtone = new Audio("../../../assets/audio/ringtone.mp3");
 
 	mostrado = false;
 
@@ -31,10 +32,32 @@ export default class Mensaje extends Contacto {
 		super();
 	}
 
+	setEndpoints() {
+		if (this.urlSearchParams.has('ulid_contacto')) {
+			this.endpointGetUltimoId = this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID_DIRECTO;
+			this.endpointSetUltimoId = this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID_DIRECTO;
+			this.endpointGetMensajes = this.ENDPOINTS.GET.MENSAJES.DIRECTOS;
+			this.endpointStreamMensajes = this.ENDPOINTS.GET.MENSAJES.STREAM_DIRECTOS;
+			this.endpointArchivo = this.ENDPOINTS.GET.MENSAJES.ARCHIVOS.DIRECTO;
+			this.ulid_type = 'ulid_contacto';
+			this.ulid_value = this.urlSearchParams.get('ulid_contacto');
+		}
+
+		if (this.urlSearchParams.has('ulid_grupo')) {
+			this.endpointGetUltimoId = this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID_GRUPAL;
+			this.endpointSetUltimoId = this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID_GRUPAL;
+			this.endpointGetMensajes = this.ENDPOINTS.GET.MENSAJES.GRUPALES;
+			this.endpointStreamMensajes = this.ENDPOINTS.GET.MENSAJES.STREAM_GRUPALES;
+			this.endpointArchivo = this.ENDPOINTS.GET.MENSAJES.ARCHIVOS.GRUPAL;
+			this.ulid_type = 'ulid_grupo';
+			this.ulid_value = this.urlSearchParams.get('ulid_grupo');
+		}
+	}
+
 	// MARK: GET ULTIMO ID
 
 	async getUltimoId() {
-		const response = await this.fetchWithoutForm(this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID, 'get', this.urlSearchparamsObj);
+		const response = await this.fetchWithoutForm(this.endpointGetUltimoId, 'get', this.urlSearchparamsObj);
 		this.ultimoIdLeido = response.json.ulid_mensaje;
 	}
 
@@ -75,21 +98,11 @@ export default class Mensaje extends Contacto {
 
 	async getMensajes() {
 
-		let endpoint;
-
-		if (this.urlSearchParams.has('ulid_contacto')) {
-			endpoint = this.ENDPOINTS.GET.MENSAJES.DIRECTOS;
-		}
-
-		if (this.urlSearchParams.has('ulid_grupo')) {
-			endpoint = this.ENDPOINTS.GET.MENSAJES.GRUPALES;
-		}
-
-		const response = await this.fetchWithoutForm(endpoint, 'get', this.urlSearchparamsObj);
+		const response = await this.fetchWithoutForm(this.endpointGetMensajes, 'get', this.urlSearchparamsObj);
 
 		if (response.json.length > 0) {
 			this.urlSearchparamsObj.ulid_mensaje = response.json[response.json.length - 1].ulid_mensaje;
-			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.urlSearchparamsObj);
+			await this.fetchWithoutForm(this.endpointSetUltimoId, 'post', this.urlSearchparamsObj);
 		}
 
 		const mensajes = this.mensajesTemplate(response.json);
@@ -100,17 +113,7 @@ export default class Mensaje extends Contacto {
 
 	streamMensajes() {
 
-		let endpoint;
-
-		if (this.urlSearchParams.has('ulid_contacto')) {
-			endpoint = `${this.ENDPOINTS.GET.MENSAJES.STREAM_DIRECTOS}?ulid_contacto=${this.urlSearchParams.get('ulid_contacto')}`;
-		}
-
-		if (this.urlSearchParams.has('ulid_grupo')) {
-			endpoint = `${this.ENDPOINTS.GET.MENSAJES.STREAM_GRUPALES}?ulid_grupo=${this.urlSearchParams.get('ulid_grupo')}`;
-		}
-
-		const evtSource = new EventSource(endpoint);
+		const evtSource = new EventSource(`${this.endpointStreamMensajes}?${this.ulid_type}=${this.ulid_value}`);
 		this.mostrado = true;
 
 		// 🔥 Cada vez que se abre (incluye reconexiones)
@@ -135,7 +138,7 @@ export default class Mensaje extends Contacto {
 			const mensaje = JSON.parse(event.data);
 			this.urlSearchparamsObj.ulid_mensaje = mensaje;
 
-			await this.fetchWithoutForm(this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID, 'post', this.urlSearchparamsObj);
+			await this.fetchWithoutForm(this.endpointSetUltimoId, 'post', this.urlSearchparamsObj);
 		});
 	}
 
@@ -338,14 +341,11 @@ export default class Mensaje extends Contacto {
 			this.dom.h1.textContent = this.urlSearchParams.get('nombre');
 
 			if (this.urlSearchParams.has('ulid_grupo')) {
-				this.endpointArchivo = this.ENDPOINTS.GET.MENSAJES.ARCHIVOS.GRUPAL;
-				this.ulid_type = 'ulid_grupo';
-				this.ulid_value = this.urlSearchParams.get('ulid_grupo');
 
 				const formInvitar =
 					`
 						<form method="POST" name="invitarGrupo">
-							<input type="hidden" value="${this.urlSearchParams.get('ulid_grupo')}" name="ulid_grupo">
+							<input type="hidden" value="${this.ulid_value}" name="ulid_grupo">
 							<select name="ulid_contacto" id="ulid_contacto" required>
 								<option value="">Añadir a...</option>
 							</select>
@@ -355,27 +355,22 @@ export default class Mensaje extends Contacto {
 
 				this.dom.header.insertAdjacentHTML('beforeend', this.sanitize(formInvitar));
 
-				this.streamContactosInvitables(this.urlSearchParams.get('ulid_grupo'));
+				this.streamContactosInvitables(this.ulid_value);
 
 				this.dom.form[0].name = 'createMensajeGrupal';
 				this.dom.form[1].name = 'createMensajeGrupalImagen';
 				this.dom.form[2].name = 'createMensajeGrupalImagen';
 				this.dom.form[3].name = 'createMensajeGrupalAudio';
-				// this.dom.form[4].name = 'createMensajeGrupalAudio';
 				this.dom.form[4].name = 'createMensajeGrupalVideo';
 				this.dom.form[5].name = 'createMensajeGrupalVideo';
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
-				this.endpointArchivo = this.ENDPOINTS.GET.MENSAJES.ARCHIVOS.DIRECTO;
-				this.ulid_type = 'ulid_contacto';
-				this.ulid_value = this.urlSearchParams.get('ulid_contacto');
 
 				this.dom.form[0].name = 'createMensajeDirecto';
 				this.dom.form[1].name = 'createMensajeDirectoImagen';
 				this.dom.form[2].name = 'createMensajeDirectoImagen';
 				this.dom.form[3].name = 'createMensajeDirectoAudio';
-				// this.dom.form[4].name = 'createMensajeDirectoAudio';
 				this.dom.form[4].name = 'createMensajeDirectoVideo';
 				this.dom.form[5].name = 'createMensajeDirectoVideo';
 			}

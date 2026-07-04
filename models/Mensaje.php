@@ -131,30 +131,19 @@ readonly class Mensaje extends Contacto
 
 	// MARK: GET ULTIMO ID DIRECTO
 
-	private function getUltimoIdDirecto(): void
+	public function getUltimoIdDirecto(): void
 	{
 		$this->getUltimoIdTemplate('contacto');
 	}
 
 	// MARK: GET ULTIMO ID GRUPAL
 
-	private function getUltimoIdGrupal(): void
+	public function getUltimoIdGrupal(): void
 	{
 		$this->getUltimoIdTemplate('grupo');
 	}
 
-	// MARK: GET ULTIMO ID
-
-	public function getUltimoIdMensaje(): void
-	{
-		if (isset($_GET['ulid_contacto'])) {
-			$this->getUltimoIdDirecto();
-		}
-
-		if (isset($_GET['ulid_grupo'])) {
-			$this->getUltimoIdGrupal();
-		}
-	}
+	// MARK: SET ULTIMO ID TEMPLATE
 
 	private function setUltimoIdTemplate(string $tipo_contacto): void
 	{
@@ -180,7 +169,8 @@ readonly class Mensaje extends Contacto
 		$query =
 			"INSERT INTO ultimos_mensajes_leidos_{$config['tipo']} (ulid_usuario, {$config['ulid']}, ulid_mensaje)
 			VALUES (?, ?, ?)
-			ON DUPLICATE KEY UPDATE ulid_mensaje = ?";
+			ON DUPLICATE KEY
+			UPDATE ulid_mensaje = ?";
 
 		$this->executeQuery(
 			$query,
@@ -197,32 +187,18 @@ readonly class Mensaje extends Contacto
 		$this->sendResponse();
 	}
 
-
 	// MARK: SET ULTIMO ID DIRECTO
 
-	private function setUltimoIdDirecto(): void
+	public function setUltimoIdDirecto(): void
 	{
 		$this->setUltimoIdTemplate('contacto');
 	}
 
 	// MARK: SET ULTIMO ID GRUPAL
 
-	private function setUltimoIdGrupal(): void
+	public function setUltimoIdGrupal(): void
 	{
 		$this->setUltimoIdTemplate('grupo');
-	}
-
-	// MARK: SET ULTIMO ID
-
-	public function setultimoIdLeido(): void
-	{
-		if (isset($_POST['ulid_contacto'])) {
-			$this->setUltimoIdDirecto();
-		}
-
-		if (isset($_POST['ulid_grupo'])) {
-			$this->setUltimoIdGrupal();
-		}
 	}
 
 	// MARK: READ MENSAJES DIRECTOS
@@ -250,8 +226,7 @@ readonly class Mensaje extends Contacto
 			FROM mensajes
 			LEFT JOIN usuarios
 				ON mensajes.ulid_emisor = usuarios.ulid_usuario
-			WHERE mensajes.ulid_contacto IS NOT NULL
-			AND (
+			WHERE (
 				LEAST(ulid_emisor, ulid_contacto) = ?
 				AND GREATEST(ulid_emisor, ulid_contacto) = ?
 			)
@@ -539,7 +514,6 @@ readonly class Mensaje extends Contacto
 				LEAST(ulid_emisor, ulid_contacto) = ?
 				AND GREATEST(ulid_emisor, ulid_contacto) = ?
 			)
-			AND mensajes.ulid_grupo IS NULL
 			ORDER BY mensajes.ulid_mensaje ASC";
 
 		$mensajes = $this->executeQuery(
@@ -579,7 +553,6 @@ readonly class Mensaje extends Contacto
 				WHERE ulid_usuario = ?
 				AND ulid_grupo = ?
 			), '')
-	        AND mensajes.ulid_contacto IS NULL
 			AND mensajes.ulid_grupo = ?
 	        ORDER BY mensajes.ulid_mensaje ASC";
 

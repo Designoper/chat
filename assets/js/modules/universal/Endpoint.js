@@ -22,7 +22,8 @@ export default class Endpoint extends Fetch {
 				GRUPALES: `${this.ROOT}mensajes/grupales`,
 				STREAM_DIRECTOS: `${this.ROOT}mensajes/stream/directos`,
 				STREAM_GRUPALES: `${this.ROOT}mensajes/stream/grupales`,
-				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`,
+				ULTIMO_ID_DIRECTO: `${this.ROOT}mensajes/ultimo-id-directo`,
+				ULTIMO_ID_GRUPAL: `${this.ROOT}mensajes/ultimo-id-grupal`,
 				ARCHIVOS: {
 					DIRECTO: `${this.ROOT}mensajes/archivos/directo`,
 					GRUPAL: `${this.ROOT}mensajes/archivos/grupal`,
@@ -64,7 +65,8 @@ export default class Endpoint extends Fetch {
 				CREAR_AUDIO_GRUPAL: `${this.ROOT}mensajes/crear/audio-grupal`,
 				CREAR_VIDEO_GRUPAL: `${this.ROOT}mensajes/crear/video-grupal`,
 				ELIMINAR: `${this.ROOT}mensajes/delete`,
-				ULTIMO_ID: `${this.ROOT}mensajes/ultimo-id`
+				ULTIMO_ID_DIRECTO: `${this.ROOT}mensajes/ultimo-id-directo`,
+				ULTIMO_ID_GRUPAL: `${this.ROOT}mensajes/ultimo-id-grupal`
 			},
 			CONEXION: {
 				ESTADO: `${this.ROOT}conexion/estado`,
