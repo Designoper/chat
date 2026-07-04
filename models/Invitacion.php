@@ -432,9 +432,9 @@ readonly class Invitacion extends Grupo
 		// 2. Validar que existe la invitación
 		$query =
 			"SELECT 1
-         FROM invitaciones_grupales
-         WHERE ulid_usuario = ?
-           AND ulid_grupo = ?";
+			FROM invitaciones_grupales
+			WHERE ulid_usuario = ?
+			AND ulid_grupo = ?";
 
 		$existeInvitacion = $this->executeQuery(
 			$query,
@@ -452,9 +452,9 @@ readonly class Invitacion extends Grupo
 		// 3. Validar que NO eres miembro del grupo
 		$query =
 			"SELECT 1
-         FROM contactos_grupales
-         WHERE ulid_usuario = ?
-           AND ulid_grupo = ?";
+			FROM contactos_grupales
+			WHERE ulid_usuario = ?
+			AND ulid_grupo = ?";
 
 		$esMiembro = $this->executeQuery(
 			$query,
@@ -565,22 +565,21 @@ readonly class Invitacion extends Grupo
 	private function readContactosInvitables(): array
 	{
 		$query =
-			"SELECT ulid_usuario, nombre_usuario
+			"SELECT u.ulid_usuario, u.nombre_usuario
 			FROM usuarios u
-			WHERE u.ulid_usuario NOT IN
-			(
-				SELECT ulid_usuario
-				FROM contactos_grupales
-				WHERE ulid_grupo = ?
+			WHERE NOT EXISTS (
+				SELECT 1
+				FROM contactos_grupales cg
+				WHERE cg.ulid_usuario = u.ulid_usuario
+				AND cg.ulid_grupo = ?
 			)
-			AND u.ulid_usuario NOT IN
-			(
-				SELECT ulid_usuario
-				FROM invitaciones_grupales
-				WHERE ulid_grupo = ?
+			AND NOT EXISTS (
+				SELECT 1
+				FROM invitaciones_grupales ig
+				WHERE ig.ulid_usuario = u.ulid_usuario
+				AND ig.ulid_grupo = ?
 			)
-			AND EXISTS
-			(
+			AND EXISTS (
 				SELECT 1
 				FROM contactos_directos cd
 				WHERE cd.ulid_a = LEAST(?, u.ulid_usuario)
