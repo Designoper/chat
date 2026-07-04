@@ -94,7 +94,7 @@ RewriteRule ^(\.git|\.svn|config|private|backups|models)(/|$) - [F,L]
     # Denies anyone to embbed the website into an <iframe>, <embed>, <object>...to prevent click-jacking
     Header set X-Frame-Options "Deny"
     # Prevents MIME type sniffing
-    Header set X-Content-Type-Options: nosniff
+    Header set X-Content-Type-Options "nosniff"
     # Force HTTP into HTTPS to avoid man in the middle attacks. Max-age written here is 2 years
     Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains"
     # Privacy friendly setting; will only give origin in referer, without path, query string...
