@@ -24,8 +24,8 @@ readonly class Invitacion extends Grupo
 		// Buscar usuario por código
 		$query =
 			"SELECT ulid_usuario
-         FROM usuarios
-         WHERE codigo_contacto = ?";
+			FROM usuarios
+			WHERE codigo_contacto = ?";
 
 		$contacto = $this->executeQuery(
 			$query,
@@ -49,9 +49,9 @@ readonly class Invitacion extends Grupo
 		// Ya son contactos
 		$query =
 			"SELECT 1
-         FROM contactos_directos
-         WHERE ulid_a = LEAST(?, ?)
-           AND ulid_b = GREATEST(?, ?)";
+			FROM contactos_directos
+			WHERE ulid_a = LEAST(?, ?)
+			AND ulid_b = GREATEST(?, ?)";
 
 		$yaSonContactos = $this->executeQuery(
 			$query,
@@ -74,9 +74,9 @@ readonly class Invitacion extends Grupo
 		// Invitación duplicada
 		$query =
 			"SELECT 1
-         FROM invitaciones_directas
-         WHERE ulid_usuario = ?
-           AND ulid_contacto = ?";
+			FROM invitaciones_directas
+			WHERE ulid_usuario = ?
+			AND ulid_contacto = ?";
 
 		$yaInvitado = $this->executeQuery(
 			$query,
@@ -97,9 +97,9 @@ readonly class Invitacion extends Grupo
 		// Invitación cruzada → aceptar automáticamente
 		$query =
 			"SELECT 1
-         FROM invitaciones_directas
-         WHERE ulid_usuario = ?
-           AND ulid_contacto = ?";
+			FROM invitaciones_directas
+			WHERE ulid_usuario = ?
+			AND ulid_contacto = ?";
 
 		$invitacionCruzada = $this->executeQuery(
 			$query,
@@ -119,7 +119,7 @@ readonly class Invitacion extends Grupo
 
 			$query =
 				"INSERT IGNORE INTO contactos_directos (ulid_a, ulid_b)
-             VALUES (?, ?)";
+             	VALUES (?, ?)";
 
 			$this->executeQuery(
 				$query,
@@ -130,8 +130,11 @@ readonly class Invitacion extends Grupo
 			// Eliminar invitaciones cruzadas
 			$query =
 				"DELETE FROM invitaciones_directas
-             WHERE (ulid_usuario = ? AND ulid_contacto = ?)
-                OR (ulid_usuario = ? AND ulid_contacto = ?)";
+				WHERE (ulid_usuario, ulid_contacto) IN
+				(
+					(?, ?),
+					(?, ?)
+				)";
 
 			$this->executeQuery(
 				$query,
@@ -151,7 +154,7 @@ readonly class Invitacion extends Grupo
 		// Si no hay cruzada → crear invitación normal
 		$query =
 			"INSERT INTO invitaciones_directas (ulid_usuario, ulid_contacto)
-         VALUES (?, ?)";
+         	VALUES (?, ?)";
 
 		$this->executeQuery(
 			$query,
@@ -191,8 +194,11 @@ readonly class Invitacion extends Grupo
 		// Eliminar invitaciones en ambos sentidos
 		$query =
 			"DELETE FROM invitaciones_directas
-         	WHERE (ulid_usuario = ? AND ulid_contacto = ?)
-            OR (ulid_usuario = ? AND ulid_contacto = ?)";
+         	WHERE (ulid_usuario, ulid_contacto) IN
+			(
+				(?, ?),
+				(?, ?)
+			)";
 
 		$this->executeQuery(
 			$query,
@@ -254,8 +260,17 @@ readonly class Invitacion extends Grupo
 		}
 
 		// 2. Validar que el usuario existe
-		$query = "SELECT 1 FROM usuarios WHERE ulid_usuario = ?";
-		$existeUsuario = $this->executeQuery($query, 's', [$contacto], SqlReturn::FetchColumn);
+		$query =
+			"SELECT 1
+			FROM usuarios
+			WHERE ulid_usuario = ?";
+
+		$existeUsuario = $this->executeQuery(
+			$query,
+			's',
+			[$contacto],
+			SqlReturn::FetchColumn
+		);
 
 		if (!$existeUsuario) {
 			$this->status = 404;
@@ -279,9 +294,9 @@ readonly class Invitacion extends Grupo
 		// 5. Validar que el invitado NO es miembro del grupo
 		$query =
 			"SELECT 1
-         FROM contactos_grupales
-         WHERE ulid_usuario = ?
-           AND ulid_grupo = ?";
+         	FROM contactos_grupales
+         	WHERE ulid_usuario = ?
+          	AND ulid_grupo = ?";
 
 		$esMiembro = $this->executeQuery(
 			$query,
@@ -401,7 +416,7 @@ readonly class Invitacion extends Grupo
 		$this->setUlid('ulid_grupo');
 		$this->checkValidationErrors();
 
-		$grupo   = $this->ulid_grupo;
+		$grupo = $this->ulid_grupo;
 		$usuario = $this->session_ulid;
 
 		// 1. Validar que el grupo existe

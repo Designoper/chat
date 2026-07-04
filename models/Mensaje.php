@@ -31,11 +31,11 @@ readonly class Mensaje extends Contacto
 			"SELECT 1
 			FROM mensajes
 			WHERE ulid_mensaje = ?
-			AND (
-				(ulid_emisor = ? AND ulid_contacto = ?)
-				OR
-				(ulid_emisor = ? AND ulid_contacto = ?)
-			)";
+			AND (ulid_emisor, ulid_contacto) IN
+				(
+					(?, ?),
+					(?, ?)
+				)";
 
 		$esDeLaConversacion = $this->executeQuery(
 			$query,
@@ -107,12 +107,14 @@ readonly class Mensaje extends Contacto
 		$this->isContacto();
 
 		$query =
-			"SELECT COALESCE((
-				SELECT ulid_mensaje
-				FROM ultimos_mensajes_leidos_directos
-				WHERE ulid_usuario = ?
-				AND ulid_contacto = ?
-			), '') AS ulid_mensaje";
+			"SELECT COALESCE(
+				(
+					SELECT ulid_mensaje
+					FROM ultimos_mensajes_leidos_directos
+					WHERE ulid_usuario = ?
+					AND ulid_contacto = ?
+				),
+			'') AS ulid_mensaje";
 
 		$last_id = $this->executeQuery(
 			$query,
@@ -174,18 +176,35 @@ readonly class Mensaje extends Contacto
 		}
 	}
 
-	// MARK: SET ULTIMO ID DIRECTO
+	// MARK: SET ULTIMO ID TEMPLATE
 
-	private function setUltimoIdDirecto(): void
+	private function setUltimoIdTemplate(string $tipo_contacto): void
 	{
-		$this->setUlid('ulid_contacto');
+		$ulid = null;
+		$tipo = null;
+		$security_function = null;
+
+		switch ($tipo_contacto) {
+			case 'contacto':
+				$ulid = 'ulid_contacto';
+				$tipo = 'directos';
+				$security_function = fn() => $this->isContacto();
+				break;
+
+			case 'grupo':
+				$ulid = 'ulid_grupo';
+				$tipo = 'grupales';
+				$security_function = fn() => $this->isMiembroGrupo();
+		}
+
+		$this->setUlid($ulid);
 		$this->setUlid('ulid_mensaje');
 		$this->checkValidationErrors();
 
-		$this->isContacto();
+		$security_function();
 
 		$query =
-			"INSERT INTO ultimos_mensajes_leidos_directos (ulid_usuario, ulid_contacto, ulid_mensaje)
+			"INSERT INTO ultimos_mensajes_leidos_$tipo (ulid_usuario, $ulid, ulid_mensaje)
 			VALUES (?, ?, ?)
 			ON DUPLICATE KEY
 			UPDATE ulid_mensaje = ?";
@@ -195,7 +214,7 @@ readonly class Mensaje extends Contacto
 			'ssss',
 			[
 				$this->session_ulid,
-				$this->ulid_contacto,
+				$this->$ulid,
 				$this->ulid_mensaje,
 				$this->ulid_mensaje
 			]
@@ -205,35 +224,18 @@ readonly class Mensaje extends Contacto
 		$this->sendResponse();
 	}
 
+	// MARK: SET ULTIMO ID DIRECTO
+
+	private function setUltimoIdDirecto(): void
+	{
+		$this->setUltimoIdTemplate('contacto');
+	}
+
 	// MARK: SET ULTIMO ID GRUPAL
 
 	private function setUltimoIdGrupal(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->setUlid('ulid_mensaje');
-		$this->checkValidationErrors();
-
-		$this->isMiembroGrupo();
-
-		$query =
-			"INSERT INTO ultimos_mensajes_leidos_grupales (ulid_usuario, ulid_grupo, ulid_mensaje)
-			VALUES (?, ?, ?)
-			ON DUPLICATE KEY
-			UPDATE ulid_mensaje = ?";
-
-		$this->executeQuery(
-			$query,
-			'ssss',
-			[
-				$this->session_ulid,
-				$this->ulid_grupo,
-				$this->ulid_mensaje,
-				$this->ulid_mensaje
-			]
-		);
-
-		$this->status = 201;
-		$this->sendResponse();
+		$this->setUltimoIdTemplate('grupo');
 	}
 
 	// MARK: READ MENSAJES DIRECTOS
@@ -502,7 +504,7 @@ readonly class Mensaje extends Contacto
 		}
 	}
 
-	// MARK: DELETE MENSAJE
+	// MARK: DELETE MENSAJE (FIX IMAGE)
 
 	public function deleteMensaje(): void
 	{
@@ -618,7 +620,7 @@ readonly class Mensaje extends Contacto
 
 	// MARK: STREAM MENSAJES
 
-	protected function streamMensajesGeneric(callable $getter): void
+	private function streamMensajesGeneric(callable $getter): void
 	{
 		$mensajes = $getter();
 
@@ -640,13 +642,7 @@ readonly class Mensaje extends Contacto
 
 		$this->isContacto();
 
-		$this->setSSE(
-			fn() =>
-			$this->streamMensajesGeneric(
-				fn() =>
-				$this->getNuevosMensajesDirectos()
-			)
-		);
+		$this->setSSE(fn() => $this->streamMensajesGeneric(fn() => $this->getNuevosMensajesDirectos()));
 	}
 
 	public function streamMensajesGrupales(): void
@@ -656,12 +652,6 @@ readonly class Mensaje extends Contacto
 
 		$this->isMiembroGrupo();
 
-		$this->setSSE(
-			fn() =>
-			$this->streamMensajesGeneric(
-				fn() =>
-				$this->getNuevosMensajesGrupales()
-			)
-		);
+		$this->setSSE(fn() => $this->streamMensajesGeneric(fn() => $this->getNuevosMensajesGrupales()));
 	}
 }
