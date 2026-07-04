@@ -8,8 +8,4 @@ mensaje.delete();
 mensaje.setForm();
 mensaje.setObj();
 await mensaje.getUltimoId();
-await mensaje.getMensajes();
-
-mensaje.scrollToCurrent();
-
 mensaje.streamMensajes();
