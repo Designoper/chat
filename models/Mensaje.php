@@ -361,7 +361,7 @@ readonly class Mensaje extends Contacto
 
 		$this->isContacto();
 
-		$ulid = $this->generateUlid();
+		$this->ulid_mensaje = $this->generateUlid();
 
 		$query =
 			"INSERT INTO mensajes (ulid_mensaje, contenido, ulid_emisor, ulid_contacto)
@@ -371,7 +371,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'ssss',
 			[
-				$ulid,
+				$this->ulid_mensaje,
 				$this->contenido,
 				$this->session_ulid,
 				$this->ulid_contacto
@@ -392,7 +392,7 @@ readonly class Mensaje extends Contacto
 
 		$this->isContacto();
 
-		$ulid_mensaje = $this->generateUlid();
+		$this->ulid_mensaje = $this->generateUlid();
 
 		$this->file = $this->archivo;
 		$this->extraDirectories = self::FOLDER;
@@ -406,7 +406,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'sssss',
 			[
-				$ulid_mensaje,
+				$this->ulid_mensaje,
 				'imagen',
 				$file_name,
 				$this->session_ulid,
@@ -429,7 +429,7 @@ readonly class Mensaje extends Contacto
 
 		$this->isContacto();
 
-		$ulid_mensaje = $this->generateUlid();
+		$this->ulid_mensaje = $this->generateUlid();
 
 		$this->file = $this->archivo;
 		$this->extraDirectories = self::FOLDER;
@@ -443,7 +443,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'sssss',
 			[
-				$ulid_mensaje,
+				$this->ulid_mensaje,
 				'audio',
 				$file_name,
 				$this->session_ulid,
@@ -466,7 +466,7 @@ readonly class Mensaje extends Contacto
 
 		$this->isContacto();
 
-		$ulid_mensaje = $this->generateUlid();
+		$this->ulid_mensaje = $this->generateUlid();
 
 		$this->file = $this->archivo;
 		$this->extraDirectories = self::FOLDER;
@@ -480,7 +480,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'sssss',
 			[
-				$ulid_mensaje,
+				$this->ulid_mensaje,
 				'video',
 				$file_name,
 				$this->session_ulid,
@@ -503,7 +503,7 @@ readonly class Mensaje extends Contacto
 
 		$this->isMiembroGrupo();
 
-		$ulid = $this->generateUlid();
+		$this->ulid_mensaje = $this->generateUlid();
 
 		$query =
 			"INSERT INTO mensajes (ulid_mensaje, contenido, ulid_emisor, ulid_grupo)
@@ -513,7 +513,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'ssss',
 			[
-				$ulid,
+				$this->ulid_mensaje,
 				$this->contenido,
 				$this->session_ulid,
 				$this->ulid_grupo
@@ -534,7 +534,7 @@ readonly class Mensaje extends Contacto
 
 		$this->isMiembroGrupo();
 
-		$ulid_mensaje = $this->generateUlid();
+		$this->ulid_mensaje = $this->generateUlid();
 
 		$this->file = $this->archivo;
 		$this->extraDirectories = self::FOLDER;
@@ -548,7 +548,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'sssss',
 			[
-				$ulid_mensaje,
+				$this->ulid_mensaje,
 				'imagen',
 				$file_name,
 				$this->session_ulid,
@@ -571,7 +571,7 @@ readonly class Mensaje extends Contacto
 
 		$this->isMiembroGrupo();
 
-		$ulid_mensaje = $this->generateUlid();
+		$this->ulid_mensaje = $this->generateUlid();
 
 		$this->file = $this->archivo;
 		$this->extraDirectories = self::FOLDER;
@@ -585,7 +585,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'sssss',
 			[
-				$ulid_mensaje,
+				$this->ulid_mensaje,
 				'audio',
 				$file_name,
 				$this->session_ulid,
@@ -608,7 +608,7 @@ readonly class Mensaje extends Contacto
 
 		$this->isMiembroGrupo();
 
-		$ulid_mensaje = $this->generateUlid();
+		$this->ulid_mensaje = $this->generateUlid();
 
 		$this->file = $this->archivo;
 		$this->extraDirectories = self::FOLDER;
@@ -622,7 +622,7 @@ readonly class Mensaje extends Contacto
 			$query,
 			'sssss',
 			[
-				$ulid_mensaje,
+				$this->ulid_mensaje,
 				'video',
 				$file_name,
 				$this->session_ulid,

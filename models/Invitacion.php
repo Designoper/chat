@@ -299,9 +299,9 @@ readonly class Invitacion extends Grupo
 		// 6. Validar que NO tiene invitación pendiente
 		$query =
 			"SELECT 1
-         FROM invitaciones_grupales
-         WHERE ulid_usuario = ?
-           AND ulid_grupo = ?";
+			FROM invitaciones_grupales
+			WHERE ulid_usuario = ?
+			AND ulid_grupo = ?";
 
 		$yaInvitado = $this->executeQuery(
 			$query,
@@ -319,9 +319,9 @@ readonly class Invitacion extends Grupo
 		// 7. Validar que es tu contacto directo
 		$query =
 			"SELECT 1
-         FROM contactos_directos
-         WHERE ulid_a = LEAST(?, ?)
-           AND ulid_b = GREATEST(?, ?)";
+			FROM contactos_directos
+			WHERE ulid_a = LEAST(?, ?)
+			AND ulid_b = GREATEST(?, ?)";
 
 		$esContacto = $this->executeQuery(
 			$query,
@@ -343,7 +343,7 @@ readonly class Invitacion extends Grupo
 		// 9. Insertar invitación
 		$query =
 			"INSERT INTO invitaciones_grupales (ulid_usuario, ulid_grupo)
-         VALUES (?, ?)";
+			VALUES (?, ?)";
 
 		$this->executeQuery(
 			$query,
@@ -354,7 +354,6 @@ readonly class Invitacion extends Grupo
 		$this->status = 201;
 		$this->sendResponse();
 	}
-
 
 	// MARK: ACEPTAR GRUPO
 
@@ -458,8 +457,8 @@ readonly class Invitacion extends Grupo
 		// 4. Eliminar invitaciones (si hubiera duplicadas por error, se eliminan todas)
 		$query =
 			"DELETE FROM invitaciones_grupales
-         WHERE ulid_usuario = ?
-           AND ulid_grupo = ?";
+			WHERE ulid_usuario = ?
+			AND ulid_grupo = ?";
 
 		$this->executeQuery(
 			$query,

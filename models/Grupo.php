@@ -78,7 +78,7 @@ readonly class Grupo extends Usuario
 
 		$this->checkValidationErrors();
 
-		$ulid = $this->generateUlid();
+		$this->ulid_grupo = $this->generateUlid();
 
 		$query =
 			"INSERT INTO grupos (ulid_grupo, nombre_grupo, ulid_fundador)
@@ -89,7 +89,8 @@ readonly class Grupo extends Usuario
 				$query,
 				'sss',
 				[
-					$ulid,
+
+					$this->ulid_grupo,
 					$this->nombre_grupo,
 					$this->session_ulid
 				]
@@ -112,7 +113,7 @@ readonly class Grupo extends Usuario
 			'ss',
 			[
 				$this->session_ulid,
-				$ulid,
+				$this->ulid_grupo
 			]
 		);
 

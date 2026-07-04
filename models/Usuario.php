@@ -8,6 +8,7 @@ readonly class Usuario extends Setter
 {
 	protected string $nombre_usuario;
 	protected string $password;
+	protected string $ulid_usuario;
 
 	public function __construct()
 	{
@@ -30,11 +31,12 @@ readonly class Usuario extends Setter
 
 	public function createUsuario(): void
 	{
-		$ulid = $this->generateUlid();
 		$this->setNombre('nombre_usuario');
 		$this->setPassword('password');
 
 		$this->checkValidationErrors();
+
+		$this->ulid_usuario = $this->generateUlid();
 
 		$query =
 			"INSERT INTO usuarios (ulid_usuario, nombre_usuario, password, codigo_contacto)
@@ -52,14 +54,14 @@ readonly class Usuario extends Setter
 					$query,
 					'ssss',
 					[
-						$ulid,
+						$this->ulid_usuario,
 						$this->nombre_usuario,
 						password_hash($this->password, PASSWORD_DEFAULT),
 						$codigo
 					]
 				);
 
-				$_SESSION['ulid_usuario'] = $ulid;
+				$_SESSION['ulid_usuario'] = $this->ulid_usuario;
 				$this->status = 201;
 				$this->sendResponse();
 			} catch (\mysqli_sql_exception $error) {
