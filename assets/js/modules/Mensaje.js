@@ -116,11 +116,11 @@ export default class Mensaje extends Contacto {
 		// 🔥 Cada vez que se abre (incluye reconexiones)
 		evtSource.onopen = async () => {
 
-			await this.getMensajes();   // <--- tu impresión inicial
+			await this.getMensajes();
 			if (this.counter === 0) {
 				this.scrollToCurrent();
+				this.counter++;
 			}
-			this.counter++;
 		};
 
 		evtSource.addEventListener("mensaje", (event) => {
