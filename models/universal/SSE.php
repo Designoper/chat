@@ -17,7 +17,7 @@ abstract readonly class SSE extends Response
 
 	// MARK: LAST EVENT ID
 
-	protected function getLastEventId(): ?int
+	private function getLastEventId(): ?int
 	{
 		return isset($_SERVER['HTTP_LAST_EVENT_ID'])
 			? (int) $_SERVER['HTTP_LAST_EVENT_ID']
@@ -42,8 +42,7 @@ abstract readonly class SSE extends Response
 			}
 		}
 
-		ob_flush();
-		flush();
+		$this->doubleFlush();
 	}
 
 	// MARK: SET SSE
@@ -76,15 +75,10 @@ abstract readonly class SSE extends Response
 				break;
 			}
 
-			// Lógica de envío de eventos del usuario
 			$function();
 
-			// Heartbeat
 			$this->heartbeat();
-
-			// Flush en cada iteración
-			ob_flush();
-			flush();
+			$this->doubleFlush();
 
 			usleep(300000); // 0.3s
 		}
@@ -99,9 +93,19 @@ abstract readonly class SSE extends Response
 		if (time() - $lastPing > 10) {
 			$lastPing = time();
 			echo ": keepalive\n\n";
-			ob_flush();
-			flush();
+			$this->doubleFlush();
 		}
+	}
+
+	// MARK: DOUBLE FLUSH
+
+	private function doubleFlush(): void
+	{
+		if (ob_get_level() > 0) {
+			ob_flush();
+		}
+
+		flush();
 	}
 
 	// MARK: SEND EVENT
@@ -114,7 +118,6 @@ abstract readonly class SSE extends Response
 		echo "event: $event\n";
 		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
 
-		ob_flush();
-		flush();
+		$this->doubleFlush();
 	}
 }
