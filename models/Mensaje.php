@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Dom\Text;
-
 require_once __DIR__ . '/Contacto.php';
 
 readonly class Mensaje extends Contacto
