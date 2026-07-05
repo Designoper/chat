@@ -21,26 +21,21 @@ readonly class Grupo extends Usuario
 	protected function isFundadorGrupo(): void
 	{
 		$query =
-			"SELECT ulid_fundador
-			FROM grupos
-			WHERE ulid_usuario = ?
-			AND ulid_grupo = ?";
+			"SELECT EXISTS(
+				SELECT ulid_fundador
+				FROM grupos
+				WHERE ulid_fundador = ?
+				AND ulid_grupo = ?
+			)";
 
-		$ulid_fundador = $this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$this->ulid_grupo
-			],
-			SqlReturn::FetchColumn
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->ulid_grupo]
+		];
 
-		if ($ulid_fundador !== $this->session_ulid) {
-			$this->status = 403;
-			$this->errors->setIntegrityError('No eres el fundador del grupo');
-			$this->checkIntegrityErrors();
-		}
+		$ulid_fundador = $this->executeQuery($query, $params, SqlReturn::Exists);
+
+		$this->isAuthorized($ulid_fundador, 'No eres el fundador del grupo');
 	}
 
 	// MARK: IS MIEMBRO
@@ -55,15 +50,12 @@ readonly class Grupo extends Usuario
 				AND ulid_grupo = ?
 			)";
 
-		$rol = $this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$this->ulid_grupo
-			],
-			SqlReturn::Exists
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->ulid_grupo]
+		];
+
+		$rol = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		$this->isAuthorized($rol, 'No eres miembro del grupo');
 	}
@@ -81,16 +73,14 @@ readonly class Grupo extends Usuario
 			"INSERT INTO grupos (ulid_grupo, nombre_grupo, ulid_fundador)
 		 	VALUES (?, ?, ?)";
 
+		$params = [
+			['s', $this->ulid_grupo],
+			['s', $this->nombre_grupo],
+			['s', $this->session_ulid]
+		];
+
 		try {
-			$this->executeQuery(
-				$query,
-				'sss',
-				[
-					$this->ulid_grupo,
-					$this->nombre_grupo,
-					$this->session_ulid
-				]
-			);
+			$this->executeQuery($query, $params);
 		} catch (\mysqli_sql_exception $error) {
 			$this->isConflict($error, '¡Este nombre de grupo ya existe!');
 		}
@@ -99,14 +89,12 @@ readonly class Grupo extends Usuario
 			"INSERT INTO contactos_grupales (ulid_usuario, ulid_grupo)
 		 	VALUES (?, ?)";
 
-		$this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$this->ulid_grupo
-			]
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->ulid_grupo]
+		];
+
+		$this->executeQuery($query, $params);
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -126,14 +114,12 @@ readonly class Grupo extends Usuario
 			WHERE ulid_usuario = ?
 			AND ulid_grupo = ?";
 
-		$this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$this->ulid_grupo,
-			]
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->ulid_grupo]
+		];
+
+		$this->executeQuery($query, $params);
 
 		$this->status = 204;
 		$this->sendResponse();
@@ -152,13 +138,9 @@ readonly class Grupo extends Usuario
 			"DELETE FROM grupos
 			WHERE ulid_grupo = ?";
 
-		$this->executeQuery(
-			$query,
-			's',
-			[
-				$this->ulid_grupo
-			]
-		);
+		$params = [['s', $this->ulid_grupo]];
+
+		$this->executeQuery($query, $params);
 
 		$this->status = 204;
 		$this->sendResponse();

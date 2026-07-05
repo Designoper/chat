@@ -19,7 +19,7 @@ CREATE TABLE usuarios (
 CREATE TABLE grupos (
     ulid_grupo CHAR(26) PRIMARY KEY,
     nombre_grupo VARCHAR(20) NOT NULL UNIQUE,
-    ulid_fundador CHAR(26) NULL,
+    ulid_fundador CHAR(26) NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
 
     FOREIGN KEY (ulid_fundador)
