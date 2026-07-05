@@ -51,6 +51,15 @@ abstract readonly class SQL extends Database
 		return $encoded;
 	}
 
+	protected function isAuthorized(bool $result, string $error_message): void
+	{
+		if ($result === false) {
+			$this->status = 403;
+			$this->errors->setIntegrityError($error_message);
+			$this->checkIntegrityErrors();
+		}
+	}
+
 	// MARK: EXECUTE QUERY
 
 	protected function executeQuery(string $query, string $types, array $variables, ?SqlReturn $type = null): string|int|float|array|null|bool

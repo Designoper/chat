@@ -50,11 +50,7 @@ readonly class Mensaje extends Contacto
 			SqlReturn::Exists
 		);
 
-		if ($esDeLaConversacion === false) {
-			$this->status = 403;
-			$this->errors->setIntegrityError('Este archivo no pertenece a esta conversación');
-			$this->checkIntegrityErrors();
-		}
+		$this->isAuthorized($esDeLaConversacion, 'Este archivo no pertenece a la conversación');
 	}
 
 	// MARK: CAN VIEW ARCHIVO GRUPAL
@@ -62,10 +58,12 @@ readonly class Mensaje extends Contacto
 	protected function canViewArchivoGrupal(): void
 	{
 		$query =
-			"SELECT 1
-			FROM mensajes
-			WHERE ulid_mensaje = ?
-			AND ulid_grupo = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM mensajes
+				WHERE ulid_mensaje = ?
+				AND ulid_grupo = ?
+			)";
 
 		$esDeLaConversacion = $this->executeQuery(
 			$query,
@@ -73,15 +71,11 @@ readonly class Mensaje extends Contacto
 			[
 				$this->ulid_mensaje,
 				$this->ulid_grupo
-			]
-			// SqlReturn::FetchColumn
+			],
+			SqlReturn::Exists
 		);
 
-		if (!$esDeLaConversacion) {
-			$this->status = 403;
-			$this->errors->setIntegrityError('No pertences al grupo de este archivo.');
-			$this->checkIntegrityErrors();
-		}
+		$this->isAuthorized($esDeLaConversacion, 'No pertences al grupo de este archivo.');
 	}
 
 	// MARK: GET ULTIMO ID TEMPLATE
@@ -114,7 +108,7 @@ readonly class Mensaje extends Contacto
 					WHERE ulid_usuario = ?
 					AND {$config['ulid']} = ?
 				),
-			'') AS ulid_mensaje";
+			'')";
 
 		$last_id = $this->executeQuery(
 			$query,
@@ -440,24 +434,24 @@ readonly class Mensaje extends Contacto
 	private function isAutorMensaje(): void
 	{
 		$query =
-			"SELECT ulid_emisor
-			FROM mensajes
-			WHERE ulid_mensaje = ?";
+			"SELECT EXISTS(
+				SELECT ulid_emisor
+				FROM mensajes
+				WHERE ulid_mensaje = ?
+				AND ulid_emisor = ?
+			)";
 
 		$autor = $this->executeQuery(
 			$query,
-			"s",
+			"ss",
 			[
-				$this->ulid_mensaje
+				$this->ulid_mensaje,
+				$this->session_ulid
 			],
-			SqlReturn::FetchColumn
+			SqlReturn::Exists
 		);
 
-		if ($autor !== $this->session_ulid) {
-			$this->status = 403;
-			$this->errors->setIntegrityError('No eres el autor del mensaje');
-			$this->checkIntegrityErrors();
-		}
+		$this->isAuthorized($autor, 'No eres el autor del mensaje.');
 	}
 
 	// MARK: DELETE MENSAJE (FIX IMAGE)
