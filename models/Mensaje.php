@@ -38,13 +38,12 @@ readonly class Mensaje extends Contacto
 
 		$mensaje_directo = $this->executeQuery(
 			$query,
-			'sssss',
 			[
-				$this->ulid_mensaje,
-				$this->session_ulid,
-				$this->ulid_contacto,
-				$this->ulid_contacto,
-				$this->session_ulid
+				['s', $this->ulid_mensaje],
+				['s', $this->session_ulid],
+				['s', $this->ulid_contacto],
+				['s', $this->ulid_contacto],
+				['s', $this->session_ulid]
 			],
 			SqlReturn::Exists
 		);
@@ -68,10 +67,9 @@ readonly class Mensaje extends Contacto
 
 		$mensaje_grupo = $this->executeQuery(
 			$query,
-			'ss',
 			[
-				$this->ulid_mensaje,
-				$this->ulid_grupo
+				['s', $this->ulid_mensaje],
+				['s', $this->ulid_grupo]
 			],
 			SqlReturn::Exists
 		);
@@ -518,12 +516,11 @@ readonly class Mensaje extends Contacto
 
 		$mensajes = $this->executeQuery(
 			$query,
-			"ssss",
 			[
-				$this->session_ulid,
-				$this->ulid_contacto,
-				$user_min,
-				$user_max
+				['s', $this->session_ulid],
+				['s', $this->ulid_contacto],
+				['s', $user_min],
+				['s', $user_max]
 			],
 			SqlReturn::FetchAll
 		);
@@ -558,11 +555,10 @@ readonly class Mensaje extends Contacto
 
 		$mensajes = $this->executeQuery(
 			$query,
-			"sss",
 			[
-				$this->session_ulid,
-				$this->ulid_grupo,
-				$this->ulid_grupo
+				['s', $this->session_ulid],
+				['s', $this->ulid_grupo],
+				['s', $this->ulid_grupo]
 			],
 			SqlReturn::FetchAll
 		);

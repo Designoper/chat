@@ -52,12 +52,11 @@ readonly class Usuario extends Setter
 			try {
 				$this->executeQuery(
 					$query,
-					'ssss',
 					[
-						$this->ulid_usuario,
-						$this->nombre_usuario,
-						password_hash($this->password, PASSWORD_DEFAULT),
-						$codigo
+						['s', $this->ulid_usuario],
+						['s', $this->nombre_usuario],
+						['s', password_hash($this->password, PASSWORD_DEFAULT)],
+						['s', $codigo]
 					]
 				);
 
@@ -100,9 +99,8 @@ readonly class Usuario extends Setter
 
 		$usuario = $this->executeQuery(
 			$query,
-			's',
 			[
-				$this->nombre_usuario
+				['s', $this->nombre_usuario]
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -163,9 +161,8 @@ readonly class Usuario extends Setter
 
 		$usuario = $this->executeQuery(
 			$query,
-			's',
 			[
-				$this->session_ulid
+				['s', $this->session_ulid]
 			],
 			SqlReturn::FetchAssoc
 		);
@@ -187,9 +184,8 @@ readonly class Usuario extends Setter
 
 		$this->executeQuery(
 			$query,
-			's',
 			[
-				$this->session_ulid
+				['s', $this->session_ulid]
 			]
 		);
 
@@ -213,10 +209,9 @@ readonly class Usuario extends Setter
 		try {
 			$this->executeQuery(
 				$query,
-				'ss',
 				[
-					$this->nombre_usuario,
-					$this->session_ulid
+					['s', $this->nombre_usuario],
+					['s', $this->session_ulid]
 				]
 			);
 		} catch (\mysqli_sql_exception $error) {
@@ -243,10 +238,9 @@ readonly class Usuario extends Setter
 
 		$this->executeQuery(
 			$query,
-			'ss',
 			[
-				password_hash($this->password, PASSWORD_DEFAULT),
-				$this->session_ulid
+				['s', password_hash($this->password, PASSWORD_DEFAULT)],
+				['s', $this->session_ulid]
 			]
 		);
 
