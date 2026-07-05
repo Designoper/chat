@@ -220,12 +220,7 @@ readonly class Usuario extends Setter
 				]
 			);
 		} catch (\mysqli_sql_exception $error) {
-
-			if ($error->getCode() === 1062) {
-				$this->status = 409;
-				$this->errors->setIntegrityError('¡Este nombre de usuario ya existe!');
-				$this->checkIntegrityErrors();
-			}
+			$this->isConflict($error, '¡Este nombre de usuario ya existe!');
 		}
 
 		$this->status = 201;

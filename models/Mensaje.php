@@ -52,7 +52,10 @@ readonly class Mensaje extends Contacto
 		$this->isAuthorized($mensaje_directo, 'Este archivo no pertenece a la conversación.');
 	}
 
+	// ============================================================================
 	// MARK: CAN VIEW ARCHIVO GRUPAL
+	// ============================================================================
+
 	protected function canViewArchivoGrupal(): void
 	{
 		$query =
@@ -123,6 +126,7 @@ readonly class Mensaje extends Contacto
 		$this->content = $last_ulid;
 		$this->sendResponse();
 	}
+
 	// ============================================================================
 	// MARK: GET ULTIMO ULID DIRECTO
 	// ============================================================================
@@ -130,6 +134,7 @@ readonly class Mensaje extends Contacto
 	{
 		$this->getUltimoUlidTemplate('contacto');
 	}
+
 	// ============================================================================
 	// MARK: GET ULTIMO ULID GRUPAL
 	// ============================================================================

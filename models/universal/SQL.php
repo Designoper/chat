@@ -60,6 +60,15 @@ abstract readonly class SQL extends Database
 		}
 	}
 
+	protected function isConflict(\mysqli_sql_exception $error, string $error_message): void
+	{
+		if ($error->getCode() === 1062) {
+			$this->status = 409;
+			$this->errors->setIntegrityError($error_message);
+			$this->checkIntegrityErrors();
+		}
+	}
+
 	// MARK: EXECUTE QUERY
 
 	protected function executeQuery(string $query, string $types, array $variables, ?SqlReturn $type = null): string|int|float|array|null|bool

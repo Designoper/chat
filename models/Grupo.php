@@ -48,10 +48,12 @@ readonly class Grupo extends Usuario
 	protected function isMiembroGrupo(): void
 	{
 		$query =
-			"SELECT 1
-			FROM contactos_grupales
-			WHERE ulid_usuario = ?
-			AND ulid_grupo = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM contactos_grupales
+				WHERE ulid_usuario = ?
+				AND ulid_grupo = ?
+			)";
 
 		$rol = $this->executeQuery(
 			$query,
@@ -60,14 +62,10 @@ readonly class Grupo extends Usuario
 				$this->session_ulid,
 				$this->ulid_grupo
 			],
-			SqlReturn::FetchColumn
+			SqlReturn::Exists
 		);
 
-		if (!$rol) {
-			$this->status = 403;
-			$this->errors->setIntegrityError('No eres miembro del grupo');
-			$this->checkIntegrityErrors();
-		}
+		$this->isAuthorized($rol, 'No eres miembro del grupo');
 	}
 
 	// MARK: CREATE GRUPO
@@ -75,7 +73,6 @@ readonly class Grupo extends Usuario
 	public function createGrupo(): void
 	{
 		$this->setNombre('nombre_grupo');
-
 		$this->checkValidationErrors();
 
 		$this->ulid_grupo = $this->generateUlid();
@@ -89,19 +86,13 @@ readonly class Grupo extends Usuario
 				$query,
 				'sss',
 				[
-
 					$this->ulid_grupo,
 					$this->nombre_grupo,
 					$this->session_ulid
 				]
 			);
 		} catch (\mysqli_sql_exception $error) {
-
-			if ($error->getCode() === 1062) {
-				$this->status = 409;
-				$this->errors->setIntegrityError('¡Este nombre de grupo ya existe!');
-				$this->checkIntegrityErrors();
-			}
+			$this->isConflict($error, '¡Este nombre de grupo ya existe!');
 		}
 
 		$query =
