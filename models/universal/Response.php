@@ -28,9 +28,12 @@ abstract readonly class Response
         exit;
     }
 
+    // MARK: SEND OK RESPONSE
+
     protected function sendOkResponse(int $http_code, ?array $content = null): never
     {
         $this->status = $http_code;
+
         if ($content) {
             $this->content = $content;
         }
