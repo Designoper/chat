@@ -85,13 +85,13 @@ final readonly class Router
 
     private function executeRoute(): void
     {
-        $method = $_SERVER['REQUEST_METHOD'];
         $requestUri = $_SERVER['REQUEST_URI'];
-
-        $protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $protocol = $_SERVER['REQUEST_SCHEME'];
+        $host = $_SERVER['HTTP_HOST'];
         $domain = $protocol . '://' . $host;
         $completeUrl = $domain . $requestUri;
+
+        $method = $_SERVER['REQUEST_METHOD'];
 
         switch ($method) {
             case 'GET':
