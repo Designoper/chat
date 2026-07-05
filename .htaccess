@@ -111,13 +111,13 @@ RewriteRule ^(.*)$ /Router.php [QSA,L]
 
 </IfModule>
 
-# Gzip compression
-<IfModule mod_deflate.c>
+# # Gzip compression
+# <IfModule mod_deflate.c>
 
-    AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/css
-    AddOutputFilterByType DEFLATE text/javascript
-    AddOutputFilterByType DEFLATE image/svg+xml
-    AddOutputFilterByType DEFLATE font/woff2
+#     AddOutputFilterByType DEFLATE text/html
+#     AddOutputFilterByType DEFLATE text/css
+#     AddOutputFilterByType DEFLATE text/javascript
+#     AddOutputFilterByType DEFLATE image/svg+xml
+#     AddOutputFilterByType DEFLATE font/woff2
 
-</IfModule>
+# </IfModule>
