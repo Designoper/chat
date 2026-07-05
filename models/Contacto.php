@@ -123,22 +123,19 @@ readonly class Contacto extends Invitacion
 				fecha_creacion DESC,
 				nombre ASC";
 
-		$contactos = $this->executeQuery(
-			$query,
-			'sssssssss',
-			[
-				$this->session_ulid,
-				$this->session_ulid,
-				$this->session_ulid,
-				$this->session_ulid,
-				$this->session_ulid,
-				$this->session_ulid,
-				$this->session_ulid,
-				$this->session_ulid,
-				$this->session_ulid
-			],
-			SqlReturn::FetchAll
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->session_ulid],
+			['s', $this->session_ulid],
+			['s', $this->session_ulid],
+			['s', $this->session_ulid],
+			['s', $this->session_ulid],
+			['s', $this->session_ulid],
+			['s', $this->session_ulid],
+			['s', $this->session_ulid]
+		];
+
+		$contactos = $this->executeQuery($query, $params, SqlReturn::FetchAll);
 
 		return $contactos;
 	}
@@ -177,12 +174,12 @@ readonly class Contacto extends Invitacion
 				AND ulid_b = ?
 			)";
 
-		$contacto = $this->executeQuery(
-			$query,
-			'ss',
-			[$a, $b],
-			SqlReturn::Exists
-		);
+		$params = [
+			['s', $a],
+			['s', $b]
+		];
+
+		$contacto = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		$this->isAuthorized($contacto, 'No eres contacto de este usuario.');
 	}
