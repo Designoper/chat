@@ -186,7 +186,7 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	// MARK: SET ULTIMO ULID GRUPAL
 	// ============================================================================
-	public function setUltimoIdGrupal(): void
+	public function setUltimoUlidGrupal(): void
 	{
 		$this->setUltimoUlidTemplate('grupo');
 	}
@@ -297,8 +297,9 @@ readonly class Mensaje extends Contacto
 		$this->showFile();
 	}
 
+	// ============================================================================
 	// MARK: CREATE MENSAJE TEMPLATE
-
+	// ============================================================================
 	private function createMensajeTemplate(FileTypes $filetype, string $tipo_contacto): void
 	{
 		$contacto = match ($tipo_contacto) {
@@ -356,64 +357,73 @@ readonly class Mensaje extends Contacto
 		$this->sendOkResponse(201);
 	}
 
-	// MARK: CREATE MENSAJE DIRECTO TEXTO
-
+	// ============================================================================
+	// MARK: CREATE MENSAJE DIRECTO
+	// ============================================================================
 	public function createMensajeDirecto(): void
 	{
 		$this->createMensajeTemplate(FileTypes::Text, 'contacto');
 	}
 
+	// ============================================================================
 	// MARK: CREATE MENSAJE DIRECTO IMAGEN
-
+	// ============================================================================
 	public function createMensajeDirectoImagen(): void
 	{
 		$this->createMensajeTemplate(FileTypes::Image, 'contacto');
 	}
 
+	// ============================================================================
 	// MARK: CREATE MENSAJE DIRECTO AUDIO
-
+	// ============================================================================
 	public function createMensajeDirectoAudio(): void
 	{
 		$this->createMensajeTemplate(FileTypes::Audio, 'contacto');
 	}
 
+	// ============================================================================
 	// MARK: CREATE MENSAJE DIRECTO VIDEO
-
+	// ============================================================================
 	public function createMensajeDirectoVideo(): void
 	{
 		$this->createMensajeTemplate(FileTypes::Video, 'contacto');
 	}
 
-	// MARK: CREATE MENSAJE GRUPAL TEXTTO
-
+	// ============================================================================
+	// MARK: CREATE MENSAJE GRUPAL
+	// ============================================================================
 	public function createMensajeGrupal(): void
 	{
 		$this->createMensajeTemplate(FileTypes::Text, 'grupo');
 	}
 
+	// ============================================================================
 	// MARK: CREATE MENSAJE GRUPAL IMAGEN
-
+	// ============================================================================
 	public function createMensajeGrupalImagen(): void
 	{
 		$this->createMensajeTemplate(FileTypes::Image, 'grupo');
 	}
 
+	// ============================================================================
 	// MARK: CREATE MENSAJE GRUPAL AUDIO
-
+	// ============================================================================
 	public function createMensajeGrupalAudio(): void
 	{
 		$this->createMensajeTemplate(FileTypes::Audio, 'grupo');
 	}
 
+	// ============================================================================
 	// MARK: CREATE MENSAJE GRUPAL VIDEO
-
+	// ============================================================================
 	public function createMensajeGrupalVideo(): void
 	{
 		$this->createMensajeTemplate(FileTypes::Video, 'grupo');
 	}
 
+	// ============================================================================
 	// MARK: IS AUTOR MENSAJE
-
+	// ============================================================================
 	private function isAutorMensaje(): void
 	{
 		$query =
@@ -434,8 +444,9 @@ readonly class Mensaje extends Contacto
 		$this->isAuthorized($autor, 'No eres el autor del mensaje.');
 	}
 
-	// MARK: DELETE MENSAJE (FIX IMAGE)
-
+	// ============================================================================
+	// MARK: DELETE MENSAJE (FIX MENSAJE)
+	// ============================================================================
 	public function deleteMensaje(): void
 	{
 		$this->setUlid('ulid_mensaje');
@@ -456,8 +467,9 @@ readonly class Mensaje extends Contacto
 		$this->sendOkResponse(204);
 	}
 
+	// ============================================================================
 	// MARK: GET NUEVOS MENSAJES DIRECTOS
-
+	// ============================================================================
 	private function getNuevosMensajesDirectos(): array
 	{
 		$user_min = min($this->session_ulid, $this->ulid_contacto);
@@ -499,8 +511,9 @@ readonly class Mensaje extends Contacto
 		return $mensajes;
 	}
 
+	// ============================================================================
 	// MARK: GET NUEVOS MENSAJES GRUPALES
-
+	// ============================================================================
 	private function getNuevosMensajesGrupales(): array
 	{
 		$dateFormat = self::ISO8601_SQL_FORMAT;
@@ -535,8 +548,9 @@ readonly class Mensaje extends Contacto
 		return $mensajes;
 	}
 
-	// MARK: STREAM MENSAJES
-
+	// ============================================================================
+	// MARK: STREAM MENSAJES GENERIC
+	// ============================================================================
 	private function streamMensajesGeneric(callable $getter): void
 	{
 		$mensajes = $getter();
@@ -552,6 +566,9 @@ readonly class Mensaje extends Contacto
 		}
 	}
 
+	// ============================================================================
+	// MARK: STREAM MENSAJES DIRECTOS
+	// ============================================================================
 	public function streamMensajesDirectos(): void
 	{
 		$this->setUlid('ulid_contacto');
@@ -562,6 +579,9 @@ readonly class Mensaje extends Contacto
 		$this->setSSE(fn() => $this->streamMensajesGeneric(fn() => $this->getNuevosMensajesDirectos()));
 	}
 
+	// ============================================================================
+	// MARK: STREAM MENSAJES GRUPALES
+	// ============================================================================
 	public function streamMensajesGrupales(): void
 	{
 		$this->setUlid('ulid_grupo');
