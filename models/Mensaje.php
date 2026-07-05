@@ -233,8 +233,9 @@ readonly class Mensaje extends Contacto
 		$this->sendOkResponse(200, $mensajes);
 	}
 
+	// ============================================================================
 	// MARK: READ ARCHIVO MENSAJE DIRECTO
-
+	// ============================================================================
 	public function readArchivoMensajeDirecto(): void
 	{
 		$this->setUlid('ulid_contacto');
@@ -247,8 +248,9 @@ readonly class Mensaje extends Contacto
 		$this->showFile();
 	}
 
+	// ============================================================================
 	// MARK: READ MENSAJES GRUPALES
-
+	// ============================================================================
 	public function readMensajesGrupales(): void
 	{
 		$this->setUlid('ulid_grupo');
@@ -279,8 +281,9 @@ readonly class Mensaje extends Contacto
 		$this->sendOkResponse(200, $mensajes);
 	}
 
+	// ============================================================================
 	// MARK: READ ARCHIVO MENSAJE GRUPAL
-
+	// ============================================================================
 	public function readArchivoMensajeGrupal(): void
 	{
 		$this->setUlid('ulid_grupo');

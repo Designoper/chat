@@ -27,12 +27,9 @@ readonly class Invitacion extends Grupo
 			FROM usuarios
 			WHERE codigo_contacto = ?";
 
-		$contacto = $this->executeQuery(
-			$query,
-			's',
-			[$this->codigo_contacto],
-			SqlReturn::FetchColumn
-		);
+		$params = [['s', $this->session_ulid]];
+
+		$contacto = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
 		if (!$contacto) {
 			$this->status = 404;
@@ -53,17 +50,14 @@ readonly class Invitacion extends Grupo
 			WHERE ulid_a = LEAST(?, ?)
 			AND ulid_b = GREATEST(?, ?)";
 
-		$yaSonContactos = $this->executeQuery(
-			$query,
-			'ssss',
-			[
-				$this->session_ulid,
-				$contacto,
-				$this->session_ulid,
-				$contacto
-			],
-			SqlReturn::FetchColumn
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $contacto],
+			['s', $this->session_ulid],
+			['s', $contacto]
+		];
+
+		$yaSonContactos = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
 		if ($yaSonContactos) {
 			$this->status = 409;
@@ -78,15 +72,12 @@ readonly class Invitacion extends Grupo
 			WHERE ulid_usuario = ?
 			AND ulid_contacto = ?";
 
-		$yaInvitado = $this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$contacto
-			],
-			SqlReturn::FetchColumn
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $contacto]
+		];
+
+		$yaInvitado = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
 		if ($yaInvitado) {
 			$this->status = 409;
@@ -101,31 +92,28 @@ readonly class Invitacion extends Grupo
 			WHERE ulid_usuario = ?
 			AND ulid_contacto = ?";
 
-		$invitacionCruzada = $this->executeQuery(
-			$query,
-			'ss',
-			[
-				$contacto,
-				$this->session_ulid
-			],
-			SqlReturn::FetchColumn
-		);
+		$params = [
+			['s', $contacto],
+			['s', $this->session_ulid]
+		];
+
+		$invitacionCruzada = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
 		if ($invitacionCruzada) {
 
-			// Crear contacto normalizado
-			$a = min($this->session_ulid, $contacto);
-			$b = max($this->session_ulid, $contacto);
+			$ulid_min = min($this->session_ulid, $contacto);
+			$ulid_max = max($this->session_ulid, $contacto);
 
 			$query =
 				"INSERT IGNORE INTO contactos_directos (ulid_a, ulid_b)
              	VALUES (?, ?)";
 
-			$this->executeQuery(
-				$query,
-				'ss',
-				[$a, $b]
-			);
+			$params = [
+				['s', $ulid_min],
+				['s', $ulid_max]
+			];
+
+			$this->executeQuery($query, $params);
 
 			// Eliminar invitaciones cruzadas
 			$query =
@@ -136,19 +124,16 @@ readonly class Invitacion extends Grupo
 					(?, ?)
 				)";
 
-			$this->executeQuery(
-				$query,
-				'ssss',
-				[
-					$this->session_ulid,
-					$contacto,
-					$contacto,
-					$this->session_ulid
-				]
-			);
+			$params = [
+				['s', $this->session_ulid],
+				['s', $this->ulid_contacto],
+				['s', $this->ulid_contacto],
+				['s', $this->session_ulid]
+			];
 
-			$this->status = 201;
-			$this->sendResponse();
+			$this->executeQuery($query, $params);
+
+			$this->sendOkResponse(201);
 		}
 
 		// Si no hay cruzada → crear invitación normal
@@ -163,8 +148,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery($query, $params);
 
-		$this->status = 201;
-		$this->sendResponse();
+		$this->sendOkResponse(201);
 	}
 
 	// MARK: ACEPTAR CONTACTO
@@ -205,8 +189,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery($query, $params);
 
-		$this->status = 200;
-		$this->sendResponse();
+		$this->sendOkResponse(200);
 	}
 
 	// MARK: RECHAZAR CONTACTO
@@ -228,8 +211,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery($query, $params);
 
-		$this->status = 204;
-		$this->sendResponse();
+		$this->sendOkResponse(204);
 	}
 
 	// MARK: INVITAR GRUPO
@@ -240,12 +222,8 @@ readonly class Invitacion extends Grupo
 		$this->setUlid('ulid_grupo');
 		$this->checkValidationErrors();
 
-		$contacto = $this->ulid_contacto;
-		$grupo    = $this->ulid_grupo;
-		$usuario  = $this->session_ulid;
-
 		// 1. No puedes invitarte a ti mismo
-		if ($contacto === $usuario) {
+		if ($this->session_ulid === $this->ulid_contacto) {
 			$this->status = 409;
 			$this->errors->setIntegrityError('No puedes invitarte a ti mismo.');
 			$this->checkIntegrityErrors();
@@ -257,12 +235,9 @@ readonly class Invitacion extends Grupo
 			FROM usuarios
 			WHERE ulid_usuario = ?";
 
-		$existeUsuario = $this->executeQuery(
-			$query,
-			's',
-			[$contacto],
-			SqlReturn::FetchColumn
-		);
+		$params = [['s', $this->ulid_contacto]];
+
+		$existeUsuario = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
 		if (!$existeUsuario) {
 			$this->status = 404;
@@ -271,8 +246,14 @@ readonly class Invitacion extends Grupo
 		}
 
 		// 3. Validar que el grupo existe
-		$query = "SELECT 1 FROM grupos WHERE ulid_grupo = ?";
-		$existeGrupo = $this->executeQuery($query, 's', [$grupo], SqlReturn::FetchColumn);
+		$query =
+			"SELECT 1
+			FROM grupos
+			WHERE ulid_grupo = ?";
+
+		$params = [['s', $this->ulid_grupo]];
+
+		$existeGrupo = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
 		if (!$existeGrupo) {
 			$this->status = 404;
@@ -280,7 +261,6 @@ readonly class Invitacion extends Grupo
 			$this->checkIntegrityErrors();
 		}
 
-		// 4. Validar que tú eres miembro del grupo
 		$this->isMiembroGrupo();
 
 		// 5. Validar que el invitado NO es miembro del grupo
@@ -290,12 +270,12 @@ readonly class Invitacion extends Grupo
          	WHERE ulid_usuario = ?
           	AND ulid_grupo = ?";
 
-		$esMiembro = $this->executeQuery(
-			$query,
-			'ss',
-			[$contacto, $grupo],
-			SqlReturn::FetchColumn
-		);
+		$params = [
+			['s', $this->ulid_contacto],
+			['s', $this->ulid_grupo]
+		];
+
+		$esMiembro = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
 		if ($esMiembro) {
 			$this->status = 409;
@@ -310,12 +290,12 @@ readonly class Invitacion extends Grupo
 			WHERE ulid_usuario = ?
 			AND ulid_grupo = ?";
 
-		$yaInvitado = $this->executeQuery(
-			$query,
-			'ss',
-			[$contacto, $grupo],
-			SqlReturn::FetchColumn
-		);
+		$params = [
+			['s', $this->ulid_contacto],
+			['s', $this->ulid_grupo]
+		];
+
+		$yaInvitado = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
 		if ($yaInvitado) {
 			$this->status = 409;
@@ -325,27 +305,23 @@ readonly class Invitacion extends Grupo
 
 		// 7. Validar que es tu contacto directo
 		$query =
-			"SELECT 1
-			FROM contactos_directos
-			WHERE ulid_a = LEAST(?, ?)
-			AND ulid_b = GREATEST(?, ?)";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM contactos_directos
+				WHERE ulid_a = LEAST(?, ?)
+				AND ulid_b = GREATEST(?, ?)
+			)";
 
-		$esContacto = $this->executeQuery(
-			$query,
-			'ssss',
-			[$usuario, $contacto, $usuario, $contacto],
-			SqlReturn::FetchColumn
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->ulid_contacto],
+			['s', $this->session_ulid],
+			['s', $this->ulid_contacto]
+		];
 
-		if (!$esContacto) {
-			$this->status = 409;
-			$this->errors->setIntegrityError('Solo puedes invitar a tus contactos directos.');
-			$this->checkIntegrityErrors();
-		}
+		$esContacto = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		// 8. Validar invitación cruzada (si el grupo invitó al usuario, no aplica)
-		// En grupos NO existe invitación cruzada porque la invitación siempre es usuario → grupo.
-		// Así que este caso NO se aplica aquí.
+		$this->isAuthorized($esContacto, 'Solo puedes invitar a tus contactos directos.');
 
 		// 9. Insertar invitación
 		$query =
@@ -359,8 +335,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery($query, $params);
 
-		$this->status = 201;
-		$this->sendResponse();
+		$this->sendOkResponse(201);
 	}
 
 	// MARK: ACEPTAR GRUPO
@@ -389,8 +364,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery($query, $params);
 
-		$this->status = 200;
-		$this->sendResponse();
+		$this->sendOkResponse(200);
 	}
 
 	// MARK: RECHAZAR GRUPO
@@ -471,8 +445,7 @@ readonly class Invitacion extends Grupo
 
 		$this->executeQuery($query, $params);
 
-		$this->status = 204;
-		$this->sendResponse();
+		$this->sendOkResponse(204);
 	}
 
 	// MARK: READ INVITACIONES
