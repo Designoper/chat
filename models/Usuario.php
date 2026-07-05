@@ -97,13 +97,9 @@ readonly class Usuario extends Setter
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
-		$usuario = $this->executeQuery(
-			$query,
-			[
-				['s', $this->nombre_usuario]
-			],
-			SqlReturn::FetchAssoc
-		);
+		$params = [['s', $this->nombre_usuario]];
+
+		$usuario = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
 		if (!$usuario || !password_verify($this->password, $usuario['password'])) {
 			$this->status = 401;
@@ -159,13 +155,9 @@ readonly class Usuario extends Setter
 			FROM usuarios
 			WHERE ulid_usuario = ?";
 
-		$usuario = $this->executeQuery(
-			$query,
-			[
-				['s', $this->session_ulid]
-			],
-			SqlReturn::FetchAssoc
-		);
+		$params = [['s', $this->session_ulid]];
+
+		$usuario = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
 		$this->status = 200;
 		$this->content = $usuario;
@@ -182,12 +174,9 @@ readonly class Usuario extends Setter
 			"DELETE FROM usuarios
 			WHERE ulid_usuario = ?";
 
-		$this->executeQuery(
-			$query,
-			[
-				['s', $this->session_ulid]
-			]
-		);
+		$params = [['s', $this->session_ulid]];
+
+		$this->executeQuery($query, $params);
 
 		$this->logout();
 	}
@@ -206,14 +195,13 @@ readonly class Usuario extends Setter
 			SET nombre_usuario = ?
 			WHERE ulid_usuario = ?";
 
+		$params = [
+			['s', $this->nombre_usuario],
+			['s', $this->session_ulid]
+		];
+
 		try {
-			$this->executeQuery(
-				$query,
-				[
-					['s', $this->nombre_usuario],
-					['s', $this->session_ulid]
-				]
-			);
+			$this->executeQuery($query, $params);
 		} catch (\mysqli_sql_exception $error) {
 			$this->isConflict($error, '¡Este nombre de usuario ya existe!');
 		}
@@ -236,13 +224,12 @@ readonly class Usuario extends Setter
 			SET password = ?
 			WHERE ulid_usuario = ?";
 
-		$this->executeQuery(
-			$query,
-			[
-				['s', password_hash($this->password, PASSWORD_DEFAULT)],
-				['s', $this->session_ulid]
-			]
-		);
+		$params = [
+			['s', password_hash($this->password, PASSWORD_DEFAULT)],
+			['s', $this->session_ulid]
+		];
+
+		$this->executeQuery($query, $params);
 
 		$this->status = 201;
 		$this->sendResponse();
