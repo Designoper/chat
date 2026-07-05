@@ -201,8 +201,8 @@ readonly class Mensaje extends Contacto
 
 		$this->isContacto();
 
-		$user_min = min($this->session_ulid, $this->ulid_contacto);
-		$user_max = max($this->session_ulid, $this->ulid_contacto);
+		$ulid_min = min($this->session_ulid, $this->ulid_contacto);
+		$ulid_max = max($this->session_ulid, $this->ulid_contacto);
 
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
@@ -224,8 +224,8 @@ readonly class Mensaje extends Contacto
 			ORDER BY fecha_creacion ASC";
 
 		$params = [
-			['s', $user_min],
-			['s', $user_max]
+			['s', $ulid_min],
+			['s', $ulid_max]
 		];
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
@@ -472,8 +472,8 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	private function getNuevosMensajesDirectos(): array
 	{
-		$user_min = min($this->session_ulid, $this->ulid_contacto);
-		$user_max = max($this->session_ulid, $this->ulid_contacto);
+		$ulid_min = min($this->session_ulid, $this->ulid_contacto);
+		$ulid_max = max($this->session_ulid, $this->ulid_contacto);
 
 		$dateFormat = self::ISO8601_SQL_FORMAT;
 
@@ -502,8 +502,8 @@ readonly class Mensaje extends Contacto
 		$params = [
 			['s', $this->session_ulid],
 			['s', $this->ulid_contacto],
-			['s', $user_min],
-			['s', $user_max]
+			['s', $ulid_min],
+			['s', $ulid_max]
 		];
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
