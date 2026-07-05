@@ -34,8 +34,8 @@ export default class Mensaje extends Contacto {
 
 	setEndpoints() {
 		if (this.urlSearchParams.has('ulid_contacto')) {
-			this.endpointGetUltimoId = this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID_DIRECTO;
-			this.endpointSetUltimoId = this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID_DIRECTO;
+			this.endpointGetUltimoUlid = this.ENDPOINTS.GET.MENSAJES.ULTIMO_ULID_DIRECTO;
+			this.endpointSetUltimoUlid = this.ENDPOINTS.POST.MENSAJES.ULTIMO_ULID_DIRECTO;
 			this.endpointGetMensajes = this.ENDPOINTS.GET.MENSAJES.DIRECTOS;
 			this.endpointStreamMensajes = this.ENDPOINTS.GET.MENSAJES.STREAM_DIRECTOS;
 			this.endpointArchivo = this.ENDPOINTS.GET.MENSAJES.ARCHIVOS.DIRECTO;
@@ -44,8 +44,8 @@ export default class Mensaje extends Contacto {
 		}
 
 		if (this.urlSearchParams.has('ulid_grupo')) {
-			this.endpointGetUltimoId = this.ENDPOINTS.GET.MENSAJES.ULTIMO_ID_GRUPAL;
-			this.endpointSetUltimoId = this.ENDPOINTS.POST.MENSAJES.ULTIMO_ID_GRUPAL;
+			this.endpointGetUltimoUlid = this.ENDPOINTS.GET.MENSAJES.ULTIMO_ULID_GRUPAL;
+			this.endpointSetUltimoUlid = this.ENDPOINTS.POST.MENSAJES.ULTIMO_ULID_GRUPAL;
 			this.endpointGetMensajes = this.ENDPOINTS.GET.MENSAJES.GRUPALES;
 			this.endpointStreamMensajes = this.ENDPOINTS.GET.MENSAJES.STREAM_GRUPALES;
 			this.endpointArchivo = this.ENDPOINTS.GET.MENSAJES.ARCHIVOS.GRUPAL;
@@ -54,10 +54,10 @@ export default class Mensaje extends Contacto {
 		}
 	}
 
-	// MARK: GET ULTIMO ID
+	// MARK: GET ULTIMO ULID
 
-	async getUltimoId() {
-		const response = await this.fetchWithoutForm(this.endpointGetUltimoId, 'get', this.urlSearchparamsObj);
+	async getUltimoUlid() {
+		const response = await this.fetchWithoutForm(this.endpointGetUltimoUlid, 'get', this.urlSearchparamsObj);
 		this.ultimoIdLeido = response.json.ulid_mensaje;
 	}
 
@@ -102,7 +102,7 @@ export default class Mensaje extends Contacto {
 
 		if (response.json.length > 0) {
 			this.urlSearchparamsObj.ulid_mensaje = response.json[response.json.length - 1].ulid_mensaje;
-			await this.fetchWithoutForm(this.endpointSetUltimoId, 'post', this.urlSearchparamsObj);
+			await this.fetchWithoutForm(this.endpointSetUltimoUlid, 'post', this.urlSearchparamsObj);
 		}
 
 		const mensajes = this.mensajesTemplate(response.json);
@@ -138,7 +138,7 @@ export default class Mensaje extends Contacto {
 			const mensaje = JSON.parse(event.data);
 			this.urlSearchparamsObj.ulid_mensaje = mensaje;
 
-			await this.fetchWithoutForm(this.endpointSetUltimoId, 'post', this.urlSearchparamsObj);
+			await this.fetchWithoutForm(this.endpointSetUltimoUlid, 'post', this.urlSearchparamsObj);
 		});
 	}
 

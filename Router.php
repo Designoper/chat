@@ -26,8 +26,8 @@ final readonly class Router
             $this->setRoute('GET', 'mensajes/stream/grupales', [Mensaje::class, 'streamMensajesGrupales']),
             $this->setRoute('GET', 'mensajes/directos', [Mensaje::class, 'readMensajesDirectos']),
             $this->setRoute('GET', 'mensajes/grupales', [Mensaje::class, 'readMensajesGrupales']),
-            $this->setRoute('GET', 'mensajes/ultimo-id-directo', [Mensaje::class, 'getUltimoIdDirecto']),
-            $this->setRoute('GET', 'mensajes/ultimo-id-grupal', [Mensaje::class, 'getUltimoIdGrupal']),
+            $this->setRoute('GET', 'mensajes/ultimo-ulid-directo', [Mensaje::class, 'getUltimoUlidDirecto']),
+            $this->setRoute('GET', 'mensajes/ultimo-ulid-grupal', [Mensaje::class, 'getUltimoUlidGrupal']),
 
             $this->setRoute('GET', 'mensajes/archivos/directo', [Mensaje::class, 'readArchivoMensajeDirecto']),
             $this->setRoute('GET', 'mensajes/archivos/grupal', [Mensaje::class, 'readArchivoMensajeGrupal']),
@@ -61,9 +61,8 @@ final readonly class Router
             $this->setRoute('POST', 'mensajes/crear/audio-grupal', [Mensaje::class, 'createMensajeGrupalAudio']),
             $this->setRoute('POST', 'mensajes/crear/video-grupal', [Mensaje::class, 'createMensajeGrupalVideo']),
             $this->setRoute('POST', 'mensajes/delete', [Mensaje::class, 'deleteMensaje']),
-            $this->setRoute('POST', 'mensajes/ultimo-id-directo', [Mensaje::class, 'setUltimoIdDirecto']),
-            $this->setRoute('POST', 'mensajes/ultimo-id-grupal', [Mensaje::class, 'setUltimoIdGrupal']),
-
+            $this->setRoute('POST', 'mensajes/ultimo-ulid-directo', [Mensaje::class, 'setUltimoUlidDirecto']),
+            $this->setRoute('POST', 'mensajes/ultimo-ulid-grupal', [Mensaje::class, 'setUltimoUlidGrupal']),
         ];
 
         $this->executeRoute();

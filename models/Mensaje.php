@@ -22,7 +22,6 @@ readonly class Mensaje extends Contacto
 	}
 
 	// MARK: CAN VIEW ARCHIVO DIRECTO
-
 	protected function canViewArchivoDirecto(): void
 	{
 		$query =
@@ -37,7 +36,7 @@ readonly class Mensaje extends Contacto
 				)
 			)";
 
-		$esDeLaConversacion = $this->executeQuery(
+		$mensaje_directo = $this->executeQuery(
 			$query,
 			'sssss',
 			[
@@ -50,11 +49,10 @@ readonly class Mensaje extends Contacto
 			SqlReturn::Exists
 		);
 
-		$this->isAuthorized($esDeLaConversacion, 'Este archivo no pertenece a la conversación');
+		$this->isAuthorized($mensaje_directo, 'Este archivo no pertenece a la conversación.');
 	}
 
 	// MARK: CAN VIEW ARCHIVO GRUPAL
-
 	protected function canViewArchivoGrupal(): void
 	{
 		$query =
@@ -65,7 +63,7 @@ readonly class Mensaje extends Contacto
 				AND ulid_grupo = ?
 			)";
 
-		$esDeLaConversacion = $this->executeQuery(
+		$mensaje_grupo = $this->executeQuery(
 			$query,
 			'ss',
 			[
@@ -75,12 +73,11 @@ readonly class Mensaje extends Contacto
 			SqlReturn::Exists
 		);
 
-		$this->isAuthorized($esDeLaConversacion, 'No pertences al grupo de este archivo.');
+		$this->isAuthorized($mensaje_grupo, 'No pertences al grupo de este archivo.');
 	}
 
-	// MARK: GET ULTIMO ID TEMPLATE
-
-	private function getUltimoIdTemplate(string $tipo_contacto): void
+	// MARK: GET ULTIMO ULID TEMPLATE
+	private function getUltimoUlidTemplate(string $tipo_contacto): void
 	{
 		$config = match ($tipo_contacto) {
 			'contacto' => [
@@ -110,7 +107,7 @@ readonly class Mensaje extends Contacto
 				),
 			'')";
 
-		$last_id = $this->executeQuery(
+		$last_ulid = $this->executeQuery(
 			$query,
 			'ss',
 			[
@@ -121,27 +118,31 @@ readonly class Mensaje extends Contacto
 		);
 
 		$this->status = 200;
-		$this->content = $last_id;
+		$this->content = $last_ulid;
 		$this->sendResponse();
 	}
 
-	// MARK: GET ULTIMO ID DIRECTO
+	// ============================================================================
+	// MARK: GET ULTIMO ULID DIRECTO
+	// ============================================================================
 
-	public function getUltimoIdDirecto(): void
+	public function getUltimoUlidDirecto(): void
 	{
-		$this->getUltimoIdTemplate('contacto');
+		$this->getUltimoUlidTemplate('contacto');
 	}
 
-	// MARK: GET ULTIMO ID GRUPAL
+	// ============================================================================
+	// MARK: GET ULTIMO ULID GRUPAL
+	// ============================================================================
 
-	public function getUltimoIdGrupal(): void
+	public function getUltimoUlidGrupal(): void
 	{
-		$this->getUltimoIdTemplate('grupo');
+		$this->getUltimoUlidTemplate('grupo');
 	}
 
-	// MARK: SET ULTIMO ID TEMPLATE
+	// MARK: SET ULTIMO ULID TEMPLATE
 
-	private function setUltimoIdTemplate(string $tipo_contacto): void
+	private function setUltimoUlidTemplate(string $tipo_contacto): void
 	{
 		$config = match ($tipo_contacto) {
 			'contacto' => [
@@ -183,18 +184,18 @@ readonly class Mensaje extends Contacto
 		$this->sendResponse();
 	}
 
-	// MARK: SET ULTIMO ID DIRECTO
+	// MARK: SET ULTIMO ULID DIRECTO
 
-	public function setUltimoIdDirecto(): void
+	public function setUltimoUlidDirecto(): void
 	{
-		$this->setUltimoIdTemplate('contacto');
+		$this->setUltimoUlidTemplate('contacto');
 	}
 
-	// MARK: SET ULTIMO ID GRUPAL
+	// MARK: SET ULTIMO ULID GRUPAL
 
 	public function setUltimoIdGrupal(): void
 	{
-		$this->setUltimoIdTemplate('grupo');
+		$this->setUltimoUlidTemplate('grupo');
 	}
 
 	// MARK: READ MENSAJES DIRECTOS
