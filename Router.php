@@ -88,6 +88,10 @@ final readonly class Router
         $method = $_SERVER['REQUEST_METHOD'];
         $requestUri = $_SERVER['REQUEST_URI'];
 
+        $protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $domain = $protocol . '://' . $host;
+
         switch ($method) {
             case 'GET':
             case 'POST':
@@ -102,7 +106,7 @@ final readonly class Router
                 http_response_code(404);
                 header("Content-Type: application/json");
                 echo json_encode(
-                    "La ruta $method solicitada no existe: {$_SERVER['DOCUMENT_ROOT']}$requestUri",
+                    "La ruta $method solicitada no existe: $domain$requestUri",
                     JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                 );
 

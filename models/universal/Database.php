@@ -11,6 +11,7 @@ abstract readonly class Database extends SSE
 	private string $password;
 	private string $database;
 	protected mysqli $connection;
+	protected string $domain;
 	protected ?string $session_ulid;
 
 	protected function __construct()
@@ -48,6 +49,15 @@ abstract readonly class Database extends SSE
 			$this->errors->setIntegrityError("Error({$e->getCode()}): {$e->getMessage()}");
 			$this->checkIntegrityErrors();
 		}
+	}
+
+	// MARK: SET DOMAIN
+
+	private function setDomain(): void
+	{
+		$protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
+		$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+		$this->domain = $protocol . '://' . $host;
 	}
 
 	// MARK: AUTH BROWSER
