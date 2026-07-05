@@ -76,7 +76,9 @@ readonly class Mensaje extends Contacto
 		$this->isAuthorized($mensaje_grupo, 'No pertences al grupo de este archivo.');
 	}
 
+	// ============================================================================
 	// MARK: GET ULTIMO ULID TEMPLATE
+	// ============================================================================
 	private function getUltimoUlidTemplate(string $tipo_contacto): void
 	{
 		$config = match ($tipo_contacto) {
@@ -121,20 +123,16 @@ readonly class Mensaje extends Contacto
 		$this->content = $last_ulid;
 		$this->sendResponse();
 	}
-
 	// ============================================================================
 	// MARK: GET ULTIMO ULID DIRECTO
 	// ============================================================================
-
 	public function getUltimoUlidDirecto(): void
 	{
 		$this->getUltimoUlidTemplate('contacto');
 	}
-
 	// ============================================================================
 	// MARK: GET ULTIMO ULID GRUPAL
 	// ============================================================================
-
 	public function getUltimoUlidGrupal(): void
 	{
 		$this->getUltimoUlidTemplate('grupo');
