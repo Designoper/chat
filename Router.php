@@ -50,7 +50,7 @@ final readonly class Router
             $this->setRoute('POST', 'invitaciones/grupos/aceptar', [Invitacion::class, 'aceptarGrupo']),
             $this->setRoute('POST', 'invitaciones/grupos/rechazar', [Invitacion::class, 'rechazarGrupo']),
 
-            $this->setRoute('POST', 'conexion/estado', [Conexion::class, 'setConexion']),
+            // $this->setRoute('POST', 'conexion/estado', [Conexion::class, 'setConexion']),
 
             $this->setRoute('POST', 'mensajes/crear/directo', [Mensaje::class, 'createMensajeDirecto']),
             $this->setRoute('POST', 'mensajes/crear/imagen-directo', [Mensaje::class, 'createMensajeDirectoImagen']),
@@ -101,12 +101,18 @@ final readonly class Router
 
                 http_response_code(404);
                 header("Content-Type: application/json");
-                echo json_encode("La ruta solicitada no existe: $requestUri", JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                echo json_encode(
+                    "La ruta $method solicitada no existe: {$_SERVER['DOCUMENT_ROOT']}$requestUri",
+                    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                );
+
                 return;
 
             default:
                 http_response_code(405);
                 header("Allow: GET, POST");
+                header("Content-Type: application/json");
+                echo json_encode("Solo se permiten solicitudes GET y POST.", JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         }
     }
 }
