@@ -47,8 +47,8 @@ readonly class Invitacion extends Grupo
 		$query =
 			"SELECT 1
 			FROM contactos_directos
-			WHERE ulid_a = LEAST(?, ?)
-			AND ulid_b = GREATEST(?, ?)";
+			WHERE ulid_min = LEAST(?, ?)
+			AND ulid_max = GREATEST(?, ?)";
 
 		$params = [
 			['s', $this->session_ulid],
@@ -105,7 +105,7 @@ readonly class Invitacion extends Grupo
 			$ulid_max = max($this->session_ulid, $contacto);
 
 			$query =
-				"INSERT IGNORE INTO contactos_directos (ulid_a, ulid_b)
+				"INSERT IGNORE INTO contactos_directos (ulid_min, ulid_max)
              	VALUES (?, ?)";
 
 			$params = [
@@ -162,7 +162,7 @@ readonly class Invitacion extends Grupo
 		$ulid_max = max($this->ulid_contacto, $this->session_ulid);
 
 		$query =
-			"INSERT IGNORE INTO contactos_directos (ulid_a, ulid_b)
+			"INSERT IGNORE INTO contactos_directos (ulid_min, ulid_max)
          	VALUES (?, ?)";
 
 		$params = [
@@ -308,8 +308,8 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM contactos_directos
-				WHERE ulid_a = LEAST(?, ?)
-				AND ulid_b = GREATEST(?, ?)
+				WHERE ulid_min = LEAST(?, ?)
+				AND ulid_max = GREATEST(?, ?)
 			)";
 
 		$params = [
@@ -541,8 +541,8 @@ readonly class Invitacion extends Grupo
 			AND EXISTS (
 				SELECT 1
 				FROM contactos_directos cd
-				WHERE cd.ulid_a = LEAST(?, u.ulid_usuario)
-				AND cd.ulid_b = GREATEST(?, u.ulid_usuario)
+				WHERE cd.ulid_min = LEAST(?, u.ulid_usuario)
+				AND cd.ulid_max = GREATEST(?, u.ulid_usuario)
 			)
 			ORDER BY u.nombre_usuario ASC";
 

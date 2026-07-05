@@ -34,8 +34,8 @@ readonly class Contacto extends Invitacion
 				FROM usuarios u
 
 				JOIN contactos_directos cd
-					ON cd.ulid_a = LEAST(?, u.ulid_usuario)
-					AND cd.ulid_b = GREATEST(?, u.ulid_usuario)
+					ON cd.ulid_min = LEAST(?, u.ulid_usuario)
+					AND cd.ulid_max = GREATEST(?, u.ulid_usuario)
 
 				LEFT JOIN ultimos_mensajes_leidos_directos uml
 					ON uml.ulid_usuario = ?
@@ -170,8 +170,8 @@ readonly class Contacto extends Invitacion
 			"SELECT EXISTS(
 				SELECT 1
 				FROM contactos_directos
-				WHERE ulid_a = ?
-				AND ulid_b = ?
+				WHERE ulid_min = ?
+				AND ulid_max = ?
 			)";
 
 		$params = [
