@@ -38,17 +38,15 @@ readonly class Mensaje extends Contacto
 				)
 			)";
 
-		$mensaje_directo = $this->executeQuery(
-			$query,
-			[
-				['s', $this->ulid_mensaje],
-				['s', $this->session_ulid],
-				['s', $this->ulid_contacto],
-				['s', $this->ulid_contacto],
-				['s', $this->session_ulid]
-			],
-			SqlReturn::Exists
-		);
+		$params = [
+			['s', $this->ulid_mensaje],
+			['s', $this->session_ulid],
+			['s', $this->ulid_contacto],
+			['s', $this->ulid_contacto],
+			['s', $this->session_ulid]
+		];
+
+		$mensaje_directo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		$this->isAuthorized($mensaje_directo, 'Este archivo no pertenece a la conversación.');
 	}
@@ -66,14 +64,12 @@ readonly class Mensaje extends Contacto
 				AND ulid_grupo = ?
 			)";
 
-		$mensaje_grupo = $this->executeQuery(
-			$query,
-			[
-				['s', $this->ulid_mensaje],
-				['s', $this->ulid_grupo]
-			],
-			SqlReturn::Exists
-		);
+		$params = [
+			['s', $this->ulid_mensaje],
+			['s', $this->ulid_grupo]
+		];
+
+		$mensaje_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		$this->isAuthorized($mensaje_grupo, 'No pertences al grupo de este archivo.');
 	}
