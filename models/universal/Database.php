@@ -32,14 +32,22 @@ abstract readonly class Database extends SSE
 
 	private function setConnection(): void
 	{
-		$this->connection = new mysqli(
-			$this->hostname,
-			$this->username,
-			$this->password,
-			$this->database
-		);
+		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-		$this->connection->set_charset('utf8');
+		try {
+			$this->connection = @new mysqli(
+				$this->hostname,
+				$this->username,
+				$this->password,
+				$this->database
+			);
+
+			$this->connection->set_charset('utf8');
+		} catch (mysqli_sql_exception $e) {
+			$this->status = 500;
+			$this->errors->setIntegrityError("Error({$e->getCode()}): {$e->getMessage()}");
+			$this->checkIntegrityErrors();
+		}
 	}
 
 	// MARK: AUTH BROWSER
