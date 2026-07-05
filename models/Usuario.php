@@ -61,8 +61,7 @@ readonly class Usuario extends Setter
 				);
 
 				$_SESSION['ulid_usuario'] = $this->ulid_usuario;
-				$this->status = 201;
-				$this->sendResponse();
+				$this->sendOkResponse(201);
 			} catch (\mysqli_sql_exception $error) {
 
 				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'nombre_usuario')) {
@@ -109,8 +108,7 @@ readonly class Usuario extends Setter
 
 		$_SESSION['ulid_usuario'] = $usuario['ulid_usuario'];
 
-		$this->status = 200;
-		$this->sendResponse();
+		$this->sendOkResponse(200);
 	}
 
 	// MARK: LOGOUT
@@ -140,8 +138,7 @@ readonly class Usuario extends Setter
 
 		session_destroy();
 
-		$this->status = 204;
-		$this->sendResponse();
+		$this->sendOkResponse(204);
 	}
 
 	// MARK: CURRENT USUARIO
@@ -159,9 +156,7 @@ readonly class Usuario extends Setter
 
 		$usuario = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
-		$this->status = 200;
-		$this->content = $usuario;
-		$this->sendResponse();
+		$this->sendOkResponse(200, $usuario);
 	}
 
 	// MARK: DELETE USUARIO
@@ -206,8 +201,7 @@ readonly class Usuario extends Setter
 			$this->isConflict($error, '¡Este nombre de usuario ya existe!');
 		}
 
-		$this->status = 201;
-		$this->sendResponse();
+		$this->sendOkResponse(200);
 	}
 
 	// MARK: CAMBIAR PASSWORD
@@ -231,7 +225,6 @@ readonly class Usuario extends Setter
 
 		$this->executeQuery($query, $params);
 
-		$this->status = 201;
-		$this->sendResponse();
+		$this->sendOkResponse(200);
 	}
 }
