@@ -9,7 +9,7 @@ enum SqlReturn
 	case FetchAll;
 	case FetchAssoc;
 	case FetchColumn;
-	case Boolean;
+	case Exists;
 }
 
 abstract readonly class SQL extends Database
@@ -73,7 +73,7 @@ abstract readonly class SQL extends Database
 				$result = $resultSet->fetch_column();
 				break;
 
-			case SqlReturn::Boolean:
+			case SqlReturn::Exists:
 				$result = (bool) $resultSet->fetch_row()[0];
 				break;
 

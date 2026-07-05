@@ -47,7 +47,7 @@ readonly class Mensaje extends Contacto
 				$this->ulid_contacto,
 				$this->session_ulid
 			],
-			SqlReturn::Boolean
+			SqlReturn::Exists
 		);
 
 		if ($esDeLaConversacion === false) {

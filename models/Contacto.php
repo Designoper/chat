@@ -181,10 +181,10 @@ readonly class Contacto extends Invitacion
 			$query,
 			'ss',
 			[$a, $b],
-			SqlReturn::Boolean
+			SqlReturn::Exists
 		);
 
-		if ($contacto === false) {
+		if (!$contacto === false) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('No eres contacto de este usuario');
 			$this->checkIntegrityErrors();
