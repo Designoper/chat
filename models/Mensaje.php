@@ -110,15 +110,12 @@ readonly class Mensaje extends Contacto
 				),
 			'')";
 
-		$last_ulid = $this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$this->{$config['ulid']}
-			],
-			SqlReturn::FetchAssoc
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->{$config['ulid']}]
+		];
+
+		$last_ulid = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
 		$this->status = 200;
 		$this->content = $last_ulid;
@@ -170,16 +167,14 @@ readonly class Mensaje extends Contacto
 			ON DUPLICATE KEY
 			UPDATE ulid_mensaje = ?";
 
-		$this->executeQuery(
-			$query,
-			'ssss',
-			[
-				$this->session_ulid,
-				$this->{$config['ulid']},
-				$this->ulid_mensaje,
-				$this->ulid_mensaje
-			]
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->{$config['ulid']}],
+			['s', $this->ulid_mensaje],
+			['s', $this->ulid_mensaje]
+		];
+
+		$this->executeQuery($query, $params);
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -230,15 +225,12 @@ readonly class Mensaje extends Contacto
 			)
 			ORDER BY fecha_creacion ASC";
 
-		$mensajes = $this->executeQuery(
-			$query,
-			"ss",
-			[
-				$user_min,
-				$user_max
-			],
-			SqlReturn::FetchAll
-		);
+		$params = [
+			['s', $user_min],
+			['s', $user_max]
+		];
+
+		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
 
 		$this->status = 200;
 		$this->content = $mensajes;
@@ -284,14 +276,9 @@ readonly class Mensaje extends Contacto
 			WHERE mensajes.ulid_grupo = ?
 			ORDER BY fecha_creacion ASC";
 
-		$mensajes = $this->executeQuery(
-			$query,
-			"s",
-			[
-				$this->ulid_grupo
-			],
-			SqlReturn::FetchAll
-		);
+		$params = [['s', $this->ulid_grupo]];
+
+		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
 
 		$this->status = 200;
 		$this->content = $mensajes;
@@ -357,17 +344,15 @@ readonly class Mensaje extends Contacto
 			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, contenido, ulid_emisor, {$contacto['ulid']})
 			VALUES (?, ?, ?, ?, ?)";
 
-		$this->executeQuery(
-			$query,
-			'sssss',
-			[
-				$this->ulid_mensaje,
-				$filetype->value,
-				$contenido,
-				$this->session_ulid,
-				$this->{$contacto['ulid']}
-			]
-		);
+		$params = [
+			['s', $this->ulid_mensaje],
+			['s', $filetype->value],
+			['s', $contenido],
+			['s', $this->session_ulid],
+			['s', $this->{$contacto['ulid']}]
+		];
+
+		$this->executeQuery($query, $params);
 
 		$archivo['upload']();
 
@@ -443,15 +428,12 @@ readonly class Mensaje extends Contacto
 				AND ulid_emisor = ?
 			)";
 
-		$autor = $this->executeQuery(
-			$query,
-			"ss",
-			[
-				$this->ulid_mensaje,
-				$this->session_ulid
-			],
-			SqlReturn::Exists
-		);
+		$params = [
+			['s', $this->ulid_mensaje],
+			['s', $this->session_ulid]
+		];
+
+		$autor = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		$this->isAuthorized($autor, 'No eres el autor del mensaje.');
 	}
@@ -470,13 +452,9 @@ readonly class Mensaje extends Contacto
 			"DELETE FROM mensajes
 			WHERE ulid_mensaje = ?";
 
-		$this->executeQuery(
-			$query,
-			's',
-			[
-				$this->ulid_mensaje
-			]
-		);
+		$params = [['s', $this->ulid_mensaje]];
+
+		$this->executeQuery($query, $params);
 
 		$this->status = 204;
 		$this->deleteFile($fileUrl);
@@ -514,16 +492,14 @@ readonly class Mensaje extends Contacto
 			)
 			ORDER BY mensajes.ulid_mensaje ASC";
 
-		$mensajes = $this->executeQuery(
-			$query,
-			[
-				['s', $this->session_ulid],
-				['s', $this->ulid_contacto],
-				['s', $user_min],
-				['s', $user_max]
-			],
-			SqlReturn::FetchAll
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->ulid_contacto],
+			['s', $user_min],
+			['s', $user_max]
+		];
+
+		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
 
 		return $mensajes;
 	}
@@ -553,15 +529,13 @@ readonly class Mensaje extends Contacto
 			AND mensajes.ulid_grupo = ?
 	        ORDER BY mensajes.ulid_mensaje ASC";
 
-		$mensajes = $this->executeQuery(
-			$query,
-			[
-				['s', $this->session_ulid],
-				['s', $this->ulid_grupo],
-				['s', $this->ulid_grupo]
-			],
-			SqlReturn::FetchAll
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->ulid_grupo],
+			['s', $this->ulid_grupo]
+		];
+
+		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
 
 		return $mensajes;
 	}
