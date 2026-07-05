@@ -21,7 +21,9 @@ readonly class Mensaje extends Contacto
 		parent::__construct();
 	}
 
+	// ============================================================================
 	// MARK: CAN VIEW ARCHIVO DIRECTO
+	// ============================================================================
 	protected function canViewArchivoDirecto(): void
 	{
 		$query =
@@ -54,7 +56,6 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	// MARK: CAN VIEW ARCHIVO GRUPAL
 	// ============================================================================
-
 	protected function canViewArchivoGrupal(): void
 	{
 		$query =
@@ -136,8 +137,9 @@ readonly class Mensaje extends Contacto
 		$this->getUltimoUlidTemplate('grupo');
 	}
 
+	// ============================================================================
 	// MARK: SET ULTIMO ULID TEMPLATE
-
+	// ============================================================================
 	private function setUltimoUlidTemplate(string $tipo_contacto): void
 	{
 		$config = match ($tipo_contacto) {
@@ -177,22 +179,25 @@ readonly class Mensaje extends Contacto
 		$this->sendOkResponse(201);
 	}
 
+	// ============================================================================
 	// MARK: SET ULTIMO ULID DIRECTO
-
+	// ============================================================================
 	public function setUltimoUlidDirecto(): void
 	{
 		$this->setUltimoUlidTemplate('contacto');
 	}
 
+	// ============================================================================
 	// MARK: SET ULTIMO ULID GRUPAL
-
+	// ============================================================================
 	public function setUltimoIdGrupal(): void
 	{
 		$this->setUltimoUlidTemplate('grupo');
 	}
 
-	// MARK: READ MENSAJES DIRECTOS
-
+	// ============================================================================
+	// MARK: READ MENSAJAES DIRECTOS
+	// ============================================================================
 	public function readMensajesDirectos(): void
 	{
 		$this->setUlid('ulid_contacto');

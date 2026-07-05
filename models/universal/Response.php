@@ -30,6 +30,21 @@ abstract readonly class Response extends Sanitizer
         exit;
     }
 
+    protected function sendOkResponse(int $http_code, ?array $content = null): never
+    {
+        $this->status = $http_code;
+        if ($content) {
+            $this->content = $content;
+        }
+
+        $this->buildResponse();
+
+        http_response_code($this->status);
+        header('Content-Type: application/json');
+        echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        exit;
+    }
+
     // MARK: BUILD RESPONSE
 
     private function buildResponse(): void
