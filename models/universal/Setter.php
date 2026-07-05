@@ -148,7 +148,7 @@ abstract readonly class Setter extends File
 
 		// Bloqueo inmediato de SVG
 		if ($extension === 'svg') {
-			$this->errors->setValidationError('Los archivos SVG no están permitidos por razones de seguridad.');
+			$this->errors->setValidationError('Los archivos SVG no están permitidos.');
 			$this->checkValidationErrors();
 		}
 
