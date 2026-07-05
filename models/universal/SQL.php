@@ -80,23 +80,23 @@ abstract readonly class SQL extends Database
 		$mysqli_stmt = $this->connection->prepare($query);
 		$mysqli_stmt->bind_param($types, ...$values);
 		$mysqli_stmt->execute();
-		$resultSet = $mysqli_stmt->get_result();
+		$mysqli_result = $mysqli_stmt->get_result();
 
 		switch ($type) {
 			case SqlReturn::FetchAll:
-				$result = $resultSet->fetch_all(MYSQLI_ASSOC);
+				$result = $mysqli_result->fetch_all(MYSQLI_ASSOC);
 				break;
 
 			case SqlReturn::FetchAssoc:
-				$result = $resultSet->fetch_assoc();
+				$result = $mysqli_result->fetch_assoc();
 				break;
 
 			case SqlReturn::FetchColumn:
-				$result = $resultSet->fetch_column();
+				$result = $mysqli_result->fetch_column();
 				break;
 
 			case SqlReturn::Exists:
-				$result = (bool) $resultSet->fetch_row()[0];
+				$result = (bool) $mysqli_result->fetch_row()[0];
 				break;
 
 			default:
