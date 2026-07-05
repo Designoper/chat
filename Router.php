@@ -91,7 +91,6 @@ final readonly class Router
         $protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $domain = $protocol . '://' . $host;
-
         $completeUrl = $domain . $requestUri;
 
         switch ($method) {
