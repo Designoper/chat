@@ -21,19 +21,21 @@ readonly class Mensaje extends Contacto
 		parent::__construct();
 	}
 
-	// MARK: CAN VIEW MENSAJE DIRECTO
+	// MARK: CAN VIEW ARCHIVO DIRECTO
 
-	protected function canViewMensajeDirecto(): void
+	protected function canViewArchivoDirecto(): void
 	{
 		$query =
-			"SELECT 1
-			FROM mensajes
-			WHERE ulid_mensaje = ?
-			AND (ulid_emisor, ulid_contacto) IN
+			"SELECT EXISTS(
+				SELECT 1
+				FROM mensajes
+				WHERE ulid_mensaje = ?
+				AND (ulid_emisor, ulid_contacto) IN
 				(
 					(?, ?),
 					(?, ?)
-				)";
+				)
+			)";
 
 		$esDeLaConversacion = $this->executeQuery(
 			$query,
@@ -45,19 +47,19 @@ readonly class Mensaje extends Contacto
 				$this->ulid_contacto,
 				$this->session_ulid
 			],
-			SqlReturn::FetchColumn
+			SqlReturn::Boolean
 		);
 
-		if (!$esDeLaConversacion) {
+		if ($esDeLaConversacion === false) {
 			$this->status = 403;
 			$this->errors->setIntegrityError('Este archivo no pertenece a esta conversación');
 			$this->checkIntegrityErrors();
 		}
 	}
 
-	// MARK: CAN VIEW MENSAJE GRUPAL
+	// MARK: CAN VIEW ARCHIVO GRUPAL
 
-	protected function canViewMensajeGrupal(): void
+	protected function canViewArchivoGrupal(): void
 	{
 		$query =
 			"SELECT 1
@@ -71,8 +73,8 @@ readonly class Mensaje extends Contacto
 			[
 				$this->ulid_mensaje,
 				$this->ulid_grupo
-			],
-			SqlReturn::FetchColumn
+			]
+			// SqlReturn::FetchColumn
 		);
 
 		if (!$esDeLaConversacion) {
@@ -256,7 +258,7 @@ readonly class Mensaje extends Contacto
 		$this->checkValidationErrors();
 
 		$this->isContacto();
-		$this->canViewMensajeDirecto();
+		$this->canViewArchivoDirecto();
 
 		$this->showFile();
 	}
@@ -310,7 +312,7 @@ readonly class Mensaje extends Contacto
 		$this->checkValidationErrors();
 
 		$this->isMiembroGrupo();
-		$this->canViewMensajeGrupal();
+		$this->canViewArchivoGrupal();
 
 		$this->showFile();
 	}

@@ -170,16 +170,18 @@ readonly class Contacto extends Invitacion
 		$b = max($this->session_ulid, $this->ulid_contacto);
 
 		$query =
-			"SELECT 1
-			FROM contactos_directos
-			WHERE ulid_a = ?
-			AND ulid_b = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM contactos_directos
+				WHERE ulid_a = ?
+				AND ulid_b = ?
+			)";
 
 		$contacto = $this->executeQuery(
 			$query,
 			'ss',
 			[$a, $b],
-			SqlReturn::FetchColumn
+			SqlReturn::Boolean
 		);
 
 		if (!$contacto) {

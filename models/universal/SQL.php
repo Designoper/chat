@@ -9,6 +9,7 @@ enum SqlReturn
 	case FetchAll;
 	case FetchAssoc;
 	case FetchColumn;
+	case Boolean;
 }
 
 abstract readonly class SQL extends Database
@@ -56,8 +57,6 @@ abstract readonly class SQL extends Database
 	{
 		$mysqli_stmt = $this->connection->prepare($query);
 		$mysqli_stmt->bind_param($types, ...$variables);
-		$success = $mysqli_stmt->execute();
-
 		$resultSet = $mysqli_stmt->get_result();
 
 		switch ($type) {
@@ -73,8 +72,12 @@ abstract readonly class SQL extends Database
 				$result = $resultSet->fetch_column();
 				break;
 
+			case SqlReturn::Boolean:
+				$result = $resultSet->fetch_column() ? true : false;
+				break;
+
 			default:
-				$result = $success;
+				$result = null;
 		}
 
 		$mysqli_stmt->close();
