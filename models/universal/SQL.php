@@ -72,18 +72,12 @@ abstract readonly class SQL extends Database
 	// MARK: EXECUTE QUERY
 	// --------------------
 
-	protected function executeQuery(string $query, array $params, ?SqlReturn $type = null): string|int|float|array|null|bool
+	protected function executeQuery(string $query, array $params, ?SqlReturn $type = null): string|int|float|array|bool|null
 	{
+		$types  = implode('', array_column($params, 0));
+		$values = array_column($params, 1);
+
 		$mysqli_stmt = $this->connection->prepare($query);
-
-		$types = '';
-		$values = [];
-
-		foreach ($params as [$t, $v]) {
-			$types .= $t;
-			$values[] = $v;
-		}
-
 		$mysqli_stmt->bind_param($types, ...$values);
 		$mysqli_stmt->execute();
 		$resultSet = $mysqli_stmt->get_result();
