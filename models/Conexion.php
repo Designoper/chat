@@ -37,14 +37,12 @@ final readonly class Conexion extends Mensaje
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
 
-		$this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$this->ulid_contacto
-			]
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->ulid_contacto]
+		];
+
+		$this->executeQuery($query, $params);
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -63,14 +61,12 @@ final readonly class Conexion extends Mensaje
 			ON DUPLICATE KEY
 			UPDATE last_seen = CURRENT_TIMESTAMP";
 
-		$this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$this->ulid_grupo
-			]
-		);
+		$params = [
+			['s', $this->session_ulid],
+			['s', $this->ulid_grupo]
+		];
+
+		$this->executeQuery($query, $params);
 
 		$this->status = 201;
 		$this->sendResponse();
@@ -90,15 +86,12 @@ final readonly class Conexion extends Mensaje
 				AND conexion_directa.ulid_contacto = ?
 			WHERE usuarios.ulid_usuario = ?";
 
-		$conexion = $this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->session_ulid,
-				$this->ulid_contacto
-			],
-			SqlReturn::FetchAssoc
-		);
+		// $params = [
+		// 	['s', $this->session_ulid],
+		// 	['s', $this->ulid_grupo]
+		// ];
+
+		$conexion = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
 		return $conexion;
 	}
@@ -121,15 +114,12 @@ final readonly class Conexion extends Mensaje
 			AND membresias.rol IN ('fundador','miembro')
 			ORDER BY usuarios.nombre_usuario ASC";
 
-		$conexion = $this->executeQuery(
-			$query,
-			'ss',
-			[
-				$this->ulid_grupo,
-				$this->session_ulid
-			],
-			SqlReturn::FetchAssoc
-		);
+		$params = [
+			['s', $this->ulid_grupo],
+			['s', $this->session_ulid]
+		];
+
+		$conexion = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
 		return $conexion;
 	}

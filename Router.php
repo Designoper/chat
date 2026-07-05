@@ -68,8 +68,9 @@ final readonly class Router
         $this->executeRoute();
     }
 
+    // ============================================================================
     // MARK: SET ROUTE
-
+    // ============================================================================
     private function setRoute(string $method, string $path, array $action): array
     {
         [$class, $methodName] = $action;
@@ -81,8 +82,9 @@ final readonly class Router
         ];
     }
 
+    // ============================================================================
     // MARK: EXECUTE ROUTE
-
+    // ============================================================================
     private function executeRoute(): void
     {
         $requestUri = $_SERVER['REQUEST_URI'];
