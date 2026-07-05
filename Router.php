@@ -92,6 +92,8 @@ final readonly class Router
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $domain = $protocol . '://' . $host;
 
+        $completeUrl = $domain . $requestUri;
+
         switch ($method) {
             case 'GET':
             case 'POST':
@@ -106,7 +108,7 @@ final readonly class Router
                 http_response_code(404);
                 header("Content-Type: application/json");
                 echo json_encode(
-                    "La ruta $method solicitada no existe: $domain$requestUri",
+                    "La ruta $method solicitada no existe: $completeUrl",
                     JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
                 );
 
