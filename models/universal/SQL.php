@@ -57,6 +57,7 @@ abstract readonly class SQL extends Database
 	{
 		$mysqli_stmt = $this->connection->prepare($query);
 		$mysqli_stmt->bind_param($types, ...$variables);
+		$mysqli_stmt->execute();
 		$resultSet = $mysqli_stmt->get_result();
 
 		switch ($type) {
