@@ -74,7 +74,7 @@ abstract readonly class SQL extends Database
 				break;
 
 			case SqlReturn::Boolean:
-				$result = $resultSet->fetch_column() ? true : false;
+				$result = (bool) $resultSet->fetch_row()[0];
 				break;
 
 			default:
