@@ -177,14 +177,9 @@ abstract readonly class File extends SQL
             FROM $table
             WHERE $primaryKey = ?";
 
-        $fileUrl = $this->executeQuery(
-            $query,
-            "s",
-            [
-                $primaryKeyValue
-            ],
-            SqlReturn::FetchColumn
-        );
+        $params = [['s', $primaryKeyValue]];
+
+        $fileUrl = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
         return $fileUrl;
     }
