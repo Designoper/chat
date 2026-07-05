@@ -13,7 +13,7 @@ abstract readonly class Env
 
     private function setEnvVariables(): void
     {
-        $file = __DIR__ . '/../../.env';
+        $file = $_SERVER['DOCUMENT_ROOT'] . '/.env';
 
         if (!is_readable($file)) {
             return;
