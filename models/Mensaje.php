@@ -117,9 +117,7 @@ readonly class Mensaje extends Contacto
 
 		$last_ulid = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
-		$this->status = 200;
-		$this->content = $last_ulid;
-		$this->sendResponse();
+		$this->sendOkResponse(200, $last_ulid);
 	}
 
 	// ============================================================================
@@ -176,8 +174,7 @@ readonly class Mensaje extends Contacto
 
 		$this->executeQuery($query, $params);
 
-		$this->status = 201;
-		$this->sendResponse();
+		$this->sendOkResponse(201);
 	}
 
 	// MARK: SET ULTIMO ULID DIRECTO
@@ -232,9 +229,7 @@ readonly class Mensaje extends Contacto
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
 
-		$this->status = 200;
-		$this->content = $mensajes;
-		$this->sendResponse();
+		$this->sendOkResponse(200, $mensajes);
 	}
 
 	// MARK: READ ARCHIVO MENSAJE DIRECTO
@@ -280,9 +275,7 @@ readonly class Mensaje extends Contacto
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
 
-		$this->status = 200;
-		$this->content = $mensajes;
-		$this->sendResponse();
+		$this->sendOkResponse(200, $mensajes);
 	}
 
 	// MARK: READ ARCHIVO MENSAJE GRUPAL
@@ -356,8 +349,7 @@ readonly class Mensaje extends Contacto
 
 		$archivo['upload']();
 
-		$this->status = 201;
-		$this->sendResponse();
+		$this->sendOkResponse(201);
 	}
 
 	// MARK: CREATE MENSAJE DIRECTO TEXTO
@@ -456,9 +448,8 @@ readonly class Mensaje extends Contacto
 
 		$this->executeQuery($query, $params);
 
-		$this->status = 204;
 		$this->deleteFile($fileUrl);
-		$this->sendResponse();
+		$this->sendOkResponse(204);
 	}
 
 	// MARK: GET NUEVOS MENSAJES DIRECTOS
