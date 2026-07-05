@@ -25,6 +25,7 @@ abstract readonly class Env extends Response
         }
 
         $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
         foreach ($lines as $line) {
             $line = trim($line);
 
@@ -37,9 +38,9 @@ abstract readonly class Env extends Response
                 continue;
             }
 
-            $key = trim($parts[0]);
-            $value = trim($parts[1]);
-            putenv(sprintf('%s=%s', $key, $value));
+            $env_key = trim($parts[0]);
+            $env_value = trim($parts[1]);
+            putenv(sprintf('%s=%s', $env_key, $env_value));
         }
     }
 }
