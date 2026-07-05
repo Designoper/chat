@@ -428,7 +428,7 @@ readonly class Mensaje extends Contacto
 	{
 		$query =
 			"SELECT EXISTS(
-				SELECT ulid_emisor
+				SELECT 1
 				FROM mensajes
 				WHERE ulid_mensaje = ?
 				AND ulid_emisor = ?

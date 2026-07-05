@@ -163,8 +163,8 @@ readonly class Contacto extends Invitacion
 
 	protected function isContacto(): void
 	{
-		$a = min($this->session_ulid, $this->ulid_contacto);
-		$b = max($this->session_ulid, $this->ulid_contacto);
+		$ulid_min = min($this->session_ulid, $this->ulid_contacto);
+		$ulid_max = max($this->session_ulid, $this->ulid_contacto);
 
 		$query =
 			"SELECT EXISTS(
@@ -175,8 +175,8 @@ readonly class Contacto extends Invitacion
 			)";
 
 		$params = [
-			['s', $a],
-			['s', $b]
+			['s', $ulid_min],
+			['s', $ulid_max]
 		];
 
 		$contacto = $this->executeQuery($query, $params, SqlReturn::Exists);
