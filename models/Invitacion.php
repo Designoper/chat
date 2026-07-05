@@ -27,7 +27,7 @@ readonly class Invitacion extends Grupo
 			FROM usuarios
 			WHERE codigo_contacto = ?";
 
-		$params = [['s', $this->session_ulid]];
+		$params = [['s', $this->codigo_contacto]];
 
 		$contacto = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
@@ -143,7 +143,7 @@ readonly class Invitacion extends Grupo
 
 		$params = [
 			['s', $this->session_ulid],
-			['s', $this->ulid_contacto]
+			['s', $contacto]
 		];
 
 		$this->executeQuery($query, $params);
