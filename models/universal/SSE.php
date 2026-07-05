@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/Response.php';
+require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/SSEState.php';
 
-abstract readonly class SSE extends Response
+abstract readonly class SSE extends Sanitizer
 {
 	private SSEState $state;
 

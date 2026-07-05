@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-abstract readonly class Env
+require_once __DIR__ . '/Response.php';
+
+abstract readonly class Env extends Response
 {
     protected function __construct()
     {
+        parent::__construct();
         $this->setEnvVariables();
     }
 
@@ -13,13 +16,15 @@ abstract readonly class Env
 
     private function setEnvVariables(): void
     {
-        $file = $_SERVER['DOCUMENT_ROOT'] . '/.env';
+        $env_file = $_SERVER['DOCUMENT_ROOT'] . '/.env';
 
-        if (!is_readable($file)) {
-            return;
+        if (!is_readable($env_file)) {
+            $this->status = 500;
+            $this->errors->setIntegrityError('No se puede leer el archivo .env');
+            $this->checkIntegrityErrors();
         }
 
-        $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lines as $line) {
             $line = trim($line);
 

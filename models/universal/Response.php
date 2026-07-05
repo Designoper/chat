@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/Sanitizer.php';
 require_once __DIR__ . '/ErrorHandler.php';
 
-abstract readonly class Response extends Sanitizer
+abstract readonly class Response
 {
     protected int $status;
     protected array $content;
@@ -14,7 +13,6 @@ abstract readonly class Response extends Sanitizer
 
     protected function __construct()
     {
-        parent::__construct();
         $this->errors = new ErrorHandler();
     }
 
