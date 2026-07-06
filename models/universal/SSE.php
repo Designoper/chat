@@ -53,6 +53,12 @@ abstract readonly class SSE extends Sanitizer
 	// ============================================================================
 	protected function setSSE(callable $function): void
 	{
+		header("Content-Type: text/event-stream");
+		header("Cache-Control: no-cache");
+		header("Connection: keep-alive");
+		header("Content-Encoding: none");
+		header("X-Accel-Buffering: no");
+
 		if (session_status() === PHP_SESSION_ACTIVE) {
 			session_write_close();
 		}
@@ -63,12 +69,6 @@ abstract readonly class SSE extends Sanitizer
 		while (ob_get_level() > 0) {
 			ob_end_clean();
 		}
-
-		header("Content-Type: text/event-stream");
-		header("Cache-Control: no-cache");
-		header("Connection: keep-alive");
-		header("Content-Encoding: none");
-		header("X-Accel-Buffering: no");
 
 		$this->resendMissedEvents();
 
