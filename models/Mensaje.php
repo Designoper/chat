@@ -559,7 +559,7 @@ readonly class Mensaje extends Contacto
 
 			foreach ($mensajes as $m) {
 				$ultimo_id = $m["ulid_mensaje"];
-				$this->sendEvent('mensaje', $m);
+				$this->sendEvent('mensaje', $m, $ultimo_id);
 			}
 
 			$this->sendEvent('new mensaje', $ultimo_id);

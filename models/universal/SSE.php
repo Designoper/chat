@@ -7,44 +7,35 @@ require_once __DIR__ . '/SSEState.php';
 
 abstract readonly class SSE extends Sanitizer
 {
-	private SSEState $state;
+	private ?int $lastId;
 
 	protected function __construct()
 	{
 		parent::__construct();
-
-		$this->state = new SSEState();
 	}
 
 	// ============================================================================
 	// MARK: GET LAST EVENT ID
 	// ============================================================================
-	private function getLastEventId(): ?int
+	private function getLastEventId(): void
 	{
-		return isset($_SERVER['HTTP_LAST_EVENT_ID'])
-			? (int) $_SERVER['HTTP_LAST_EVENT_ID']
-			: null;
+		if (isset($_SERVER['HTTP_LAST_EVENT_ID'])) {
+			$this->lastId = (int) $_SERVER['HTTP_LAST_EVENT_ID'];
+		} else $this->lastId = null;
 	}
 
 	// ============================================================================
 	// MARK: RESEND MISSED EVENTS
 	// ============================================================================
-	private function resendMissedEvents(): void
+	private function resendMissedEvents(callable $function): void
 	{
-		$lastId = $this->getLastEventId();
+		$lastId = $this->lastId;
 
 		if ($lastId === null) {
 			return; // primera conexión
 		}
 
-		foreach ($this->state->eventBuffer as $storedEvent) {
-			if ($storedEvent['id'] > $lastId) {
-				echo "id: {$storedEvent['id']}\n";
-				echo "event: {$storedEvent['event']}\n";
-				echo "data: " . json_encode($storedEvent['data'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
-				$this->doubleFlush();
-			}
-		}
+		$function();
 	}
 
 	// ============================================================================
@@ -69,7 +60,9 @@ abstract readonly class SSE extends Sanitizer
 			ob_end_clean();
 		}
 
-		$this->resendMissedEvents();
+		$this->getLastEventId();
+
+		// $this->resendMissedEvents($function);
 
 		while (true) {
 
@@ -115,11 +108,13 @@ abstract readonly class SSE extends Sanitizer
 	// ============================================================================
 	// MARK: SEND EVENT
 	// ============================================================================
-	protected function sendEvent(string $event, mixed $data): void
+	protected function sendEvent(string $event, mixed $data, ?int $id = null): void
 	{
-		$id = $this->state->storeEvent($event, $data);
+		// $id = $this->state->storeEvent($event, $data);
 
-		echo "id: $id\n";
+		if ($id) {
+			echo "id: $id\n";
+		}
 		echo "event: $event\n";
 		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
 
