@@ -12,11 +12,13 @@ abstract readonly class SSE extends Sanitizer
 	protected function __construct()
 	{
 		parent::__construct();
+
 		$this->state = new SSEState();
 	}
 
-	// MARK: LAST EVENT ID
-
+	// ============================================================================
+	// MARK: GET LAST EVENT ID
+	// ============================================================================
 	private function getLastEventId(): ?int
 	{
 		return isset($_SERVER['HTTP_LAST_EVENT_ID'])
@@ -24,8 +26,9 @@ abstract readonly class SSE extends Sanitizer
 			: null;
 	}
 
+	// ============================================================================
 	// MARK: RESEND MISSED EVENTS
-
+	// ============================================================================
 	private function resendMissedEvents(): void
 	{
 		$lastId = $this->getLastEventId();
@@ -45,8 +48,9 @@ abstract readonly class SSE extends Sanitizer
 		$this->doubleFlush();
 	}
 
+	// ============================================================================
 	// MARK: SET SSE
-
+	// ============================================================================
 	protected function setSSE(callable $function): void
 	{
 		if (session_status() === PHP_SESSION_ACTIVE) {
@@ -66,7 +70,6 @@ abstract readonly class SSE extends Sanitizer
 		header("Content-Encoding: none");
 		header("X-Accel-Buffering: no");
 
-		// Reenviar eventos perdidos si el cliente se reconecta
 		$this->resendMissedEvents();
 
 		while (true) {
@@ -84,8 +87,9 @@ abstract readonly class SSE extends Sanitizer
 		}
 	}
 
+	// ============================================================================
 	// MARK: HEARTBEAT
-
+	// ============================================================================
 	private function heartbeat(): void
 	{
 		static $lastPing = 0;
@@ -97,8 +101,9 @@ abstract readonly class SSE extends Sanitizer
 		}
 	}
 
+	// ============================================================================
 	// MARK: DOUBLE FLUSH
-
+	// ============================================================================
 	private function doubleFlush(): void
 	{
 		if (ob_get_level() > 0) {
@@ -108,8 +113,9 @@ abstract readonly class SSE extends Sanitizer
 		flush();
 	}
 
+	// ============================================================================
 	// MARK: SEND EVENT
-
+	// ============================================================================
 	protected function sendEvent(string $event, mixed $data): void
 	{
 		$id = $this->state->storeEvent($event, $data);

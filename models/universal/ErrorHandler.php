@@ -9,21 +9,33 @@ final class ErrorHandler
 
     public function __construct() {}
 
+    // ============================================================================
+    // MARK: SET VALIDATION ERROR
+    // ============================================================================
     public function setValidationError(string $message): void
     {
         $this->validationErrors[] = $message;
     }
 
+    // ============================================================================
+    // MARK: SET INTEGRITY ERROR
+    // ============================================================================
     public function setIntegrityError(string $message): void
     {
         $this->integrityErrors[] = $message;
     }
 
+    // ============================================================================
+    // MARK: GET VALIDATION ERRORS
+    // ============================================================================
     public function getValidationErrors(): array
     {
         return $this->validationErrors;
     }
 
+    // ============================================================================
+    // MARK: GET INTEGRITY ERRORS
+    // ============================================================================
     public function getIntegrityErrors(): array
     {
         return $this->integrityErrors;

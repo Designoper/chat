@@ -30,8 +30,9 @@ abstract readonly class File extends SQL
         parent::__construct();
     }
 
+    // ============================================================================
     // MARK: FLATTEN FILES ARRAY
-
+    // ============================================================================
     protected function flattenFilesArray(string $inputFileName): array
     {
         if (!isset($_FILES[$inputFileName])) {
@@ -64,8 +65,9 @@ abstract readonly class File extends SQL
         return $newArray;
     }
 
+    // ============================================================================
     // MARK: SET UNIQUE FILENAME
-
+    // ============================================================================
     private function setUniqueFilename(string $originalFilename): void
     {
         $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
@@ -73,8 +75,9 @@ abstract readonly class File extends SQL
         $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
+    // ============================================================================
     // MARK: UPLOAD FILENAME
-
+    // ============================================================================
     protected function uploadFileName(): ?string
     {
         if ($this->file === null) {
@@ -86,8 +89,9 @@ abstract readonly class File extends SQL
         return $this->extraDirectories . $this->uniqueFilename;
     }
 
+    // ============================================================================
     // MARK: UPLOAD FILE
-
+    // ============================================================================
     protected function uploadFile(): void
     {
         if ($this->file === null) {
@@ -105,8 +109,9 @@ abstract readonly class File extends SQL
         move_uploaded_file($this->file['tmp_name'], $finalDestination);
     }
 
+    // ============================================================================
     // MARK: UPDATE FILENAME
-
+    // ============================================================================
     protected function updateFileName(string $column, string $table, string $primaryKey, string $primaryKeyValue): ?string
     {
         if ($this->file === null) {
@@ -124,8 +129,9 @@ abstract readonly class File extends SQL
         return $imagePath;
     }
 
+    // ============================================================================
     // MARK: UPDATE FILE
-
+    // ============================================================================
     protected function updateFile(?string $filePath): void
     {
         if ($this->file === null) {
@@ -140,8 +146,9 @@ abstract readonly class File extends SQL
         $this->uploadFile();
     }
 
+    // ============================================================================
     // MARK: DELETE FILE
-
+    // ============================================================================
     protected function deleteFile(?string $filePath): void
     {
         if ($filePath !== null) {
@@ -149,8 +156,9 @@ abstract readonly class File extends SQL
         }
     }
 
+    // ============================================================================
     // MARK: DELETE ALL FILES
-
+    // ============================================================================
     protected function deleteAllFiles(): void
     {
         $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH . $this->extraDirectories;
@@ -168,8 +176,9 @@ abstract readonly class File extends SQL
         }
     }
 
+    // ============================================================================
     // MARK: GET FILE URL
-
+    // ============================================================================
     protected function getFileUrl(string $column, string $table, string $primaryKey, string $primaryKeyValue): string|null|false
     {
         $query =
@@ -184,11 +193,11 @@ abstract readonly class File extends SQL
         return $fileUrl;
     }
 
+    // ============================================================================
     // MARK: SHOW FILE
-
+    // ============================================================================
     protected function showFile(): void
     {
-        // Ruta base absoluta de la carpeta private
         $base = realpath($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH);
 
         if ($base === false) {
@@ -217,7 +226,6 @@ abstract readonly class File extends SQL
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->file($rutaSolicitada);
 
-        // Permitir solo imagen/audio/video
         if (
             !str_starts_with($mime, 'image/') &&
             !str_starts_with($mime, 'audio/') &&

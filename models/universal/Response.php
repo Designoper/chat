@@ -16,8 +16,9 @@ abstract readonly class Response
         $this->errors = new ErrorHandler();
     }
 
+    // ============================================================================
     // MARK: SEND RESPONSE
-
+    // ============================================================================
     protected function sendResponse(): never
     {
         $this->buildResponse();
@@ -28,8 +29,9 @@ abstract readonly class Response
         exit;
     }
 
+    // ============================================================================
     // MARK: SEND OK RESPONSE
-
+    // ============================================================================
     protected function sendOkResponse(int $http_code, ?array $content = null): never
     {
         $this->status = $http_code;
@@ -46,8 +48,9 @@ abstract readonly class Response
         exit;
     }
 
+    // ============================================================================
     // MARK: BUILD RESPONSE
-
+    // ============================================================================
     private function buildResponse(): void
     {
         if (!empty($this->errors->getValidationErrors())) {
@@ -68,8 +71,9 @@ abstract readonly class Response
         $this->response = [];
     }
 
-    // MARK: CHECK VALIDATIONS ERRORS
-
+    // ============================================================================
+    // MARK: CHECK VALIDATION ERRORS
+    // ============================================================================
     protected function checkValidationErrors(): void
     {
         if (!empty($this->errors->getValidationErrors())) {
@@ -78,8 +82,9 @@ abstract readonly class Response
         }
     }
 
+    // ============================================================================
     // MARK: CHECK INTEGRITY ERRORS
-
+    // ============================================================================
     protected function checkIntegrityErrors(): void
     {
         if (!empty($this->errors->getIntegrityErrors())) {

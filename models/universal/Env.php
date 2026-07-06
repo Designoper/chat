@@ -11,6 +11,7 @@ abstract readonly class Env extends Response
     protected function __construct()
     {
         parent::__construct();
+
         $this->setEnvVariables();
     }
 

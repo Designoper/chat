@@ -7,6 +7,11 @@ final class SSEState
 	public array $eventBuffer = [];
 	public int $nextEventId = 1;
 
+	public function __construct() {}
+
+	// ============================================================================
+	// MARK: STORE EVENT
+	// ============================================================================
 	public function storeEvent(string $event, mixed $data): int
 	{
 		$id = $this->nextEventId++;

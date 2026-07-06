@@ -13,8 +13,9 @@ abstract readonly class Sanitizer extends Env
         $this->sanitizeGlobals();
     }
 
+    // ============================================================================
     // MARK: SANITIZE VALUE
-
+    // ============================================================================
     private function sanitizeValue(mixed $value): string|array
     {
         if (is_array($value)) {
@@ -32,8 +33,9 @@ abstract readonly class Sanitizer extends Env
         return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
+    // ============================================================================
     // MARK: SANITIZE GLOBALS
-
+    // ============================================================================
     private function sanitizeGlobals(): void
     {
         $globals = ['_GET', '_POST', '_REQUEST', '_COOKIE'];

@@ -11,8 +11,9 @@ abstract readonly class Setter extends File
 		parent::__construct();
 	}
 
+	// ============================================================================
 	// MARK: SET ULID
-
+	// ============================================================================
 	protected function setUlid(string $name): void
 	{
 		$value = $_REQUEST[$name] ?? null;
@@ -24,8 +25,9 @@ abstract readonly class Setter extends File
 			: $this->$name = $value;
 	}
 
+	// ============================================================================
 	// MARK: SET NOMBRE
-
+	// ============================================================================
 	protected function setNombre(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
@@ -37,8 +39,9 @@ abstract readonly class Setter extends File
 			: $this->$name = $value;
 	}
 
+	// ============================================================================
 	// MARK: SET PASSWORD
-
+	// ============================================================================
 	protected function setPassword(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
@@ -50,8 +53,9 @@ abstract readonly class Setter extends File
 			: $this->$name = $value;
 	}
 
+	// ============================================================================
 	// MARK: SET CODIGO
-
+	// ============================================================================
 	protected function setCodigo(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
@@ -63,8 +67,9 @@ abstract readonly class Setter extends File
 			: $this->$name = $value;
 	}
 
+	// ============================================================================
 	// MARK: SET CONTENIDO
-
+	// ============================================================================
 	protected function setContenido(string $name): void
 	{
 		$value = $_POST[$name] ?? null;
@@ -75,8 +80,9 @@ abstract readonly class Setter extends File
 			: $this->$name = $value;
 	}
 
+	// ============================================================================
 	// MARK: SET ARCHIVO
-
+	// ============================================================================
 	protected function setArchivo(string $name, FileTypes $tipoEsperado): void
 	{
 		$filesUploaded = $this->flattenFilesArray($name);
@@ -100,8 +106,9 @@ abstract readonly class Setter extends File
 		$this->$name = $archivo;
 	}
 
+	// ============================================================================
 	// MARK: VALIDAR ARCHIVO SEGURO
-
+	// ============================================================================
 	private function validarArchivoSeguro(string $ruta, string $tipoDetectado, FileTypes $tipoEsperado): void
 	{
 		if ($tipoDetectado === null) {
@@ -114,7 +121,6 @@ abstract readonly class Setter extends File
 			$this->checkValidationErrors();
 		}
 
-		// Validación por categoría detectada
 		switch ($tipoDetectado) {
 
 			case 'image':
@@ -139,8 +145,9 @@ abstract readonly class Setter extends File
 		}
 	}
 
-	// MARK: DETECTAR TIPO DE ARCHIVO
-
+	// ============================================================================
+	// MARK: DETECTAR TIPO ARCHIVO
+	// ============================================================================
 	private function detectarTipoArchivo(string $ruta, string $nombreOriginal): ?string
 	{
 		// --- 0. Extensión ---

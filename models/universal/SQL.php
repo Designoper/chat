@@ -22,8 +22,9 @@ abstract readonly class SQL extends Database
 		parent::__construct();
 	}
 
+	// ============================================================================
 	// MARK: GENERATE ULID
-
+	// ============================================================================
 	protected function generateUlid(): string
 	{
 		$time = (int) (microtime(true) * 1000);
@@ -39,8 +40,9 @@ abstract readonly class SQL extends Database
 		return $ulid;
 	}
 
+	// ============================================================================
 	// MARK: ENCODE BASE 32
-
+	// ============================================================================
 	private function encodeBase32(int $value, int $length): string
 	{
 		$encoded = '';
@@ -51,6 +53,9 @@ abstract readonly class SQL extends Database
 		return $encoded;
 	}
 
+	// ============================================================================
+	// MARK: IS AUTHORIZED
+	// ============================================================================
 	protected function isAuthorized(bool $result, string $error_message): void
 	{
 		if ($result === false) {
@@ -60,6 +65,9 @@ abstract readonly class SQL extends Database
 		}
 	}
 
+	// ============================================================================
+	// MARK: IS CONFLICT
+	// ============================================================================
 	protected function isConflict(\mysqli_sql_exception $error, string $error_message): void
 	{
 		if ($error->getCode() === 1062) {
@@ -69,12 +77,12 @@ abstract readonly class SQL extends Database
 		}
 	}
 
+	// ============================================================================
 	// MARK: EXECUTE QUERY
-	// --------------------
-
+	// ============================================================================
 	protected function executeQuery(string $query, array $params, ?SqlReturn $type = null): string|int|float|array|bool|null
 	{
-		$types  = implode('', array_column($params, 0));
+		$types = implode('', array_column($params, 0));
 		$values = array_column($params, 1);
 
 		$mysqli_stmt = $this->connection->prepare($query);
