@@ -163,29 +163,6 @@ export default class Mensaje extends Contacto {
 
 		const mensajes = fetchedMensajes.map(mensaje => {
 
-			let marcador = "";
-			let fileHref;
-
-			switch (mensaje.tipo_mensaje) {
-				case 'image':
-					fileHref = `<img src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">`;
-					break;
-				case 'audio':
-					fileHref = `<audio src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></audio>`;
-					break;
-				case 'video':
-					fileHref = `<video src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></video>`;
-					break;
-				case 'text':
-					fileHref = `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
-			}
-
-			if (!this.mostrado && mensaje.ulid_mensaje > this.ultimoUlidLeido) {
-				marcador = "<p id='marcador'>Nuevos mensajes</p>";
-				this.mostrado = true; // ← ya no se vuelve a mostrar
-			}
-
-			const fechaEnvio = this.hoursMinutes(mensaje.fecha_creacion);
 			const fechaMensajeActual = this.formatearFecha(mensaje.fecha_creacion);
 			const fechaMensajeAnterior = this.mensaje.fecha;
 
@@ -193,15 +170,48 @@ export default class Mensaje extends Contacto {
 				? ""
 				: `<date>${this.compareTime(mensaje.fecha_creacion)}</date>`;
 
-			const nombreAutor = mensaje.nombre_usuario === this.mensaje?.autor
-				? ""
-				: `<h2 translate="no">${mensaje.nombre_usuario}</h2>`;
+			let marcador = "";
+
+			if (!this.mostrado && mensaje.ulid_mensaje > this.ultimoUlidLeido) {
+				marcador = "<p id='marcador'>Nuevos mensajes</p>";
+				this.mostrado = true; // ← ya no se vuelve a mostrar
+			}
 
 			const isAutor = mensaje.ulid_emisor === this.usuario.ulid_usuario;
 
 			const classArticle = isAutor
 				? 'class="mensaje-propio"'
 				: '';
+
+			const nombreAutor = mensaje.nombre_usuario === this.mensaje?.autor
+				? ""
+				: `<h2 translate="no">${mensaje.nombre_usuario}</h2>`;
+
+			const fechaEnvio = this.hoursMinutes(mensaje.fecha_creacion);
+
+			let fileHref;
+
+			switch (mensaje.tipo_mensaje) {
+				case 'image':
+					fileHref = `<img src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">
+					<date>${fechaEnvio}</date>`;
+					break;
+				case 'audio':
+					fileHref = `<audio src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></audio>
+					<date>${fechaEnvio}</date>`;
+					break;
+				case 'video':
+					fileHref = `<video src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></video>
+					<date>${fechaEnvio}</date>`;
+					break;
+				case 'text':
+					fileHref =
+						`<div>
+							<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
+							<date>${fechaEnvio}</date>
+						</div>`;
+			}
+
 
 			const formDelete = isAutor
 				? `<form method="POST" name="deleteMensaje">
@@ -220,10 +230,7 @@ export default class Mensaje extends Contacto {
 					${marcador}
 					<article ${classArticle}>
 						${nombreAutor}
-						<div>
-							${fileHref}
-							<date>${fechaEnvio}</date>
-						</div>
+						${fileHref}
 						${formDelete}
 					</article>
 				`;
