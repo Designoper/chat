@@ -42,7 +42,6 @@ abstract readonly class SSE extends Sanitizer
 				echo "id: {$event['id']}\n";
 				echo "event: {$event['event']}\n";
 				echo "data: " . json_encode($event['data'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
-				flush();
 			}
 		}
 	}
@@ -52,7 +51,6 @@ abstract readonly class SSE extends Sanitizer
 	// ============================================================================
 	protected function setSSE(callable $function): void
 	{
-		// Cabeceras obligatorias para SSE
 		header("Content-Type: text/event-stream");
 		header('Cache-Control: no-cache');
 		header("Connection: keep-alive");
@@ -98,7 +96,6 @@ abstract readonly class SSE extends Sanitizer
 		if (time() - $lastPing > 10) {
 			$lastPing = time();
 			echo ": keepalive\n\n";
-			flush();
 		}
 	}
 
@@ -112,7 +109,5 @@ abstract readonly class SSE extends Sanitizer
 		}
 		echo "event: $event\n";
 		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
-
-		flush();
 	}
 }
