@@ -37,15 +37,14 @@ abstract readonly class SSE extends Sanitizer
 			return; // primera conexión
 		}
 
-		foreach ($this->state->eventBuffer as $id => $event) {
-			if ($id > $lastId) {
-				echo "id: {$event['id']}\n";
-				echo "event: {$event['event']}\n";
-				echo "data: " . json_encode($event['data'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
+		foreach ($this->state->eventBuffer as $storedEvent) {
+			if ($storedEvent['id'] > $lastId) {
+				echo "id: {$storedEvent['id']}\n";
+				echo "event: {$storedEvent['event']}\n";
+				echo "data: " . json_encode($storedEvent['data'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
+				$this->doubleFlush();
 			}
 		}
-
-		$this->doubleFlush();
 	}
 
 	// ============================================================================
