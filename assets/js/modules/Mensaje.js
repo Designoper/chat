@@ -2,8 +2,8 @@ import Contacto from "./Contacto.js";
 
 export default class Mensaje extends Contacto {
 
-	endpointGetUltimoId;
-	endpointSetUltimoId;
+	endpointGetUltimoUlId;
+	endpointSetUltimoUlId;
 	endpointGetMensajes;
 	endpointStreamMensajes;
 	endpointArchivo;
@@ -24,7 +24,7 @@ export default class Mensaje extends Contacto {
 
 	mensaje = {};
 
-	ultimoIdLeido;
+	ultimoUlidLeido;
 
 	counter = 0;
 
@@ -58,7 +58,7 @@ export default class Mensaje extends Contacto {
 
 	async getUltimoUlid() {
 		const response = await this.fetchWithoutForm(this.endpointGetUltimoUlid, 'get', this.urlSearchparamsObj);
-		this.ultimoIdLeido = response.json.ulid_mensaje;
+		this.ultimoUlidLeido = response.json.ulid_mensaje;
 	}
 
 	delete() {
@@ -185,7 +185,7 @@ export default class Mensaje extends Contacto {
 					fileHref = `<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>`;
 			}
 
-			if (!this.mostrado && mensaje.ulid_mensaje > this.ultimoIdLeido) {
+			if (!this.mostrado && mensaje.ulid_mensaje > this.ultimoUlidLeido) {
 				marcador = "<p id='marcador'>Nuevos mensajes</p>";
 				this.mostrado = true; // ← ya no se vuelve a mostrar
 			}

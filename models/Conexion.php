@@ -83,12 +83,12 @@ final readonly class Conexion extends Mensaje
 			FROM usuarios
 			LEFT JOIN conexion_directa
 				ON usuarios.ulid_usuario = conexion_directa.ulid_usuario
-				AND conexion_directa.ulid_contacto = ?
-			WHERE usuarios.ulid_usuario = ?";
+			WHERE conexion_directa.ulid_usuario = ?
+			AND conexion_directa.ulid_contacto = ?";
 
 		// $params = [
 		// 	['s', $this->session_ulid],
-		// 	['s', $this->ulid_grupo]
+		// 	['s', $this->ulid_contacto]
 		// ];
 
 		$conexion = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);

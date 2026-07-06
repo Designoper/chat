@@ -4,7 +4,7 @@ const mensaje = new Mensaje();
 
 mensaje.setEndpoints();
 await mensaje.currentUsuario();
-await mensaje.writeChat();
+mensaje.writeChat();
 mensaje.delete();
 mensaje.setForm();
 mensaje.setObj();
