@@ -70,7 +70,7 @@ abstract readonly class SSE extends Sanitizer
 			ob_end_clean();
 		}
 
-		$this->resendMissedEvents();
+		// $this->resendMissedEvents();
 
 		while (true) {
 
