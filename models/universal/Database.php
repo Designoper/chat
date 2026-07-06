@@ -29,8 +29,9 @@ abstract readonly class Database extends SSE
 		$this->setConnection();
 	}
 
+	// ============================================================================
 	// MARK: SET CONNECTION
-
+	// ============================================================================
 	private function setConnection(): void
 	{
 		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -51,17 +52,9 @@ abstract readonly class Database extends SSE
 		}
 	}
 
-	// MARK: SET DOMAIN
-
-	private function setDomain(): void
-	{
-		$protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
-		$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-		$this->domain = $protocol . '://' . $host;
-	}
-
+	// ============================================================================
 	// MARK: AUTH BROWSER
-
+	// ============================================================================
 	public function authBrowser(): void
 	{
 		if ($this->session_ulid === null) {
@@ -70,8 +63,9 @@ abstract readonly class Database extends SSE
 		}
 	}
 
+	// ============================================================================
 	// MARK: SESSION REDIRECT
-
+	// ============================================================================
 	public function sessionRedirect(): void
 	{
 		if ($this->session_ulid !== null) {
@@ -80,8 +74,9 @@ abstract readonly class Database extends SSE
 		}
 	}
 
+	// ============================================================================
 	// MARK: AUTH ENDPOINT
-
+	// ============================================================================
 	protected function authEndpoint(): void
 	{
 		if ($this->session_ulid === null) {

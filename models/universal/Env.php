@@ -6,21 +6,24 @@ require_once __DIR__ . '/Response.php';
 
 abstract readonly class Env extends Response
 {
+    private const string ENV = '.env';
+
     protected function __construct()
     {
         parent::__construct();
         $this->setEnvVariables();
     }
 
-    // MARK: SET ENVIRONMENT VARIABLES
-
+    // ============================================================================
+    // MARK: SET ENV VARIABLES
+    // ============================================================================
     private function setEnvVariables(): void
     {
-        $env_file = $_SERVER['DOCUMENT_ROOT'] . '/.env';
+        $env_file = $_SERVER['DOCUMENT_ROOT'] . '/' . self::ENV;
 
         if (!is_readable($env_file)) {
             $this->status = 500;
-            $this->errors->setIntegrityError('No se puede leer el archivo .env');
+            $this->errors->setIntegrityError("No se puede leer el archivo " . self::ENV);
             $this->checkIntegrityErrors();
         }
 
