@@ -194,6 +194,17 @@ abstract readonly class File extends SQL
     }
 
     // ============================================================================
+    // MARK: OBTAIN MIME
+    // ============================================================================
+    protected function obtainMime(string $filename): string|false
+    {
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($filename);
+
+        return $mime;
+    }
+
+    // ============================================================================
     // MARK: SHOW FILE
     // ============================================================================
     protected function showFile(): void
@@ -223,8 +234,7 @@ abstract readonly class File extends SQL
         }
 
         // Validar MIME real
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mime = $finfo->file($rutaSolicitada);
+        $mime = $this->obtainMime($rutaSolicitada);
 
         if (
             !str_starts_with($mime, 'image/') &&

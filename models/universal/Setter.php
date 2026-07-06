@@ -224,8 +224,7 @@ abstract readonly class Setter extends File
 		}
 
 		// --- 3. MIME ---
-		$finfo = new finfo(FILEINFO_MIME_TYPE);
-		$mime = $finfo->file($ruta);
+		$mime = $this->obtainMime($ruta);
 
 		if (str_starts_with($mime, 'image/')) return 'image';
 		if (str_starts_with($mime, 'audio/')) return 'audio';
