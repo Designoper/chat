@@ -34,7 +34,7 @@ abstract readonly class SSE extends Sanitizer
 		$lastId = $this->getLastEventId();
 
 		if ($lastId === null) {
-			return; // primera conexión
+			return;
 		}
 
 		foreach ($this->state->eventBuffer as $id => $event) {
@@ -42,10 +42,9 @@ abstract readonly class SSE extends Sanitizer
 				echo "id: {$event['id']}\n";
 				echo "event: {$event['event']}\n";
 				echo "data: " . json_encode($event['data'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
+				flush();
 			}
 		}
-
-		$this->doubleFlush();
 	}
 
 	// ============================================================================
@@ -53,11 +52,12 @@ abstract readonly class SSE extends Sanitizer
 	// ============================================================================
 	protected function setSSE(callable $function): void
 	{
+		// Cabeceras obligatorias para SSE
 		header("Content-Type: text/event-stream");
-		header("Cache-Control: no-cache");
+		header('Cache-Control: no-cache');
 		header("Connection: keep-alive");
 		header("Content-Encoding: none");
-		header("X-Accel-Buffering: no");
+		header("X-Accel-Buffering: no"); // Evita el búfer en proxies externos
 
 		if (session_status() === PHP_SESSION_ACTIVE) {
 			session_write_close();
@@ -65,6 +65,8 @@ abstract readonly class SSE extends Sanitizer
 
 		set_time_limit(0);
 		ignore_user_abort(false);
+
+		ob_implicit_flush(true);
 
 		while (ob_get_level() > 0) {
 			ob_end_clean();
@@ -81,7 +83,6 @@ abstract readonly class SSE extends Sanitizer
 			$function();
 
 			$this->heartbeat();
-			$this->doubleFlush();
 
 			usleep(300000); // 0.3s
 		}
@@ -97,20 +98,8 @@ abstract readonly class SSE extends Sanitizer
 		if (time() - $lastPing > 10) {
 			$lastPing = time();
 			echo ": keepalive\n\n";
-			$this->doubleFlush();
+			flush();
 		}
-	}
-
-	// ============================================================================
-	// MARK: DOUBLE FLUSH
-	// ============================================================================
-	private function doubleFlush(): void
-	{
-		if (ob_get_level() > 0) {
-			ob_flush();
-		}
-
-		flush();
 	}
 
 	// ============================================================================
@@ -124,6 +113,6 @@ abstract readonly class SSE extends Sanitizer
 		echo "event: $event\n";
 		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
 
-		$this->doubleFlush();
+		flush();
 	}
 }

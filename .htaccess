@@ -4,15 +4,6 @@ Options -MultiViews
 
 RewriteEngine On
 
-# No reescribir audios
-# RewriteRule ^audios/ - [L]
-
-# # No reescribir imágenes
-# RewriteRule ^img/ - [L]
-
-# # No reescribir JS/CSS
-# RewriteRule ^(js|css)/ - [L]
-
 # Bloquear carpetas internas
 RewriteRule ^(\.git|\.svn|config|private|backups|models)(/|$) - [F,L]
 
@@ -32,20 +23,6 @@ RewriteRule ^(.*)$ /Router.php [QSA,L]
 <FilesMatch "^\..*">
     Require all denied
 </FilesMatch>
-
-
-
-# <IfModule mod_headers.c>
-#     Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
-#     Header set Pragma "no-cache"
-#     Header set Expires "0"
-# </IfModule>
-
-# <IfModule mod_headers.c>
-#     Header set Cache-Control "public, max-age=120"
-#     Header unset Pragma
-#     Header set Expires "120"
-# </IfModule>
 
 # Cache configuration to improve page loading speed
 <IfModule mod_expires.c>
@@ -110,14 +87,3 @@ RewriteRule ^(.*)$ /Router.php [QSA,L]
     </FilesMatch>
 
 </IfModule>
-
-# # Gzip compression
-# <IfModule mod_deflate.c>
-
-#     AddOutputFilterByType DEFLATE text/html
-#     AddOutputFilterByType DEFLATE text/css
-#     AddOutputFilterByType DEFLATE text/javascript
-#     AddOutputFilterByType DEFLATE image/svg+xml
-#     AddOutputFilterByType DEFLATE font/woff2
-
-# </IfModule>
