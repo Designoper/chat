@@ -556,13 +556,10 @@ readonly class Mensaje extends Contacto
 		$mensajes = $getter();
 
 		if (!empty($mensajes)) {
-
-			foreach ($mensajes as $m) {
-				$ultimo_id = $m["ulid_mensaje"];
-				$this->sendEvent('mensaje', $m);
+			foreach ($mensajes as $mensaje) {
+				$ultimo_ulid = $mensaje["ulid_mensaje"];
+				$this->sendEvent('mensaje', $mensaje, $ultimo_ulid);
 			}
-
-			$this->sendEvent('new mensaje', $ultimo_id);
 		}
 	}
 

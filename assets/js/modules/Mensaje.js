@@ -11,7 +11,7 @@ export default class Mensaje extends Contacto {
 	ulid_value;
 
 	urlSearchParams = new URLSearchParams(location.search);
-	ringtone = new Audio("../../../assets/audio/ringtone.mp3");
+	ringtone = new Audio(`${location.origin}/assets/audio/ringtone.mp3`);
 
 	mostrado = false;
 
@@ -116,7 +116,6 @@ export default class Mensaje extends Contacto {
 		const evtSource = new EventSource(`${this.endpointStreamMensajes}?${this.ulid_type}=${this.ulid_value}`);
 		this.mostrado = true;
 
-		// 🔥 Cada vez que se abre (incluye reconexiones)
 		evtSource.onopen = async () => {
 
 			await this.getMensajes();
@@ -126,18 +125,14 @@ export default class Mensaje extends Contacto {
 			}
 		};
 
-		evtSource.addEventListener("mensaje", (event) => {
+		evtSource.addEventListener("mensaje", async (event) => {
 			const mensaje = JSON.parse(event.data);
 			const content = this.mensajesTemplate([mensaje]);
 
 			this.dom.output.insertAdjacentHTML("beforeend", this.sanitize(content));
 			this.ringtone.play();
-		});
 
-		evtSource.addEventListener("new mensaje", async (event) => {
-			const mensaje = JSON.parse(event.data);
-			this.urlSearchparamsObj.ulid_mensaje = mensaje;
-
+			this.urlSearchparamsObj.ulid_mensaje = mensaje.ulid_mensaje;
 			await this.fetchWithoutForm(this.endpointSetUltimoUlid, 'post', this.urlSearchparamsObj);
 		});
 	}
@@ -196,7 +191,7 @@ export default class Mensaje extends Contacto {
 
 			const cambioFecha = fechaMensajeAnterior?.dayOfYear === fechaMensajeActual.dayOfYear
 				? ""
-				: `<date datetime="${this.yearMonthDay(mensaje.fecha_creacion)}">${this.compareTime(mensaje.fecha_creacion)}</date>`;
+				: `<date>${this.compareTime(mensaje.fecha_creacion)}</date>`;
 
 			const nombreAutor = mensaje.nombre_usuario === this.mensaje?.autor
 				? ""

@@ -116,11 +116,11 @@ abstract readonly class SSE extends Sanitizer
 	// ============================================================================
 	// MARK: SEND EVENT
 	// ============================================================================
-	protected function sendEvent(string $event, mixed $data): void
+	protected function sendEvent(string $event, mixed $data, ?string $id = null): void
 	{
-		$id = $this->state->storeEvent($event, $data);
-
-		echo "id: $id\n";
+		if ($id) {
+			echo "id: $id\n";
+		}
 		echo "event: $event\n";
 		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
 
