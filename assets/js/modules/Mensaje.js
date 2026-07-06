@@ -212,7 +212,6 @@ export default class Mensaje extends Contacto {
 						</div>`;
 			}
 
-
 			const formDelete = isAutor
 				? `<form method="POST" name="deleteMensaje">
 						<input type="hidden" name="ulid_mensaje" value="${mensaje.ulid_mensaje}">
