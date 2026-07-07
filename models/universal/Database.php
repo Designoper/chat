@@ -81,9 +81,7 @@ abstract readonly class Database extends SSE
 	protected function authEndpoint(): void
 	{
 		if ($this->session_ulid === null) {
-			$this->status = 401;
-			$this->errors->setIntegrityError('No hay sesión');
-			$this->checkIntegrityErrors();
+			$this->integrityErrorSetup(401, "No hay sesión.");
 		}
 	}
 }

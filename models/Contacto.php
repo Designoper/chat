@@ -181,6 +181,8 @@ readonly class Contacto extends Invitacion
 
 		$contacto = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		$this->isAuthorized($contacto, 'No eres contacto de este usuario.');
+		if (!$contacto) {
+			$this->integrityErrorSetup(403, "No eres contacto de este usuario.");
+		}
 	}
 }

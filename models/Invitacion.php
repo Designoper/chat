@@ -18,8 +18,7 @@ readonly class Invitacion extends Grupo
 
 	public function invitarContacto(): void
 	{
-		$this->setCodigo('codigo_contacto');
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setCodigo('codigo_contacto')]);
 
 		$query =
 			"SELECT ulid_usuario
@@ -146,8 +145,7 @@ readonly class Invitacion extends Grupo
 
 	public function aceptarContacto(): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setUlid('ulid_contacto')]);
 
 		$ulid_min = min($this->ulid_contacto, $this->session_ulid);
 		$ulid_max = max($this->ulid_contacto, $this->session_ulid);
@@ -187,8 +185,7 @@ readonly class Invitacion extends Grupo
 
 	public function rechazarContacto(): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setUlid('ulid_contacto')]);
 
 		$query =
 			"DELETE FROM invitaciones_directas
@@ -209,9 +206,10 @@ readonly class Invitacion extends Grupo
 
 	public function invitarGrupo(): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->setUlid('ulid_grupo');
-		$this->checkValidationErrors();
+		$this->setProperties([
+			fn() => $this->setUlid('ulid_contacto'),
+			fn() => $this->setUlid('ulid_grupo')
+		]);
 
 		// 3. Validar que el grupo existe
 		$query =
@@ -252,7 +250,9 @@ readonly class Invitacion extends Grupo
 
 		$esContacto = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		$this->isAuthorized($esContacto, 'Solo puedes invitar a tus contactos directos.');
+		if (!$esContacto) {
+			$this->integrityErrorSetup(403, "Solo puedes invitar a tus contactos directos.");
+		}
 
 		// 2. Validar que el usuario existe
 		$query =
@@ -315,7 +315,6 @@ readonly class Invitacion extends Grupo
 		];
 
 		$this->executeQuery($query, $params);
-
 		$this->sendOkResponse(201);
 	}
 
@@ -323,9 +322,7 @@ readonly class Invitacion extends Grupo
 
 	public function aceptarGrupo(): void
 	{
-		$this->setUlid('ulid_grupo');
-
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
 
 		$query =
 			"INSERT INTO contactos_grupales (ulid_usuario, ulid_grupo)
@@ -344,7 +341,6 @@ readonly class Invitacion extends Grupo
 			AND ulid_grupo = ?";
 
 		$this->executeQuery($query, $params);
-
 		$this->sendOkResponse(200);
 	}
 
@@ -352,10 +348,7 @@ readonly class Invitacion extends Grupo
 
 	public function rechazarGrupo(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->checkValidationErrors();
-
-		$this->ulid_grupo;
+		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
 
 		// 1. Validar que el grupo existe
 		$query =
@@ -549,9 +542,8 @@ readonly class Invitacion extends Grupo
 
 	public function streamContactosInvitables(): void
 	{
-		$this->setUlid('ulid_grupo');
+		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
 
-		$this->checkValidationErrors();
 		$this->isMiembroGrupo();
 
 		$this->setSSE([$this, "streamContactosInvitablesLogic"]);

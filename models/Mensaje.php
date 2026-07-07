@@ -48,7 +48,9 @@ readonly class Mensaje extends Contacto
 
 		$mensaje_directo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		$this->isAuthorized($mensaje_directo, 'Este archivo no pertenece a la conversación.');
+		if (!$mensaje_directo) {
+			$this->integrityErrorSetup(403, "Este archivo no pertenece a la conversación.");
+		}
 	}
 
 	// ============================================================================
@@ -71,7 +73,9 @@ readonly class Mensaje extends Contacto
 
 		$mensaje_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		$this->isAuthorized($mensaje_grupo, 'No pertences al grupo de este archivo.');
+		if (!$mensaje_grupo) {
+			$this->integrityErrorSetup(403, "No pertences al grupo de este archivo.");
+		}
 	}
 
 	// ============================================================================
@@ -92,8 +96,7 @@ readonly class Mensaje extends Contacto
 			]
 		};
 
-		$this->setUlid($config['ulid']);
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setUlid($config['ulid'])]);
 
 		$config['security']();
 
@@ -105,7 +108,7 @@ readonly class Mensaje extends Contacto
 					WHERE ulid_usuario = ?
 					AND {$config['ulid']} = ?
 				),
-			'')";
+			'') AS ulid_mensaje";
 
 		$params = [
 			['s', $this->session_ulid],
@@ -151,9 +154,10 @@ readonly class Mensaje extends Contacto
 			]
 		};
 
-		$this->setUlid($config['ulid']);
-		$this->setUlid('ulid_mensaje');
-		$this->checkValidationErrors();
+		$this->setProperties([
+			fn() => $this->setUlid($config['ulid']),
+			fn() => $this->setUlid('ulid_mensaje')
+		]);
 
 		$config['security']();
 
@@ -196,8 +200,8 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	public function readMensajesDirectos(): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->checkValidationErrors();
+
+		$this->setProperties([fn() => $this->setUlid('ulid_contacto')]);
 
 		$this->isContacto();
 
@@ -238,9 +242,10 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	public function readArchivoMensajeDirecto(): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->setUlid('ulid_mensaje');
-		$this->checkValidationErrors();
+		$this->setProperties([
+			fn() => $this->setUlid('ulid_contacto'),
+			fn() => $this->setUlid('ulid_mensaje')
+		]);
 
 		$this->isContacto();
 		$this->canViewArchivoDirecto();
@@ -253,8 +258,7 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	public function readMensajesGrupales(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
 
 		$this->isMiembroGrupo();
 
@@ -286,10 +290,10 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	public function readArchivoMensajeGrupal(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->setUlid('ulid_mensaje');
-
-		$this->checkValidationErrors();
+		$this->setProperties([
+			fn() => $this->setUlid('ulid_grupo'),
+			fn() => $this->setUlid('ulid_mensaje')
+		]);
 
 		$this->isMiembroGrupo();
 		$this->canViewArchivoGrupal();
@@ -330,9 +334,15 @@ readonly class Mensaje extends Contacto
 			]
 		};
 
-		$this->setUlid($contacto['ulid']);
-		$archivo['set']();
-		$this->checkValidationErrors();
+		// $this->setUlid($contacto['ulid']);
+		// $archivo['set']();
+		// $this->checkValidationErrors();
+
+		$this->setProperties([
+			fn() => $this->setUlid($contacto['ulid']),
+			fn() => $archivo['set']()
+		]);
+
 		$contacto['security']();
 
 		$this->ulid_mensaje = $this->generateUlid();
@@ -439,9 +449,11 @@ readonly class Mensaje extends Contacto
 			['s', $this->session_ulid]
 		];
 
-		$autor = $this->executeQuery($query, $params, SqlReturn::Exists);
+		$autor_mensaje = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		$this->isAuthorized($autor, 'No eres el autor del mensaje.');
+		if (!$autor_mensaje) {
+			$this->integrityErrorSetup(403, "No eres el autor del mensaje.");
+		}
 	}
 
 	// ============================================================================
@@ -449,8 +461,8 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	public function deleteMensaje(): void
 	{
-		$this->setUlid('ulid_mensaje');
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setUlid('ulid_mensaje')]);
+
 		$this->isAutorMensaje();
 
 		$fileUrl = $this->getFileUrl(self::SQL_COLUMN, self::SQL_TABLE, self::SQL_PRIMARY_KEY, $this->ulid_mensaje);
@@ -568,8 +580,7 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	public function streamMensajesDirectos(): void
 	{
-		$this->setUlid('ulid_contacto');
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setUlid('ulid_contacto')]);
 
 		$this->isContacto();
 
@@ -581,8 +592,7 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	public function streamMensajesGrupales(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
 
 		$this->isMiembroGrupo();
 

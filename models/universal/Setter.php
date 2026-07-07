@@ -233,4 +233,16 @@ abstract readonly class Setter extends File
 		// --- 4. No se pudo determinar ---
 		return null;
 	}
+
+	// ============================================================================
+	// MARK: SET PROPERTIES
+	// ============================================================================
+	protected function setProperties(array $name): void
+	{
+		foreach ($name as $test) {
+			$test();
+		}
+
+		$this->checkValidationErrors();
+	}
 }

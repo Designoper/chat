@@ -35,7 +35,9 @@ readonly class Grupo extends Usuario
 
 		$ulid_fundador = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		$this->isAuthorized($ulid_fundador, 'No eres el fundador del grupo');
+		if (!$ulid_fundador) {
+			$this->integrityErrorSetup(403, "No eres el fundador del grupo");
+		}
 	}
 
 	// MARK: IS MIEMBRO
@@ -55,23 +57,23 @@ readonly class Grupo extends Usuario
 			['s', $this->ulid_grupo]
 		];
 
-		$rol = $this->executeQuery($query, $params, SqlReturn::Exists);
+		$miembro_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		$this->isAuthorized($rol, 'No eres miembro del grupo');
+		if (!$miembro_grupo) {
+			$this->integrityErrorSetup(403, "No eres miembro del grupo");
+		}
 	}
 
 	// MARK: CREATE GRUPO
 
 	public function createGrupo(): void
 	{
-		$this->setNombre('nombre_grupo');
-		$this->checkValidationErrors();
-
+		$this->setProperties([fn() => $this->setNombre('nombre_grupo')]);
 		$this->ulid_grupo = $this->generateUlid();
 
 		$query =
 			"INSERT INTO grupos (ulid_grupo, nombre_grupo, ulid_fundador)
-		 	VALUES (?, ?, ?)";
+			VALUES (?, ?, ?)";
 
 		$params = [
 			['s', $this->ulid_grupo],
@@ -81,8 +83,10 @@ readonly class Grupo extends Usuario
 
 		try {
 			$this->executeQuery($query, $params);
-		} catch (\mysqli_sql_exception $error) {
-			$this->isConflict($error, '¡Este nombre de grupo ya existe!');
+		} catch (mysqli_sql_exception $error) {
+			if ($error->getCode() === 1062) {
+				$this->integrityErrorSetup(409, "¡Este nombre de grupo ya existe!");
+			}
 		}
 
 		$query =
@@ -95,17 +99,14 @@ readonly class Grupo extends Usuario
 		];
 
 		$this->executeQuery($query, $params);
-
-		$this->status = 201;
-		$this->sendResponse();
+		$this->sendOkResponse(201);
 	}
 
 	// MARK: ABANDONAR GRUPO
 
 	public function abandonarGrupo(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
 
 		$this->isMiembroGrupo();
 
@@ -120,17 +121,14 @@ readonly class Grupo extends Usuario
 		];
 
 		$this->executeQuery($query, $params);
-
-		$this->status = 204;
-		$this->sendResponse();
+		$this->sendOkResponse(204);
 	}
 
 	// MARK: DELETE GRUPO
 
 	public function deleteGrupo(): void
 	{
-		$this->setUlid('ulid_grupo');
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
 
 		$this->isFundadorGrupo();
 
@@ -141,8 +139,6 @@ readonly class Grupo extends Usuario
 		$params = [['s', $this->ulid_grupo]];
 
 		$this->executeQuery($query, $params);
-
-		$this->status = 204;
-		$this->sendResponse();
+		$this->sendOkResponse(204);
 	}
 }

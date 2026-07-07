@@ -15,8 +15,9 @@ readonly class Usuario extends Setter
 		parent::__construct();
 	}
 
+	// ============================================================================
 	// MARK: GENERAR CODIGO
-
+	// ============================================================================
 	private function generarCodigo($length = 6)
 	{
 		$chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -27,14 +28,15 @@ readonly class Usuario extends Setter
 		return $code;
 	}
 
+	// ============================================================================
 	// MARK: CREATE USUARIO
-
+	// ============================================================================
 	public function createUsuario(): void
 	{
-		$this->setNombre('nombre_usuario');
-		$this->setPassword('password');
-
-		$this->checkValidationErrors();
+		$this->setProperties([
+			fn() => $this->setNombre('nombre_usuario'),
+			fn() => $this->setPassword("password")
+		]);
 
 		$this->ulid_usuario = $this->generateUlid();
 
@@ -60,9 +62,14 @@ readonly class Usuario extends Setter
 					]
 				);
 
+				session_start();
+
 				$_SESSION['ulid_usuario'] = $this->ulid_usuario;
+
+				session_write_close();
+
 				$this->sendOkResponse(201);
-			} catch (\mysqli_sql_exception $error) {
+			} catch (mysqli_sql_exception $error) {
 
 				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'nombre_usuario')) {
 					$this->integrityErrorSetup(409, '¡Este nombre de usuario ya existe!');
@@ -78,14 +85,15 @@ readonly class Usuario extends Setter
 		$this->integrityErrorSetup(500, 'No se pudo generar un código único. Inténtalo de nuevo.');
 	}
 
+	// ============================================================================
 	// MARK: LOGIN
-
+	// ============================================================================
 	public function login(): void
 	{
-		$this->setNombre('nombre_usuario');
-		$this->setPassword('password');
-
-		$this->checkValidationErrors();
+		$this->setProperties([
+			fn() => $this->setNombre('nombre_usuario'),
+			fn() => $this->setPassword("password")
+		]);
 
 		$query =
 			"SELECT ulid_usuario, password
@@ -109,8 +117,9 @@ readonly class Usuario extends Setter
 		$this->sendOkResponse(200);
 	}
 
+	// ============================================================================
 	// MARK: LOGOUT
-
+	// ============================================================================
 	public function logout(): void
 	{
 		$this->authEndpoint();
@@ -137,8 +146,9 @@ readonly class Usuario extends Setter
 		$this->sendOkResponse(204);
 	}
 
+	// ============================================================================
 	// MARK: CURRENT USUARIO
-
+	// ============================================================================
 	public function currentUsuario(): void
 	{
 		$this->authEndpoint();
@@ -155,8 +165,9 @@ readonly class Usuario extends Setter
 		$this->sendOkResponse(200, $usuario);
 	}
 
+	// ============================================================================
 	// MARK: DELETE USUARIO
-
+	// ============================================================================
 	public function deleteUsuario(): void
 	{
 		$this->authEndpoint();
@@ -172,14 +183,14 @@ readonly class Usuario extends Setter
 		$this->logout();
 	}
 
+	// ============================================================================
 	// MARK: CAMBIAR NOMBRE
-
+	// ============================================================================
 	public function cambiarNombre(): void
 	{
 		$this->authEndpoint();
 
-		$this->setNombre('nombre_usuario');
-		$this->checkValidationErrors();
+		$this->setProperties([fn() => $this->setNombre("nombre_usuario")]);
 
 		$query =
 			"UPDATE usuarios
@@ -193,21 +204,23 @@ readonly class Usuario extends Setter
 
 		try {
 			$this->executeQuery($query, $params);
-		} catch (\mysqli_sql_exception $error) {
-			$this->isConflict($error, '¡Este nombre de usuario ya existe!');
+		} catch (mysqli_sql_exception $error) {
+			if ($error->getCode() === 1062) {
+				$this->integrityErrorSetup(409, "¡Este nombre de usuario ya existe!");
+			}
 		}
 
 		$this->sendOkResponse(200);
 	}
 
+	// ============================================================================
 	// MARK: CAMBIAR PASSWORD
-
+	// ============================================================================
 	public function cambiarPassword(): void
 	{
 		$this->authEndpoint();
 
-		$this->setPassword('password');
-		$this->checkValidationErrors();
+		$this->setProperties([$this->setPassword("password")]);
 
 		$query =
 			"UPDATE usuarios
