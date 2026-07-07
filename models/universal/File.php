@@ -126,13 +126,13 @@ abstract readonly class File extends SQL
             return;
         }
 
-        move_uploaded_file();
+        move_uploaded_file($this->file['tmp_name'], $finalDestination);
     }
 
     // ============================================================================
     // MARK: UPDATE FILENAME
     // ============================================================================
-    protected function updateFileName(string $column, string $table, string $primaryKey, string $primaryKeyValue): ?string
+    protected function updateFileName(string $column, string $table, string $primaryKey, string $primaryKeyValue, FileTypes $filetype): ?string
     {
         if ($this->file === null) {
             if ($this->deleteCheckbox === true) {
@@ -142,7 +142,7 @@ abstract readonly class File extends SQL
             return $fileUrl;
         }
 
-        $this->setUniqueFilename($this->file['name']);
+        $this->setUniqueFilename($this->file['name'], $filetype);
 
         $imagePath = self::COMMON_FILE_PATH . $this->extraDirectories . $this->uniqueFilename;
 
@@ -152,7 +152,7 @@ abstract readonly class File extends SQL
     // ============================================================================
     // MARK: UPDATE FILE
     // ============================================================================
-    protected function updateFile(?string $filePath): void
+    protected function updateFile(?string $filePath, FileTypes $filetype): void
     {
         if ($this->file === null) {
             if ($this->deleteCheckbox === true) {
@@ -163,7 +163,7 @@ abstract readonly class File extends SQL
         }
 
         $this->deleteFile($filePath);
-        $this->uploadFile();
+        $this->uploadFile($filetype);
     }
 
     // ============================================================================
