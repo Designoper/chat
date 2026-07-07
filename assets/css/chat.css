@@ -117,10 +117,10 @@ main {
 
 		> menu {
 			display: flex;
-			gap: 1em;
+			gap: 0.75em;
 
 			svg {
-				width: 2em;
+				width: 1.75em;
 			}
 		}
 

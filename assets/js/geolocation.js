@@ -9,6 +9,7 @@ if (typeof HTMLGeolocationElement === "function") {
 			console.log(`(${geo.position}), `);
 			console.log(`(${geo.position.coords}), `);
 			console.log(`https://www.google.com/maps/place/${geo.position.coords.latitude},${geo.position.coords.longitude}`);
+			console.log(`https://www.google.com/maps/search/?api=1&query=${geo.position.coords.latitude},${geo.position.coords.longitude}`);
 		} else if (geo.error) {
 			outputElem.textContent += `${geo.error.message}, `;
 		}
