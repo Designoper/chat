@@ -15,11 +15,13 @@ abstract readonly class Database extends SSE
 
 	protected function __construct()
 	{
-		session_start();
-
 		parent::__construct();
 
+		session_start();
+
 		$this->session_ulid = $_SESSION['ulid_usuario'] ?? null;
+
+		session_write_close();
 
 		$this->hostname = getenv('HOSTNAME');
 		$this->username = getenv('USERNAME');

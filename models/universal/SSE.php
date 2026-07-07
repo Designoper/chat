@@ -57,10 +57,6 @@ abstract readonly class SSE extends Sanitizer
 		header("Content-Encoding: none");
 		header("X-Accel-Buffering: no"); // Evita el búfer en proxies externos
 
-		if (session_status() === PHP_SESSION_ACTIVE) {
-			session_write_close();
-		}
-
 		set_time_limit(0);
 		ignore_user_abort(false);
 
