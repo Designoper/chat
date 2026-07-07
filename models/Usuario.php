@@ -106,7 +106,11 @@ readonly class Usuario extends Setter
 			$this->checkIntegrityErrors();
 		}
 
+		session_start();
+
 		$_SESSION['ulid_usuario'] = $usuario['ulid_usuario'];
+
+		session_write_close();
 
 		$this->sendOkResponse(200);
 	}
@@ -117,9 +121,7 @@ readonly class Usuario extends Setter
 	{
 		$this->authEndpoint();
 
-		if (session_status() === PHP_SESSION_NONE) {
-			session_start();
-		}
+		session_start();
 
 		$_SESSION = [];
 
