@@ -35,6 +35,7 @@ new Usuario()->authBrowser();
 	<link href="./assets/css/chat.css" rel="preload stylesheet" as="style">
 
 	<script src="./assets/js/pages/chat.js" type="module"></script>
+	<script src="./assets/js/geolocation.js" defer></script>
 
 </head>
 
@@ -54,6 +55,8 @@ new Usuario()->authBrowser();
 				</a>
 
 				<h1></h1>
+
+				<geolocation></geolocation>
 
 			</div>
 

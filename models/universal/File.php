@@ -70,9 +70,9 @@ abstract readonly class File extends SQL
     // ============================================================================
     private function setUniqueFilename(string $originalFilename): void
     {
-        $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+        // $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
-        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
+        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . 'webp';
     }
 
     // ============================================================================
@@ -106,7 +106,19 @@ abstract readonly class File extends SQL
 
         $finalDestination = $folderDestination . $this->uniqueFilename;
 
-        move_uploaded_file($this->file['tmp_name'], $finalDestination);
+        $optimized = new Imagick($this->file['tmp_name']);
+        $ancho_original = $optimized->getImageWidth();
+        $ancho_deseado = 800;
+
+        if ($ancho_original > $ancho_deseado) {
+            $optimized->scaleImage($ancho_deseado, 0);
+        }
+
+        // (1 = lento/óptimo, 9 = rápido/pesado)
+        $optimized->setOption('webp:speed', '6');
+        $optimized->setOption('webp:quality', '65');
+        $optimized->writeImage($finalDestination);
+        $optimized->clear();
     }
 
     // ============================================================================
