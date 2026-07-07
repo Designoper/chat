@@ -19,10 +19,10 @@ abstract readonly class SSE extends Sanitizer
 	// ============================================================================
 	// MARK: GET LAST EVENT ID
 	// ============================================================================
-	private function getLastEventId(): ?int
+	private function getLastEventId(): ?string
 	{
 		return isset($_SERVER['HTTP_LAST_EVENT_ID'])
-			? (int) $_SERVER['HTTP_LAST_EVENT_ID']
+			? $_SERVER['HTTP_LAST_EVENT_ID']
 			: null;
 	}
 
@@ -98,10 +98,10 @@ abstract readonly class SSE extends Sanitizer
 	// ============================================================================
 	// MARK: SEND EVENT
 	// ============================================================================
-	protected function sendEvent(string $event, mixed $data, ?string $id = null): void
+	protected function sendEvent(string $event, mixed $data, ?string $ulid = null): void
 	{
-		if ($id) {
-			echo "id: $id\n";
+		if ($ulid) {
+			echo "id: $ulid\n";
 		}
 		echo "event: $event\n";
 		echo "data: " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
