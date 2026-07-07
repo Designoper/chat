@@ -68,23 +68,25 @@ abstract readonly class File extends SQL
     // ============================================================================
     // MARK: SET UNIQUE FILENAME
     // ============================================================================
-    private function setUniqueFilename(string $originalFilename): void
+    private function setUniqueFilename(string $originalFilename, FileTypes $filetype): void
     {
-        // $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+        if ($filetype === FileTypes::Image) {
+            $extension = 'webp';
+        } else $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
-        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . 'webp';
+        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
     // ============================================================================
     // MARK: UPLOAD FILENAME
     // ============================================================================
-    protected function uploadFileName(): ?string
+    protected function uploadFileName(FileTypes $filetype): ?string
     {
         if ($this->file === null) {
             return null;
         }
 
-        $this->setUniqueFilename($this->file['name']);
+        $this->setUniqueFilename($this->file['name'], $filetype);
 
         return $this->extraDirectories . $this->uniqueFilename;
     }
@@ -92,7 +94,7 @@ abstract readonly class File extends SQL
     // ============================================================================
     // MARK: UPLOAD FILE
     // ============================================================================
-    protected function uploadFile(): void
+    protected function uploadFile(FileTypes $filetype): void
     {
         if ($this->file === null) {
             return;
@@ -106,19 +108,25 @@ abstract readonly class File extends SQL
 
         $finalDestination = $folderDestination . $this->uniqueFilename;
 
-        $optimized = new Imagick($this->file['tmp_name']);
-        $ancho_original = $optimized->getImageWidth();
-        $ancho_deseado = 800;
+        if ($filetype === FileTypes::Image) {
+            $optimized = new Imagick($this->file['tmp_name']);
+            $ancho_original = $optimized->getImageWidth();
+            $ancho_deseado = 800;
 
-        if ($ancho_original > $ancho_deseado) {
-            $optimized->scaleImage($ancho_deseado, 0);
+            if ($ancho_original > $ancho_deseado) {
+                $optimized->scaleImage($ancho_deseado, 0);
+            }
+
+            // (1 = lento/óptimo, 9 = rápido/pesado)
+            $optimized->setOption('webp:speed', '6');
+            $optimized->setOption('webp:quality', '65');
+            $optimized->writeImage($finalDestination);
+            $optimized->clear();
+
+            return;
         }
 
-        // (1 = lento/óptimo, 9 = rápido/pesado)
-        $optimized->setOption('webp:speed', '6');
-        $optimized->setOption('webp:quality', '65');
-        $optimized->writeImage($finalDestination);
-        $optimized->clear();
+        move_uploaded_file();
     }
 
     // ============================================================================

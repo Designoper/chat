@@ -1,6 +1,12 @@
+form:has(geolocation) {
+	button {
+		display: none;
+	}
+}
+
 geolocation {
 	background-color: white;
-	padding: 1em;
+	padding: 0.4em 0.65em;
 }
 
 header {
@@ -99,6 +105,12 @@ main {
 
 		&:has(li:nth-of-type(6) details:open) {
 			form:nth-of-type(6) {
+				display: grid;
+			}
+		}
+
+		&:has(li:nth-of-type(7) details:open) {
+			form:nth-of-type(7) {
 				display: grid;
 			}
 		}

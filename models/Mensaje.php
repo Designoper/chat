@@ -321,11 +321,11 @@ readonly class Mensaje extends Contacto
 			],
 			default => [
 				'set' => fn() => $this->setArchivo('archivo', $filetype),
-				'upload' => fn() => $this->uploadFile(),
-				'extra' => function () {
+				'upload' => fn() => $this->uploadFile($filetype),
+				'extra' => function ($filetype) {
 					$this->file = $this->archivo;
 					$this->extraDirectories = self::FOLDER;
-					return $this->uploadFileName();
+					return $this->uploadFileName($filetype);
 				},
 			]
 		};
