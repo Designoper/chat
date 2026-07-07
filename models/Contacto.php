@@ -44,8 +44,8 @@ readonly class Contacto extends Invitacion
 				LEFT JOIN mensajes m
 					ON m.ulid_contacto = ?
 					AND m.ulid_emisor = u.ulid_usuario
-					AND m.ulid_grupo IS NULL
-					AND m.ulid_mensaje > COALESCE(uml.ulid_mensaje, 0)
+					-- AND m.ulid_grupo IS NULLS
+					AND m.ulid_mensaje > COALESCE(uml.ulid_mensaje, '')
 
 				LEFT JOIN mensajes ult
 					ON ult.ulid_mensaje = (
@@ -97,7 +97,7 @@ readonly class Contacto extends Invitacion
 
 				LEFT JOIN mensajes mg
 					ON mg.ulid_grupo = g.ulid_grupo
-					AND mg.ulid_mensaje > COALESCE(umlg.ulid_mensaje, 0)
+					AND mg.ulid_mensaje > COALESCE(umlg.ulid_mensaje, '')
 
 				LEFT JOIN mensajes ultg
 					ON ultg.ulid_mensaje = (

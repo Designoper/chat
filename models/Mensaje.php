@@ -200,7 +200,6 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	public function readMensajesDirectos(): void
 	{
-
 		$this->setProperties([fn() => $this->setUlid('ulid_contacto')]);
 
 		$this->isContacto();
