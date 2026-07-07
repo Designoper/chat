@@ -59,21 +59,23 @@ abstract readonly class SQL extends Database
 	protected function isAuthorized(bool $result, string $error_message): void
 	{
 		if ($result === false) {
-			$this->status = 403;
-			$this->errors->setIntegrityError($error_message);
-			$this->checkIntegrityErrors();
+			// $this->status = 403;
+			// $this->errors->setIntegrityError($error_message);
+			// $this->checkIntegrityErrors();
+			$this->integrityErrorSetup(403, $error_message);
 		}
 	}
 
 	// ============================================================================
 	// MARK: IS CONFLICT
 	// ============================================================================
-	protected function isConflict(\mysqli_sql_exception $error, string $error_message): void
+	protected function isConflict(mysqli_sql_exception $error, string $error_message): void
 	{
 		if ($error->getCode() === 1062) {
-			$this->status = 409;
-			$this->errors->setIntegrityError($error_message);
-			$this->checkIntegrityErrors();
+			// $this->status = 409;
+			// $this->errors->setIntegrityError($error_message);
+			// $this->checkIntegrityErrors();
+			$this->integrityErrorSetup(409, $error_message);
 		}
 	}
 

@@ -91,4 +91,14 @@ abstract readonly class Response
             $this->sendResponse();
         }
     }
+
+    // ============================================================================
+    // MARK: CHECK INTEGRITY ERROR SETUP
+    // ============================================================================
+    protected function integrityErrorSetup(int $http_code, string $error_message): void
+    {
+        $this->status = $http_code;
+        $this->errors->setIntegrityError($error_message);
+        $this->checkIntegrityErrors();
+    }
 }

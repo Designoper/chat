@@ -65,9 +65,10 @@ readonly class Usuario extends Setter
 			} catch (\mysqli_sql_exception $error) {
 
 				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'nombre_usuario')) {
-					$this->status = 409;
-					$this->errors->setIntegrityError('¡Este nombre de usuario ya existe!');
-					$this->checkIntegrityErrors();
+					// $this->status = 409;
+					// $this->errors->setIntegrityError('¡Este nombre de usuario ya existe!');
+					// $this->checkIntegrityErrors();
+					$this->integrityErrorSetup(409, '¡Este nombre de usuario ya existe!');
 				}
 
 				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'codigo_contacto')) {
@@ -77,9 +78,10 @@ readonly class Usuario extends Setter
 			}
 		}
 
-		$this->status = 500;
-		$this->errors->setIntegrityError('No se pudo generar un código único. Inténtalo de nuevo.');
-		$this->checkIntegrityErrors();
+		// $this->status = 500;
+		// $this->errors->setIntegrityError('No se pudo generar un código único. Inténtalo de nuevo.');
+		// $this->checkIntegrityErrors();
+		$this->integrityErrorSetup(500, 'No se pudo generar un código único. Inténtalo de nuevo.');
 	}
 
 	// MARK: LOGIN
@@ -101,9 +103,10 @@ readonly class Usuario extends Setter
 		$usuario = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
 		if (!$usuario || !password_verify($this->password, $usuario['password'])) {
-			$this->status = 401;
-			$this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
-			$this->checkIntegrityErrors();
+			// $this->status = 401;
+			// $this->errors->setIntegrityError("El usuario o la contraseña son incorrectos.");
+			// $this->checkIntegrityErrors();
+			$this->integrityErrorSetup(401, "El usuario o la contraseña son incorrectos.");
 		}
 
 		session_start();
