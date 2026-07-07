@@ -11,7 +11,6 @@ abstract readonly class Database extends SSE
 	private string $password;
 	private string $database;
 	protected mysqli $connection;
-	protected string $domain;
 	protected ?string $session_ulid;
 
 	protected function __construct()
