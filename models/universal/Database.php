@@ -44,7 +44,7 @@ abstract readonly class Database extends SSE
 				$this->database
 			);
 
-			$this->connection->set_charset('utf8');
+			$this->connection->set_charset('utf8mb4');
 		} catch (mysqli_sql_exception $e) {
 			$this->status = 500;
 			$this->errors->setIntegrityError("Error({$e->getCode()}): {$e->getMessage()}");
