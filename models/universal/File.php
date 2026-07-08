@@ -73,7 +73,7 @@ abstract readonly class File extends SQL
     {
         if ($filetype === FileTypes::Image) {
             if (pathinfo($originalFilename, PATHINFO_EXTENSION) === 'gif') {
-                $extension = 'webp';
+                $extension = 'gif';
             } else $extension = self::COMPRESSED_IMAGE_EXTENSION;
         } else $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
 
@@ -110,19 +110,15 @@ abstract readonly class File extends SQL
             mkdir($folderDestination, 0755, true);
         }
 
-        // Aseguramos extensión webp
-        // $filenameWithWebp = preg_replace('/\.[^.]+$/', '.webp', $this->uniqueFilename);
         $finalDestination = $folderDestination . $this->uniqueFilename;
 
-        // RUTA TEMPORAL: Evita que el archivo final sea leído mientras Imagick procesa los fotogramas
-        $tempDestination = $finalDestination . '.tmp';
+        if ($filetype === FileTypes::Image && pathinfo($this->file["name"], PATHINFO_EXTENSION) !== 'gif') {
 
-        if ($filetype === FileTypes::Image) {
             $imagick = new Imagick($this->file['tmp_name']);
             $ancho_deseado = 800;
-            $extension_destino = 'webp';
 
             if ($imagick->getNumberImages() > 1) {
+                // Es una imagen animada (GIF) -> La mantenemos como GIF animado
                 $optimized = $imagick->coalesceImages();
                 $imagick->clear();
 
@@ -131,33 +127,32 @@ abstract readonly class File extends SQL
                     if ($ancho_original > $ancho_deseado) {
                         $frame->scaleImage($ancho_deseado, 0);
                     }
-                    $frame->stripImage();
-                    $frame->setFormat($extension_destino);
-                    $frame->setOption('webp:lossless', 'false');
-                    $frame->setImageCompressionQuality(65);
+                    $frame->stripImage(); // Quita metadatos innecesarios
                 }
 
-                $optimized->setFormat($extension_destino);
-                // Guardamos en el archivo temporal primero
-                $optimized->writeImages($tempDestination, true);
+                // COMPRESIÓN REAL PARA GIF:
+                // Reducimos la paleta global a 128 o 64 colores para bajar drásticamente el peso
+                $optimized->quantizeImages(128, Imagick::COLORSPACE_RGB, 0, false, false);
+
+                // Reconstruimos calculando solo las diferencias entre fotogramas (reduce el peso de la animación)
+                $optimized = $optimized->deconstructImages();
+
+                // Guardamos la secuencia completa de GIFs de forma segura
+                $optimized->writeImages($finalDestination, true);
                 $optimized->clear();
             } else {
+                // Es una imagen estática -> Esta SÍ la conviertes a AVIF o WebP
                 $ancho_original = $imagick->getImageWidth();
                 if ($ancho_original > $ancho_deseado) {
                     $imagick->scaleImage($ancho_deseado, 0);
                 }
-                $imagick->stripImage();
-                $imagick->setFormat($extension_destino);
-                $imagick->setOption('webp:lossless', 'false');
-                $imagick->setImageCompressionQuality(65);
-                // Guardamos en el archivo temporal primero
-                $imagick->writeImage($tempDestination);
-                $imagick->clear();
-            }
 
-            // OPERACIÓN ATÓMICA: Ahora que el archivo está completo, lo renombramos al destino final
-            if (file_exists($tempDestination)) {
-                rename($tempDestination, $finalDestination);
+                $imagick->stripImage();
+                $imagick->setFormat(self::COMPRESSED_IMAGE_EXTENSION);
+                $imagick->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":speed", "6");
+                $imagick->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":quality", "65");
+                $imagick->writeImage($finalDestination);
+                $imagick->clear();
             }
 
             return;
@@ -265,9 +260,6 @@ abstract readonly class File extends SQL
     // ============================================================================
     // MARK: SHOW FILE
     // ============================================================================
-    // ============================================================================
-    // MARK: SHOW FILE
-    // ============================================================================
     protected function showFile(): void
     {
         $base = realpath($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH);
@@ -279,7 +271,7 @@ abstract readonly class File extends SQL
         // Normalizar la ruta solicitada
         $rutaSolicitada = realpath($base . '/' . $_GET['f']);
 
-        // Validación de seguridad física de la ruta
+        // Validación: el archivo debe estar dentro de /private
         if (!$rutaSolicitada || !str_starts_with($rutaSolicitada, $base)) {
             $this->integrityErrorSetup(403, "Acceso no permitido.");
         }
@@ -288,17 +280,8 @@ abstract readonly class File extends SQL
             $this->integrityErrorSetup(403, "No puedes acceder a directorios.");
         }
 
-        // Detectamos la extensión real del archivo solicitado en el disco
-        $extension = strtolower(pathinfo($rutaSolicitada, PATHINFO_EXTENSION));
+        $mime = $this->obtainMime($rutaSolicitada);
 
-        // Si es un WebP procesado por nosotros, forzamos su MIME para evitar fallos de lectura interna de la librería finfo
-        if ($extension === 'webp') {
-            $mime = 'image/webp';
-        } else {
-            $mime = $this->obtainMime($rutaSolicitada);
-        }
-
-        // Validación final de seguridad de tipos de archivo permitidos
         if (
             !str_starts_with($mime, 'image/') &&
             !str_starts_with($mime, 'audio/') &&
@@ -310,7 +293,7 @@ abstract readonly class File extends SQL
         $mtime = filemtime($rutaSolicitada);
         $size  = filesize($rutaSolicitada);
 
-        // Enviar archivo de forma limpia
+        // Enviar archivo
         header("Content-Type: $mime");
         header("Content-Length: $size");
         header("X-Content-Type-Options: nosniff");
