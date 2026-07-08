@@ -12,6 +12,18 @@ abstract readonly class Setter extends File
 	}
 
 	// ============================================================================
+	// MARK: SET PROPERTIES
+	// ============================================================================
+	protected function setProperties(array $properties): void
+	{
+		foreach ($properties as $property) {
+			$property();
+		}
+
+		$this->checkValidationErrors();
+	}
+
+	// ============================================================================
 	// MARK: SET ULID
 	// ============================================================================
 	protected function setUlid(string $name): void
@@ -232,17 +244,5 @@ abstract readonly class Setter extends File
 
 		// --- 4. No se pudo determinar ---
 		return null;
-	}
-
-	// ============================================================================
-	// MARK: SET PROPERTIES
-	// ============================================================================
-	protected function setProperties(array $properties): void
-	{
-		foreach ($properties as $property) {
-			$property();
-		}
-
-		$this->checkValidationErrors();
 	}
 }
