@@ -72,10 +72,10 @@ abstract readonly class File extends SQL
     private function setUniqueFilename(string $originalFilename, FileTypes $filetype): void
     {
         if ($filetype === FileTypes::Image) {
-            $extension = pathinfo($originalFilename, PATHINFO_EXTENSION) === 'gif'
+            $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION)) === 'gif'
                 ? 'gif'
                 : self::COMPRESSED_IMAGE_EXTENSION;
-        } else $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+        } else $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION));
 
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
         $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
@@ -112,17 +112,21 @@ abstract readonly class File extends SQL
 
         $finalDestination = $folderDestination . $this->uniqueFilename;
 
-        $extension = pathinfo($this->file['name'], PATHINFO_EXTENSION);
+        // 1. Forzamos minúsculas para evitar fallos con extensiones tipo .GIF o .Png
+        $extension = strtolower(pathinfo($this->file['name'], PATHINFO_EXTENSION));
 
         if ($filetype === FileTypes::Image && $extension !== 'gif') {
             $optimized = new Imagick($this->file['tmp_name']);
+            // Eliminamos perfiles EXIF/color innecesarios para reducir drásticamente el peso
+            $optimized->stripImage();
             $ancho_original = $optimized->getImageWidth();
             $ancho_deseado = 800;
 
             if ($ancho_original > $ancho_deseado) {
                 $optimized->scaleImage($ancho_deseado, 0);
             }
-
+            // Forzamos explícitamente el formato de salida en el buffer de Imagick
+            $optimized->setFormat(self::COMPRESSED_IMAGE_EXTENSION);
             // (1 = lento/óptimo, 9 = rápido/pesado)
             $optimized->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":speed", "6");
             $optimized->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":quality", "65");
