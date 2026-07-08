@@ -79,6 +79,9 @@ export default class Fetch {
 
 		const output = form.querySelector("output");
 		const dialog = form.closest("dialog");
+		const sendButton = form.querySelector('button');
+
+		sendButton.disabled = true;
 
 		try {
 			const response = await fetch(url, init);
@@ -92,8 +95,14 @@ export default class Fetch {
 				: this.errorChecker(json, output);
 
 			return { status, json };
-		} catch (error) {
+		}
+
+		catch (error) {
 			console.error("fetchData error:", error);
+		}
+
+		finally {
+			sendButton.disabled = false;
 		}
 	}
 
