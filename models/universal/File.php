@@ -14,7 +14,7 @@ enum FileTypes: string
 
 abstract readonly class File extends SQL
 {
-    private const string COMPRESSED_FILE_EXTENSION = 'webp';
+    private const string COMPRESSED_IMAGE_EXTENSION = 'avif';
     private const string COMMON_FILE_PATH = '/private/';
     protected const string DEFAULT_IMAGE = self::COMMON_FILE_PATH . 'default/default.jpg';
 
@@ -74,7 +74,7 @@ abstract readonly class File extends SQL
         if ($filetype === FileTypes::Image) {
             if (pathinfo($originalFilename, PATHINFO_EXTENSION) === 'gif') {
                 $extension = 'gif';
-            } else $extension = 'webp';
+            } else $extension = self::COMPRESSED_IMAGE_EXTENSION;
         } else $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
 
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
@@ -124,8 +124,8 @@ abstract readonly class File extends SQL
             }
 
             // (1 = lento/óptimo, 9 = rápido/pesado)
-            $optimized->setOption("webp:speed", "6");
-            $optimized->setOption("webp:quality", "65");
+            $optimized->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":speed", "6");
+            $optimized->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":quality", "65");
             $optimized->writeImage($finalDestination);
             $optimized->clear();
 
