@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/universal/Setter.php';
+require_once __DIR__ . '/common/Setter.php';
 
 readonly class Usuario extends Setter
 {

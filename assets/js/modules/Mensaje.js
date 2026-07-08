@@ -13,7 +13,10 @@ export default class Mensaje extends Contacto {
 	urlSearchParams = new URLSearchParams(location.search);
 	ringtone = new Audio(`${location.origin}/assets/audio/ringtone.mp3`);
 
-	mostrado = false;
+	flags = {
+		scroll: true,
+		marcador: true
+	};
 
 	dom = {
 		header: document.querySelector('header'),
@@ -25,8 +28,6 @@ export default class Mensaje extends Contacto {
 	mensaje = {};
 
 	ultimoUlidLeido;
-
-	counter = 0;
 
 	constructor() {
 		super();
@@ -121,6 +122,7 @@ export default class Mensaje extends Contacto {
 
 		const mensajes = this.mensajesTemplate(response.json);
 		this.dom.output.innerHTML = this.sanitize(mensajes);
+		this.flags.marcador = false;
 	}
 
 	// MARK: STREAM MENSAJES
@@ -133,9 +135,9 @@ export default class Mensaje extends Contacto {
 		evtSource.onopen = async () => {
 
 			await this.getMensajes();
-			if (this.counter === 0) {
+			if (this.flags.scroll) {
 				this.scrollToCurrent();
-				this.counter++;
+				this.flags.scroll = false;
 			}
 		};
 
@@ -175,6 +177,8 @@ export default class Mensaje extends Contacto {
 
 	mensajesTemplate(fetchedMensajes) {
 
+		let marcadorPuesto = false;
+
 		const mensajes = fetchedMensajes.map(mensaje => {
 
 			const fechaMensajeActual = this.formatearFecha(mensaje.fecha_creacion);
@@ -186,9 +190,9 @@ export default class Mensaje extends Contacto {
 
 			let marcador = "";
 
-			if (!this.mostrado && mensaje.ulid_mensaje > this.ultimoUlidLeido) {
+			if (this.flags.marcador === true && !marcadorPuesto && mensaje.ulid_mensaje > this.ultimoUlidLeido) {
 				marcador = "<p id='marcador'>Nuevos mensajes</p>";
-				this.mostrado = true; // ← ya no se vuelve a mostrar
+				marcadorPuesto = true; // Marcamos que ya se incluyó en el HTML generado
 			}
 
 			const isAutor = mensaje.ulid_emisor === this.usuario.ulid_usuario;
