@@ -11,8 +11,9 @@ readonly class Contacto extends Invitacion
 		parent::__construct();
 	}
 
+	// ============================================================================
 	// MARK: OBTAIN CONTACTOS
-
+	// ============================================================================
 	private function obtainContactos(): array
 	{
 		$dateFormat = self::ISO8601_SQL_FORMAT;
@@ -140,6 +141,9 @@ readonly class Contacto extends Invitacion
 		return $contactos;
 	}
 
+	// ============================================================================
+	// MARK: STREAM CONTACTOS LOGIC
+	// ============================================================================
 	protected function streamContactosLogic(): void
 	{
 		static $contactos = [];
@@ -152,15 +156,17 @@ readonly class Contacto extends Invitacion
 		}
 	}
 
+	// ============================================================================
 	// MARK: STREAM CONTACTOS
-
+	// ============================================================================
 	public function streamContactos(): void
 	{
 		$this->setSSE([$this, 'streamContactosLogic']);
 	}
 
+	// ============================================================================
 	// MARK: IS CONTACTO
-
+	// ============================================================================
 	protected function isContacto(): void
 	{
 		$ulid_min = min($this->session_ulid, $this->ulid_contacto);
