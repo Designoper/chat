@@ -34,9 +34,9 @@ readonly class Grupo extends Usuario
 			['s', $this->ulid_grupo]
 		];
 
-		$ulid_fundador = $this->executeQuery($query, $params, SqlReturn::Exists);
+		$fundador_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		if (!$ulid_fundador) {
+		if (!$fundador_grupo) {
 			$this->integrityErrorSetup(403, "No eres el fundador del grupo");
 		}
 	}
