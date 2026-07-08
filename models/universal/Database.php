@@ -17,10 +17,6 @@ abstract readonly class Database extends SSE
 	{
 		parent::__construct();
 
-		session_start();
-		$this->session_ulid = $_SESSION['ulid_usuario'] ?? null;
-		session_write_close();
-
 		$this->hostname = getenv('HOSTNAME');
 		$this->username = getenv('USERNAME');
 		$this->password = getenv('PASSWORD');
@@ -47,6 +43,10 @@ abstract readonly class Database extends SSE
 		} catch (mysqli_sql_exception $e) {
 			$this->integrityErrorSetup(500, "Error({$e->getCode()}): {$e->getMessage()}");
 		}
+
+		session_start();
+		$this->session_ulid = $_SESSION['ulid_usuario'] ?? null;
+		session_write_close();
 	}
 
 	// ============================================================================
