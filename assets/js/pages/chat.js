@@ -10,3 +10,4 @@ mensaje.setForm();
 mensaje.setObj();
 await mensaje.getUltimoUlid();
 mensaje.streamMensajes();
+mensaje.geolocate();

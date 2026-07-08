@@ -54,6 +54,20 @@ export default class Mensaje extends Contacto {
 		}
 	}
 
+	geolocate() {
+		const geo = document.querySelector("geolocation");
+		const form = geo.closest('form');
+		const sendButton = form.querySelector('button');
+		const input = form.querySelector('input[name="contenido"]');
+
+		geo.onlocation = () => {
+			if (confirm('¿Enviar ubicación?')) {
+				input.value = `https://www.google.com/maps/search/?api=1&query=${geo.position.coords.latitude},${geo.position.coords.longitude}`;
+				sendButton.click();
+			}
+		};
+	}
+
 	// MARK: GET ULTIMO ULID
 
 	async getUltimoUlid() {
