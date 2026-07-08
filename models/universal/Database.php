@@ -18,9 +18,7 @@ abstract readonly class Database extends SSE
 		parent::__construct();
 
 		session_start();
-
 		$this->session_ulid = $_SESSION['ulid_usuario'] ?? null;
-
 		session_write_close();
 
 		$this->hostname = getenv('HOSTNAME');
@@ -47,9 +45,7 @@ abstract readonly class Database extends SSE
 
 			$this->connection->set_charset('utf8mb4');
 		} catch (mysqli_sql_exception $e) {
-			$this->status = 500;
-			$this->errors->setIntegrityError("Error({$e->getCode()}): {$e->getMessage()}");
-			$this->checkIntegrityErrors();
+			$this->integrityErrorSetup(500, "Error({$e->getCode()}): {$e->getMessage()}");
 		}
 	}
 

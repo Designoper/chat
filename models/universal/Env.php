@@ -23,9 +23,7 @@ abstract readonly class Env extends Response
         $env_file = $_SERVER['DOCUMENT_ROOT'] . '/' . self::ENV;
 
         if (!is_readable($env_file)) {
-            $this->status = 500;
-            $this->errors->setIntegrityError("No se puede leer el archivo " . self::ENV);
-            $this->checkIntegrityErrors();
+            $this->integrityErrorSetup(500, "No se puede leer el archivo " . self::ENV);
         }
 
         $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
