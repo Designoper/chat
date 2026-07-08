@@ -51,24 +51,15 @@ readonly class Usuario extends Setter
 
 			$codigo = $this->generarCodigo();
 
+			$params = [
+				['s', $this->ulid_usuario],
+				['s', $this->nombre_usuario],
+				['s', password_hash($this->password, PASSWORD_DEFAULT)],
+				['s', $codigo]
+			];
+
 			try {
-				$this->executeQuery(
-					$query,
-					[
-						['s', $this->ulid_usuario],
-						['s', $this->nombre_usuario],
-						['s', password_hash($this->password, PASSWORD_DEFAULT)],
-						['s', $codigo]
-					]
-				);
-
-				session_start();
-
-				$_SESSION['ulid_usuario'] = $this->ulid_usuario;
-
-				session_write_close();
-
-				$this->sendOkResponse(201);
+				$this->executeQuery($query, $params);
 			} catch (mysqli_sql_exception $error) {
 
 				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'nombre_usuario')) {
@@ -80,6 +71,12 @@ readonly class Usuario extends Setter
 					continue;
 				}
 			}
+
+			session_start();
+			$_SESSION['ulid_usuario'] = $this->ulid_usuario;
+			session_write_close();
+
+			$this->sendOkResponse(201);
 		}
 
 		$this->integrityErrorSetup(500, 'No se pudo generar un código único. Inténtalo de nuevo.');

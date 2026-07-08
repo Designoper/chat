@@ -116,7 +116,6 @@ readonly class Mensaje extends Contacto
 		];
 
 		$last_ulid = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
-
 		$this->sendOkResponse(200, $last_ulid);
 	}
 
@@ -175,7 +174,6 @@ readonly class Mensaje extends Contacto
 		];
 
 		$this->executeQuery($query, $params);
-
 		$this->sendOkResponse(201);
 	}
 
@@ -332,10 +330,6 @@ readonly class Mensaje extends Contacto
 				},
 			]
 		};
-
-		// $this->setUlid($contacto['ulid']);
-		// $archivo['set']();
-		// $this->checkValidationErrors();
 
 		$this->setProperties([
 			fn() => $this->setUlid($contacto['ulid']),
