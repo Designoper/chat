@@ -106,9 +106,7 @@ readonly class Usuario extends Setter
 		}
 
 		session_start();
-
 		$_SESSION['ulid_usuario'] = $usuario['ulid_usuario'];
-
 		session_write_close();
 
 		$this->sendOkResponse(200);

@@ -16,8 +16,9 @@ readonly class Grupo extends Usuario
 		$this->authEndpoint();
 	}
 
-	// MARK: IS FUNDADOR
-
+	// ============================================================================
+	// MARK: IS FUNDADOR GRUPO
+	// ============================================================================
 	protected function isFundadorGrupo(): void
 	{
 		$query =
@@ -40,8 +41,9 @@ readonly class Grupo extends Usuario
 		}
 	}
 
-	// MARK: IS MIEMBRO
-
+	// ============================================================================
+	// MARK: IS MIEMBRO GRUPO
+	// ============================================================================
 	protected function isMiembroGrupo(): void
 	{
 		$query =
@@ -64,8 +66,9 @@ readonly class Grupo extends Usuario
 		}
 	}
 
+	// ============================================================================
 	// MARK: CREATE GRUPO
-
+	// ============================================================================
 	public function createGrupo(): void
 	{
 		$this->setProperties([fn() => $this->setNombre('nombre_grupo')]);
@@ -102,8 +105,9 @@ readonly class Grupo extends Usuario
 		$this->sendOkResponse(201);
 	}
 
+	// ============================================================================
 	// MARK: ABANDONAR GRUPO
-
+	// ============================================================================
 	public function abandonarGrupo(): void
 	{
 		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
@@ -124,8 +128,9 @@ readonly class Grupo extends Usuario
 		$this->sendOkResponse(204);
 	}
 
+	// ============================================================================
 	// MARK: DELETE GRUPO
-
+	// ============================================================================
 	public function deleteGrupo(): void
 	{
 		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
