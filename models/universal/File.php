@@ -72,9 +72,9 @@ abstract readonly class File extends SQL
     private function setUniqueFilename(string $originalFilename, FileTypes $filetype): void
     {
         if ($filetype === FileTypes::Image) {
-            if (pathinfo($originalFilename, PATHINFO_EXTENSION) === 'gif') {
-                $extension = 'gif';
-            } else $extension = self::COMPRESSED_IMAGE_EXTENSION;
+            $extension = pathinfo($originalFilename, PATHINFO_EXTENSION) === 'gif'
+                ? 'gif'
+                : self::COMPRESSED_IMAGE_EXTENSION;
         } else $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
 
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
