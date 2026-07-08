@@ -102,7 +102,7 @@ readonly class Usuario extends Setter
 			$this->integrityErrorSetup(401, "El usuario o la contraseña son incorrectos.");
 		}
 
-		$this->writeSession($this->ulid_usuario);
+		$this->writeSession($usuario['ulid_usuario']);
 		$this->sendOkResponse(200);
 	}
 
