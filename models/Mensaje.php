@@ -357,7 +357,8 @@ readonly class Mensaje extends Contacto
 
 		$archivo['upload']();
 
-		$this->sendOkResponse(201);
+		$content = "Nuevo mensaje creado con éxito";
+		$this->sendOkResponse(201, $content);
 	}
 
 	// ============================================================================

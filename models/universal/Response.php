@@ -7,9 +7,9 @@ require_once __DIR__ . '/ErrorHandler.php';
 abstract readonly class Response
 {
     protected int $status;
-    protected array $content;
+    protected string|array $content;
     protected ErrorHandler $errors;
-    private array $response;
+    private string|array $response;
 
     protected function __construct()
     {
@@ -37,7 +37,7 @@ abstract readonly class Response
     // ============================================================================
     // MARK: SEND OK RESPONSE
     // ============================================================================
-    protected function sendOkResponse(int $http_code, ?array $content = null): never
+    protected function sendOkResponse(int $http_code, string|array|null $content = null): never
     {
         $this->status = $http_code;
 
