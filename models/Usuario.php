@@ -182,6 +182,8 @@ readonly class Usuario extends Setter
 			}
 		}
 
+		$this->regenerateSession();
+
 		$this->sendOkResponse(200);
 	}
 
@@ -205,6 +207,8 @@ readonly class Usuario extends Setter
 		];
 
 		$this->executeQuery($query, $params);
+
+		$this->regenerateSession();
 
 		$this->sendOkResponse(200);
 	}
