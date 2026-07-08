@@ -219,9 +219,9 @@ readonly class Invitacion extends Grupo
 
 		$params = [['s', $this->ulid_grupo]];
 
-		$existeGrupo = $this->executeQuery($query, $params, SqlReturn::Exists);
+		$grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		if (!$existeGrupo) {
+		if (!$grupo) {
 			$this->integrityErrorSetup(404, "El grupo no existe.");
 		}
 
@@ -284,9 +284,9 @@ readonly class Invitacion extends Grupo
 			['s', $this->ulid_grupo]
 		];
 
-		$esMiembro = $this->executeQuery($query, $params, SqlReturn::Exists);
+		$miembro_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		if ($esMiembro) {
+		if ($miembro_grupo) {
 			$this->integrityErrorSetup(409, "Este usuario ya es miembro del grupo.");
 		}
 
