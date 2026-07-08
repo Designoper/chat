@@ -14,7 +14,7 @@ enum FileTypes: string
 
 abstract readonly class File extends SQL
 {
-    private const string COMPRESSED_IMAGE_EXTENSION = 'avif';
+    private const string COMPRESSED_IMAGE_EXTENSION = 'webp';
     private const string COMMON_FILE_PATH = '/private/';
     protected const string DEFAULT_IMAGE = self::COMMON_FILE_PATH . 'default/default.jpg';
 
@@ -72,10 +72,10 @@ abstract readonly class File extends SQL
     private function setUniqueFilename(string $originalFilename, FileTypes $filetype): void
     {
         if ($filetype === FileTypes::Image) {
-            $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION)) === 'gif'
-                ? 'gif'
-                : self::COMPRESSED_IMAGE_EXTENSION;
-        } else $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION));
+            if (pathinfo($originalFilename, PATHINFO_EXTENSION) === 'gif') {
+                $extension = 'webp';
+            } else $extension = self::COMPRESSED_IMAGE_EXTENSION;
+        } else $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
 
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
         $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
@@ -110,34 +110,94 @@ abstract readonly class File extends SQL
             mkdir($folderDestination, 0755, true);
         }
 
+        // Aseguramos extensión webp
+        // $filenameWithWebp = preg_replace('/\.[^.]+$/', '.webp', $this->uniqueFilename);
         $finalDestination = $folderDestination . $this->uniqueFilename;
 
-        // 1. Forzamos minúsculas para evitar fallos con extensiones tipo .GIF o .Png
-        $extension = strtolower(pathinfo($this->file['name'], PATHINFO_EXTENSION));
+        // RUTA TEMPORAL: Evita que el archivo final sea leído mientras Imagick procesa los fotogramas
+        $tempDestination = $finalDestination . '.tmp';
 
-        if ($filetype === FileTypes::Image && $extension !== 'gif') {
-            $optimized = new Imagick($this->file['tmp_name']);
-            // Eliminamos perfiles EXIF/color innecesarios para reducir drásticamente el peso
-            $optimized->stripImage();
-            $ancho_original = $optimized->getImageWidth();
+        if ($filetype === FileTypes::Image) {
+            $imagick = new Imagick($this->file['tmp_name']);
             $ancho_deseado = 800;
+            $extension_destino = 'webp';
 
-            if ($ancho_original > $ancho_deseado) {
-                $optimized->scaleImage($ancho_deseado, 0);
+            if ($imagick->getNumberImages() > 1) {
+                $optimized = $imagick->coalesceImages();
+                $imagick->clear();
+
+                foreach ($optimized as $frame) {
+                    $ancho_original = $frame->getImageWidth();
+                    if ($ancho_original > $ancho_deseado) {
+                        $frame->scaleImage($ancho_deseado, 0);
+                    }
+                    $frame->stripImage();
+                    $frame->setFormat($extension_destino);
+                    $frame->setOption('webp:lossless', 'false');
+                    $frame->setImageCompressionQuality(65);
+                }
+
+                $optimized->setFormat($extension_destino);
+                // Guardamos en el archivo temporal primero
+                $optimized->writeImages($tempDestination, true);
+                $optimized->clear();
+            } else {
+                $ancho_original = $imagick->getImageWidth();
+                if ($ancho_original > $ancho_deseado) {
+                    $imagick->scaleImage($ancho_deseado, 0);
+                }
+                $imagick->stripImage();
+                $imagick->setFormat($extension_destino);
+                $imagick->setOption('webp:lossless', 'false');
+                $imagick->setImageCompressionQuality(65);
+                // Guardamos en el archivo temporal primero
+                $imagick->writeImage($tempDestination);
+                $imagick->clear();
             }
-            // Forzamos explícitamente el formato de salida en el buffer de Imagick
-            $optimized->setFormat(self::COMPRESSED_IMAGE_EXTENSION);
-            // (1 = lento/óptimo, 9 = rápido/pesado)
-            $optimized->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":speed", "6");
-            $optimized->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":quality", "65");
-            $optimized->writeImage($finalDestination);
-            $optimized->clear();
 
-            return;
+            // OPERACIÓN ATÓMICA: Ahora que el archivo está completo, lo renombramos al destino final
+            if (file_exists($tempDestination)) {
+                rename($tempDestination, $finalDestination);
+            }
+        } else {
+            // Para archivos que no son imágenes, también procesamos mediante temporal para mantener consistencia
+            if (move_uploaded_file($this->file['tmp_name'], $tempDestination)) {
+                rename($tempDestination, $finalDestination);
+            }
         }
 
-        move_uploaded_file($this->file['tmp_name'], $finalDestination);
+        // --- BUCLE DE RETENCIÓN DE FLUJO ---
+        // Detiene el código hasta que el archivo final esté 100% escrito y estable en disco
+        $intentos = 0;
+        $maxIntentos = 30; // Tiempo límite de espera: 30 segundos
+        $tamanoAnterior = 0;
+
+        while ($intentos < $maxIntentos) {
+            // Forzamos al sistema operativo a ignorar su memoria caché de estado de archivos
+            clearstatcache(true, $finalDestination);
+
+            if (file_exists($finalDestination)) {
+                $tamanoActual = filesize($finalDestination);
+
+                // Si mide más de 0 bytes y el tamaño no ha cambiado respecto al segundo anterior, está listo
+                if ($tamanoActual > 0 && $tamanoActual === $tamanoAnterior) {
+                    break;
+                }
+
+                $tamanoAnterior = $tamanoActual;
+            }
+
+            sleep(1); // Detiene el script por 1 segundo antes de volver a verificar
+            $intentos++;
+        }
+
+        if ($intentos >= $maxIntentos) {
+            throw new \RuntimeException("Error: El archivo tardó demasiado en confirmarse en el disco.");
+        }
+
+        // El código continuará a partir de aquí de forma completamente síncrona y segura
     }
+
 
     // ============================================================================
     // MARK: UPDATE FILENAME
@@ -237,6 +297,9 @@ abstract readonly class File extends SQL
     // ============================================================================
     // MARK: SHOW FILE
     // ============================================================================
+    // ============================================================================
+    // MARK: SHOW FILE
+    // ============================================================================
     protected function showFile(): void
     {
         $base = realpath($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH);
@@ -248,7 +311,7 @@ abstract readonly class File extends SQL
         // Normalizar la ruta solicitada
         $rutaSolicitada = realpath($base . '/' . $_GET['f']);
 
-        // Validación: el archivo debe estar dentro de /private
+        // Validación de seguridad física de la ruta
         if (!$rutaSolicitada || !str_starts_with($rutaSolicitada, $base)) {
             $this->integrityErrorSetup(403, "Acceso no permitido.");
         }
@@ -257,8 +320,17 @@ abstract readonly class File extends SQL
             $this->integrityErrorSetup(403, "No puedes acceder a directorios.");
         }
 
-        $mime = $this->obtainMime($rutaSolicitada);
+        // Detectamos la extensión real del archivo solicitado en el disco
+        $extension = strtolower(pathinfo($rutaSolicitada, PATHINFO_EXTENSION));
 
+        // Si es un WebP procesado por nosotros, forzamos su MIME para evitar fallos de lectura interna de la librería finfo
+        if ($extension === 'webp') {
+            $mime = 'image/webp';
+        } else {
+            $mime = $this->obtainMime($rutaSolicitada);
+        }
+
+        // Validación final de seguridad de tipos de archivo permitidos
         if (
             !str_starts_with($mime, 'image/') &&
             !str_starts_with($mime, 'audio/') &&
@@ -270,7 +342,7 @@ abstract readonly class File extends SQL
         $mtime = filemtime($rutaSolicitada);
         $size  = filesize($rutaSolicitada);
 
-        // Enviar archivo
+        // Enviar archivo de forma limpia
         header("Content-Type: $mime");
         header("Content-Length: $size");
         header("X-Content-Type-Options: nosniff");
