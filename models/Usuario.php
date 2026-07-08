@@ -72,10 +72,7 @@ readonly class Usuario extends Setter
 				}
 			}
 
-			session_start();
-			$_SESSION['ulid_usuario'] = $this->ulid_usuario;
-			session_write_close();
-
+			$this->writeSession($this->ulid_usuario);
 			$this->sendOkResponse(201);
 		}
 
@@ -105,10 +102,7 @@ readonly class Usuario extends Setter
 			$this->integrityErrorSetup(401, "El usuario o la contraseña son incorrectos.");
 		}
 
-		session_start();
-		$_SESSION['ulid_usuario'] = $usuario['ulid_usuario'];
-		session_write_close();
-
+		$this->writeSession($this->ulid_usuario);
 		$this->sendOkResponse(200);
 	}
 
@@ -119,24 +113,7 @@ readonly class Usuario extends Setter
 	{
 		$this->authEndpoint();
 
-		session_start();
-
-		$_SESSION = [];
-
-		if (ini_get("session.use_cookies")) {
-			$params = session_get_cookie_params();
-			setcookie(
-				session_name(),
-				'',
-				time() - 42000,
-				$params["path"],
-				$params["domain"],
-				$params["secure"],
-				$params["httponly"]
-			);
-		}
-
-		session_destroy();
+		$this->destroySession();
 
 		$this->sendOkResponse(204);
 	}
@@ -215,7 +192,7 @@ readonly class Usuario extends Setter
 	{
 		$this->authEndpoint();
 
-		$this->setProperties([$this->setPassword("password")]);
+		$this->setProperties([fn() => $this->setPassword("password")]);
 
 		$query =
 			"UPDATE usuarios
