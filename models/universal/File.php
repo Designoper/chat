@@ -14,7 +14,7 @@ enum FileTypes: string
 
 abstract readonly class File extends SQL
 {
-    private const string COMPRESSED_IMAGE_EXTENSION = 'avif';
+    private const string COMPRESSED_IMAGE_EXTENSION = 'webp';
     private const string COMMON_FILE_PATH = '/private/';
     protected const string DEFAULT_IMAGE = self::COMMON_FILE_PATH . 'default/default.jpg';
 
@@ -72,9 +72,7 @@ abstract readonly class File extends SQL
     private function setUniqueFilename(string $originalFilename, FileTypes $filetype): void
     {
         if ($filetype === FileTypes::Image) {
-            $extension = pathinfo($originalFilename, PATHINFO_EXTENSION) === 'gif'
-                ? 'gif'
-                : self::COMPRESSED_IMAGE_EXTENSION;
+            $extension = self::COMPRESSED_IMAGE_EXTENSION;
         } else $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
 
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
@@ -112,28 +110,57 @@ abstract readonly class File extends SQL
 
         $finalDestination = $folderDestination . $this->uniqueFilename;
 
-        $extension = pathinfo($this->file['name'], PATHINFO_EXTENSION);
+        if ($filetype === FileTypes::Image) {
 
-        if ($filetype === FileTypes::Image && $extension !== 'gif') {
-            $optimized = new Imagick($this->file['tmp_name']);
-            $ancho_original = $optimized->getImageWidth();
+            $imagick = new Imagick($this->file['tmp_name']);
             $ancho_deseado = 800;
 
-            if ($ancho_original > $ancho_deseado) {
-                $optimized->scaleImage($ancho_deseado, 0);
-            }
+            if ($imagick->getNumberImages() > 1) {
+                // Es una imagen animada (GIF)
+                $optimized = $imagick->coalesceImages();
+                $imagick->clear(); // Liberamos el objeto original
 
-            // (1 = lento/óptimo, 9 = rápido/pesado)
-            $optimized->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":speed", "6");
-            $optimized->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":quality", "65");
-            $optimized->writeImage($finalDestination);
-            $optimized->clear();
+                foreach ($optimized as $frame) {
+                    // Redimensionamos cada fotograma individualmente
+                    $ancho_original = $frame->getImageWidth();
+                    if ($ancho_original > $ancho_deseado) {
+                        $frame->scaleImage($ancho_deseado, 0);
+                    }
+
+                    $frame->stripImage();
+                    $frame->setFormat(self::COMPRESSED_IMAGE_EXTENSION);
+                    $frame->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":speed", "6");
+                    $frame->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":quality", "65");
+                }
+
+                // Reconstruimos la animación optimizando fotogramas
+                $optimized = $optimized->deconstructImages();
+
+                // Forzamos el formato de destino en la secuencia completa
+                $optimized->setFormat(self::COMPRESSED_IMAGE_EXTENSION);
+                $optimized->writeImages($finalDestination, true);
+                $optimized->clear();
+            } else {
+                // Es una imagen estática
+                $ancho_original = $imagick->getImageWidth();
+                if ($ancho_original > $ancho_deseado) {
+                    $imagick->scaleImage($ancho_deseado, 0);
+                }
+
+                $imagick->stripImage();
+                $imagick->setFormat(self::COMPRESSED_IMAGE_EXTENSION);
+                $imagick->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":speed", "6");
+                $imagick->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":quality", "65");
+                $imagick->writeImage($finalDestination);
+                $imagick->clear();
+            }
 
             return;
         }
 
         move_uploaded_file($this->file['tmp_name'], $finalDestination);
     }
+
 
     // ============================================================================
     // MARK: UPDATE FILENAME
