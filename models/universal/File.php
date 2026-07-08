@@ -70,9 +70,15 @@ abstract readonly class File extends SQL
     // ============================================================================
     private function setUniqueFilename(string $originalFilename, FileTypes $filetype): void
     {
-        $extension = $filetype === FileTypes::Image
-            ? 'webp'
-            : pathinfo($originalFilename, PATHINFO_EXTENSION);
+        // $extension = $filetype === FileTypes::Image
+        //     ? 'webp'
+        //     : pathinfo($originalFilename, PATHINFO_EXTENSION);
+
+        if ($filetype === FileTypes::Image) {
+            if (pathinfo($originalFilename, PATHINFO_EXTENSION) === 'gif') {
+                $extension = 'gif';
+            } else $extension = 'webp';
+        } else $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
 
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
         $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
@@ -109,7 +115,9 @@ abstract readonly class File extends SQL
 
         $finalDestination = $folderDestination . $this->uniqueFilename;
 
-        if ($filetype === FileTypes::Image) {
+        $extension = pathinfo($this->file['name'], PATHINFO_EXTENSION);
+
+        if ($filetype === FileTypes::Image && $extension !== 'gif') {
             $optimized = new Imagick($this->file['tmp_name']);
             $ancho_original = $optimized->getImageWidth();
             $ancho_deseado = 800;
