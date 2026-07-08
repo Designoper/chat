@@ -17,15 +17,20 @@ abstract readonly class Response
     }
 
     // ============================================================================
-    // MARK: SEND RESPONSE
+    // MARK: SEND NOT OK RESPONSE
     // ============================================================================
-    protected function sendResponse(): never
+    protected function sendNotOkResponse(): never
     {
         $this->buildResponse();
 
         http_response_code($this->status);
         header('Content-Type: application/json');
-        echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        if (isset($this->response)) {
+            echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            exit;
+        }
+
         exit;
     }
 
@@ -44,7 +49,12 @@ abstract readonly class Response
 
         http_response_code($this->status);
         header('Content-Type: application/json');
-        echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        if (isset($this->response)) {
+            echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            exit;
+        }
+
         exit;
     }
 
@@ -78,7 +88,7 @@ abstract readonly class Response
     {
         if (!empty($this->errors->getValidationErrors())) {
             $this->status = 400;
-            $this->sendResponse();
+            $this->sendNotOkResponse();
         }
     }
 
@@ -88,7 +98,7 @@ abstract readonly class Response
     protected function checkIntegrityErrors(): void
     {
         if (!empty($this->errors->getIntegrityErrors())) {
-            $this->sendResponse();
+            $this->sendNotOkResponse();
         }
     }
 

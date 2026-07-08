@@ -43,9 +43,7 @@ final readonly class Conexion extends Mensaje
 		];
 
 		$this->executeQuery($query, $params);
-
-		$this->status = 201;
-		$this->sendResponse();
+		$this->sendOkResponse(201);
 	}
 
 	// MARK: SET CONEXION GRUPAL
@@ -67,9 +65,7 @@ final readonly class Conexion extends Mensaje
 		];
 
 		$this->executeQuery($query, $params);
-
-		$this->status = 201;
-		$this->sendResponse();
+		$this->sendOkResponse(201);
 	}
 
 	// MARK: GET CONEXION DIRECTA
