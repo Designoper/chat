@@ -14,8 +14,9 @@ readonly class Invitacion extends Grupo
 		parent::__construct();
 	}
 
+	// ============================================================================
 	// MARK: INVITAR CONTACTO
-
+	// ============================================================================
 	public function invitarContacto(): void
 	{
 		$this->setProperties([fn() => $this->setCodigo('codigo_contacto')]);
@@ -137,12 +138,12 @@ readonly class Invitacion extends Grupo
 		];
 
 		$this->executeQuery($query, $params);
-
 		$this->sendOkResponse(201);
 	}
 
-	// MARK: ACEPTAR CONTACTO
-
+	// ============================================================================
+	// MARK: IS ACEPTAR CONTACTO
+	// ============================================================================
 	public function aceptarContacto(): void
 	{
 		$this->setProperties([fn() => $this->setUlid('ulid_contacto')]);
@@ -181,8 +182,9 @@ readonly class Invitacion extends Grupo
 		$this->sendOkResponse(200);
 	}
 
+	// ============================================================================
 	// MARK: RECHAZAR CONTACTO
-
+	// ============================================================================
 	public function rechazarContacto(): void
 	{
 		$this->setProperties([fn() => $this->setUlid('ulid_contacto')]);
@@ -198,12 +200,12 @@ readonly class Invitacion extends Grupo
 		];
 
 		$this->executeQuery($query, $params);
-
 		$this->sendOkResponse(204);
 	}
 
+	// ============================================================================
 	// MARK: INVITAR GRUPO
-
+	// ============================================================================
 	public function invitarGrupo(): void
 	{
 		$this->setProperties([
@@ -318,8 +320,9 @@ readonly class Invitacion extends Grupo
 		$this->sendOkResponse(201);
 	}
 
+	// ============================================================================
 	// MARK: ACEPTAR GRUPO
-
+	// ============================================================================
 	public function aceptarGrupo(): void
 	{
 		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
@@ -344,8 +347,9 @@ readonly class Invitacion extends Grupo
 		$this->sendOkResponse(200);
 	}
 
+	// ============================================================================
 	// MARK: RECHAZAR GRUPO
-
+	// ============================================================================
 	public function rechazarGrupo(): void
 	{
 		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
@@ -412,12 +416,12 @@ readonly class Invitacion extends Grupo
 		];
 
 		$this->executeQuery($query, $params);
-
 		$this->sendOkResponse(204);
 	}
 
+	// ============================================================================
 	// MARK: READ INVITACIONES
-
+	// ============================================================================
 	private function readInvitaciones(): array
 	{
 		$query =
@@ -468,8 +472,9 @@ readonly class Invitacion extends Grupo
 		return $invitaciones;
 	}
 
-	// MARK: STREAM INVITACIONES
-
+	// ============================================================================
+	// MARK: STREAM INVITACIONES LOGIC
+	// ============================================================================
 	protected function streamInvitacionesLogic(): void
 	{
 		static $invitaciones = [];
@@ -482,13 +487,17 @@ readonly class Invitacion extends Grupo
 		}
 	}
 
+	// ============================================================================
+	// MARK: STREAM INVITACIONES
+	// ============================================================================
 	public function streamInvitaciones(): void
 	{
 		$this->setSSE([$this, "streamInvitacionesLogic"]);
 	}
 
+	// ============================================================================
 	// MARK: READ CONTACTOS INVITABLES
-
+	// ============================================================================
 	private function readContactosInvitables(): array
 	{
 		$query =
@@ -526,8 +535,9 @@ readonly class Invitacion extends Grupo
 		return $contactosInvitables;
 	}
 
-	// MARK: STREAM CONTACTOS INVITABLES
-
+	// ============================================================================
+	// MARK: STREAM CONTACTOS INVITABLES LOGIC
+	// ============================================================================
 	protected function streamContactosInvitablesLogic(): void
 	{
 		static $contactosInvitables = [];
@@ -540,6 +550,9 @@ readonly class Invitacion extends Grupo
 		}
 	}
 
+	// ============================================================================
+	// MARK: STREAM CONTACTOS INVITABLES
+	// ============================================================================
 	public function streamContactosInvitables(): void
 	{
 		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
