@@ -14,6 +14,7 @@ enum FileTypes: string
 
 abstract readonly class File extends SQL
 {
+    private const string COMPRESSED_FILE_EXTENSION = 'webp';
     private const string COMMON_FILE_PATH = '/private/';
     protected const string DEFAULT_IMAGE = self::COMMON_FILE_PATH . 'default/default.jpg';
 
@@ -123,8 +124,8 @@ abstract readonly class File extends SQL
             }
 
             // (1 = lento/óptimo, 9 = rápido/pesado)
-            $optimized->setOption('webp:speed', '6');
-            $optimized->setOption('webp:quality', '65');
+            $optimized->setOption("webp:speed", "6");
+            $optimized->setOption("webp:quality", "65");
             $optimized->writeImage($finalDestination);
             $optimized->clear();
 
@@ -237,9 +238,7 @@ abstract readonly class File extends SQL
         $base = realpath($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH);
 
         if ($base === false) {
-            $this->status = 500;
-            $this->errors->setIntegrityError("Tenemos problemas técnicos para encontrar esa ruta");
-            $this->checkIntegrityErrors();
+            $this->integrityErrorSetup(500, "Tenemos problemas técnicos para encontrar esa ruta");
         }
 
         // Normalizar la ruta solicitada
@@ -247,18 +246,13 @@ abstract readonly class File extends SQL
 
         // Validación: el archivo debe estar dentro de /private
         if (!$rutaSolicitada || !str_starts_with($rutaSolicitada, $base)) {
-            $this->status = 403;
-            $this->errors->setIntegrityError("Acceso no permitido");
-            $this->checkIntegrityErrors();
+            $this->integrityErrorSetup(403, "Acceso no permitido.");
         }
 
         if (!is_file($rutaSolicitada)) {
-            $this->status = 403;
-            $this->errors->setIntegrityError("No puedes acceder a directorios");
-            $this->checkIntegrityErrors();
+            $this->integrityErrorSetup(403, "No puedes acceder a directorios.");
         }
 
-        // Validar MIME real
         $mime = $this->obtainMime($rutaSolicitada);
 
         if (
@@ -266,9 +260,7 @@ abstract readonly class File extends SQL
             !str_starts_with($mime, 'audio/') &&
             !str_starts_with($mime, 'video/')
         ) {
-            $this->status = 403;
-            $this->errors->setIntegrityError("Tipo de archivo no permitido");
-            $this->checkIntegrityErrors();
+            $this->integrityErrorSetup(403, "Tipo de archivo no permitido.");
         }
 
         $mtime = filemtime($rutaSolicitada);
