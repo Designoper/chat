@@ -40,10 +40,12 @@ readonly class Invitacion extends Grupo
 
 		// Ya son contactos
 		$query =
-			"SELECT 1
-			FROM contactos_directos
-			WHERE ulid_min = LEAST(?, ?)
-			AND ulid_max = GREATEST(?, ?)";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM contactos_directos
+				WHERE ulid_min = LEAST(?, ?)
+				AND ulid_max = GREATEST(?, ?)
+			)";
 
 		$params = [
 			['s', $this->session_ulid],
@@ -52,7 +54,7 @@ readonly class Invitacion extends Grupo
 			['s', $contacto]
 		];
 
-		$yaSonContactos = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
+		$yaSonContactos = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		if ($yaSonContactos) {
 			$this->integrityErrorSetup(409, "Ya sois contactos.");
@@ -60,35 +62,31 @@ readonly class Invitacion extends Grupo
 
 		// Invitación duplicada
 		$query =
-			"SELECT 1
-			FROM invitaciones_directas
-			WHERE ulid_usuario = ?
-			AND ulid_contacto = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM invitaciones_directas
+				WHERE ulid_usuario = ?
+				AND ulid_contacto = ?
+			)";
 
 		$params = [
 			['s', $this->session_ulid],
 			['s', $contacto]
 		];
 
-		$yaInvitado = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
+		$yaInvitado = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		if ($yaInvitado) {
 			$this->integrityErrorSetup(409, "Ya has enviado una invitación a este usuario.");
 		}
 
 		// Invitación cruzada → aceptar automáticamente
-		$query =
-			"SELECT 1
-			FROM invitaciones_directas
-			WHERE ulid_usuario = ?
-			AND ulid_contacto = ?";
-
 		$params = [
 			['s', $contacto],
 			['s', $this->session_ulid]
 		];
 
-		$invitacionCruzada = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
+		$invitacionCruzada = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		if ($invitacionCruzada) {
 
@@ -123,7 +121,6 @@ readonly class Invitacion extends Grupo
 			];
 
 			$this->executeQuery($query, $params);
-
 			$this->sendOkResponse(201);
 		}
 
@@ -178,7 +175,6 @@ readonly class Invitacion extends Grupo
 		];
 
 		$this->executeQuery($query, $params);
-
 		$this->sendOkResponse(200);
 	}
 
@@ -215,13 +211,15 @@ readonly class Invitacion extends Grupo
 
 		// 3. Validar que el grupo existe
 		$query =
-			"SELECT 1
-			FROM grupos
-			WHERE ulid_grupo = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM grupos
+				WHERE ulid_grupo = ?
+			)";
 
 		$params = [['s', $this->ulid_grupo]];
 
-		$existeGrupo = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
+		$existeGrupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		if (!$existeGrupo) {
 			$this->integrityErrorSetup(404, "El grupo no existe.");
@@ -258,31 +256,35 @@ readonly class Invitacion extends Grupo
 
 		// 2. Validar que el usuario existe
 		$query =
-			"SELECT 1
-			FROM usuarios
-			WHERE ulid_usuario = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM usuarios
+				WHERE ulid_usuario = ?
+			)";
 
 		$params = [['s', $this->ulid_contacto]];
 
-		$existeUsuario = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
+		$usuario = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		if (!$existeUsuario) {
+		if (!$usuario) {
 			$this->integrityErrorSetup(404, "El usuario no existe.");
 		}
 
 		// 5. Validar que el invitado NO es miembro del grupo
 		$query =
-			"SELECT 1
-         	FROM contactos_grupales
-         	WHERE ulid_usuario = ?
-          	AND ulid_grupo = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM contactos_grupales
+				WHERE ulid_usuario = ?
+				AND ulid_grupo = ?
+			)";
 
 		$params = [
 			['s', $this->ulid_contacto],
 			['s', $this->ulid_grupo]
 		];
 
-		$esMiembro = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
+		$esMiembro = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		if ($esMiembro) {
 			$this->integrityErrorSetup(409, "Este usuario ya es miembro del grupo.");
@@ -290,17 +292,19 @@ readonly class Invitacion extends Grupo
 
 		// 6. Validar que NO tiene invitación pendiente
 		$query =
-			"SELECT 1
-			FROM invitaciones_grupales
-			WHERE ulid_usuario = ?
-			AND ulid_grupo = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM invitaciones_grupales
+				WHERE ulid_usuario = ?
+				AND ulid_grupo = ?
+			)";
 
 		$params = [
 			['s', $this->ulid_contacto],
 			['s', $this->ulid_grupo]
 		];
 
-		$yaInvitado = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
+		$yaInvitado = $this->executeQuery($query, $params, SqlReturn::Exists);
 
 		if ($yaInvitado) {
 			$this->integrityErrorSetup(409, "Este usuario ya tiene una invitación pendiente.");
@@ -356,51 +360,57 @@ readonly class Invitacion extends Grupo
 
 		// 1. Validar que el grupo existe
 		$query =
-			"SELECT 1
-			FROM grupos
-			WHERE ulid_grupo = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM grupos
+				WHERE ulid_grupo = ?
+			)";
 
 		$params = [['s', $this->ulid_grupo]];
 
-		$existeGrupo = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
+		$grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		if (!$existeGrupo) {
+		if (!$grupo) {
 			$this->integrityErrorSetup(404, "El grupo no existe.");
 		}
 
 		// 3. Validar que NO eres miembro del grupo
 		$query =
-			"SELECT 1
-			FROM contactos_grupales
-			WHERE ulid_usuario = ?
-			AND ulid_grupo = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM contactos_grupales
+				WHERE ulid_usuario = ?
+				AND ulid_grupo = ?
+			)";
 
 		$params = [
 			['s', $this->session_ulid],
 			['s', $this->ulid_grupo]
 		];
 
-		$esMiembro = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
+		$miembro_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		if ($esMiembro) {
+		if ($miembro_grupo) {
 			$this->integrityErrorSetup(409, "Ya eres miembro del grupo.");
 		}
 
 		// 2. Validar que existe la invitación
 		$query =
-			"SELECT 1
-			FROM invitaciones_grupales
-			WHERE ulid_usuario = ?
-			AND ulid_grupo = ?";
+			"SELECT EXISTS(
+				SELECT 1
+				FROM invitaciones_grupales
+				WHERE ulid_usuario = ?
+				AND ulid_grupo = ?
+			)";
 
 		$params = [
 			['s', $this->session_ulid],
 			['s', $this->ulid_grupo]
 		];
 
-		$existeInvitacion = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
+		$invitacion = $this->executeQuery($query, $params, SqlReturn::Exists);
 
-		if (!$existeInvitacion) {
+		if (!$invitacion) {
 			$this->integrityErrorSetup(404, "No tienes ninguna invitación para este grupo.");
 		}
 
