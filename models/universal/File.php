@@ -70,9 +70,10 @@ abstract readonly class File extends SQL
     // ============================================================================
     private function setUniqueFilename(string $originalFilename, FileTypes $filetype): void
     {
-        if ($filetype === FileTypes::Image) {
-            $extension = 'webp';
-        } else $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+        $extension = $filetype === FileTypes::Image
+            ? 'webp'
+            : pathinfo($originalFilename, PATHINFO_EXTENSION);
+
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
         $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }

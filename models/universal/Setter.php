@@ -237,10 +237,10 @@ abstract readonly class Setter extends File
 	// ============================================================================
 	// MARK: SET PROPERTIES
 	// ============================================================================
-	protected function setProperties(array $name): void
+	protected function setProperties(array $properties): void
 	{
-		foreach ($name as $test) {
-			$test();
+		foreach ($properties as $property) {
+			$property();
 		}
 
 		$this->checkValidationErrors();

@@ -23,6 +23,19 @@ abstract readonly class SQL extends Database
 	}
 
 	// ============================================================================
+	// MARK: ENCODE BASE 32
+	// ============================================================================
+	private function encodeBase32(int $value, int $length): string
+	{
+		$encoded = '';
+		for ($i = 0; $i < $length; $i++) {
+			$encoded = self::BASE32_ALPHABET[$value & 31] . $encoded;
+			$value >>= 5;
+		}
+		return $encoded;
+	}
+
+	// ============================================================================
 	// MARK: GENERATE ULID
 	// ============================================================================
 	protected function generateUlid(): string
@@ -39,39 +52,6 @@ abstract readonly class SQL extends Database
 
 		return $ulid;
 	}
-
-	// ============================================================================
-	// MARK: ENCODE BASE 32
-	// ============================================================================
-	private function encodeBase32(int $value, int $length): string
-	{
-		$encoded = '';
-		for ($i = 0; $i < $length; $i++) {
-			$encoded = self::BASE32_ALPHABET[$value & 31] . $encoded;
-			$value >>= 5;
-		}
-		return $encoded;
-	}
-
-	// ============================================================================
-	// MARK: IS AUTHORIZED
-	// ============================================================================
-	// protected function isAuthorized(bool $result, string $error_message): void
-	// {
-	// 	if ($result === false) {
-	// 		$this->integrityErrorSetup(403, $error_message);
-	// 	}
-	// }
-
-	// // ============================================================================
-	// // MARK: IS CONFLICT
-	// // ============================================================================
-	// protected function isConflict(mysqli_sql_exception $error, string $error_message): void
-	// {
-	// 	if ($error->getCode() === 1062) {
-	// 		$this->integrityErrorSetup(409, $error_message);
-	// 	}
-	// }
 
 	// ============================================================================
 	// MARK: EXECUTE QUERY
