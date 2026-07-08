@@ -25,10 +25,10 @@ abstract readonly class SQL extends Database
 	// ============================================================================
 	// MARK: ENCODE BASE 32
 	// ============================================================================
-	private function encodeBase32(int $value, int $length): string
+	private function encodeBase32(int $value): string
 	{
 		$encoded = '';
-		for ($i = 0; $i < $length; $i++) {
+		for ($i = 0; $i < 10; $i++) {
 			$encoded = self::BASE32_ALPHABET[$value & 31] . $encoded;
 			$value >>= 5;
 		}
@@ -41,7 +41,7 @@ abstract readonly class SQL extends Database
 	protected function generateUlid(): string
 	{
 		$time = (int) (microtime(true) * 1000);
-		$time32 = $this->encodeBase32($time, 10);
+		$time32 = $this->encodeBase32($time);
 
 		$rand = '';
 		for ($i = 0; $i < 16; $i++) {
