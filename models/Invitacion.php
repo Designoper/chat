@@ -115,8 +115,8 @@ readonly class Invitacion extends Grupo
 
 			$params = [
 				['s', $this->session_ulid],
-				['s', $this->ulid_contacto],
-				['s', $this->ulid_contacto],
+				['s', $this->$contacto],
+				['s', $this->$contacto],
 				['s', $this->session_ulid]
 			];
 
@@ -316,7 +316,7 @@ readonly class Invitacion extends Grupo
 			VALUES (?, ?)";
 
 		$params = [
-			['s', $this->session_ulid],
+			['s', $this->ulid_contacto],
 			['s', $this->ulid_grupo]
 		];
 
