@@ -17,21 +17,26 @@ abstract readonly class Response
     }
 
     // ============================================================================
-    // MARK: SEND NOT OK RESPONSE
+    // MARK: BUILD RESPONSE
     // ============================================================================
-    protected function sendNotOkResponse(): never
+    private function buildResponse(): void
     {
-        $this->buildResponse();
-
-        http_response_code($this->status);
-        header('Content-Type: application/json');
-
-        if (isset($this->response)) {
-            echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-            exit;
+        if (!empty($this->errors->getValidationErrors())) {
+            $this->response = $this->errors->getValidationErrors();
+            return;
         }
 
-        exit;
+        if (!empty($this->errors->getIntegrityErrors())) {
+            $this->response = $this->errors->getIntegrityErrors();
+            return;
+        }
+
+        if (isset($this->content)) {
+            $this->response = $this->content;
+            return;
+        }
+
+        $this->response = [];
     }
 
     // ============================================================================
@@ -59,26 +64,21 @@ abstract readonly class Response
     }
 
     // ============================================================================
-    // MARK: BUILD RESPONSE
+    // MARK: SEND NOT OK RESPONSE
     // ============================================================================
-    private function buildResponse(): void
+    protected function sendNotOkResponse(): never
     {
-        if (!empty($this->errors->getValidationErrors())) {
-            $this->response = $this->errors->getValidationErrors();
-            return;
+        $this->buildResponse();
+
+        http_response_code($this->status);
+        header('Content-Type: application/json');
+
+        if (isset($this->response)) {
+            echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            exit;
         }
 
-        if (!empty($this->errors->getIntegrityErrors())) {
-            $this->response = $this->errors->getIntegrityErrors();
-            return;
-        }
-
-        if (isset($this->content)) {
-            $this->response = $this->content;
-            return;
-        }
-
-        $this->response = [];
+        exit;
     }
 
     // ============================================================================
@@ -103,7 +103,7 @@ abstract readonly class Response
     }
 
     // ============================================================================
-    // MARK: CHECK INTEGRITY ERROR SETUP
+    // MARK: INTEGRITY ERROR SETUP
     // ============================================================================
     protected function integrityErrorSetup(int $http_code, string $error_message): void
     {
