@@ -42,31 +42,31 @@ readonly class Usuario extends Validator
 
 		$query =
 			"INSERT INTO usuarios (ulid_usuario, nombre_usuario, password, codigo_contacto)
-        	VALUES (?, ?, ?, ?)";
+        	VALUES (:ulid_usuario, :nombre_usuario, :password, :codigo_contacto)";
 
 		$maxIntentos = 5;
 		$intento = 0;
 
 		while ($intento < $maxIntentos) {
 
-			$codigo = $this->generarCodigo();
+			$codigo_contacto = $this->generarCodigo();
 
 			$params = [
-				$this->ulid_usuario,
-				$this->nombre_usuario,
-				password_hash($this->password, PASSWORD_DEFAULT),
-				$codigo
+				":ulid_usuario" => $this->ulid_usuario,
+				":nombre_usuario" => $this->nombre_usuario,
+				":password" => password_hash($this->password, PASSWORD_DEFAULT),
+				":codigo_contact" => $codigo_contacto
 			];
 
 			try {
 				$this->executeQuery($query, $params);
-			} catch (mysqli_sql_exception $error) {
+			} catch (PDOException $error) {
 
-				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'nombre_usuario')) {
+				if ($error->errorInfo[1] === 1062 && str_contains($error->errorInfo[2], 'nombre_usuario')) {
 					$this->integrityErrorSetup(409, '¡Este nombre de usuario ya existe!');
 				}
 
-				if ($error->getCode() === 1062 && str_contains($error->getMessage(), 'codigo_contacto')) {
+				if ($error->errorInfo[1] === 1062 && str_contains($error->errorInfo[2], 'codigo_contacto')) {
 					$intento++;
 					continue;
 				}
@@ -92,9 +92,9 @@ readonly class Usuario extends Validator
 		$query =
 			"SELECT ulid_usuario, password
 			FROM usuarios
-			WHERE nombre_usuario = ?";
+			WHERE nombre_usuario = :nombre_usuario";
 
-		$params = [$this->nombre_usuario];
+		$params = [":nombre_usuario" => $this->nombre_usuario];
 
 		$usuario = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
@@ -126,9 +126,9 @@ readonly class Usuario extends Validator
 		$query =
 			"SELECT ulid_usuario, nombre_usuario, codigo_contacto
 			FROM usuarios
-			WHERE ulid_usuario = ?";
+			WHERE ulid_usuario = :session_ulid";
 
-		$params = [$this->session_ulid];
+		$params = [':session_ulid' => $this->session_ulid];
 
 		$usuario = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
@@ -144,9 +144,9 @@ readonly class Usuario extends Validator
 
 		$query =
 			"DELETE FROM usuarios
-			WHERE ulid_usuario = ?";
+			WHERE ulid_usuario = :session_ulid";
 
-		$params = [$this->session_ulid];
+		$params = [':session_ulid' => $this->session_ulid];
 
 		$this->executeQuery($query, $params);
 		$this->logout();
@@ -163,18 +163,18 @@ readonly class Usuario extends Validator
 
 		$query =
 			"UPDATE usuarios
-			SET nombre_usuario = ?
-			WHERE ulid_usuario = ?";
+			SET nombre_usuario = :nombre_usuario
+			WHERE ulid_usuario = :session_ulid";
 
 		$params = [
-			$this->nombre_usuario,
-			$this->session_ulid
+			"nombre_usuario" => $this->nombre_usuario,
+			"session_ulid"   => $this->session_ulid
 		];
 
 		try {
 			$this->executeQuery($query, $params);
-		} catch (mysqli_sql_exception $error) {
-			if ($error->getCode() === 1062) {
+		} catch (PDOException $error) {
+			if ($error->errorInfo[1] === 1062) {
 				$this->integrityErrorSetup(409, "¡Este nombre de usuario ya existe!");
 			}
 		}
@@ -182,6 +182,7 @@ readonly class Usuario extends Validator
 		$this->regenerateSession();
 		$this->sendOkResponse(200);
 	}
+
 
 	// ============================================================================
 	// MARK: CAMBIAR PASSWORD
@@ -194,12 +195,12 @@ readonly class Usuario extends Validator
 
 		$query =
 			"UPDATE usuarios
-			SET password = ?
-			WHERE ulid_usuario = ?";
+			SET password = :password
+			WHERE ulid_usuario = :session_ulid";
 
 		$params = [
-			password_hash($this->password, PASSWORD_DEFAULT),
-			$this->session_ulid
+			":password" => password_hash($this->password, PASSWORD_DEFAULT),
+			":session_ulid" => $this->session_ulid
 		];
 
 		$this->executeQuery($query, $params);
