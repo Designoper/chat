@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/File.php';
 
-abstract readonly class Request extends File
+abstract readonly class Validator extends File
 {
 	protected function __construct()
 	{
@@ -119,45 +119,6 @@ abstract readonly class Request extends File
 	}
 
 	// ============================================================================
-	// MARK: VALIDAR ARCHIVO SEGURO
-	// ============================================================================
-	private function validarArchivoSeguro(string $filename, ?FileTypes $tipoDetectado, FileTypes $tipoEsperado): void
-	{
-		if ($tipoDetectado === null) {
-			$this->errors->setValidationError('No se pudo determinar el tipo de archivo.');
-			$this->checkValidationErrors();
-		}
-
-		if ($tipoDetectado !== $tipoEsperado) {
-			$this->errors->setValidationError("Se esperaba un archivo de tipo '$tipoEsperado', pero se recibió '$tipoDetectado'.");
-			$this->checkValidationErrors();
-		}
-
-		switch ($tipoDetectado) {
-
-			case FileTypes::Image:
-				$info = @getimagesize($filename);
-				if ($info === false) {
-					$this->errors->setValidationError('La imagen no es válida o está corrupta.');
-					$this->checkValidationErrors();
-				}
-				break;
-
-			case FileTypes::Audio:
-			case FileTypes::Video:
-				if (filesize($filename) < 1024) {
-					$this->errors->setValidationError('El archivo multimedia es demasiado pequeño para ser válido.');
-					$this->checkValidationErrors();
-				}
-				break;
-
-			default:
-				$this->errors->setValidationError('Tipo de archivo no permitido.');
-				$this->checkValidationErrors();
-		}
-	}
-
-	// ============================================================================
 	// MARK: GET MAGIC NUMBER
 	// ============================================================================
 	private function getMagicNumber(string $filename): string
@@ -253,5 +214,44 @@ abstract readonly class Request extends File
 
 		// --- 4. No se pudo determinar ---
 		return null;
+	}
+
+	// ============================================================================
+	// MARK: VALIDAR ARCHIVO SEGURO
+	// ============================================================================
+	private function validarArchivoSeguro(string $filename, ?FileTypes $tipoDetectado, FileTypes $tipoEsperado): void
+	{
+		if ($tipoDetectado === null) {
+			$this->errors->setValidationError('No se pudo determinar el tipo de archivo.');
+			$this->checkValidationErrors();
+		}
+
+		if ($tipoDetectado !== $tipoEsperado) {
+			$this->errors->setValidationError("Se esperaba un archivo de tipo '$tipoEsperado', pero se recibió '$tipoDetectado'.");
+			$this->checkValidationErrors();
+		}
+
+		switch ($tipoDetectado) {
+
+			case FileTypes::Image:
+				$info = @getimagesize($filename);
+				if ($info === false) {
+					$this->errors->setValidationError('La imagen no es válida o está corrupta.');
+					$this->checkValidationErrors();
+				}
+				break;
+
+			case FileTypes::Audio:
+			case FileTypes::Video:
+				if (filesize($filename) < 1024) {
+					$this->errors->setValidationError('El archivo multimedia es demasiado pequeño para ser válido.');
+					$this->checkValidationErrors();
+				}
+				break;
+
+			default:
+				$this->errors->setValidationError('Tipo de archivo no permitido.');
+				$this->checkValidationErrors();
+		}
 	}
 }

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/common/Request.php';
+require_once __DIR__ . '/common/Validator.php';
 
-readonly class Usuario extends Request
+readonly class Usuario extends Validator
 {
 	protected string $nombre_usuario;
 	protected string $password;
