@@ -29,8 +29,8 @@ abstract readonly class SQL extends Auth
 	{
 		$encoded = '';
 		for ($i = 0; $i < 10; $i++) {
-			$encoded = self::BASE32_ALPHABET[$value & 31] . $encoded;
-			$value >>= 5;
+			$encoded = self::BASE32_ALPHABET[$value % 32] . $encoded;
+			$value = intdiv($value, 32);
 		}
 		return $encoded;
 	}
@@ -40,18 +40,30 @@ abstract readonly class SQL extends Auth
 	// ============================================================================
 	protected function generateUlid(): string
 	{
-		$time = (int) (microtime(true) * 1000);
+		// 1. Evitar problemas de precisión con enteros de 64 bits y float
+		$time = (int) floor(microtime(true) * 1000);
 		$time32 = $this->encodeBase32($time);
 
+		// 2. Generar aleatoriedad segura de golpe en lugar de un bucle lento
+		$bytes = random_bytes(10);
 		$rand = '';
+
 		for ($i = 0; $i < 16; $i++) {
-			$rand .= self::BASE32_ALPHABET[random_int(0, 31)];
+			$byteIndex = (int) ($i * 5 / 8);
+			$bitOffset = ($i * 5) % 8;
+
+			$byte1 = ord($bytes[$byteIndex]);
+			$byte2 = isset($bytes[$byteIndex + 1]) ? ord($bytes[$byteIndex + 1]) : 0;
+
+			$combined = ($byte1 << 8) | $byte2;
+			$index = ($combined >> (11 - $bitOffset)) & 31;
+
+			$rand .= self::BASE32_ALPHABET[$index];
 		}
 
-		$ulid = $time32 . $rand;
-
-		return $ulid;
+		return $time32 . $rand;
 	}
+
 
 	// ============================================================================
 	// MARK: EXECUTE QUERY
