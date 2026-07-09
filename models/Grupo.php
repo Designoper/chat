@@ -23,7 +23,7 @@ readonly class Grupo extends Usuario
 	{
 		$query =
 			"SELECT EXISTS(
-				SELECT ulid_fundador
+				SELECT 1
 				FROM grupos
 				WHERE ulid_fundador = :session_ulid
 				AND ulid_grupo = :ulid_grupo
