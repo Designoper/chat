@@ -41,11 +41,11 @@ abstract readonly class Auth extends Database
 	// ============================================================================
 	// MARK: WRITE SESSION
 	// ============================================================================
-	protected function writeSession(string $ulid): void
+	protected function writeSession(string $session_ulid): void
 	{
 		session_start(self::SESSION_BASE_OPTIONS);
 		session_regenerate_id(true);
-		$_SESSION['ulid_usuario'] = $ulid;
+		$_SESSION['ulid_usuario'] = $session_ulid;
 		session_write_close();
 	}
 
