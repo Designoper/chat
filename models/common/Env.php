@@ -31,7 +31,7 @@ abstract readonly class Env extends Response
         foreach ($lines as $line) {
             $line = trim($line);
 
-            if ($line === '' || str_starts_with($line, "#")) {
+            if ($line === "" || str_starts_with($line, "#")) {
                 continue;
             }
 
