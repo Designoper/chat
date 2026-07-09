@@ -24,9 +24,9 @@ readonly class Invitacion extends Grupo
 		$query =
 			"SELECT ulid_usuario
 			FROM usuarios
-			WHERE codigo_contacto = ?";
+			WHERE codigo_contacto = :codigo_contacto";
 
-		$params = [$this->codigo_contacto];
+		$params = ["codigo_contacto" => $this->codigo_contacto];
 
 		$contacto = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
@@ -43,18 +43,18 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM contactos_directos
-				WHERE ulid_min = LEAST(?, ?)
-				AND ulid_max = GREATEST(?, ?)
+				WHERE ulid_min = LEAST(:session_ulid, :contacto)
+				AND ulid_max = GREATEST(:session_ulid, :contacto)
 			)";
 
 		$params = [
-			$this->session_ulid,
-			$contacto,
-			$this->session_ulid,
-			$contacto
+			"session_ulid" => $this->session_ulid,
+			"contacto" => $contacto
 		];
 
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 		$yaSonContactos = $this->executeQuery($query, $params, SqlReturn::Exists);
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 		if ($yaSonContactos) {
 			$this->integrityErrorSetup(409, "Ya sois contactos.");
@@ -65,13 +65,13 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM invitaciones_directas
-				WHERE ulid_usuario = ?
-				AND ulid_contacto = ?
+				WHERE ulid_usuario = :session_ulid
+				AND ulid_contacto = :contacto
 			)";
 
 		$params = [
-			$this->session_ulid,
-			$contacto
+			"session_ulid" => $this->session_ulid,
+			"contacto" => $contacto
 		];
 
 		$yaInvitado = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -80,10 +80,18 @@ readonly class Invitacion extends Grupo
 			$this->integrityErrorSetup(409, "Ya has enviado una invitación a este usuario.");
 		}
 
+		$query =
+			"SELECT EXISTS(
+				SELECT 1
+				FROM invitaciones_directas
+				WHERE ulid_usuario = :contacto
+				AND ulid_contacto = :session_ulid
+			)";
+
 		// Invitación cruzada → aceptar automáticamente
 		$params = [
-			$contacto,
-			$this->session_ulid
+			"contacto" => $contacto,
+			"session_ulid" => $this->session_ulid
 		];
 
 		$invitacionCruzada = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -95,11 +103,11 @@ readonly class Invitacion extends Grupo
 
 			$query =
 				"INSERT IGNORE INTO contactos_directos (ulid_min, ulid_max)
-             	VALUES (?, ?)";
+             	VALUES (:ulid_min, :ulid_max)";
 
 			$params = [
-				$ulid_min,
-				$ulid_max
+				"ulid_min" => $ulid_min,
+				"ulid_max" => $ulid_max
 			];
 
 			$this->executeQuery($query, $params);
@@ -109,29 +117,30 @@ readonly class Invitacion extends Grupo
 				"DELETE FROM invitaciones_directas
 				WHERE (ulid_usuario, ulid_contacto) IN
 				(
-					(?, ?),
-					(?, ?)
+					(:session_ulid, :contacto),
+					(:contacto, :session_ulid)
 				)";
 
 			$params = [
-				$this->session_ulid,
-				$this->$contacto,
-				$this->$contacto,
-				$this->session_ulid
+				"session_ulid" => $this->session_ulid,
+				"contacto" => $this->$contacto
 			];
 
+			$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 			$this->executeQuery($query, $params);
+			$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
 			$this->sendOkResponse(201);
 		}
 
 		// Si no hay cruzada → crear invitación normal
 		$query =
 			"INSERT INTO invitaciones_directas (ulid_usuario, ulid_contacto)
-         	VALUES (?, ?)";
+         	VALUES (:session_ulid, :contacto)";
 
 		$params = [
-			$this->session_ulid,
-			$contacto
+			"session_ulid" => $this->session_ulid,
+			"contacto" => $contacto
 		];
 
 		$this->executeQuery($query, $params);
@@ -139,7 +148,7 @@ readonly class Invitacion extends Grupo
 	}
 
 	// ============================================================================
-	// MARK: IS ACEPTAR CONTACTO
+	// MARK: ACEPTAR CONTACTO
 	// ============================================================================
 	public function aceptarContacto(): void
 	{
@@ -150,11 +159,11 @@ readonly class Invitacion extends Grupo
 
 		$query =
 			"INSERT IGNORE INTO contactos_directos (ulid_min, ulid_max)
-         	VALUES (?, ?)";
+         	VALUES (:ulid_min, :ulid_max)";
 
 		$params = [
-			$ulid_min,
-			$ulid_max
+			"ulid_min" => $ulid_min,
+			"ulid_max" => $ulid_max
 		];
 
 		$this->executeQuery($query, $params);
@@ -163,18 +172,19 @@ readonly class Invitacion extends Grupo
 			"DELETE FROM invitaciones_directas
          	WHERE (ulid_usuario, ulid_contacto) IN
 			(
-				(?, ?),
-				(?, ?)
+				(:session_ulid, :ulid_contacto),
+				(:ulid_contacto, :session_ulid)
 			)";
 
 		$params = [
-			$this->session_ulid,
-			$this->ulid_contacto,
-			$this->ulid_contacto,
-			$this->session_ulid
+			"session_ulid" => $this->session_ulid,
+			"ulid_contacto" => $this->ulid_contacto
 		];
 
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 		$this->executeQuery($query, $params);
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
 		$this->sendOkResponse(200);
 	}
 
@@ -187,12 +197,12 @@ readonly class Invitacion extends Grupo
 
 		$query =
 			"DELETE FROM invitaciones_directas
-			WHERE ulid_usuario = ?
-			AND ulid_contacto = ?";
+			WHERE ulid_usuario = :ulid_contacto
+			AND ulid_contacto = :session_ulid";
 
 		$params = [
-			$this->ulid_contacto,
-			$this->session_ulid
+			"ulid_contacto" => $this->ulid_contacto,
+			"session_ulid" => $this->session_ulid
 		];
 
 		$this->executeQuery($query, $params);
@@ -214,10 +224,10 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM grupos
-				WHERE ulid_grupo = ?
+				WHERE ulid_grupo = :ulid_grupo
 			)";
 
-		$params = [$this->ulid_grupo];
+		$params = ["ulid_grupo" => $this->ulid_grupo];
 
 		$grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
@@ -237,18 +247,18 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM contactos_directos
-				WHERE ulid_min = LEAST(?, ?)
-				AND ulid_max = GREATEST(?, ?)
+				WHERE ulid_min = LEAST(:session_ulid, :ulid_contacto)
+				AND ulid_max = GREATEST(:session_ulid, :ulid_contacto)
 			)";
 
 		$params = [
-			$this->session_ulid,
-			$this->ulid_contacto,
-			$this->session_ulid,
-			$this->ulid_contacto
+			"session_ulid" => $this->session_ulid,
+			"ulid_contacto" => $this->ulid_contacto
 		];
 
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 		$esContacto = $this->executeQuery($query, $params, SqlReturn::Exists);
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 		if (!$esContacto) {
 			$this->integrityErrorSetup(403, "Solo puedes invitar a tus contactos directos.");
@@ -259,10 +269,10 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM usuarios
-				WHERE ulid_usuario = ?
+				WHERE ulid_usuario = :ulid_contacto
 			)";
 
-		$params = [$this->ulid_contacto];
+		$params = ["ulid_contacto" => $this->ulid_contacto];
 
 		$usuario = $this->executeQuery($query, $params, SqlReturn::Exists);
 
@@ -275,13 +285,13 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM contactos_grupales
-				WHERE ulid_usuario = ?
-				AND ulid_grupo = ?
+				WHERE ulid_usuario = :ulid_contacto
+				AND ulid_grupo = :ulid_grupo
 			)";
 
 		$params = [
-			$this->ulid_contacto,
-			$this->ulid_grupo
+			"ulid_contacto" => $this->ulid_contacto,
+			"ulid_grupo" => $this->ulid_grupo
 		];
 
 		$miembro_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -295,13 +305,13 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM invitaciones_grupales
-				WHERE ulid_usuario = ?
-				AND ulid_grupo = ?
+				WHERE ulid_usuario = :ulid_contacto
+				AND ulid_grupo = :ulid_grupo
 			)";
 
 		$params = [
-			$this->ulid_contacto,
-			$this->ulid_grupo
+			"ulid_contacto" => $this->ulid_contacto,
+			"ulid_grupo" => $this->ulid_grupo
 		];
 
 		$yaInvitado = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -313,11 +323,11 @@ readonly class Invitacion extends Grupo
 		// 9. Insertar invitación
 		$query =
 			"INSERT INTO invitaciones_grupales (ulid_usuario, ulid_grupo)
-			VALUES (?, ?)";
+			VALUES (:ulid_contacto, :ulid_grupo)";
 
 		$params = [
-			$this->ulid_contacto,
-			$this->ulid_grupo
+			"ulid_contacto" => $this->ulid_contacto,
+			"ulid_grupo" => $this->ulid_grupo
 		];
 
 		$this->executeQuery($query, $params);
@@ -333,19 +343,19 @@ readonly class Invitacion extends Grupo
 
 		$query =
 			"INSERT INTO contactos_grupales (ulid_usuario, ulid_grupo)
-			VALUES (?, ?)";
+			VALUES (:session_ulid, :ulid_grupo)";
 
 		$params = [
-			$this->session_ulid,
-			$this->ulid_grupo
+			"session_ulid" => $this->session_ulid,
+			"ulid_grupo" => $this->ulid_grupo
 		];
 
 		$this->executeQuery($query, $params);
 
 		$query =
 			"DELETE FROM invitaciones_grupales
-			WHERE ulid_usuario = ?
-			AND ulid_grupo = ?";
+			WHERE ulid_usuario = :session_ulid
+			AND ulid_grupo = :ulid_grupo";
 
 		$this->executeQuery($query, $params);
 		$this->sendOkResponse(200);
@@ -363,10 +373,10 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM grupos
-				WHERE ulid_grupo = ?
+				WHERE ulid_grupo = :ulid_grupo
 			)";
 
-		$params = [$this->ulid_grupo];
+		$params = ["ulid_grupo" => $this->ulid_grupo];
 
 		$grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
@@ -379,13 +389,13 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM contactos_grupales
-				WHERE ulid_usuario = ?
-				AND ulid_grupo = ?
+				WHERE ulid_usuario = :session_ulid
+				AND ulid_grupo = :ulid_grupo
 			)";
 
 		$params = [
-			$this->session_ulid,
-			$this->ulid_grupo
+			"session_ulid" => $this->session_ulid,
+			"ulid_grupo" => $this->ulid_grupo
 		];
 
 		$miembro_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -399,13 +409,13 @@ readonly class Invitacion extends Grupo
 			"SELECT EXISTS(
 				SELECT 1
 				FROM invitaciones_grupales
-				WHERE ulid_usuario = ?
-				AND ulid_grupo = ?
+				WHERE ulid_usuario = :session_ulid
+				AND ulid_grupo = :ulid_grupo
 			)";
 
 		$params = [
-			$this->session_ulid,
-			$this->ulid_grupo
+			"session_ulid" => $this->session_ulid,
+			"ulid_grupo" => $this->ulid_grupo
 		];
 
 		$invitacion = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -417,12 +427,12 @@ readonly class Invitacion extends Grupo
 		// 4. Eliminar invitaciones (si hubiera duplicadas por error, se eliminan todas)
 		$query =
 			"DELETE FROM invitaciones_grupales
-			WHERE ulid_usuario = ?
-			AND ulid_grupo = ?";
+			WHERE ulid_usuario = :session_ulid
+			AND ulid_grupo = :ulid_grupo";
 
 		$params = [
-			$this->session_ulid,
-			$this->ulid_grupo
+			"session_ulid" => $this->session_ulid,
+			"ulid_grupo" => $this->ulid_grupo
 		];
 
 		$this->executeQuery($query, $params);
@@ -445,7 +455,7 @@ readonly class Invitacion extends Grupo
 
 					LEFT JOIN invitaciones_directas
 						ON u.ulid_usuario = invitaciones_directas.ulid_usuario
-					WHERE invitaciones_directas.ulid_contacto = ?
+					WHERE invitaciones_directas.ulid_contacto = :session_ulid
 
 					GROUP BY
 						u.ulid_usuario,
@@ -461,7 +471,7 @@ readonly class Invitacion extends Grupo
 
 					LEFT JOIN invitaciones_grupales
 						ON invitaciones_grupales.ulid_grupo = g.ulid_grupo
-					WHERE invitaciones_grupales.ulid_usuario = ?
+					WHERE invitaciones_grupales.ulid_usuario = :session_ulid
 
 					GROUP BY
 						g.ulid_grupo,
@@ -472,12 +482,11 @@ readonly class Invitacion extends Grupo
 		// 	fecha_creacion DESC,
 		// 	nombre ASC";
 
-		$params = [
-			$this->session_ulid,
-			$this->session_ulid
-		];
+		$params = ["session_ulid" => $this->session_ulid];
 
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 		$invitaciones = $this->executeQuery($query, $params, SqlReturn::FetchAll);
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 		return $invitaciones;
 	}
@@ -517,30 +526,30 @@ readonly class Invitacion extends Grupo
 				SELECT 1
 				FROM contactos_grupales cg
 				WHERE cg.ulid_usuario = u.ulid_usuario
-				AND cg.ulid_grupo = ?
+				AND cg.ulid_grupo = :ulid_grupo
 			)
 			AND NOT EXISTS (
 				SELECT 1
 				FROM invitaciones_grupales ig
 				WHERE ig.ulid_usuario = u.ulid_usuario
-				AND ig.ulid_grupo = ?
+				AND ig.ulid_grupo = :ulid_grupo
 			)
 			AND EXISTS (
 				SELECT 1
 				FROM contactos_directos cd
-				WHERE cd.ulid_min = LEAST(?, u.ulid_usuario)
-				AND cd.ulid_max = GREATEST(?, u.ulid_usuario)
+				WHERE cd.ulid_min = LEAST(:session_ulid, u.ulid_usuario)
+				AND cd.ulid_max = GREATEST(:session_ulid, u.ulid_usuario)
 			)
 			ORDER BY u.nombre_usuario ASC";
 
 		$params = [
-			$this->ulid_grupo,
-			$this->ulid_grupo,
-			$this->session_ulid,
-			$this->session_ulid
+			"ulid_grupo" => $this->ulid_grupo,
+			"session_ulid" => $this->session_ulid
 		];
 
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 		$contactosInvitables = $this->executeQuery($query, $params, SqlReturn::FetchAll);
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 		return $contactosInvitables;
 	}

@@ -118,12 +118,6 @@ abstract readonly class Auth extends Database
 
 	// protected function authEndpoi(): void
 
-	// {
-	// 	session_start();
-
-	// 	// ... después de verificar usuario y contraseña ...
-	// 	$_SESSION['usuario_id'] = $usuario['id'];
-
 	// 	// Obtener el ID de sesión actual de PHP
 	// 	$sesion_actual = session_id();
 
@@ -135,12 +129,6 @@ abstract readonly class Auth extends Database
 	// protected function authEnd(): void
 	// {
 	// 	session_start();
-
-	// 	// Verificar si el usuario ha iniciado sesión
-	// 	if (!isset($_SESSION['usuario_id'])) {
-	// 		header("Location: login.php");
-	// 		exit;
-	// 	}
 
 	// 	// Obtener el Session ID registrado en la base de datos para este usuario
 	// 	$stmt = $pdo->prepare("SELECT session_id FROM usuarios WHERE id = ?");
