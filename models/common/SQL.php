@@ -69,7 +69,6 @@ abstract readonly class SQL extends Auth
 	// ============================================================================
 	public function executeQuery(string $query, array $params, ?SqlReturn $fetchMode = null): string|int|float|array|bool|null
 	{
-		// try {
 		$stmt = $this->connection->prepare($query);
 		$stmt->execute($params);
 
@@ -80,9 +79,5 @@ abstract readonly class SQL extends Auth
 			SqlReturn::Exists      => (bool) $stmt->fetchColumn(),
 			default                => null
 		};
-		// } catch (PDOException $e) {
-		// 	// Aquí puedes centralizar el manejo de errores de base de datos de tu API
-		// 	$this->integrityErrorSetup(500, "Error interno en la base de datos.");
-		// }
 	}
 }
