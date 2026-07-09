@@ -20,8 +20,8 @@ readonly class Usuario extends Validator
 	// ============================================================================
 	private function generarCodigo($length = 6)
 	{
-		$chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-		$code = '';
+		$chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+		$code = "";
 		for ($i = 0; $i < $length; $i++) {
 			$code .= $chars[random_int(0, strlen($chars) - 1)];
 		}
@@ -34,7 +34,7 @@ readonly class Usuario extends Validator
 	public function createUsuario(): void
 	{
 		$this->setProperties([
-			fn() => $this->setNombre('nombre_usuario'),
+			fn() => $this->setNombre("nombre_usuario"),
 			fn() => $this->setPassword("password")
 		]);
 
@@ -52,10 +52,10 @@ readonly class Usuario extends Validator
 			$codigo_contacto = $this->generarCodigo();
 
 			$params = [
-				":ulid_usuario" => $this->ulid_usuario,
-				":nombre_usuario" => $this->nombre_usuario,
-				":password" => password_hash($this->password, PASSWORD_DEFAULT),
-				":codigo_contact" => $codigo_contacto
+				"ulid_usuario" => $this->ulid_usuario,
+				"nombre_usuario" => $this->nombre_usuario,
+				"password" => password_hash($this->password, PASSWORD_DEFAULT),
+				"codigo_contacto" => $codigo_contacto
 			];
 
 			try {
@@ -76,7 +76,7 @@ readonly class Usuario extends Validator
 			$this->sendOkResponse(201);
 		}
 
-		$this->integrityErrorSetup(500, 'No se pudo generar un código único. Inténtalo de nuevo.');
+		$this->integrityErrorSetup(500, "No se pudo generar un código único. Inténtalo de nuevo.");
 	}
 
 	// ============================================================================
@@ -85,7 +85,7 @@ readonly class Usuario extends Validator
 	public function login(): void
 	{
 		$this->setProperties([
-			fn() => $this->setNombre('nombre_usuario'),
+			fn() => $this->setNombre("nombre_usuario"),
 			fn() => $this->setPassword("password")
 		]);
 
@@ -94,15 +94,15 @@ readonly class Usuario extends Validator
 			FROM usuarios
 			WHERE nombre_usuario = :nombre_usuario";
 
-		$params = [":nombre_usuario" => $this->nombre_usuario];
+		$params = ["nombre_usuario" => $this->nombre_usuario];
 
 		$usuario = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
-		if (!$usuario || !password_verify($this->password, $usuario['password'])) {
+		if (!$usuario || !password_verify($this->password, $usuario["password"])) {
 			$this->integrityErrorSetup(401, "El usuario o la contraseña son incorrectos.");
 		}
 
-		$this->writeSession($usuario['ulid_usuario']);
+		$this->writeSession($usuario["ulid_usuario"]);
 		$this->sendOkResponse(200);
 	}
 
@@ -128,7 +128,7 @@ readonly class Usuario extends Validator
 			FROM usuarios
 			WHERE ulid_usuario = :session_ulid";
 
-		$params = [':session_ulid' => $this->session_ulid];
+		$params = ["session_ulid" => $this->session_ulid];
 
 		$usuario = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
@@ -146,7 +146,7 @@ readonly class Usuario extends Validator
 			"DELETE FROM usuarios
 			WHERE ulid_usuario = :session_ulid";
 
-		$params = [':session_ulid' => $this->session_ulid];
+		$params = ["session_ulid" => $this->session_ulid];
 
 		$this->executeQuery($query, $params);
 		$this->logout();
@@ -198,8 +198,8 @@ readonly class Usuario extends Validator
 			WHERE ulid_usuario = :session_ulid";
 
 		$params = [
-			":password" => password_hash($this->password, PASSWORD_DEFAULT),
-			":session_ulid" => $this->session_ulid
+			"password" => password_hash($this->password, PASSWORD_DEFAULT),
+			"session_ulid" => $this->session_ulid
 		];
 
 		$this->executeQuery($query, $params);

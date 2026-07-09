@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/Database.php';
+require_once __DIR__ . "/Database.php";
 
 abstract readonly class Auth extends Database
 {
 	protected ?string $session_ulid;
 
 	protected const array SESSION_BASE_OPTIONS = [
-		'cookie_lifetime' => 0,          // La cookie expira al cerrar el navegador
-		'cookie_secure'   => true,       // Solo se envía a través de HTTPS (Obligatorio)
-		'cookie_httponly' => true,       // Bloquea el acceso a la cookie desde JavaScript (Evita XSS)
-		'cookie_samesite' => 'Lax',      // Mitiga ataques CSRF (Cross-Site Request Forgery)
-		'use_only_cookies' => true,      // Evita que el ID de sesión se pase por la URL
-		'use_strict_mode' => true,        // Rechaza IDs de sesión inicializados por el usuario
+		"cookie_lifetime" => 0,          // La cookie expira al cerrar el navegador
+		"cookie_secure" => true,       // Solo se envía a través de HTTPS (Obligatorio)
+		"cookie_httponly" => true,       // Bloquea el acceso a la cookie desde JavaScript (Evita XSS)
+		"cookie_samesite" => 'Lax',      // Mitiga ataques CSRF (Cross-Site Request Forgery)
+		"use_only_cookies" => true,      // Evita que el ID de sesión se pase por la URL
+		"use_strict_mode" => true,        // Rechaza IDs de sesión inicializados por el usuario
 	];
 
 	// protected const array READ_ONLY_OPTIONS = [
@@ -34,7 +34,7 @@ abstract readonly class Auth extends Database
 	protected function readSession(): void
 	{
 		session_start(self::SESSION_BASE_OPTIONS);
-		$this->session_ulid = $_SESSION['ulid_usuario'] ?? null;
+		$this->session_ulid = $_SESSION["ulid_usuario"] ?? null;
 		session_write_close();
 	}
 
@@ -45,7 +45,7 @@ abstract readonly class Auth extends Database
 	{
 		session_start(self::SESSION_BASE_OPTIONS);
 		session_regenerate_id(true);
-		$_SESSION['ulid_usuario'] = $session_ulid;
+		$_SESSION["ulid_usuario"] = $session_ulid;
 		session_write_close();
 	}
 

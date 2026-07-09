@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/Env.php';
+require_once __DIR__ . "/Env.php";
 
 abstract readonly class Sanitizer extends Env
 {
@@ -19,7 +19,7 @@ abstract readonly class Sanitizer extends Env
     private function sanitizeValue(mixed $value): string|array
     {
         if (is_array($value)) {
-            return array_map([$this, 'sanitizeValue'], $value);
+            return array_map([$this, "sanitizeValue"], $value);
         }
 
         if ($value === null) {
@@ -30,7 +30,7 @@ abstract readonly class Sanitizer extends Env
         |> trim(...)
         |> stripslashes(...);
 
-        return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5, "UTF-8");
     }
 
     // ============================================================================
@@ -38,7 +38,7 @@ abstract readonly class Sanitizer extends Env
     // ============================================================================
     private function sanitizeGlobals(): void
     {
-        $globals = ['_GET', '_POST', '_REQUEST', '_COOKIE'];
+        $globals = ["_GET", "_POST", "_REQUEST", "_COOKIE"];
 
         foreach ($globals as $global) {
             if (isset($GLOBALS[$global]) && is_array($GLOBALS[$global])) {

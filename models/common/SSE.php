@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/Sanitizer.php';
-require_once __DIR__ . '/SSEState.php';
+require_once __DIR__ . "/Sanitizer.php";
+require_once __DIR__ . "/SSEState.php";
 
 abstract readonly class SSE extends Sanitizer
 {
@@ -21,8 +21,8 @@ abstract readonly class SSE extends Sanitizer
 	// ============================================================================
 	private function getLastEventId(): ?string
 	{
-		return isset($_SERVER['HTTP_LAST_EVENT_ID'])
-			? $_SERVER['HTTP_LAST_EVENT_ID']
+		return isset($_SERVER["HTTP_LAST_EVENT_ID"])
+			? $_SERVER["HTTP_LAST_EVENT_ID"]
 			: null;
 	}
 
@@ -39,9 +39,9 @@ abstract readonly class SSE extends Sanitizer
 
 		foreach ($this->state->eventBuffer as $id => $event) {
 			if ($id > $lastId) {
-				echo "id: {$event['id']}\n";
-				echo "event: {$event['event']}\n";
-				echo "data: " . json_encode($event['data'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
+				echo "id: {$event["id"]}\n";
+				echo "event: {$event["event"]}\n";
+				echo "data: " . json_encode($event["data"], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n\n";
 			}
 		}
 	}
@@ -52,7 +52,7 @@ abstract readonly class SSE extends Sanitizer
 	protected function setSSE(callable $function): void
 	{
 		header("Content-Type: text/event-stream");
-		header('Cache-Control: no-cache');
+		header("Cache-Control: no-cache");
 		header("Connection: keep-alive");
 		header("Content-Encoding: none");
 		header("X-Accel-Buffering: no"); // Evita el búfer en proxies externos

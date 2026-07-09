@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/Auth.php';
+require_once __DIR__ . "/Auth.php";
 
 enum SqlReturn
 {
@@ -14,8 +14,8 @@ enum SqlReturn
 
 abstract readonly class SQL extends Auth
 {
-	protected const string ISO8601_SQL_FORMAT = "'%Y-%m-%dT%H:%i:%sZ'";
-	private const string BASE32_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+	protected const string ISO8601_SQL_FORMAT = "%Y-%m-%dT%H:%i:%sZ";
+	private const string BASE32_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
 	protected function __construct()
 	{
@@ -27,7 +27,7 @@ abstract readonly class SQL extends Auth
 	// ============================================================================
 	private function encodeBase32(int $value): string
 	{
-		$encoded = '';
+		$encoded = "";
 		for ($i = 0; $i < 10; $i++) {
 			$encoded = self::BASE32_ALPHABET[$value % 32] . $encoded;
 			$value = intdiv($value, 32);
@@ -46,7 +46,7 @@ abstract readonly class SQL extends Auth
 
 		// 2. Generar aleatoriedad segura de golpe en lugar de un bucle lento
 		$bytes = random_bytes(10);
-		$rand = '';
+		$rand = "";
 
 		for ($i = 0; $i < 16; $i++) {
 			$byteIndex = (int) ($i * 5 / 8);

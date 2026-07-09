@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/SSE.php';
+require_once __DIR__ . "/SSE.php";
 
 abstract readonly class Database extends SSE
 {
@@ -18,10 +18,10 @@ abstract readonly class Database extends SSE
 
 		// Nota de seguridad: getenv() puede fallar en entornos de producción específicos (como FPM).
 		// Si notas que da vacío, es mejor usar la superglobal $_ENV['HOSTNAME'].
-		$this->hostname = getenv('HOSTNAME') ?: '';
-		$this->username = getenv('USERNAME') ?: '';
-		$this->password = getenv('PASSWORD') ?: '';
-		$this->database = getenv('DATABASE') ?: '';
+		$this->hostname = getenv("HOSTNAME");
+		$this->username = getenv("USERNAME");
+		$this->password = getenv("PASSWORD");
+		$this->database = getenv("DATABASE");
 		$this->setConnection();
 	}
 
@@ -46,11 +46,9 @@ abstract readonly class Database extends SSE
 		];
 
 		try {
-			// 3. Instanciamos la conexión PDO pasándole los parámetros y opciones
 			$this->connection = new PDO($dsn, $this->username, $this->password, $options);
-		} catch (PDOException $e) {
-			// Capturamos la excepción específica de PDO y sanitizamos el mensaje para producción
-			$this->integrityErrorSetup(500, "Error de conexión al servidor de datos. Código: {$e->getCode()}");
+		} catch (PDOException $error) {
+			$this->integrityErrorSetup(500, "Error de conexión al servidor de datos. Código: {$error->getCode()}");
 		}
 	}
 }
