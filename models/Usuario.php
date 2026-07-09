@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/common/Setter.php';
+require_once __DIR__ . '/common/Request.php';
 
-readonly class Usuario extends Setter
+readonly class Usuario extends Request
 {
 	protected string $nombre_usuario;
 	protected string $password;
