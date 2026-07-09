@@ -112,9 +112,7 @@ readonly class Usuario extends Setter
 	public function logout(): void
 	{
 		$this->authEndpoint();
-
 		$this->destroySession();
-
 		$this->sendOkResponse(204);
 	}
 
@@ -151,7 +149,6 @@ readonly class Usuario extends Setter
 		$params = [['s', $this->session_ulid]];
 
 		$this->executeQuery($query, $params);
-
 		$this->logout();
 	}
 
@@ -183,7 +180,6 @@ readonly class Usuario extends Setter
 		}
 
 		$this->regenerateSession();
-
 		$this->sendOkResponse(200);
 	}
 
@@ -207,9 +203,7 @@ readonly class Usuario extends Setter
 		];
 
 		$this->executeQuery($query, $params);
-
 		$this->regenerateSession();
-
 		$this->sendOkResponse(200);
 	}
 }

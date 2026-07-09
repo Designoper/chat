@@ -72,7 +72,7 @@ abstract readonly class Setter extends File
 	{
 		$value = $_POST[$name] ?? null;
 		$codigo_length = 6;
-		$error_message = "El campo $name no puede estar vacío y debe contener $codigo_length carácteres.";
+		$error_message = "El campo $name no puede estar vacío y debe contener exactamente $codigo_length carácteres.";
 
 		empty($value) || strlen($value) !== $codigo_length
 			? $this->errors->setValidationError($error_message)
@@ -158,6 +158,20 @@ abstract readonly class Setter extends File
 	}
 
 	// ============================================================================
+	// MARK: GET MAGIC NUMBER
+	// ============================================================================
+	private function getMagicNumber(string $filename): string
+	{
+		$stream = fopen($filename, 'rb');
+		$bytes = fread($stream, 32);
+		fclose($stream);
+
+		$magicNumber = bin2hex($bytes);
+
+		return $magicNumber;
+	}
+
+	// ============================================================================
 	// MARK: DETECTAR TIPO ARCHIVO
 	// ============================================================================
 	private function detectarTipoArchivo(string $ruta, string $nombreOriginal): ?string
@@ -176,37 +190,32 @@ abstract readonly class Setter extends File
 			return 'audio';
 		}
 
-		// --- 1. Magic numbers ---
-		$fh = fopen($ruta, 'rb');
-		$bytes = fread($fh, 32);
-		fclose($fh);
-
-		$magic = bin2hex($bytes);
+		$magicNumber = $this->getMagicNumber($ruta);
 
 		// Imágenes
-		if (str_starts_with($magic, 'ffd8ff')) return 'image'; // JPEG
-		if (str_starts_with($magic, '89504e47')) return 'image'; // PNG
-		if (str_starts_with($magic, '47494638')) return 'image'; // GIF
-		if (str_starts_with($magic, '52494646') && strpos($magic, '57454250') !== false) return 'image'; // WebP
+		if (str_starts_with($magicNumber, 'ffd8ff')) return 'image'; // JPEG
+		if (str_starts_with($magicNumber, '89504e47')) return 'image'; // PNG
+		if (str_starts_with($magicNumber, '47494638')) return 'image'; // GIF
+		if (str_starts_with($magicNumber, '52494646') && strpos($magicNumber, '57454250') !== false) return 'image'; // WebP
 
 		// AVIF (ftypavif / ftypavis)
 		if (
-			strpos($magic, '6674797061766966') !== false ||
-			strpos($magic, '6674797061766973') !== false
+			strpos($magicNumber, '6674797061766966') !== false ||
+			strpos($magicNumber, '6674797061766973') !== false
 		) return 'image';
 
 		// Audio
-		if (str_starts_with($magic, '494433')) return 'audio'; // MP3 ID3
-		if (str_starts_with($magic, '4f676753')) return 'audio'; // OGG
-		if (str_starts_with($magic, '52494646') && strpos($magic, '57415645') !== false) return 'audio'; // WAV
+		if (str_starts_with($magicNumber, '494433')) return 'audio'; // MP3 ID3
+		if (str_starts_with($magicNumber, '4f676753')) return 'audio'; // OGG
+		if (str_starts_with($magicNumber, '52494646') && strpos($magicNumber, '57415645') !== false) return 'audio'; // WAV
 
 		// MP4 / MOV / M4A
-		if (strpos($magic, '667479706d7034') !== false) {
+		if (strpos($magicNumber, '667479706d7034') !== false) {
 			return 'video';
 		}
 
 		// WEBM / MKV (cabecera EBML)
-		if (str_starts_with($magic, '1a45dfa3')) {
+		if (str_starts_with($magicNumber, '1a45dfa3')) {
 			return 'video';
 		}
 
