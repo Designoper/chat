@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/SQL.php';
+require_once __DIR__ . "/SQL.php";
 
 enum FileTypes: string
 {
-    case Image = 'image';
-    case Audio = 'audio';
-    case Video = 'video';
-    case Text = 'text';
+    case Image = "image";
+    case Audio = "audio";
+    case Video = "video";
+    case Text = "text";
 }
 
 abstract readonly class File extends SQL
 {
-    private const string COMPRESSED_IMAGE_EXTENSION = 'avif';
-    private const string COMMON_FILE_PATH = '/private/';
-    protected const string DEFAULT_IMAGE = self::COMMON_FILE_PATH . 'default/default.jpg';
+    private const string COMPRESSED_IMAGE_EXTENSION = "avif";
+    private const string COMMON_FILE_PATH = "/private/";
+    protected const string DEFAULT_IMAGE = self::COMMON_FILE_PATH . "default/default.jpg";
 
     protected string $extraDirectories;
     protected string $uniqueFilename;
@@ -44,21 +44,21 @@ abstract readonly class File extends SQL
 
         $newArray = [];
 
-        if (is_array($files['name'])) {
-            $count = count($files['name']);
+        if (is_array($files["name"])) {
+            $count = count($files["name"]);
             for ($i = 0; $i < $count; $i++) {
-                if ((int) $files['error'][$i] === 0) {
+                if ((int) $files["error"][$i] === 0) {
                     $newArray[] = [
-                        'name'     => $files['name'][$i],
-                        'type'     => $files['type'][$i],
-                        'tmp_name' => $files['tmp_name'][$i],
-                        'error'    => $files['error'][$i],
-                        'size'     => $files['size'][$i],
+                        "name"     => $files["name"][$i],
+                        "type"     => $files["type"][$i],
+                        "tmp_name" => $files["tmp_name"][$i],
+                        "error"    => $files["error"][$i],
+                        "size"     => $files["size"][$i],
                     ];
                 }
             }
         } else {
-            if ((int) $files['error'] === 0) {
+            if ((int) $files["error"] === 0) {
                 $newArray[] = $files;
             }
         }
@@ -72,13 +72,13 @@ abstract readonly class File extends SQL
     private function setUniqueFilename(string $originalFilename, FileTypes $filetype): void
     {
         if ($filetype === FileTypes::Image) {
-            $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION)) === 'gif'
-                ? 'gif'
+            $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION)) === "gif"
+                ? "gif"
                 : self::COMPRESSED_IMAGE_EXTENSION;
         } else $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION));
 
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
-        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
+        $this->uniqueFilename = $filename . "-" . bin2hex(random_bytes(2)) . "." . $extension;
     }
 
     // ============================================================================
@@ -90,7 +90,7 @@ abstract readonly class File extends SQL
             return null;
         }
 
-        $this->setUniqueFilename($this->file['name'], $filetype);
+        $this->setUniqueFilename($this->file["name"], $filetype);
 
         return $this->extraDirectories . $this->uniqueFilename;
     }
@@ -104,7 +104,7 @@ abstract readonly class File extends SQL
             return;
         }
 
-        $folderDestination = $_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH . $this->extraDirectories;
+        $folderDestination = $_SERVER["DOCUMENT_ROOT"] . self::COMMON_FILE_PATH . $this->extraDirectories;
 
         if (!file_exists($folderDestination)) {
             mkdir($folderDestination, 0755, true);
@@ -113,10 +113,10 @@ abstract readonly class File extends SQL
         $finalDestination = $folderDestination . $this->uniqueFilename;
 
         // 1. Forzamos minúsculas para evitar fallos con extensiones tipo .GIF o .Png
-        $extension = strtolower(pathinfo($this->file['name'], PATHINFO_EXTENSION));
+        $extension = strtolower(pathinfo($this->file["name"], PATHINFO_EXTENSION));
 
-        if ($filetype === FileTypes::Image && $extension !== 'gif') {
-            $optimized = new Imagick($this->file['tmp_name']);
+        if ($filetype === FileTypes::Image && $extension !== "gif") {
+            $optimized = new Imagick($this->file["tmp_name"]);
             // Eliminamos perfiles EXIF/color innecesarios para reducir drásticamente el peso
             $optimized->stripImage();
             $ancho_original = $optimized->getImageWidth();
@@ -136,7 +136,7 @@ abstract readonly class File extends SQL
             return;
         }
 
-        move_uploaded_file($this->file['tmp_name'], $finalDestination);
+        move_uploaded_file($this->file["tmp_name"], $finalDestination);
     }
 
     // ============================================================================
@@ -152,7 +152,7 @@ abstract readonly class File extends SQL
             return $fileUrl;
         }
 
-        $this->setUniqueFilename($this->file['name'], $filetype);
+        $this->setUniqueFilename($this->file["name"], $filetype);
 
         $imagePath = self::COMMON_FILE_PATH . $this->extraDirectories . $this->uniqueFilename;
 
@@ -182,7 +182,7 @@ abstract readonly class File extends SQL
     protected function deleteFile(?string $filePath): void
     {
         if ($filePath !== null) {
-            unlink($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH . $filePath);
+            unlink($_SERVER["DOCUMENT_ROOT"] . self::COMMON_FILE_PATH . $filePath);
         }
     }
 
@@ -191,7 +191,7 @@ abstract readonly class File extends SQL
     // ============================================================================
     protected function deleteAllFiles(): void
     {
-        $folderPath = $_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH . $this->extraDirectories;
+        $folderPath = $_SERVER["DOCUMENT_ROOT"] . self::COMMON_FILE_PATH . $this->extraDirectories;
 
         if (!is_dir($folderPath)) {
             return;
@@ -214,9 +214,9 @@ abstract readonly class File extends SQL
         $query =
             "SELECT $column
             FROM $table
-            WHERE $primaryKey = ?";
+            WHERE $primaryKey = :primary_key_value";
 
-        $params = [['s', $primaryKeyValue]];
+        $params = ["primary_key_value" => $primaryKeyValue];
 
         $fileUrl = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
@@ -239,14 +239,14 @@ abstract readonly class File extends SQL
     // ============================================================================
     protected function showFile(): void
     {
-        $base = realpath($_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH);
+        $base = realpath($_SERVER["DOCUMENT_ROOT"] . self::COMMON_FILE_PATH);
 
         if ($base === false) {
             $this->integrityErrorSetup(500, "Tenemos problemas técnicos para encontrar esa ruta");
         }
 
         // Normalizar la ruta solicitada
-        $filename = realpath($base . '/' . $_GET['f']);
+        $filename = realpath($base . "/" . $_GET["f"]);
 
         // Validación: el archivo debe estar dentro de /private
         if (!$filename || !str_starts_with($filename, $base)) {
@@ -260,9 +260,9 @@ abstract readonly class File extends SQL
         $mime = $this->obtainMime($filename);
 
         if (
-            !str_starts_with($mime, 'image/') &&
-            !str_starts_with($mime, 'audio/') &&
-            !str_starts_with($mime, 'video/')
+            !str_starts_with($mime, "image/") &&
+            !str_starts_with($mime, "audio/") &&
+            !str_starts_with($mime, "video/")
         ) {
             $this->integrityErrorSetup(403, "Tipo de archivo no permitido.");
         }
