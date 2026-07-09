@@ -87,20 +87,22 @@ final readonly class Router
     // ============================================================================
     private function executeRoute(): void
     {
-        $requestUri = $_SERVER['REQUEST_URI'];
-        $protocol = $_SERVER['REQUEST_SCHEME'];
-        $host = $_SERVER['HTTP_HOST'];
+        // 1. Obtener solo el paso limpio de la URI (sin ?query_string)
+        $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+        $protocol = $_SERVER['REQUEST_SCHEME'] ?? 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $domain = $protocol . '://' . $host;
-        $completeUrl = $domain . $requestUri;
+        $completeUrl = $domain . $_SERVER['REQUEST_URI'];
 
         $method = $_SERVER['REQUEST_METHOD'];
 
         switch ($method) {
             case 'GET':
             case 'POST':
-
                 foreach ($this->routes as $route) {
-                    if ($route['method'] === $method && preg_match("#^{$route['path']}#", $requestUri)) {
+                    // 2. Usar comparación estricta en lugar de preg_match
+                    if ($route['method'] === $method && $route['path'] === $requestUri) {
                         $route['handler']();
                         return;
                     }
@@ -110,16 +112,15 @@ final readonly class Router
                 header("Content-Type: application/json");
                 echo json_encode(
                     "La ruta $method solicitada no existe: $completeUrl",
-                    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
                 );
-
                 return;
 
             default:
                 http_response_code(405);
                 header("Allow: GET, POST");
                 header("Content-Type: application/json");
-                echo json_encode("Solo se permiten solicitudes GET y POST.", JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                echo json_encode("Solo se permiten solicitudes GET y POST.", JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         }
     }
 }

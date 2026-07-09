@@ -56,7 +56,7 @@ abstract readonly class Response
         header('Content-Type: application/json');
 
         if (isset($this->response)) {
-            echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
             exit;
         }
 
@@ -74,7 +74,7 @@ abstract readonly class Response
         header('Content-Type: application/json');
 
         if (isset($this->response)) {
-            echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
             exit;
         }
 

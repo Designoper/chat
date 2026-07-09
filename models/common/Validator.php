@@ -32,7 +32,7 @@ abstract readonly class Validator extends File
 		$ulid_length = 26;
 		$error_message = "El campo $name no puede estar vacío y debe contener $ulid_length carácteres.";
 
-		strlen($value) !== $ulid_length
+		empty($value) || strlen($value) !== $ulid_length
 			? $this->errors->setValidationError($error_message)
 			: $this->$name = $value;
 	}
