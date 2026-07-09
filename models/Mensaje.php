@@ -62,13 +62,13 @@ readonly class Mensaje extends Contacto
 			"SELECT EXISTS(
 				SELECT 1
 				FROM mensajes
-				WHERE ulid_mensaje = ?
-				AND ulid_grupo = ?
+				WHERE ulid_mensaje = :ulid_mensaje
+				AND ulid_grupo = :ulid_grupo
 			)";
 
 		$params = [
-			$this->ulid_mensaje,
-			$this->ulid_grupo
+			"ulid_mensaje" => $this->ulid_mensaje,
+			"ulid_grupo" => $this->ulid_grupo
 		];
 
 		$mensaje_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -85,13 +85,13 @@ readonly class Mensaje extends Contacto
 	{
 		$config = match ($tipo_contacto) {
 			"contacto" => [
-				"ulid" => "ulid_contacto",
-				"tipo" => "directos",
+				"ulid"     => "ulid_contacto",
+				"tipo"     => "directos",
 				"security" => fn() => $this->isContacto(),
 			],
 			"grupo" => [
-				"ulid" => "ulid_grupo",
-				"tipo" => "grupales",
+				"ulid"     => "ulid_grupo",
+				"tipo"     => "grupales",
 				"security" => fn() => $this->isMiembroGrupo(),
 			]
 		};
@@ -100,19 +100,24 @@ readonly class Mensaje extends Contacto
 
 		$config["security"]();
 
+		// 1. Mantenemos la inyección de la tabla y columna dinámica {$config["..."]}
+		//    ya que SQL no permite parametrizar nombres de estructuras estructurales.
+		// 2. Renombramos el placeholder final para que coincida dinámicamente con la columna.
 		$query =
 			"SELECT COALESCE(
 				(
 					SELECT ulid_mensaje
 					FROM ultimos_mensajes_leidos_{$config["tipo"]}
-					WHERE ulid_usuario = ?
-					AND {$config["ulid"]} = ?
+					WHERE ulid_usuario = :session_ulid
+					AND {$config["ulid"]} = :{$config["ulid"]}
 				),
 			'') AS ulid_mensaje";
 
+		// 3. Estructuramos un array asociativo limpio. PDO emparejará automáticamente
+		//    las claves del array con los nombres de tus placeholders en el SQL.
 		$params = [
-			$this->session_ulid,
-			$this->{$config["ulid"]}
+			"session_ulid" => $this->session_ulid,
+			$config["ulid"] => $this->{$config["ulid"]}
 		];
 
 		$last_ulid = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
@@ -162,18 +167,20 @@ readonly class Mensaje extends Contacto
 
 		$query =
 			"INSERT INTO ultimos_mensajes_leidos_{$config["tipo"]} (ulid_usuario, {$config["ulid"]}, ulid_mensaje)
-			VALUES (?, ?, ?)
+			VALUES (:session_ulid, :{$config["ulid"]}, :ulid_mensaje)
 			ON DUPLICATE KEY
-			UPDATE ulid_mensaje = ?";
+			UPDATE ulid_mensaje = :ulid_mensaje";
 
 		$params = [
-			$this->session_ulid,
-			$this->{$config["ulid"]},
-			$this->ulid_mensaje,
-			$this->ulid_mensaje
+			"session_ulid" => $this->session_ulid,
+			$config["ulid"] => $this->{$config["ulid"]},
+			"ulid_mensaje" => $this->ulid_mensaje
 		];
 
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 		$this->executeQuery($query, $params);
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
 		$this->sendOkResponse(201);
 	}
 
@@ -205,28 +212,27 @@ readonly class Mensaje extends Contacto
 		$ulid_min = min($this->session_ulid, $this->ulid_contacto);
 		$ulid_max = max($this->session_ulid, $this->ulid_contacto);
 
-		$dateFormat = self::ISO8601_SQL_FORMAT;
-
 		$query =
 			"SELECT
 				mensajes.ulid_mensaje,
 				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
+				DATE_FORMAT(mensajes.fecha_creacion, :date_format) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
 			LEFT JOIN usuarios
 				ON mensajes.ulid_emisor = usuarios.ulid_usuario
 			WHERE (
-				LEAST(ulid_emisor, ulid_contacto) = ?
-				AND GREATEST(ulid_emisor, ulid_contacto) = ?
+				LEAST(ulid_emisor, ulid_contacto) = :ulid_min
+				AND GREATEST(ulid_emisor, ulid_contacto) = :ulid_max
 			)
 			ORDER BY fecha_creacion ASC";
 
 		$params = [
-			$ulid_min,
-			$ulid_max
+			"date_format" => self::ISO8601_SQL_FORMAT,
+			"ulid_min" => $ulid_min,
+			"ulid_max" => $ulid_max
 		];
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
@@ -259,23 +265,24 @@ readonly class Mensaje extends Contacto
 
 		$this->isMiembroGrupo();
 
-		$dateFormat = self::ISO8601_SQL_FORMAT;
-
 		$query =
 			"SELECT
 				mensajes.ulid_mensaje,
 				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
+				DATE_FORMAT(mensajes.fecha_creacion, :date_format) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
 			LEFT JOIN usuarios
 				ON mensajes.ulid_emisor = usuarios.ulid_usuario
-			WHERE mensajes.ulid_grupo = ?
+			WHERE mensajes.ulid_grupo = :ulid_grupo
 			ORDER BY fecha_creacion ASC";
 
-		$params = [$this->ulid_grupo];
+		$params = [
+			"date_format" => self::ISO8601_SQL_FORMAT,
+			"ulid_grupo" => $this->ulid_grupo
+		];
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
 
@@ -343,14 +350,14 @@ readonly class Mensaje extends Contacto
 
 		$query =
 			"INSERT INTO mensajes (ulid_mensaje, tipo_mensaje, contenido, ulid_emisor, {$contacto["ulid"]})
-			VALUES (?, ?, ?, ?, ?)";
+			VALUES (:ulid_mensaje, :tipo_mensaje, :contenido, :session_ulid, :{$contacto["ulid"]})";
 
 		$params = [
-			$this->ulid_mensaje,
-			$filetype->value,
-			$contenido,
-			$this->session_ulid,
-			$this->{$contacto["ulid"]}
+			"ulid_mensaje" => $this->ulid_mensaje,
+			"tipo_mensaje" => $filetype->value,
+			"contenido" => $contenido,
+			"session_ulid" => $this->session_ulid,
+			$contacto["ulid"] => $this->{$contacto["ulid"]}
 		];
 
 		$this->executeQuery($query, $params);
@@ -433,13 +440,13 @@ readonly class Mensaje extends Contacto
 			"SELECT EXISTS(
 				SELECT 1
 				FROM mensajes
-				WHERE ulid_mensaje = ?
-				AND ulid_emisor = ?
+				WHERE ulid_mensaje = :ulid_mensaje
+				AND ulid_emisor = :session_ulid
 			)";
 
 		$params = [
-			$this->ulid_mensaje,
-			$this->session_ulid
+			"ulid_mensaje" => $this->ulid_mensaje,
+			"session_ulid" => $this->session_ulid
 		];
 
 		$autor_mensaje = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -462,9 +469,9 @@ readonly class Mensaje extends Contacto
 
 		$query =
 			"DELETE FROM mensajes
-			WHERE ulid_mensaje = ?";
+			WHERE ulid_mensaje = :ulid_mensaje";
 
-		$params = [$this->ulid_mensaje];
+		$params = ["ulid_mensaje" => $this->ulid_mensaje];
 
 		$this->executeQuery($query, $params);
 
@@ -480,13 +487,11 @@ readonly class Mensaje extends Contacto
 		$ulid_min = min($this->session_ulid, $this->ulid_contacto);
 		$ulid_max = max($this->session_ulid, $this->ulid_contacto);
 
-		$dateFormat = self::ISO8601_SQL_FORMAT;
-
 		$query =
 			"SELECT mensajes.ulid_mensaje,
 				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
+				DATE_FORMAT(mensajes.fecha_creacion, :date_format) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
@@ -495,20 +500,21 @@ readonly class Mensaje extends Contacto
 			WHERE mensajes.ulid_mensaje > COALESCE((
 				SELECT ulid_mensaje
 				FROM ultimos_mensajes_leidos_directos
-				WHERE ulid_usuario = ?
-				AND ulid_contacto = ?
+				WHERE ulid_usuario = :session_ulid
+				AND ulid_contacto = :ulid_contacto
 			), '')
 			AND (
-				LEAST(ulid_emisor, ulid_contacto) = ?
-				AND GREATEST(ulid_emisor, ulid_contacto) = ?
+				LEAST(ulid_emisor, ulid_contacto) = :ulid_min
+				AND GREATEST(ulid_emisor, ulid_contacto) = :ulid_max
 			)
 			ORDER BY mensajes.ulid_mensaje ASC";
 
 		$params = [
-			$this->session_ulid,
-			$this->ulid_contacto,
-			$ulid_min,
-			$ulid_max
+			"date_format" => self::ISO8601_SQL_FORMAT,
+			"session_ulid" => $this->session_ulid,
+			"ulid_contacto" => $this->ulid_contacto,
+			"ulid_min" => $ulid_min,
+			"ulid_max" => $ulid_max
 		];
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
@@ -521,13 +527,11 @@ readonly class Mensaje extends Contacto
 	// ============================================================================
 	private function getNuevosMensajesGrupales(): array
 	{
-		$dateFormat = self::ISO8601_SQL_FORMAT;
-
 		$query =
 			"SELECT mensajes.ulid_mensaje,
 				mensajes.tipo_mensaje,
 				mensajes.contenido,
-				DATE_FORMAT(mensajes.fecha_creacion, $dateFormat) AS fecha_creacion,
+				DATE_FORMAT(mensajes.fecha_creacion, :date_format) AS fecha_creacion,
 				mensajes.ulid_emisor,
 				usuarios.nombre_usuario
 			FROM mensajes
@@ -536,19 +540,21 @@ readonly class Mensaje extends Contacto
 	        WHERE mensajes.ulid_mensaje > COALESCE((
 				SELECT ulid_mensaje
 				FROM ultimos_mensajes_leidos_grupales
-				WHERE ulid_usuario = ?
-				AND ulid_grupo = ?
+				WHERE ulid_usuario = :session_ulid
+				AND ulid_grupo = :ulid_grupo
 			), '')
-			AND mensajes.ulid_grupo = ?
+			AND mensajes.ulid_grupo = :ulid_grupo
 	        ORDER BY mensajes.ulid_mensaje ASC";
 
 		$params = [
-			$this->session_ulid,
-			$this->ulid_grupo,
-			$this->ulid_grupo
+			"date_format" => self::ISO8601_SQL_FORMAT,
+			"session_ulid" => $this->session_ulid,
+			"ulid_grupo" => $this->ulid_grupo
 		];
 
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
+		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 		return $mensajes;
 	}
