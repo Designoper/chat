@@ -121,7 +121,7 @@ abstract readonly class Setter extends File
 	// ============================================================================
 	// MARK: VALIDAR ARCHIVO SEGURO
 	// ============================================================================
-	private function validarArchivoSeguro(string $ruta, string $tipoDetectado, FileTypes $tipoEsperado): void
+	private function validarArchivoSeguro(string $filename, string $tipoDetectado, FileTypes $tipoEsperado): void
 	{
 		if ($tipoDetectado === null) {
 			$this->errors->setValidationError('No se pudo determinar el tipo de archivo.');
@@ -136,7 +136,7 @@ abstract readonly class Setter extends File
 		switch ($tipoDetectado) {
 
 			case 'image':
-				$info = @getimagesize($ruta);
+				$info = @getimagesize($filename);
 				if ($info === false) {
 					$this->errors->setValidationError('La imagen no es válida o está corrupta.');
 					$this->checkValidationErrors();
@@ -145,7 +145,7 @@ abstract readonly class Setter extends File
 
 			case 'audio':
 			case 'video':
-				if (filesize($ruta) < 1024) {
+				if (filesize($filename) < 1024) {
 					$this->errors->setValidationError('El archivo multimedia es demasiado pequeño para ser válido.');
 					$this->checkValidationErrors();
 				}
@@ -174,10 +174,10 @@ abstract readonly class Setter extends File
 	// ============================================================================
 	// MARK: DETECTAR TIPO ARCHIVO
 	// ============================================================================
-	private function detectarTipoArchivo(string $ruta, string $nombreOriginal): ?string
+	private function detectarTipoArchivo(string $filename, string $path): ?string
 	{
 		// --- 0. Extensión ---
-		$extension = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
+		$extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
 		// Bloqueo inmediato de SVG
 		if ($extension === 'svg') {
@@ -190,7 +190,7 @@ abstract readonly class Setter extends File
 			return 'audio';
 		}
 
-		$magicNumber = $this->getMagicNumber($ruta);
+		$magicNumber = $this->getMagicNumber($filename);
 
 		// Imágenes
 		if (str_starts_with($magicNumber, 'ffd8ff')) return 'image'; // JPEG
@@ -245,7 +245,7 @@ abstract readonly class Setter extends File
 		}
 
 		// --- 3. MIME ---
-		$mime = $this->obtainMime($ruta);
+		$mime = $this->obtainMime($filename);
 
 		if (str_starts_with($mime, 'image/')) return 'image';
 		if (str_starts_with($mime, 'audio/')) return 'audio';

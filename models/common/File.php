@@ -246,18 +246,18 @@ abstract readonly class File extends SQL
         }
 
         // Normalizar la ruta solicitada
-        $rutaSolicitada = realpath($base . '/' . $_GET['f']);
+        $filename = realpath($base . '/' . $_GET['f']);
 
         // Validación: el archivo debe estar dentro de /private
-        if (!$rutaSolicitada || !str_starts_with($rutaSolicitada, $base)) {
+        if (!$filename || !str_starts_with($filename, $base)) {
             $this->integrityErrorSetup(403, "Acceso no permitido.");
         }
 
-        if (!is_file($rutaSolicitada)) {
+        if (!is_file($filename)) {
             $this->integrityErrorSetup(403, "No puedes acceder a directorios.");
         }
 
-        $mime = $this->obtainMime($rutaSolicitada);
+        $mime = $this->obtainMime($filename);
 
         if (
             !str_starts_with($mime, 'image/') &&
@@ -267,8 +267,8 @@ abstract readonly class File extends SQL
             $this->integrityErrorSetup(403, "Tipo de archivo no permitido.");
         }
 
-        $mtime = filemtime($rutaSolicitada);
-        $size  = filesize($rutaSolicitada);
+        $mtime = filemtime($filename);
+        $size  = filesize($filename);
 
         // Enviar archivo
         header("Content-Type: $mime");
@@ -278,12 +278,12 @@ abstract readonly class File extends SQL
         header("Cache-Control: public, max-age=31536000, immutable");
         header("Last-Modified: " . gmdate("D, d M Y H:i:s", $mtime) . " GMT");
 
-        header("ETag: \"" . md5($rutaSolicitada . $mtime . $size) . "\"");
+        header("ETag: \"" . md5($filename . $mtime . $size) . "\"");
         header("Expires: " . gmdate("D, d M Y H:i:s", time() + 31536000) . " GMT");
 
         header("Accept-Ranges: bytes");
 
-        readfile($rutaSolicitada);
+        readfile($filename);
         exit;
     }
 }
