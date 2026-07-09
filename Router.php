@@ -109,7 +109,7 @@ final readonly class Router
                 }
 
                 http_response_code(404);
-                header("Content-Type: application/json");
+                header("Content-Type: application/json; charset=utf-8");
                 echo json_encode(
                     "La ruta $method solicitada no existe: $completeUrl",
                     JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
@@ -119,7 +119,7 @@ final readonly class Router
             default:
                 http_response_code(405);
                 header("Allow: GET, POST");
-                header("Content-Type: application/json");
+                header("Content-Type: application/json; charset=utf-8");
                 echo json_encode("Solo se permiten solicitudes GET y POST.", JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         }
     }

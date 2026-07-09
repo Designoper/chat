@@ -53,7 +53,7 @@ abstract readonly class Response
         $this->buildResponse();
 
         http_response_code($this->status);
-        header('Content-Type: application/json');
+        header("Content-Type: application/json; charset=utf-8");
 
         if (isset($this->response)) {
             echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
@@ -71,7 +71,7 @@ abstract readonly class Response
         $this->buildResponse();
 
         http_response_code($this->status);
-        header('Content-Type: application/json');
+        header("Content-Type: application/json; charset=utf-8");
 
         if (isset($this->response)) {
             echo json_encode($this->response, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
