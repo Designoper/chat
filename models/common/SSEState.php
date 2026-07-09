@@ -17,9 +17,9 @@ final class SSEState
 		$id = $this->nextEventId++;
 
 		$this->eventBuffer[$id] = [
-			'id'    => $id,
-			'event' => $event,
-			'data'  => $data,
+			"id"    => $id,
+			"event" => $event,
+			"data"  => $data,
 		];
 
 		// Mantener solo los últimos 100 eventos

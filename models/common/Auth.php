@@ -12,7 +12,7 @@ abstract readonly class Auth extends Database
 		"cookie_lifetime" => 0,          // La cookie expira al cerrar el navegador
 		"cookie_secure" => true,       // Solo se envía a través de HTTPS (Obligatorio)
 		"cookie_httponly" => true,       // Bloquea el acceso a la cookie desde JavaScript (Evita XSS)
-		"cookie_samesite" => 'Lax',      // Mitiga ataques CSRF (Cross-Site Request Forgery)
+		"cookie_samesite" => "Lax",      // Mitiga ataques CSRF (Cross-Site Request Forgery)
 		"use_only_cookies" => true,      // Evita que el ID de sesión se pase por la URL
 		"use_strict_mode" => true,        // Rechaza IDs de sesión inicializados por el usuario
 	];
