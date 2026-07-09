@@ -30,8 +30,8 @@ readonly class Grupo extends Usuario
 			)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_grupo]
+			$this->session_ulid,
+			$this->ulid_grupo
 		];
 
 		$fundador_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -55,8 +55,8 @@ readonly class Grupo extends Usuario
 			)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_grupo]
+			$this->session_ulid,
+			$this->ulid_grupo
 		];
 
 		$miembro_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -79,9 +79,9 @@ readonly class Grupo extends Usuario
 			VALUES (?, ?, ?)";
 
 		$params = [
-			['s', $this->ulid_grupo],
-			['s', $this->nombre_grupo],
-			['s', $this->session_ulid]
+			$this->ulid_grupo,
+			$this->nombre_grupo,
+			$this->session_ulid
 		];
 
 		try {
@@ -97,8 +97,8 @@ readonly class Grupo extends Usuario
 		 	VALUES (?, ?)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_grupo]
+			$this->session_ulid,
+			$this->ulid_grupo
 		];
 
 		$this->executeQuery($query, $params);
@@ -120,8 +120,8 @@ readonly class Grupo extends Usuario
 			AND ulid_grupo = ?";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_grupo]
+			$this->session_ulid,
+			$this->ulid_grupo
 		];
 
 		$this->executeQuery($query, $params);
@@ -141,7 +141,7 @@ readonly class Grupo extends Usuario
 			"DELETE FROM grupos
 			WHERE ulid_grupo = ?";
 
-		$params = [['s', $this->ulid_grupo]];
+		$params = [$this->ulid_grupo];
 
 		$this->executeQuery($query, $params);
 		$this->sendOkResponse(204);

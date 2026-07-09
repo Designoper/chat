@@ -52,10 +52,10 @@ readonly class Usuario extends Validator
 			$codigo = $this->generarCodigo();
 
 			$params = [
-				['s', $this->ulid_usuario],
-				['s', $this->nombre_usuario],
-				['s', password_hash($this->password, PASSWORD_DEFAULT)],
-				['s', $codigo]
+				$this->ulid_usuario,
+				$this->nombre_usuario,
+				password_hash($this->password, PASSWORD_DEFAULT),
+				$codigo
 			];
 
 			try {
@@ -94,7 +94,7 @@ readonly class Usuario extends Validator
 			FROM usuarios
 			WHERE nombre_usuario = ?";
 
-		$params = [['s', $this->nombre_usuario]];
+		$params = [$this->nombre_usuario];
 
 		$usuario = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
@@ -128,7 +128,7 @@ readonly class Usuario extends Validator
 			FROM usuarios
 			WHERE ulid_usuario = ?";
 
-		$params = [['s', $this->session_ulid]];
+		$params = [$this->session_ulid];
 
 		$usuario = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
 
@@ -146,7 +146,7 @@ readonly class Usuario extends Validator
 			"DELETE FROM usuarios
 			WHERE ulid_usuario = ?";
 
-		$params = [['s', $this->session_ulid]];
+		$params = [$this->session_ulid];
 
 		$this->executeQuery($query, $params);
 		$this->logout();
@@ -167,8 +167,8 @@ readonly class Usuario extends Validator
 			WHERE ulid_usuario = ?";
 
 		$params = [
-			['s', $this->nombre_usuario],
-			['s', $this->session_ulid]
+			$this->nombre_usuario,
+			$this->session_ulid
 		];
 
 		try {
@@ -198,8 +198,8 @@ readonly class Usuario extends Validator
 			WHERE ulid_usuario = ?";
 
 		$params = [
-			['s', password_hash($this->password, PASSWORD_DEFAULT)],
-			['s', $this->session_ulid]
+			password_hash($this->password, PASSWORD_DEFAULT),
+			$this->session_ulid
 		];
 
 		$this->executeQuery($query, $params);

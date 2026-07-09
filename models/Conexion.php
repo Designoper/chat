@@ -38,8 +38,8 @@ final readonly class Conexion extends Mensaje
 			UPDATE last_seen = CURRENT_TIMESTAMP";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_contacto]
+			$this->session_ulid,
+			$this->ulid_contacto
 		];
 
 		$this->executeQuery($query, $params);
@@ -60,8 +60,8 @@ final readonly class Conexion extends Mensaje
 			UPDATE last_seen = CURRENT_TIMESTAMP";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_grupo]
+			$this->session_ulid,
+			$this->ulid_grupo
 		];
 
 		$this->executeQuery($query, $params);
@@ -83,8 +83,8 @@ final readonly class Conexion extends Mensaje
 			AND conexion_directa.ulid_contacto = ?";
 
 		// $params = [
-		// 	['s', $this->session_ulid],
-		// 	['s', $this->ulid_contacto]
+		// 	$this->session_ulid,
+		// 	$this->ulid_contacto
 		// ];
 
 		$conexion = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
@@ -111,8 +111,8 @@ final readonly class Conexion extends Mensaje
 			ORDER BY usuarios.nombre_usuario ASC";
 
 		$params = [
-			['s', $this->ulid_grupo],
-			['s', $this->session_ulid]
+			$this->ulid_grupo,
+			$this->session_ulid
 		];
 
 		$conexion = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);

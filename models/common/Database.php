@@ -10,16 +10,18 @@ abstract readonly class Database extends SSE
 	private string $username;
 	private string $password;
 	private string $database;
-	protected mysqli $connection;
+	protected PDO $connection;
 
 	protected function __construct()
 	{
 		parent::__construct();
 
-		$this->hostname = getenv('HOSTNAME');
-		$this->username = getenv('USERNAME');
-		$this->password = getenv('PASSWORD');
-		$this->database = getenv('DATABASE');
+		// Nota de seguridad: getenv() puede fallar en entornos de producción específicos (como FPM).
+		// Si notas que da vacío, es mejor usar la superglobal $_ENV['HOSTNAME'].
+		$this->hostname = getenv('HOSTNAME') ?: '';
+		$this->username = getenv('USERNAME') ?: '';
+		$this->password = getenv('PASSWORD') ?: '';
+		$this->database = getenv('DATABASE') ?: '';
 		$this->setConnection();
 	}
 
@@ -28,19 +30,27 @@ abstract readonly class Database extends SSE
 	// ============================================================================
 	private function setConnection(): void
 	{
-		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+		// 1. Definimos el DSN especificando directamente el charset utf8mb4
+		$dsn = "mysql:host={$this->hostname};dbname={$this->database};charset=utf8mb4";
+
+		// 2. Configuramos las banderas críticas de comportamiento de PDO
+		$options = [
+			// Fuerza a PDO a lanzar excepciones (PDOException) ante cualquier error de SQL
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+
+			// Desactiva la emulación. Obliga a MySQL a usar consultas preparadas reales a nivel binario
+			PDO::ATTR_EMULATE_PREPARES => false,
+
+			// Configura el modo de extracción por defecto a array asociativo
+			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+		];
 
 		try {
-			$this->connection = @new mysqli(
-				$this->hostname,
-				$this->username,
-				$this->password,
-				$this->database
-			);
-
-			$this->connection->set_charset('utf8mb4');
-		} catch (mysqli_sql_exception $e) {
-			$this->integrityErrorSetup(500, "Error({$e->getCode()}): {$e->getMessage()}");
+			// 3. Instanciamos la conexión PDO pasándole los parámetros y opciones
+			$this->connection = new PDO($dsn, $this->username, $this->password, $options);
+		} catch (PDOException $e) {
+			// Capturamos la excepción específica de PDO y sanitizamos el mensaje para producción
+			$this->integrityErrorSetup(500, "Error de conexión al servidor de datos. Código: {$e->getCode()}");
 		}
 	}
 }

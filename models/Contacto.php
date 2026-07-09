@@ -125,15 +125,15 @@ readonly class Contacto extends Invitacion
 				nombre ASC";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->session_ulid],
-			['s', $this->session_ulid],
-			['s', $this->session_ulid],
-			['s', $this->session_ulid],
-			['s', $this->session_ulid],
-			['s', $this->session_ulid],
-			['s', $this->session_ulid],
-			['s', $this->session_ulid]
+			$this->session_ulid,
+			$this->session_ulid,
+			$this->session_ulid,
+			$this->session_ulid,
+			$this->session_ulid,
+			$this->session_ulid,
+			$this->session_ulid,
+			$this->session_ulid,
+			$this->session_ulid
 		];
 
 		$contactos = $this->executeQuery($query, $params, SqlReturn::FetchAll);
@@ -181,8 +181,8 @@ readonly class Contacto extends Invitacion
 			)";
 
 		$params = [
-			['s', $ulid_min],
-			['s', $ulid_max]
+			$ulid_min,
+			$ulid_max
 		];
 
 		$contacto = $this->executeQuery($query, $params, SqlReturn::Exists);

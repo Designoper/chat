@@ -26,7 +26,7 @@ readonly class Invitacion extends Grupo
 			FROM usuarios
 			WHERE codigo_contacto = ?";
 
-		$params = [['s', $this->codigo_contacto]];
+		$params = [$this->codigo_contacto];
 
 		$contacto = $this->executeQuery($query, $params, SqlReturn::FetchColumn);
 
@@ -48,10 +48,10 @@ readonly class Invitacion extends Grupo
 			)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $contacto],
-			['s', $this->session_ulid],
-			['s', $contacto]
+			$this->session_ulid,
+			$contacto,
+			$this->session_ulid,
+			$contacto
 		];
 
 		$yaSonContactos = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -70,8 +70,8 @@ readonly class Invitacion extends Grupo
 			)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $contacto]
+			$this->session_ulid,
+			$contacto
 		];
 
 		$yaInvitado = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -82,8 +82,8 @@ readonly class Invitacion extends Grupo
 
 		// Invitación cruzada → aceptar automáticamente
 		$params = [
-			['s', $contacto],
-			['s', $this->session_ulid]
+			$contacto,
+			$this->session_ulid
 		];
 
 		$invitacionCruzada = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -98,8 +98,8 @@ readonly class Invitacion extends Grupo
              	VALUES (?, ?)";
 
 			$params = [
-				['s', $ulid_min],
-				['s', $ulid_max]
+				$ulid_min,
+				$ulid_max
 			];
 
 			$this->executeQuery($query, $params);
@@ -114,10 +114,10 @@ readonly class Invitacion extends Grupo
 				)";
 
 			$params = [
-				['s', $this->session_ulid],
-				['s', $this->$contacto],
-				['s', $this->$contacto],
-				['s', $this->session_ulid]
+				$this->session_ulid,
+				$this->$contacto,
+				$this->$contacto,
+				$this->session_ulid
 			];
 
 			$this->executeQuery($query, $params);
@@ -130,8 +130,8 @@ readonly class Invitacion extends Grupo
          	VALUES (?, ?)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $contacto]
+			$this->session_ulid,
+			$contacto
 		];
 
 		$this->executeQuery($query, $params);
@@ -153,8 +153,8 @@ readonly class Invitacion extends Grupo
          	VALUES (?, ?)";
 
 		$params = [
-			['s', $ulid_min],
-			['s', $ulid_max]
+			$ulid_min,
+			$ulid_max
 		];
 
 		$this->executeQuery($query, $params);
@@ -168,10 +168,10 @@ readonly class Invitacion extends Grupo
 			)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_contacto],
-			['s', $this->ulid_contacto],
-			['s', $this->session_ulid]
+			$this->session_ulid,
+			$this->ulid_contacto,
+			$this->ulid_contacto,
+			$this->session_ulid
 		];
 
 		$this->executeQuery($query, $params);
@@ -191,8 +191,8 @@ readonly class Invitacion extends Grupo
 			AND ulid_contacto = ?";
 
 		$params = [
-			['s', $this->ulid_contacto],
-			['s', $this->session_ulid]
+			$this->ulid_contacto,
+			$this->session_ulid
 		];
 
 		$this->executeQuery($query, $params);
@@ -217,7 +217,7 @@ readonly class Invitacion extends Grupo
 				WHERE ulid_grupo = ?
 			)";
 
-		$params = [['s', $this->ulid_grupo]];
+		$params = [$this->ulid_grupo];
 
 		$grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
@@ -242,10 +242,10 @@ readonly class Invitacion extends Grupo
 			)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_contacto],
-			['s', $this->session_ulid],
-			['s', $this->ulid_contacto]
+			$this->session_ulid,
+			$this->ulid_contacto,
+			$this->session_ulid,
+			$this->ulid_contacto
 		];
 
 		$esContacto = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -262,7 +262,7 @@ readonly class Invitacion extends Grupo
 				WHERE ulid_usuario = ?
 			)";
 
-		$params = [['s', $this->ulid_contacto]];
+		$params = [$this->ulid_contacto];
 
 		$usuario = $this->executeQuery($query, $params, SqlReturn::Exists);
 
@@ -280,8 +280,8 @@ readonly class Invitacion extends Grupo
 			)";
 
 		$params = [
-			['s', $this->ulid_contacto],
-			['s', $this->ulid_grupo]
+			$this->ulid_contacto,
+			$this->ulid_grupo
 		];
 
 		$miembro_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -300,8 +300,8 @@ readonly class Invitacion extends Grupo
 			)";
 
 		$params = [
-			['s', $this->ulid_contacto],
-			['s', $this->ulid_grupo]
+			$this->ulid_contacto,
+			$this->ulid_grupo
 		];
 
 		$yaInvitado = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -316,8 +316,8 @@ readonly class Invitacion extends Grupo
 			VALUES (?, ?)";
 
 		$params = [
-			['s', $this->ulid_contacto],
-			['s', $this->ulid_grupo]
+			$this->ulid_contacto,
+			$this->ulid_grupo
 		];
 
 		$this->executeQuery($query, $params);
@@ -336,8 +336,8 @@ readonly class Invitacion extends Grupo
 			VALUES (?, ?)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_grupo]
+			$this->session_ulid,
+			$this->ulid_grupo
 		];
 
 		$this->executeQuery($query, $params);
@@ -366,7 +366,7 @@ readonly class Invitacion extends Grupo
 				WHERE ulid_grupo = ?
 			)";
 
-		$params = [['s', $this->ulid_grupo]];
+		$params = [$this->ulid_grupo];
 
 		$grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
 
@@ -384,8 +384,8 @@ readonly class Invitacion extends Grupo
 			)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_grupo]
+			$this->session_ulid,
+			$this->ulid_grupo
 		];
 
 		$miembro_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -404,8 +404,8 @@ readonly class Invitacion extends Grupo
 			)";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_grupo]
+			$this->session_ulid,
+			$this->ulid_grupo
 		];
 
 		$invitacion = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -421,8 +421,8 @@ readonly class Invitacion extends Grupo
 			AND ulid_grupo = ?";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_grupo]
+			$this->session_ulid,
+			$this->ulid_grupo
 		];
 
 		$this->executeQuery($query, $params);
@@ -473,8 +473,8 @@ readonly class Invitacion extends Grupo
 		// 	nombre ASC";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->session_ulid]
+			$this->session_ulid,
+			$this->session_ulid
 		];
 
 		$invitaciones = $this->executeQuery($query, $params, SqlReturn::FetchAll);
@@ -534,10 +534,10 @@ readonly class Invitacion extends Grupo
 			ORDER BY u.nombre_usuario ASC";
 
 		$params = [
-			['s', $this->ulid_grupo],
-			['s', $this->ulid_grupo],
-			['s', $this->session_ulid],
-			['s', $this->session_ulid]
+			$this->ulid_grupo,
+			$this->ulid_grupo,
+			$this->session_ulid,
+			$this->session_ulid
 		];
 
 		$contactosInvitables = $this->executeQuery($query, $params, SqlReturn::FetchAll);

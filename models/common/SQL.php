@@ -64,42 +64,25 @@ abstract readonly class SQL extends Auth
 		return $time32 . $rand;
 	}
 
-
 	// ============================================================================
 	// MARK: EXECUTE QUERY
 	// ============================================================================
-	protected function executeQuery(string $query, array $params, ?SqlReturn $type = null): string|int|float|array|bool|null
+	public function executeQuery(string $query, array $params, ?SqlReturn $fetchMode = null): string|int|float|array|bool|null
 	{
-		$types = implode('', array_column($params, 0));
-		$values = array_column($params, 1);
+		// try {
+		$stmt = $this->connection->prepare($query);
+		$stmt->execute($params);
 
-		$mysqli_stmt = $this->connection->prepare($query);
-		$mysqli_stmt->bind_param($types, ...$values);
-		$mysqli_stmt->execute();
-		$mysqli_result = $mysqli_stmt->get_result();
-
-		switch ($type) {
-			case SqlReturn::FetchAll:
-				$result = $mysqli_result->fetch_all(MYSQLI_ASSOC);
-				break;
-
-			case SqlReturn::FetchAssoc:
-				$result = $mysqli_result->fetch_assoc();
-				break;
-
-			case SqlReturn::FetchColumn:
-				$result = $mysqli_result->fetch_column();
-				break;
-
-			case SqlReturn::Exists:
-				$result = (bool) $mysqli_result->fetch_row()[0];
-				break;
-
-			default:
-				$result = null;
-		}
-
-		$mysqli_stmt->close();
-		return $result;
+		return match ($fetchMode) {
+			SqlReturn::FetchAssoc  => $stmt->fetch(PDO::FETCH_ASSOC),
+			SqlReturn::FetchAll    => $stmt->fetchAll(PDO::FETCH_ASSOC),
+			SqlReturn::FetchColumn => $stmt->fetchColumn(),
+			SqlReturn::Exists      => (bool) $stmt->fetchColumn(),
+			default                => null
+		};
+		// } catch (PDOException $e) {
+		// 	// Aquí puedes centralizar el manejo de errores de base de datos de tu API
+		// 	$this->integrityErrorSetup(500, "Error interno en la base de datos.");
+		// }
 	}
 }

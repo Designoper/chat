@@ -39,11 +39,11 @@ readonly class Mensaje extends Contacto
 			)";
 
 		$params = [
-			['s', $this->ulid_mensaje],
-			['s', $this->session_ulid],
-			['s', $this->ulid_contacto],
-			['s', $this->ulid_contacto],
-			['s', $this->session_ulid]
+			$this->ulid_mensaje,
+			$this->session_ulid,
+			$this->ulid_contacto,
+			$this->ulid_contacto,
+			$this->session_ulid
 		];
 
 		$mensaje_directo = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -67,8 +67,8 @@ readonly class Mensaje extends Contacto
 			)";
 
 		$params = [
-			['s', $this->ulid_mensaje],
-			['s', $this->ulid_grupo]
+			$this->ulid_mensaje,
+			$this->ulid_grupo
 		];
 
 		$mensaje_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -111,8 +111,8 @@ readonly class Mensaje extends Contacto
 			'') AS ulid_mensaje";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->{$config['ulid']}]
+			$this->session_ulid,
+			$this->{$config['ulid']}
 		];
 
 		$last_ulid = $this->executeQuery($query, $params, SqlReturn::FetchAssoc);
@@ -167,10 +167,10 @@ readonly class Mensaje extends Contacto
 			UPDATE ulid_mensaje = ?";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->{$config['ulid']}],
-			['s', $this->ulid_mensaje],
-			['s', $this->ulid_mensaje]
+			$this->session_ulid,
+			$this->{$config['ulid']},
+			$this->ulid_mensaje,
+			$this->ulid_mensaje
 		];
 
 		$this->executeQuery($query, $params);
@@ -225,8 +225,8 @@ readonly class Mensaje extends Contacto
 			ORDER BY fecha_creacion ASC";
 
 		$params = [
-			['s', $ulid_min],
-			['s', $ulid_max]
+			$ulid_min,
+			$ulid_max
 		];
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
@@ -275,7 +275,7 @@ readonly class Mensaje extends Contacto
 			WHERE mensajes.ulid_grupo = ?
 			ORDER BY fecha_creacion ASC";
 
-		$params = [['s', $this->ulid_grupo]];
+		$params = [$this->ulid_grupo];
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
 
@@ -346,11 +346,11 @@ readonly class Mensaje extends Contacto
 			VALUES (?, ?, ?, ?, ?)";
 
 		$params = [
-			['s', $this->ulid_mensaje],
-			['s', $filetype->value],
-			['s', $contenido],
-			['s', $this->session_ulid],
-			['s', $this->{$contacto['ulid']}]
+			$this->ulid_mensaje,
+			$filetype->value,
+			$contenido,
+			$this->session_ulid,
+			$this->{$contacto['ulid']}
 		];
 
 		$this->executeQuery($query, $params);
@@ -438,8 +438,8 @@ readonly class Mensaje extends Contacto
 			)";
 
 		$params = [
-			['s', $this->ulid_mensaje],
-			['s', $this->session_ulid]
+			$this->ulid_mensaje,
+			$this->session_ulid
 		];
 
 		$autor_mensaje = $this->executeQuery($query, $params, SqlReturn::Exists);
@@ -464,7 +464,7 @@ readonly class Mensaje extends Contacto
 			"DELETE FROM mensajes
 			WHERE ulid_mensaje = ?";
 
-		$params = [['s', $this->ulid_mensaje]];
+		$params = [$this->ulid_mensaje];
 
 		$this->executeQuery($query, $params);
 
@@ -505,10 +505,10 @@ readonly class Mensaje extends Contacto
 			ORDER BY mensajes.ulid_mensaje ASC";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_contacto],
-			['s', $ulid_min],
-			['s', $ulid_max]
+			$this->session_ulid,
+			$this->ulid_contacto,
+			$ulid_min,
+			$ulid_max
 		];
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
@@ -543,9 +543,9 @@ readonly class Mensaje extends Contacto
 	        ORDER BY mensajes.ulid_mensaje ASC";
 
 		$params = [
-			['s', $this->session_ulid],
-			['s', $this->ulid_grupo],
-			['s', $this->ulid_grupo]
+			$this->session_ulid,
+			$this->ulid_grupo,
+			$this->ulid_grupo
 		];
 
 		$mensajes = $this->executeQuery($query, $params, SqlReturn::FetchAll);
