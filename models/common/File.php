@@ -271,11 +271,11 @@ abstract readonly class File extends SQL
 
         // 1. Calculamos la ruta absoluta teórica sin usar realpath() en el archivo completo
         // ya que realpath() fallaría si el archivo aún se está escribiendo en disco.
-        $requestedFile = $_GET["f"] ?? '';
-        $filename = $base . DIRECTORY_SEPARATOR . ltrim($requestedFile, '/\\');
+        $requestedFile = $_GET["f"] ?? "";
+        $filename = $base . DIRECTORY_SEPARATOR . ltrim($requestedFile, "/\\");
 
         // Normalizamos la ruta eliminando ".." relativos de forma segura para evitar Path Traversal
-        $filename = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $filename);
+        $filename = str_replace(array("/", "\\"), DIRECTORY_SEPARATOR, $filename);
 
         // 2. Validación de seguridad previa: el archivo debe apuntar dentro de la carpeta base
         if (!str_starts_with($filename, $base)) {
