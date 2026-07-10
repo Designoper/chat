@@ -6,6 +6,80 @@ require_once __DIR__ . "/File.php";
 
 abstract readonly class Validator extends File
 {
+	private const array MAGIC_NUMBERS = [
+		// --- IMÁGENES ---
+		"jpeg" => [
+			"starts_with" => "ffd8ff",
+			"type" => FileTypes::Image
+		],
+		"png"  => [
+			"starts_with" => "89504e47",
+			"type" => FileTypes::Image
+		],
+		"gif"  => [
+			"starts_with" => "47494638",
+			"type" => FileTypes::Image
+		],
+		"webp" => [
+			"starts_with" => "52494646", // "RIFF"
+			"contains"    => "57454250", // "WEBP"
+			"type"        => FileTypes::Image
+		],
+		"avif_1" => [
+			"contains" => "6674797061766966", // ftypavif
+			"type" => FileTypes::Image
+		],
+		"avif_2" => [
+			"contains" => "6674797061766973", // ftypavis
+			"type" => FileTypes::Image
+		],
+
+		// --- AUDIO ---
+		"mp3"  => [
+			"starts_with" => "494433", // ID3
+			"type" => FileTypes::Audio
+		],
+		"ogg"  => [
+			"starts_with" => "4f676753",
+			"type" => FileTypes::Audio
+		],
+		"wav"  => [
+			"starts_with" => "52494646", // "RIFF"
+			"contains"    => "57415645", // "WAVE"
+			"type"        => FileTypes::Audio
+		],
+
+		// --- VIDEO ---
+		"mp4"  => [
+			"contains"    => "667479706d7034", // ftypmp4
+			"type" => FileTypes::Video
+		],
+		"webm" => [
+			"starts_with" => "1a45dfa3", // EBML (MKV/WEBM)
+			"type" => FileTypes::Video
+		],
+	];
+
+	private const array EXTENSION_MAP = [
+		"jpg" => "image",
+		"jpeg" => "image",
+		"png" => "image",
+		"gif" => "image",
+		"webp" => "image",
+		"avif" => "image",
+
+		"mp3" => "audio",
+		"wav" => "audio",
+		"ogg" => "audio",
+		"m4a" => "audio",
+
+		"mp4" => "video",
+		"mov" => "video",
+		"avi" => "video",
+		"mkv" => "video",
+		"webm" => "video",
+	];
+
 	protected function __construct()
 	{
 		parent::__construct();
@@ -133,11 +207,34 @@ abstract readonly class Validator extends File
 	}
 
 	// ============================================================================
+	// MARK: MAGIC NUMBER CHECKER
+	// ============================================================================
+	private function magicNumberChecker(string $magicNumber): ?FileTypes
+	{
+		foreach (self::MAGIC_NUMBERS as $format => $rules) {
+			// 1. Si está definido "starts_with" y NO coincide, pasamos al siguiente formato
+			if (isset($rules["starts_with"]) && !str_starts_with($magicNumber, $rules["starts_with"])) {
+				continue;
+			}
+
+			// 2. Si está definido "contains" y NO lo contiene, pasamos al siguiente formato
+			if (isset($rules["contains"]) && !str_contains($magicNumber, $rules["contains"])) {
+				continue;
+			}
+
+			// 3. Si ha superado los filtros anteriores, hemos encontrado el formato correcto
+			return $rules["type"];
+		}
+
+		return null; // Formato no identificado o no soportado
+	}
+
+	// ============================================================================
 	// MARK: DETECTAR TIPO ARCHIVO
 	// ============================================================================
 	private function detectarTipoArchivo(string $filename, string $path): ?FileTypes
 	{
-		// --- 0. Extensión ---
+		// --- 0. Ajustes previos ---
 		$extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
 		// Bloqueo inmediato de SVG
@@ -151,58 +248,18 @@ abstract readonly class Validator extends File
 			return FileTypes::Audio;
 		}
 
+		// --- 1. Magic numbers ---
 		$magicNumber = $this->getMagicNumber($filename);
 
-		// Imágenes
-		if (str_starts_with($magicNumber, "ffd8ff")) return FileTypes::Image; // JPEG
-		if (str_starts_with($magicNumber, "89504e47")) return FileTypes::Image; // PNG
-		if (str_starts_with($magicNumber, "47494638")) return FileTypes::Image; // GIF
-		if (str_starts_with($magicNumber, "52494646") && strpos($magicNumber, "57454250") !== false) return FileTypes::Image; // WebP
+		$filetype = $this->magicNumberChecker($magicNumber);
 
-		// AVIF (ftypavif / ftypavis)
-		if (
-			strpos($magicNumber, "6674797061766966") !== false ||
-			strpos($magicNumber, "6674797061766973") !== false
-		) return FileTypes::Image;
-
-		// Audio
-		if (str_starts_with($magicNumber, "494433")) return FileTypes::Audio; // MP3 ID3
-		if (str_starts_with($magicNumber, "4f676753")) return FileTypes::Audio; // OGG
-		if (str_starts_with($magicNumber, "52494646") && strpos($magicNumber, "57415645") !== false) return FileTypes::Audio; // WAV
-
-		// MP4 / MOV / M4A
-		if (strpos($magicNumber, "667479706d7034") !== false) {
-			return FileTypes::Video;
-		}
-
-		// WEBM / MKV (cabecera EBML)
-		if (str_starts_with($magicNumber, "1a45dfa3")) {
-			return FileTypes::Video;
+		if ($filetype) {
+			return $filetype;
 		}
 
 		// --- 2. Extensión ---
-		$mapExt = [
-			"jpg" => "image",
-			"jpeg" => "image",
-			"png" => "image",
-			"gif" => "image",
-			"webp" => "image",
-			"avif" => "image",
-
-			"mp3" => "audio",
-			"wav" => "audio",
-			"ogg" => "audio",
-			"m4a" => "audio",
-
-			"mp4" => "video",
-			"mov" => "video",
-			"avi" => "video",
-			"mkv" => "video",
-			"webm" => "video",
-		];
-
-		if (isset($mapExt[$extension])) {
-			return $mapExt[$extension];
+		if (isset(self::EXTENSION_MAP[$extension])) {
+			return self::EXTENSION_MAP[$extension];
 		}
 
 		// --- 3. MIME ---
