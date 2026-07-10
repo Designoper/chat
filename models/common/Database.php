@@ -10,18 +10,23 @@ abstract readonly class Database extends SSE
 	private string $username;
 	private string $password;
 	private string $database;
+	private string $dsn;
+	private const array OPTIONS = [
+		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+		PDO::ATTR_EMULATE_PREPARES => false,
+		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+	];
 	protected PDO $connection;
 
 	protected function __construct()
 	{
 		parent::__construct();
 
-		// Nota de seguridad: getenv() puede fallar en entornos de producción específicos (como FPM).
-		// Si notas que da vacío, es mejor usar la superglobal $_ENV['HOSTNAME'].
 		$this->hostname = getenv("HOSTNAME");
 		$this->username = getenv("USERNAME");
 		$this->password = getenv("PASSWORD");
 		$this->database = getenv("DATABASE");
+		$this->dsn = "mysql:host={$this->hostname};dbname={$this->database};charset=utf8mb4";
 		$this->setConnection();
 	}
 
@@ -30,23 +35,8 @@ abstract readonly class Database extends SSE
 	// ============================================================================
 	private function setConnection(): void
 	{
-		// 1. Definimos el DSN especificando directamente el charset utf8mb4
-		$dsn = "mysql:host={$this->hostname};dbname={$this->database};charset=utf8mb4";
-
-		// 2. Configuramos las banderas críticas de comportamiento de PDO
-		$options = [
-			// Fuerza a PDO a lanzar excepciones (PDOException) ante cualquier error de SQL
-			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-
-			// Desactiva la emulación. Obliga a MySQL a usar consultas preparadas reales a nivel binario
-			PDO::ATTR_EMULATE_PREPARES => false,
-
-			// Configura el modo de extracción por defecto a array asociativo
-			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-		];
-
 		try {
-			$this->connection = new PDO($dsn, $this->username, $this->password, $options);
+			$this->connection = new PDO($this->dsn, $this->username, $this->password, self::OPTIONS);
 		} catch (PDOException $error) {
 			$this->integrityErrorSetup(500, "Error de conexión al servidor de datos. Código: {$error->getCode()}");
 		}
