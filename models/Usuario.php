@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/common/Validator.php';
+require_once __DIR__ . "/common/Validator.php";
 
 readonly class Usuario extends Validator
 {
@@ -62,11 +62,11 @@ readonly class Usuario extends Validator
 				$this->executeQuery($query, $params);
 			} catch (PDOException $error) {
 
-				if ($error->errorInfo[1] === 1062 && str_contains($error->errorInfo[2], 'nombre_usuario')) {
-					$this->integrityErrorSetup(409, '¡Este nombre de usuario ya existe!');
+				if ($error->errorInfo[1] === 1062 && str_contains($error->errorInfo[2], "nombre_usuario")) {
+					$this->integrityErrorSetup(409, "¡Este nombre de usuario ya existe!");
 				}
 
-				if ($error->errorInfo[1] === 1062 && str_contains($error->errorInfo[2], 'codigo_contacto')) {
+				if ($error->errorInfo[1] === 1062 && str_contains($error->errorInfo[2], "codigo_contacto")) {
 					$intento++;
 					continue;
 				}
@@ -235,7 +235,7 @@ readonly class Usuario extends Validator
 				$this->executeQuery($query, $params);
 			} catch (PDOException $error) {
 
-				if ($error->errorInfo[1] === 1062 && str_contains($error->errorInfo[2], 'codigo_contacto')) {
+				if ($error->errorInfo[1] === 1062 && str_contains($error->errorInfo[2], "codigo_contacto")) {
 					$intento++;
 					continue;
 				}

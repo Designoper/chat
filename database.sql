@@ -105,7 +105,7 @@ CREATE TABLE mensajes (
     ulid_mensaje CHAR(26) PRIMARY KEY,
     contenido TEXT NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    tipo_mensaje ENUM('text', 'image', 'audio', 'video') NOT NULL,
+    tipo_mensaje ENUM('text', 'image', 'audio', 'video', 'location') NOT NULL,
     ulid_emisor CHAR(26) NULL,
     ulid_contacto CHAR(26) NULL,
     ulid_grupo CHAR(26) NULL,
