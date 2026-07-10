@@ -60,7 +60,7 @@ main {
 
 	> section {
 		display: grid;
-		gap: 1.25em;
+		gap: 1em;
 		align-content: center;
 		width: 100%;
 		position: sticky;
@@ -69,8 +69,14 @@ main {
 		padding: 1em 10vw;
 		background-color: var(--terciary-bg);
 
-		summary::marker {
-			content: '';
+		details {
+			summary::marker {
+				content: '';
+			}
+
+			svg {
+				border-radius: 0.25em;
+			}
 		}
 
 		&:has(li:nth-of-type(1) details:open) {
@@ -111,6 +117,12 @@ main {
 
 		&:has(li:nth-of-type(7) details:open) {
 			form:nth-of-type(7) {
+				display: grid;
+			}
+		}
+
+		&:has(li:nth-of-type(8) details:open) {
+			form:nth-of-type(8) {
 				display: grid;
 			}
 		}
