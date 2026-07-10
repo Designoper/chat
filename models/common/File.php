@@ -14,7 +14,7 @@ enum FileTypes: string
 
 abstract readonly class File extends SQL
 {
-    private const string COMPRESSED_IMAGE_EXTENSION = "avif";
+    private const string COMPRESSED_IMAGE_EXTENSION = "webp";
     private const string COMMON_FILE_PATH = "/private/";
     protected const string DEFAULT_IMAGE = self::COMMON_FILE_PATH . "default/default.jpg";
 
@@ -72,13 +72,11 @@ abstract readonly class File extends SQL
     private function setUniqueFilename(string $originalFilename, FileTypes $filetype): void
     {
         if ($filetype === FileTypes::Image) {
-            $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION)) === "gif"
-                ? "gif"
-                : self::COMPRESSED_IMAGE_EXTENSION;
-        } else $extension = strtolower(pathinfo($originalFilename, PATHINFO_EXTENSION));
+            $extension = self::COMPRESSED_IMAGE_EXTENSION;
+        } else $extension = pathinfo($originalFilename, PATHINFO_EXTENSION);
 
         $filename = pathinfo($originalFilename, PATHINFO_FILENAME);
-        $this->uniqueFilename = $filename . "-" . bin2hex(random_bytes(2)) . "." . $extension;
+        $this->uniqueFilename = $filename . '-' . bin2hex(random_bytes(2)) . '.' . $extension;
     }
 
     // ============================================================================
@@ -104,7 +102,7 @@ abstract readonly class File extends SQL
             return;
         }
 
-        $folderDestination = $_SERVER["DOCUMENT_ROOT"] . self::COMMON_FILE_PATH . $this->extraDirectories;
+        $folderDestination = $_SERVER['DOCUMENT_ROOT'] . self::COMMON_FILE_PATH . $this->extraDirectories;
 
         if (!file_exists($folderDestination)) {
             mkdir($folderDestination, 0755, true);
@@ -112,31 +110,57 @@ abstract readonly class File extends SQL
 
         $finalDestination = $folderDestination . $this->uniqueFilename;
 
-        // 1. Forzamos minúsculas para evitar fallos con extensiones tipo .GIF o .Png
-        $extension = strtolower(pathinfo($this->file["name"], PATHINFO_EXTENSION));
+        if ($filetype === FileTypes::Image) {
 
-        if ($filetype === FileTypes::Image && $extension !== "gif") {
-            $optimized = new Imagick($this->file["tmp_name"]);
-            // Eliminamos perfiles EXIF/color innecesarios para reducir drásticamente el peso
-            $optimized->stripImage();
-            $ancho_original = $optimized->getImageWidth();
-            $ancho_deseado = 800;
+            $imagick = new Imagick($this->file['tmp_name']);
+            $ancho_deseado = 400;
 
-            if ($ancho_original > $ancho_deseado) {
-                $optimized->scaleImage($ancho_deseado, 0);
+            if ($imagick->getNumberImages() > 1) {
+                // Es una imagen animada (GIF)
+                $optimized = $imagick->coalesceImages();
+                $imagick->clear(); // Liberamos el objeto original
+
+                foreach ($optimized as $frame) {
+                    // Redimensionamos cada fotograma individualmente
+                    $ancho_original = $frame->getImageWidth();
+                    if ($ancho_original > $ancho_deseado) {
+                        $frame->scaleImage($ancho_deseado, 0);
+                    }
+
+                    $frame->stripImage();
+                    $frame->setFormat(self::COMPRESSED_IMAGE_EXTENSION);
+                    $frame->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":speed", "6");
+                    $frame->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":quality", "65");
+                }
+
+                // Reconstruimos la animación optimizando fotogramas
+                $optimized = $optimized->deconstructImages();
+
+                // Forzamos el formato de destino en la secuencia completa
+                $optimized->setFormat(self::COMPRESSED_IMAGE_EXTENSION);
+                $optimized->writeImages($finalDestination, true);
+                $optimized->clear();
+            } else {
+                // Es una imagen estática
+                $ancho_original = $imagick->getImageWidth();
+                $ancho_deseado = 800;
+
+                if ($ancho_original > $ancho_deseado) {
+                    $imagick->scaleImage($ancho_deseado, 0);
+                }
+
+                $imagick->stripImage();
+                $imagick->setFormat(self::COMPRESSED_IMAGE_EXTENSION);
+                $imagick->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":speed", "6");
+                $imagick->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":quality", "65");
+                $imagick->writeImage($finalDestination);
+                $imagick->clear();
             }
-            // Forzamos explícitamente el formato de salida en el buffer de Imagick
-            $optimized->setFormat(self::COMPRESSED_IMAGE_EXTENSION);
-            // (1 = lento/óptimo, 9 = rápido/pesado)
-            $optimized->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":speed", "6");
-            $optimized->setOption(self::COMPRESSED_IMAGE_EXTENSION . ":quality", "65");
-            $optimized->writeImage($finalDestination);
-            $optimized->clear();
 
             return;
         }
 
-        move_uploaded_file($this->file["tmp_name"], $finalDestination);
+        move_uploaded_file($this->file['tmp_name'], $finalDestination);
     }
 
     // ============================================================================
@@ -265,7 +289,7 @@ abstract readonly class File extends SQL
             usleep(250000); // Pausa de 250 milisegundos
             $intentos++;
 
-            if ($intentos > 12) { // 12 * 250ms = 3 segundos máximo de margen
+            if ($intentos > 20) { // 20 * 250ms = 5 segundos máximo de margen
                 // Si tras 3 segundos no existe, asumimos que falló la optimización de Imagick
                 $this->integrityErrorSetup(404, "El archivo no se procesó a tiempo o no existe.");
             }
