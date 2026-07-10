@@ -245,14 +245,33 @@ abstract readonly class File extends SQL
             $this->integrityErrorSetup(500, "Tenemos problemas técnicos para encontrar esa ruta");
         }
 
-        // Normalizar la ruta solicitada
-        $filename = realpath($base . "/" . $_GET["f"]);
+        // 1. Calculamos la ruta absoluta teórica sin usar realpath() en el archivo completo
+        // ya que realpath() fallaría si el archivo aún se está escribiendo en disco.
+        $requestedFile = $_GET["f"] ?? '';
+        $filename = $base . DIRECTORY_SEPARATOR . ltrim($requestedFile, '/\\');
 
-        // Validación: el archivo debe estar dentro de /private
-        if (!$filename || !str_starts_with($filename, $base)) {
+        // Normalizamos la ruta eliminando ".." relativos de forma segura para evitar Path Traversal
+        $filename = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $filename);
+
+        // 2. Validación de seguridad previa: el archivo debe apuntar dentro de la carpeta base
+        if (!str_starts_with($filename, $base)) {
             $this->integrityErrorSetup(403, "Acceso no permitido.");
         }
 
+        // 3. ESPERA ACTIVA: Si el archivo se está procesando, esperamos hasta 3 segundos
+        $intentos = 0;
+        while (!file_exists($filename) || filesize($filename) === 0) {
+            clearstatcache(true, $filename); // Forzamos al sistema operativo a mirar el disco real
+            usleep(250000); // Pausa de 250 milisegundos
+            $intentos++;
+
+            if ($intentos > 12) { // 12 * 250ms = 3 segundos máximo de margen
+                // Si tras 3 segundos no existe, asumimos que falló la optimización de Imagick
+                $this->integrityErrorSetup(404, "El archivo no se procesó a tiempo o no existe.");
+            }
+        }
+
+        // 4. Una vez confirmado que existe el archivo en disco, realizamos las validaciones restantes
         if (!is_file($filename)) {
             $this->integrityErrorSetup(403, "No puedes acceder a directorios.");
         }
@@ -267,10 +286,16 @@ abstract readonly class File extends SQL
             $this->integrityErrorSetup(403, "Tipo de archivo no permitido.");
         }
 
+        // 5. Ahora sí es 100% seguro leer el tamaño y fecha de modificación real en disco
         $mtime = filemtime($filename);
         $size  = filesize($filename);
 
-        // Enviar archivo
+        // 6. Limpieza preventiva de cualquier búfer intermedio que devuelva JSON/errores ocultos
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        // Enviar archivo con sus cabeceras
         header("Content-Type: $mime");
         header("Content-Length: $size");
         header("X-Content-Type-Options: nosniff");
