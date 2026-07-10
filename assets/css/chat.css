@@ -114,9 +114,9 @@ main {
 			align-content: center;
 			grid-template-columns: 1fr auto;
 
-			button:empty {
+			/* button:empty {
 				display: none;
-			}
+			} */
 
 			output {
 				padding: 0;

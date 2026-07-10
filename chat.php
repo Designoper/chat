@@ -75,7 +75,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</label>
 
-						<input type="file" id="imagen" name="archivo" accept="image/*" required hidden>
+						<input type="file" id="imagen" name="archivo" accept="image/jpeg, image/jxl, image/png, image/webp, image/gif, image/avif, image/bmp, image/tiff, image/x-icon, image/heic, image/heif" required hidden>
 
 						<button></button>
 
@@ -141,10 +141,12 @@ new Usuario()->authBrowser();
 					<form method="POST">
 
 						<label for="video">
-							<svg viewBox="0 0 800 800">
-								<path d="M0 0h800v800H0z" fill="#fff" />
-								<path d="M678.702 367.954L170.325 96.782c-30.16-13.445-64.708-12.049-64.708 36.214v533.973c0 44.121 37.064 51.076 64.708 36.214L678.702 432.01c20.927-17.697 20.927-46.358 0-64.055" />
-							</svg>
+							<button type="button">
+								<svg viewBox="0 0 800 800">
+									<path d="M0 0h800v800H0z" fill="#fff" />
+									<path d="M678.702 367.954L170.325 96.782c-30.16-13.445-64.708-12.049-64.708 36.214v533.973c0 44.121 37.064 51.076 64.708 36.214L678.702 432.01c20.927-17.697 20.927-46.358 0-64.055" />
+								</svg>
+							</button>
 						</label>
 
 						<input type="file" id="video" name="archivo" accept="video/*" required hidden>
@@ -155,6 +157,7 @@ new Usuario()->authBrowser();
 
 					</form>
 				</li>
+
 				<li>
 					<form method="POST">
 
