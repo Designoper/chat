@@ -12,13 +12,13 @@ abstract readonly class Env extends Response
     {
         parent::__construct();
 
-        $this->setEnvVariables();
+        $this->loadEnv();
     }
 
     // ============================================================================
-    // MARK: SET ENV VARIABLES
+    // MARK: LOAD ENV
     // ============================================================================
-    private function setEnvVariables(): void
+    private function loadEnv(): void
     {
         $env_file = $_SERVER["DOCUMENT_ROOT"] . "/" . self::ENV;
 
