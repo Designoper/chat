@@ -33,6 +33,18 @@ export default class Mensaje extends Contacto {
 		super();
 	}
 
+	sendFileOnInput() {
+		const forms = document.querySelectorAll("form");
+		forms.forEach(form => {
+			const inputs = form.querySelectorAll("input");
+			const sendButton = form.querySelector("button");
+
+			inputs.forEach(input => {
+				input.oninput = () => sendButton.click();
+			});
+		});
+	}
+
 	setEndpoints() {
 		if (this.urlSearchParams.has('ulid_contacto')) {
 			this.endpointGetUltimoUlid = this.ENDPOINTS.GET.MENSAJES.ULTIMO_ULID_DIRECTO;
@@ -376,26 +388,26 @@ export default class Mensaje extends Contacto {
 
 				this.streamContactosInvitables(this.ulid_value);
 
-				this.dom.form[0].name = 'createMensajeGrupal';
+				// this.dom.form[0].name = 'createMensajeGrupal';
+				this.dom.form[0].name = 'createMensajeGrupalImagen';
 				this.dom.form[1].name = 'createMensajeGrupalImagen';
-				this.dom.form[2].name = 'createMensajeGrupalImagen';
+				this.dom.form[2].name = 'createMensajeGrupalAudio';
 				this.dom.form[3].name = 'createMensajeGrupalAudio';
-				this.dom.form[4].name = 'createMensajeGrupalAudio';
+				this.dom.form[4].name = 'createMensajeGrupalVideo';
 				this.dom.form[5].name = 'createMensajeGrupalVideo';
-				this.dom.form[6].name = 'createMensajeGrupalVideo';
-				this.dom.form[7].name = 'createMensajeGrupal';
+				this.dom.form[6].name = 'createMensajeGrupal';
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
 
-				this.dom.form[0].name = 'createMensajeDirecto';
+				// this.dom.form[0].name = 'createMensajeDirecto';
+				this.dom.form[0].name = 'createMensajeDirectoImagen';
 				this.dom.form[1].name = 'createMensajeDirectoImagen';
-				this.dom.form[2].name = 'createMensajeDirectoImagen';
+				this.dom.form[2].name = 'createMensajeDirectoAudio';
 				this.dom.form[3].name = 'createMensajeDirectoAudio';
-				this.dom.form[4].name = 'createMensajeDirectoAudio';
+				this.dom.form[4].name = 'createMensajeDirectoVideo';
 				this.dom.form[5].name = 'createMensajeDirectoVideo';
-				this.dom.form[6].name = 'createMensajeDirectoVideo';
-				this.dom.form[7].name = 'createMensajeDirecto';
+				this.dom.form[6].name = 'createMensajeDirecto';
 			}
 		}
 	}

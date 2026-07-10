@@ -8,6 +8,7 @@ mensaje.writeChat();
 mensaje.delete();
 mensaje.setForm();
 mensaje.setObj();
+mensaje.sendFileOnInput();
 await mensaje.getUltimoUlid();
 mensaje.streamMensajes();
-mensaje.geolocate();
+// mensaje.geolocate();
