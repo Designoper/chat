@@ -206,4 +206,45 @@ readonly class Usuario extends Validator
 		$this->regenerateSession();
 		$this->sendOkResponse(200);
 	}
+
+	// ============================================================================
+	// MARK: CAMBIAR CODIGO CONTACTO
+	// ============================================================================
+	public function cambiarCodigoContacto(): void
+	{
+		$this->authEndpoint();
+
+		$query =
+			"UPDATE usuarios
+			SET codigo_contacto = :codigo_contacto
+			WHERE ulid_usuario = :session_ulid";
+
+		$maxIntentos = 5;
+		$intento = 0;
+
+		while ($intento < $maxIntentos) {
+
+			$codigo_contacto = $this->generarCodigo();
+
+			$params = [
+				"session_ulid" => $this->session_ulid,
+				"codigo_contacto" => $codigo_contacto
+			];
+
+			try {
+				$this->executeQuery($query, $params);
+			} catch (PDOException $error) {
+
+				if ($error->errorInfo[1] === 1062 && str_contains($error->errorInfo[2], 'codigo_contacto')) {
+					$intento++;
+					continue;
+				}
+			}
+
+			$this->regenerateSession();
+			$this->sendOkResponse(200);
+		}
+
+		$this->integrityErrorSetup(500, "No se pudo generar un código único. Inténtalo de nuevo.");
+	}
 }
