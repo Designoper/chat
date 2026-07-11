@@ -73,7 +73,7 @@ main {
 			}
 		}
 
-		input[type="file"] {
+		input {
 			display: none;
 		}
 

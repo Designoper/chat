@@ -178,28 +178,27 @@ new Usuario()->authBrowser();
 
 					</form>
 				</li>
-				<!-- <li>
+
+				<li>
 					<form method="POST">
 
-						<geolocation></geolocation>
+						<!-- <geolocation></geolocation> -->
 
-						<input hidden name="contenido" autocomplete="off" minlength="1" maxlength="255" required>
-
-						<button>
-							<svg viewBox="0 0 512 512">
-								<path
-									d="M5.091 175.195c-2.418-.846-4.092-3.522-4.091-6.54V7.202c0-2.279.949-4.402 2.53-5.664S7.113.043 8.866.913l499.636 249.199c2.114 1.053 3.498 3.54 3.498 6.283s-1.384 5.229-3.498 6.282L8.866 511.876c-1.753.87-3.758.635-5.337-.625S1 507.866 1 505.587V344.134c-.001-3.018 1.673-5.694 4.091-6.54l213.958-74.667c2.426-.844 4.098-3.508 4.098-6.533s-1.671-5.69-4.098-6.533L5.091 175.195z" />
+						<button type="button" aria-label="Enviar ubicación">
+							<svg viewBox="0 0 800 800">
+								<path d="M0 0h800v800H0z" fill="#fff" />
+								<path d="M400 92c-127.57 0-231 103.43-231 231 0 50.233 16.468 96.327 43.842 134.076.491.905.568 1.915 1.126 2.782l154 231a38.51 38.51 0 0 0 64.064 0l154-231c.568-.866.635-1.877 1.126-2.782C614.532 419.327 631 373.233 631 323c0-127.57-103.43-231-231-231zm0 308c-42.523 0-77-34.477-77-77s34.477-77 77-77 77 34.477 77 77-34.477 77-77 77z" />
 							</svg>
 						</button>
+
+						<input name="contenido" required>
+
+						<button type="submit"></button>
 
 						<output></output>
 
 					</form>
-				</li> -->
-
-				<!-- <li>
-
-				</li> -->
+				</li>
 
 			</menu>
 

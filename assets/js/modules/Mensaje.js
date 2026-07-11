@@ -81,6 +81,19 @@ export default class Mensaje extends Contacto {
 		};
 	}
 
+	geolocate2() {
+		const form = document.querySelector("section>menu>li:last-of-type>form");
+		const sendButton = form.querySelector("button");
+		const button2 = form.querySelector("button[type='submit']");
+		const input = form.querySelector("input[name='contenido']");
+		sendButton.onclick = () => {
+			navigator.geolocation.getCurrentPosition((geo) => {
+				input.value = `https://www.google.com/maps/search/?api=1&query=${geo.coords.latitude},${geo.coords.longitude}`;
+				button2.click();
+			});
+		};
+	}
+
 	formhelper() {
 		const forms = document.querySelectorAll("form:has(input[type='file'])");
 		forms.forEach(form => {
@@ -411,6 +424,7 @@ export default class Mensaje extends Contacto {
 				this.dom.form[4].name = 'createMensajeGrupalVideo';
 				this.dom.form[5].name = 'createMensajeGrupalVideo';
 				this.dom.form[6].name = 'createMensajeGrupal';
+				this.dom.form[7].name = 'createMensajeGrupal';
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
@@ -423,6 +437,7 @@ export default class Mensaje extends Contacto {
 				this.dom.form[4].name = 'createMensajeDirectoVideo';
 				this.dom.form[5].name = 'createMensajeDirectoVideo';
 				this.dom.form[6].name = 'createMensajeDirecto';
+				this.dom.form[7].name = 'createMensajeDirecto';
 			}
 		}
 	}

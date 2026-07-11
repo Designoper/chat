@@ -13,3 +13,4 @@ await mensaje.getUltimoUlid();
 mensaje.streamMensajes();
 // mensaje.geolocate();
 mensaje.formhelper();
+mensaje.geolocate2();
