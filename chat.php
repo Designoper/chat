@@ -101,6 +101,8 @@ new Usuario()->authBrowser();
 						<output></output>
 
 					</form>
+				</li>
+
 				<li>
 					<form method="POST">
 
@@ -119,6 +121,7 @@ new Usuario()->authBrowser();
 
 					</form>
 				</li>
+
 				<li>
 					<form method="POST">
 
@@ -137,6 +140,7 @@ new Usuario()->authBrowser();
 
 					</form>
 				</li>
+
 				<li>
 					<form method="POST">
 
