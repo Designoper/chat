@@ -75,7 +75,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="imagen" name="archivo" accept="image/jpeg, image/jxl, image/png, image/webp, image/gif, image/avif, image/bmp, image/tiff, image/x-icon, image/heic, image/heif" required hidden>
+						<input type="file" id="imagen" name="archivo" accept="image/jpeg, image/jxl, image/png, image/webp, image/gif, image/avif, image/bmp, image/tiff, image/x-icon, image/heic, image/heif" required>
 
 						<button type="submit"></button>
 
@@ -94,7 +94,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="camara" name="archivo" capture="user" accept="image/*" required hidden>
+						<input type="file" id="camara" name="archivo" capture="user" accept="image/*" required>
 
 						<button type="submit"></button>
 
@@ -113,7 +113,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="audio" name="archivo" accept="audio/*" required hidden>
+						<input type="file" id="audio" name="archivo" accept="audio/*" required>
 
 						<button type="submit"></button>
 
@@ -132,7 +132,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="micro" name="archivo" capture accept="audio/*" required hidden>
+						<input type="file" id="micro" name="archivo" capture accept="audio/*" required>
 
 						<button type="submit"></button>
 
@@ -151,7 +151,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="video" name="archivo" accept="video/*" required hidden>
+						<input type="file" id="video" name="archivo" accept="video/*" required>
 
 						<button type="submit"></button>
 
@@ -170,7 +170,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="grabacion" name="archivo" capture accept="video/*" required hidden>
+						<input type="file" id="grabacion" name="archivo" capture accept="video/*" required>
 
 						<button type="submit"></button>
 
