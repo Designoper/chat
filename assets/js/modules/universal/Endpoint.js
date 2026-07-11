@@ -60,10 +60,12 @@ export default class Endpoint extends Fetch {
 				CREAR_IMAGEN_DIRECTO: `${this.ROOT}mensajes/crear/imagen-directo`,
 				CREAR_AUDIO_DIRECTO: `${this.ROOT}mensajes/crear/audio-directo`,
 				CREAR_VIDEO_DIRECTO: `${this.ROOT}mensajes/crear/video-directo`,
+				CREAR_UBICACION_DIRECTO: `${this.ROOT}mensajes/crear/ubicacion-directo`,
 				CREAR_GRUPAL: `${this.ROOT}mensajes/crear/grupal`,
 				CREAR_IMAGEN_GRUPAL: `${this.ROOT}mensajes/crear/imagen-grupal`,
 				CREAR_AUDIO_GRUPAL: `${this.ROOT}mensajes/crear/audio-grupal`,
 				CREAR_VIDEO_GRUPAL: `${this.ROOT}mensajes/crear/video-grupal`,
+				CREAR_UBICACION_GRUPAL: `${this.ROOT}mensajes/crear/ubicacion-grupal`,
 				ELIMINAR: `${this.ROOT}mensajes/delete`,
 				ULTIMO_ULID_DIRECTO: `${this.ROOT}mensajes/ultimo-ulid-directo`,
 				ULTIMO_ULID_GRUPAL: `${this.ROOT}mensajes/ultimo-ulid-grupal`

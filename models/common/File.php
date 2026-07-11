@@ -10,6 +10,7 @@ enum FileTypes: string
     case Audio = "audio";
     case Video = "video";
     case Text = "text";
+    case Location = "location";
 }
 
 abstract readonly class File extends SQL

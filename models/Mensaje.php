@@ -327,6 +327,11 @@ readonly class Mensaje extends Contacto
 				"upload" => fn() => null,
 				"extra" => fn() => $this->contenido,
 			],
+			FileTypes::Location => [
+				"set" => fn() => $this->setContenido("contenido"),
+				"upload" => fn() => null,
+				"extra" => fn() => $this->contenido,
+			],
 			default => [
 				"set" => fn() => $this->setArchivo("archivo", $filetype),
 				"upload" => fn() => $this->uploadFile($filetype),
@@ -400,6 +405,14 @@ readonly class Mensaje extends Contacto
 	}
 
 	// ============================================================================
+	// MARK: CREATE MENSAJE DIRECTO UBICACION
+	// ============================================================================
+	public function createMensajeDirectoUbicacion(): void
+	{
+		$this->createMensajeTemplate(FileTypes::Location, "contacto");
+	}
+
+	// ============================================================================
 	// MARK: CREATE MENSAJE GRUPAL
 	// ============================================================================
 	public function createMensajeGrupal(): void
@@ -429,6 +442,14 @@ readonly class Mensaje extends Contacto
 	public function createMensajeGrupalVideo(): void
 	{
 		$this->createMensajeTemplate(FileTypes::Video, "grupo");
+	}
+
+	// ============================================================================
+	// MARK: CREATE MENSAJE GRUPAL UBICACION
+	// ============================================================================
+	public function createMensajeGrupalUbicacion(): void
+	{
+		$this->createMensajeTemplate(FileTypes::Location, "grupo");
 	}
 
 	// ============================================================================

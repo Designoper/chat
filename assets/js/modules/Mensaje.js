@@ -88,7 +88,7 @@ export default class Mensaje extends Contacto {
 		const input = form.querySelector("input[name='contenido']");
 		sendButton.onclick = () => {
 			navigator.geolocation.getCurrentPosition((geo) => {
-				input.value = `https://www.google.com/maps/search/?api=1&query=${geo.coords.latitude},${geo.coords.longitude}`;
+				input.value = `${geo.coords.latitude},${geo.coords.longitude}`;
 				button2.click();
 			});
 		};
@@ -262,6 +262,10 @@ export default class Mensaje extends Contacto {
 					fileHref = `<video src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></video>
 					<date>${fechaEnvio}</date>`;
 					break;
+				case 'location':
+					fileHref = `<a href="https://www.google.com/maps/search/?api=1&query=${mensaje.contenido}" target="_blank" rel="noopener noreferrer">https://www.google.com/maps/search/?api=1&query=${mensaje.contenido}</a>
+					<date>${fechaEnvio}</date>`;
+					break;
 				case 'text':
 					fileHref =
 						`<div>
@@ -343,6 +347,16 @@ export default class Mensaje extends Contacto {
 		}
 	}
 
+	async createMensajeDirectoUbicacion(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_UBICACION_DIRECTO);
+		if (response.status === 201) {
+			globalThis.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "instant"
+			});
+		}
+	}
+
 	async createMensajeGrupal(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_GRUPAL);
 		if (response.status === 201) {
@@ -375,6 +389,16 @@ export default class Mensaje extends Contacto {
 
 	async createMensajeGrupalVideo(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_VIDEO_GRUPAL);
+		if (response.status === 201) {
+			globalThis.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "instant"
+			});
+		}
+	}
+
+	async createMensajeGrupalUbicacion(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.MENSAJES.CREAR_UBICACION_GRUPAL);
 		if (response.status === 201) {
 			globalThis.scrollTo({
 				top: document.body.scrollHeight,
@@ -416,27 +440,25 @@ export default class Mensaje extends Contacto {
 
 				this.streamContactosInvitables(this.ulid_value);
 
-				// this.dom.form[0].name = 'createMensajeGrupal';
 				this.dom.form[0].name = 'createMensajeGrupalImagen';
 				this.dom.form[1].name = 'createMensajeGrupalImagen';
 				this.dom.form[2].name = 'createMensajeGrupalAudio';
 				this.dom.form[3].name = 'createMensajeGrupalAudio';
 				this.dom.form[4].name = 'createMensajeGrupalVideo';
 				this.dom.form[5].name = 'createMensajeGrupalVideo';
-				this.dom.form[6].name = 'createMensajeGrupal';
+				this.dom.form[6].name = 'createMensajeGrupalUbicacion';
 				this.dom.form[7].name = 'createMensajeGrupal';
 			}
 
 			if (this.urlSearchParams.has('ulid_contacto')) {
 
-				// this.dom.form[0].name = 'createMensajeDirecto';
 				this.dom.form[0].name = 'createMensajeDirectoImagen';
 				this.dom.form[1].name = 'createMensajeDirectoImagen';
 				this.dom.form[2].name = 'createMensajeDirectoAudio';
 				this.dom.form[3].name = 'createMensajeDirectoAudio';
 				this.dom.form[4].name = 'createMensajeDirectoVideo';
 				this.dom.form[5].name = 'createMensajeDirectoVideo';
-				this.dom.form[6].name = 'createMensajeDirecto';
+				this.dom.form[6].name = 'createMensajeDirectoUbicacion';
 				this.dom.form[7].name = 'createMensajeDirecto';
 			}
 		}
