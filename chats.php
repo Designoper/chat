@@ -32,9 +32,9 @@ new Usuario()->authBrowser();
 	<link href="./assets/css/common/reset.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
-	<link href="./assets/css/sala-principal.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/chats.css" rel="preload stylesheet" as="style">
 
-	<script src="./assets/js/pages/sala-principal.js" type="module"></script>
+	<script src="./assets/js/pages/chats.js" type="module"></script>
 
 </head>
 

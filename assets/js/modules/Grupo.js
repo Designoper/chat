@@ -15,7 +15,7 @@ export default class Grupo extends Usuario {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.ELIMINAR);
 
 		if (response.status === 204) {
-			globalThis.location.href = 'sala-principal.php';
+			globalThis.location.href = 'chats.php';
 		}
 	}
 
@@ -23,7 +23,7 @@ export default class Grupo extends Usuario {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.ABANDONAR);
 
 		if (response.status === 204) {
-			globalThis.location.href = 'sala-principal.php';
+			globalThis.location.href = 'chats.php';
 		}
 	}
 }

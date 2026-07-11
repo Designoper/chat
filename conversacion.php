@@ -32,9 +32,9 @@ new Usuario()->authBrowser();
 	<link href="./assets/css/common/reset.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
-	<link href="./assets/css/chat.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/conversacion.css" rel="preload stylesheet" as="style">
 
-	<script src="./assets/js/pages/chat.js" type="module"></script>
+	<script src="./assets/js/pages/conversacion.js" type="module"></script>
 
 </head>
 
@@ -46,7 +46,7 @@ new Usuario()->authBrowser();
 
 			<div>
 
-				<a href="./sala-principal.php">
+				<a href="./chats.php">
 					<svg viewBox="0 0 2481 2481">
 						<path d="M1413.825 2045.88c97.57 97.57 97.57 255.99 0 353.55-97.57 97.57-255.989 97.57-353.549 0l-982.499-982.5c-97.631-97.63-97.631-255.92 0-353.55l982.499-982.499c97.56-97.566 255.979-97.566 353.549 0s97.57 255.987 0 353.553l-805.72 805.726 805.72 805.72z" />
 						<path d="M2226.031 990.157c137.979 0 249.999 112.023 249.999 250.003s-112.02 250-249.999 250H254.552c-137.977 0-249.999-112.02-249.999-250s112.022-250.003 249.999-250.003h1971.479z" />

@@ -74,7 +74,7 @@ export default class Contacto extends Invitacion {
 
 			const template =
 				`<li>
-					<a href="./chat.php?${ulid}=${contacto.ulid}&nombre=${contacto.nombre}">
+					<a href="./conversacion.php?${ulid}=${contacto.ulid}&nombre=${contacto.nombre}">
 						${imgSrc}
 						<h2 translate="no">${contacto.nombre}</h2>
 						${badge}

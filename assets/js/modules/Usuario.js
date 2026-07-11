@@ -10,14 +10,14 @@ export default class Usuario extends TemporalAPI {
 	async createUsuario(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.CREAR);
 		if (response.status === 201) {
-			globalThis.location.href = 'sala-principal.php';
+			globalThis.location.href = 'chats.php';
 		}
 	}
 
 	async login(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.LOGIN);
 		if (response.status === 200) {
-			globalThis.location.href = 'sala-principal.php';
+			globalThis.location.href = 'chats.php';
 		}
 	}
 

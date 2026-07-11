@@ -282,7 +282,7 @@ abstract readonly class File extends SQL
             $this->integrityErrorSetup(403, "Acceso no permitido.");
         }
 
-        // 3. ESPERA ACTIVA: Si el archivo se está procesando, esperamos hasta 3 segundos
+        // 3. ESPERA ACTIVA: Si el archivo se está procesando, esperamos hasta 5 segundos
         $intentos = 0;
         while (!file_exists($filename) || filesize($filename) === 0) {
             clearstatcache(true, $filename); // Forzamos al sistema operativo a mirar el disco real

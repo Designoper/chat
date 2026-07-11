@@ -32,7 +32,7 @@ new Usuario()->authBrowser();
 	<link href="./assets/css/common/reset.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/colors.css" rel="preload stylesheet" as="style">
 	<link href="./assets/css/common/text.css" rel="preload stylesheet" as="style">
-	<link href="./assets/css/sala-principal.css" rel="preload stylesheet" as="style">
+	<link href="./assets/css/chats.css" rel="preload stylesheet" as="style">
 
 	<script src="./assets/js/realtimevideo/source-code.js" defer></script>
 	<script src="./assets/js/realtimevideo/videollamada.js" type="module"></script>
@@ -52,7 +52,7 @@ new Usuario()->authBrowser();
 
 		<!-- <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script> -->
 
-		<a href="./sala-principal.php">Salir</a>
+		<a href="./chats.php">Salir</a>
 
 	</main>
 

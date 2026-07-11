@@ -101,7 +101,7 @@ abstract readonly class Auth extends Database
 	public function sessionRedirect(): void
 	{
 		if ($this->session_ulid !== null) {
-			header("Location: sala-principal.php");
+			header("Location: chats.php");
 			exit;
 		}
 	}
