@@ -263,7 +263,7 @@ export default class Mensaje extends Contacto {
 					<date>${fechaEnvio}</date>`;
 					break;
 				case 'location':
-					fileHref = `<a href="https://www.google.com/maps/search/?api=1&query=${mensaje.contenido}" target="_blank" rel="noopener noreferrer">https://www.google.com/maps/search/?api=1&query=${mensaje.contenido}</a>
+					fileHref = `<a href="https://www.google.com/maps/search/?api=1&query=${mensaje.contenido}" target="_blank" rel="noopener noreferrer">Ver ubicación</a>
 					<date>${fechaEnvio}</date>`;
 					break;
 				case 'text':
