@@ -87,7 +87,7 @@ main {
 			opacity: 70%;
 			font-size: smaller;
 			width: 100%;
-			text-box: trim-both cap text;
+			text-box: initial;
 			scrollbar-width: none;
 
 			span {
