@@ -251,23 +251,26 @@ export default class Mensaje extends Contacto {
 
 			switch (mensaje.tipo_mensaje) {
 				case 'image':
-					fileHref = `<img src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">
-					<date>${fechaEnvio}</date>`;
+					fileHref =
+						`<img src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy">
+						<date>${fechaEnvio}</date>`;
 					break;
 				case 'audio':
-					fileHref = `<audio src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></audio>
-					<date>${fechaEnvio}</date>`;
+					fileHref =
+						`<audio src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></audio>
+						<date>${fechaEnvio}</date>`;
 					break;
 				case 'video':
-					fileHref = `<video src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></video>
-					<date>${fechaEnvio}</date>`;
+					fileHref =
+						`<video src="${this.endpointArchivo}?f=${mensaje.contenido}&ulid_mensaje=${mensaje.ulid_mensaje}&${this.ulid_type}=${this.ulid_value}" loading="lazy" controls></video>
+						<date>${fechaEnvio}</date>`;
 					break;
 				case 'location':
 					fileHref =
 						`<a href="https://www.google.com/maps/search/?api=1&query=${mensaje.contenido}" target="_blank" rel="noopener noreferrer">
 							<img src="./assets/img/google-maps.avif">
 						</a>
-					<date>${fechaEnvio}</date>`;
+						<date>${fechaEnvio}</date>`;
 					break;
 				case 'text':
 					fileHref =
