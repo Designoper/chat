@@ -131,7 +131,7 @@ main {
 
 		form {
 			display: flex;
-			/* flex-wrap: nowrap; */
+			flex-wrap: nowrap;
 			gap: 1em;
 			align-items: center;
 			width: 100%;
