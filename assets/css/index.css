@@ -42,7 +42,7 @@ main {
 
 		output {
 			&:empty {
-				display: none;
+				position: absolute;
 			}
 
 			p {
