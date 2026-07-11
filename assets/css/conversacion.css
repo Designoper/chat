@@ -93,7 +93,7 @@ main {
 			align-items: end;
 
 			textarea {
-				/* flex-grow: 1; */
+				flex-grow: 1;
 				border-radius: 0.25rem;
 				padding: 0.25em 0.75em;
 				background-color: var(--white);
