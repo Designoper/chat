@@ -81,7 +81,7 @@ export default class Fetch {
 		const dialog = form.closest("dialog");
 		const sendButton = form.querySelector('button');
 
-		sendButton.disabled = true;
+		sendButton.type = "button";
 
 		try {
 			const response = await fetch(url, init);
@@ -102,7 +102,7 @@ export default class Fetch {
 		}
 
 		finally {
-			sendButton.disabled = false;
+			sendButton.removeAttribute("type");
 		}
 	}
 

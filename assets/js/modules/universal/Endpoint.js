@@ -85,7 +85,7 @@ export default class Endpoint extends Fetch {
 			const form = e.target;
 			if (form.tagName !== 'FORM') return;
 
-			e.preventDefault();
+			// e.preventDefault();
 
 			const name = form.name;
 

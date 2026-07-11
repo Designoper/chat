@@ -68,7 +68,7 @@ new Usuario()->sessionRedirect();
 				</li>
 
 				<li>
-					<button>Iniciar sesión</button>
+					<button formmethod="dialog">Iniciar sesión</button>
 				</li>
 			</menu>
 
