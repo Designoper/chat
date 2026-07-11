@@ -1,4 +1,4 @@
-import TemporalAPI from "./universal/TemporalAPI.js";
+import TemporalAPI from "./common/TemporalAPI.js";
 
 export default class Usuario extends TemporalAPI {
 	usuario = {};
