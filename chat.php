@@ -68,16 +68,16 @@ new Usuario()->authBrowser();
 				<li>
 					<form method="POST">
 
-						<label for="imagen">
+						<button type="button" aria-label="Enviar imagen">
 							<svg viewBox="0 0 800 800">
 								<path d="M0 0h800v800H0z" fill="#fff" />
 								<path d="M359.269 175.875c0 55.868-46.007 101.875-101.875 101.875s-101.875-46.007-101.875-101.875S201.525 74 257.394 74s101.875 46.007 101.875 101.875zm172.169 165.16c-7.824-3.912-17.319-2.363-23.513 3.79L356.742 536.757 248.347 423.798c-8.028-5.338-18.827-4.279-25.672 2.527L74.1 603.75v81.5c0 22.372 18.378 40.75 40.75 40.75h570.5c22.372 0 40.75-18.378 40.75-40.75V501.875l-194.663-160.84z" fill-rule="nonzero" />
 							</svg>
-						</label>
+						</button>
 
 						<input type="file" id="imagen" name="archivo" accept="image/jpeg, image/jxl, image/png, image/webp, image/gif, image/avif, image/bmp, image/tiff, image/x-icon, image/heic, image/heif" required hidden>
 
-						<button></button>
+						<button type="submit"></button>
 
 						<output></output>
 
@@ -87,16 +87,16 @@ new Usuario()->authBrowser();
 				<li>
 					<form method="POST">
 
-						<label for="camara">
+						<button type="button" aria-label="Enviar imagen">
 							<svg viewBox="0 0 800 800">
 								<path d="M0 0h800v800H0z" fill="#fff" />
 								<path d="M653.5 188.755h-63.375L569 146.505c-12.443-24.568-18.928-42.25-42.25-42.25h-253.5c-23.322 0-31.054 20.153-42.25 42.25l-21.125 42.25H146.5c-46.665 0-84.5 37.835-84.5 84.5v338c0 46.665 37.835 84.5 84.5 84.5h507c46.665 0 84.5-37.835 84.5-84.5v-338c0-46.665-37.835-84.5-84.5-84.5zM400 611.255c-93.33 0-169-75.67-169-169s75.67-169 169-169 169 75.67 169 169-75.67 169-169 169zm0-295.75c-69.987 0-126.75 56.763-126.75 126.75s56.763 126.75 126.75 126.75 126.75-56.763 126.75-126.75-56.763-126.75-126.75-126.75z" />
 							</svg>
-						</label>
+						</button>
 
 						<input type="file" id="camara" name="archivo" capture="user" accept="image/*" required hidden>
 
-						<button></button>
+						<button type="submit"></button>
 
 						<output></output>
 
@@ -106,16 +106,16 @@ new Usuario()->authBrowser();
 				<li>
 					<form method="POST">
 
-						<label for="audio">
+						<button type="button" aria-label="Enviar imagen">
 							<svg viewBox="0 0 800 800">
 								<path d="M0 0h800v800H0z" fill="#fff" fill-rule="nonzero" />
 								<path d="M620.771 108.9H329.567c-32.126 0-58.229 25.899-58.229 58.2v306.423c-29.1-9.603-36.753-15.423-57.88-15.423-51.041 0-96.845 32.01-111.278 80.898-22.902 77.988 33.203 149.283 107.001 151.902 66.755 2.328 120.387-55.581 120.387-122.22V196.2c0-16.005 13.066-29.1 29.129-29.1h232.945c16.063 0 29.129 13.095 29.129 29.1v277.323c-29.1-9.603-36.753-15.423-57.909-15.423-51.041 0-96.845 32.01-111.249 80.898-22.931 77.988 33.203 149.283 106.972 151.902C625.369 693.228 679 635.319 679 568.68V167.1c0-32.301-26.074-58.2-58.229-58.2" />
 							</svg>
-						</label>
+						</button>
 
 						<input type="file" id="audio" name="archivo" accept="audio/*" required hidden>
 
-						<button></button>
+						<button type="submit"></button>
 
 						<output></output>
 
@@ -125,16 +125,16 @@ new Usuario()->authBrowser();
 				<li>
 					<form method="POST">
 
-						<label for="micro">
+						<button type="button" aria-label="Enviar imagen">
 							<svg viewBox="0 0 800 800">
 								<path d="M0 0h800v800H0z" fill="#fff" />
 								<path d="M274 190c0-69.594 56.406-126 126-126s126 56.406 126 126v168c0 69.594-56.406 126-126 126s-126-56.406-126-126V190zm168 459.018V736h-84v-86.982C215.536 628.648 106 506.134 106 358v-42h84v42c0 115.962 94.038 210 210 210s210-94.038 210-210v-42h84v42c0 148.134-109.536 270.648-252 291.018z" />
 							</svg>
-						</label>
+						</button>
 
 						<input type="file" id="micro" name="archivo" capture accept="audio/*" required hidden>
 
-						<button></button>
+						<button type="submit"></button>
 
 						<output></output>
 
@@ -144,18 +144,16 @@ new Usuario()->authBrowser();
 				<li>
 					<form method="POST">
 
-						<label for="video">
-							<button type="button">
-								<svg viewBox="0 0 800 800">
-									<path d="M0 0h800v800H0z" fill="#fff" />
-									<path d="M678.702 367.954L170.325 96.782c-30.16-13.445-64.708-12.049-64.708 36.214v533.973c0 44.121 37.064 51.076 64.708 36.214L678.702 432.01c20.927-17.697 20.927-46.358 0-64.055" />
-								</svg>
-							</button>
-						</label>
+						<button type="button" aria-label="Enviar imagen">
+							<svg viewBox="0 0 800 800">
+								<path d="M0 0h800v800H0z" fill="#fff" />
+								<path d="M678.702 367.954L170.325 96.782c-30.16-13.445-64.708-12.049-64.708 36.214v533.973c0 44.121 37.064 51.076 64.708 36.214L678.702 432.01c20.927-17.697 20.927-46.358 0-64.055" />
+							</svg>
+						</button>
 
 						<input type="file" id="video" name="archivo" accept="video/*" required hidden>
 
-						<button></button>
+						<button type="submit"></button>
 
 						<output></output>
 
@@ -165,16 +163,16 @@ new Usuario()->authBrowser();
 				<li>
 					<form method="POST">
 
-						<label for="grabacion" tabindex="0">
+						<button type="button" aria-label="Enviar imagen">
 							<svg viewBox="0 0 800 800">
 								<path d="M0 0h800v800H0z" fill="#fff" />
 								<path d="M66.667 384.145v31.708c0 104.257 0 156.354 30.267 191.455 5.533 6.405 11.733 12.303 18.467 17.566 36.9 28.791 91.7 28.791 201.266 28.791 109.6 0 164.367 0 201.266-28.791 6.733-5.264 12.933-11.161 18.467-17.566 23.4-27.111 28.7-64.4 29.9-128.038l22.3 10.432c64.867 30.852 97.3 46.294 121.033 32.342 23.7-13.952 23.7-48.419 23.7-117.416v-9.259c0-68.966 0-103.464-23.7-117.416-23.733-13.952-56.167 1.49-121.033 32.342l-22.3 10.432c-1.2-63.639-6.5-100.928-29.9-128.038-5.533-6.405-11.733-12.303-18.467-17.566-36.9-28.791-91.667-28.791-201.266-28.791-109.567 0-164.367 0-201.266 28.791-6.733 5.264-12.933 11.161-18.467 17.566-30.267 35.101-30.267 87.23-30.267 191.455z" fill-rule="nonzero" />
 							</svg>
-						</label>
+						</button>
 
 						<input type="file" id="grabacion" name="archivo" capture accept="video/*" required hidden>
 
-						<button></button>
+						<button type="submit"></button>
 
 						<output></output>
 

@@ -12,3 +12,4 @@ mensaje.sendFileOnInput();
 await mensaje.getUltimoUlid();
 mensaje.streamMensajes();
 // mensaje.geolocate();
+mensaje.formhelper();

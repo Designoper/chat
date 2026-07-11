@@ -81,6 +81,21 @@ export default class Mensaje extends Contacto {
 		};
 	}
 
+	formhelper() {
+		const forms = document.querySelectorAll("form:has(input[type='file'])");
+		forms.forEach(form => {
+			const openButton = form.querySelector("button");
+			const sendButton = form.querySelector("button[type='submit']");
+			const inputFile = form.querySelector("input[type='file']");
+			openButton.onclick = () => {
+				inputFile.showPicker();
+			};
+			inputFile.oninput = () => {
+				sendButton.click();
+			};
+		});
+	}
+
 	// MARK: GET ULTIMO ULID
 
 	async getUltimoUlid() {

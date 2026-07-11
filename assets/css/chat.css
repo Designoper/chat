@@ -69,6 +69,14 @@ main {
 		padding: 1em 10vw;
 		background-color: var(--terciary-bg);
 
+		button[type="submit"] {
+			interactivity: inert;
+		}
+
+		input[type="file"] {
+			interactivity: inert;
+		}
+
 		> menu {
 			display: flex;
 			gap: 0.75em;
