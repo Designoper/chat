@@ -104,7 +104,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="camara" name="archivo" capture="user" accept="image/*" required>
+						<input type="file" name="archivo" accept="image/*" required capture="user">
 
 						<button type="submit"></button>
 
@@ -126,7 +126,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="audio" name="archivo" accept="audio/*" required>
+						<input type="file" name="archivo" accept="audio/*" required>
 
 						<button type="submit"></button>
 
@@ -148,7 +148,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="micro" name="archivo" capture accept="audio/*" required>
+						<input type="file" name="archivo" accept="audio/*" required capture>
 
 						<button type="submit"></button>
 
@@ -170,7 +170,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="video" name="archivo" accept="video/*" required>
+						<input type="file" name="archivo" accept="video/*" required>
 
 						<button type="submit"></button>
 
@@ -192,7 +192,7 @@ new Usuario()->authBrowser();
 							</svg>
 						</button>
 
-						<input type="file" id="grabacion" name="archivo" capture accept="video/*" required>
+						<input type="file" name="archivo" accept="video/*" required capture>
 
 						<button type="submit"></button>
 
