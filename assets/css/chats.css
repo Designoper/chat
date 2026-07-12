@@ -129,8 +129,8 @@ main {
 		bottom: 0;
 
 		form {
-			display: flex;
-			flex-wrap: nowrap;
+			display: grid;
+			grid-template-columns: 1fr auto;
 			gap: 1em;
 			align-items: center;
 			width: 100%;

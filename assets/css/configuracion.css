@@ -32,20 +32,17 @@ main {
 	}
 
 	form {
-		display: flex;
+		display: grid;
+		grid-template-columns: 1fr auto;
 		gap: 1em;
 
 		input {
-			min-width: 0;
-			flex-grow: 1;
 			padding: 0.25em 0.75em;
 			border-radius: 0.15em;
 			background-color: white;
 		}
 
 		output {
-			width: 100%;
-
 			&:empty {
 				position: absolute;
 			}
