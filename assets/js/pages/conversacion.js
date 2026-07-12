@@ -11,6 +11,5 @@ mensaje.setObj();
 mensaje.sendFileOnInput();
 await mensaje.getUltimoUlid();
 mensaje.streamMensajes();
-// mensaje.geolocate();
 mensaje.formhelper();
-mensaje.geolocate2();
+mensaje.geolocate();

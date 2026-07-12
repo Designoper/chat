@@ -169,7 +169,7 @@ main {
 				width: 100%;
 
 				&:empty {
-					display: none;
+					position: absolute;
 				}
 			}
 

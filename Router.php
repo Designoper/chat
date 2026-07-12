@@ -103,7 +103,6 @@ final readonly class Router
             case "GET":
             case "POST":
                 foreach ($this->routes as $route) {
-                    // 2. Usar comparación estricta en lugar de preg_match
                     if ($route["method"] === $method && $route["path"] === $requestUri) {
                         $route["handler"]();
                         return;

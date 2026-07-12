@@ -68,20 +68,6 @@ export default class Mensaje extends Contacto {
 	}
 
 	geolocate() {
-		const geo = document.querySelector("geolocation");
-		const form = geo.closest('form');
-		const sendButton = form.querySelector('button');
-		const input = form.querySelector('input[name="contenido"]');
-
-		geo.onlocation = () => {
-			if (confirm('¿Enviar ubicación?')) {
-				input.value = `https://www.google.com/maps/search/?api=1&query=${geo.position.coords.latitude},${geo.position.coords.longitude}`;
-				sendButton.click();
-			}
-		};
-	}
-
-	geolocate2() {
 		const form = document.querySelector("section>menu>li:last-of-type>form");
 		const sendButton = form.querySelector("button");
 		const button2 = form.querySelector("button[type='submit']");
