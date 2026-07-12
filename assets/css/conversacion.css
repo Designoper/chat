@@ -157,12 +157,6 @@ main {
 				max-width: 120px;
 			}
 
-			div {
-				display: flex;
-				gap: 0.75em 0;
-				align-items: self-end;
-			}
-
 			h2 {
 				font-weight: bold;
 				/* font-size: 1.25rem; */
@@ -174,7 +168,6 @@ main {
 				text-align: right;
 				flex-grow: 1;
 				opacity: 70%;
-				margin-left: 1em;
 				justify-self: end;
 			}
 
@@ -184,6 +177,12 @@ main {
 
 			video {
 				max-height: 300px;
+			}
+
+			p {
+				display: flex;
+				align-items: center;
+				gap: 1em;
 			}
 		}
 	}

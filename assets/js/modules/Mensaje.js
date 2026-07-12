@@ -260,10 +260,10 @@ export default class Mensaje extends Contacto {
 					break;
 				case 'text':
 					fileHref =
-						`<div>
-							<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}</p>
-							<date>${fechaEnvio}</date>
-						</div>`;
+						`
+							<p>${this.detectarEnlacesAvanzado(mensaje.contenido)}<date>${fechaEnvio}</date></p>
+
+						`;
 			}
 
 			const formDelete = isAutor
