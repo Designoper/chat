@@ -1,7 +1,11 @@
 import TemporalAPI from "./common/TemporalAPI.js";
 
 export default class Usuario extends TemporalAPI {
-	usuario = {};
+	usuario = {
+		ulid_usuario: {},
+		nombre_usuario: {},
+		codigo_contacto: {}
+	};
 
 	constructor() {
 		super();
