@@ -12,8 +12,8 @@ html {
 	scrollbar-color: var(--terciary-bg) var(--secondary-bg);
 }
 
-:focus-visible {
-	/* outline: 4px solid blueviolet; */
-	/* outline: none; */
-	/* box-shadow: 0 0 0 4px var(--text-light) inset; */
-}
+/* :focus-visible {
+	outline: 4px solid blueviolet;
+	outline: none;
+	box-shadow: 0 0 0 4px var(--text-light) inset;
+} */

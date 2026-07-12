@@ -5,10 +5,13 @@ export default class Grupo extends Usuario {
 		super();
 	}
 
-	// MARK: GRUPOS CRUD
+	// MARK: CREATE GRUPO
 
 	async createGrupo(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.CREAR);
+		if (response.status === 201) {
+			form.querySelector("output").innerHTML = 'Grupo creado con éxito.';
+		}
 	}
 
 	async eliminarGrupo(form) {

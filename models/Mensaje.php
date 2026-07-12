@@ -223,10 +223,9 @@ readonly class Mensaje extends Contacto
 			FROM mensajes
 			LEFT JOIN usuarios
 				ON mensajes.ulid_emisor = usuarios.ulid_usuario
-			WHERE (
-				LEAST(ulid_emisor, ulid_contacto) = :ulid_min
-				AND GREATEST(ulid_emisor, ulid_contacto) = :ulid_max
-			)
+			WHERE LEAST(ulid_emisor, ulid_contacto) = :ulid_min
+			AND GREATEST(ulid_emisor, ulid_contacto) = :ulid_max
+
 			ORDER BY fecha_creacion ASC";
 
 		$params = [
@@ -524,10 +523,8 @@ readonly class Mensaje extends Contacto
 				WHERE ulid_usuario = :session_ulid
 				AND ulid_contacto = :ulid_contacto
 			), '')
-			AND (
-				LEAST(ulid_emisor, ulid_contacto) = :ulid_min
-				AND GREATEST(ulid_emisor, ulid_contacto) = :ulid_max
-			)
+			AND LEAST(ulid_emisor, ulid_contacto) = :ulid_min
+			AND GREATEST(ulid_emisor, ulid_contacto) = :ulid_max
 			ORDER BY mensajes.ulid_mensaje ASC";
 
 		$params = [
