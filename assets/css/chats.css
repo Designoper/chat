@@ -4,7 +4,7 @@ header {
 	align-items: center;
 	position: sticky;
 	top: 0;
-	padding: 1em 10vw;
+	padding: 0.7em 10vw;
 	width: 100%;
 	z-index: 1;
 	background-color: var(--quartery-bg);
@@ -112,8 +112,8 @@ main {
 		a {
 			display: flex;
 			width: 100%;
-			gap: 0.75em 0.5em;
-			padding: 1em 10vw;
+			gap: 0.5em 0.5em;
+			padding: 1em 10vw 0.8em;
 			align-items: center;
 		}
 
