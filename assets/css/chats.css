@@ -142,8 +142,7 @@ main {
 				background-color: var(--quartery-bg);
 			}
 
-			input,
-			textarea {
+			input {
 				min-width: 0;
 				flex-grow: 1;
 				padding: 0.25em 0.75em;
@@ -172,13 +171,6 @@ main {
 					position: absolute;
 				}
 			}
-
-			/* &:has(:invalid) {
-			button:not([type="reset"], [type="button"]) {
-				opacity: 25%;
-				cursor: not-allowed;
-			}
-		} */
 		}
 	}
 }
