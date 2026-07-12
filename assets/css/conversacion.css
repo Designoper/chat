@@ -154,7 +154,7 @@ main {
 			display: grid;
 			gap: 1em;
 			padding: 0.5em 1em;
-			border-radius: 1em;
+			border-radius: 10px;
 			width: fit-content;
 			max-width: 85%;
 			/* align-items: self-end; */
@@ -202,7 +202,7 @@ main {
 			p {
 				display: flex;
 				align-items: center;
-				gap: 0.75em 1em;
+				gap: 0.25em 1em;
 			}
 		}
 	}
