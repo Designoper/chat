@@ -5,7 +5,6 @@ header {
 	position: sticky;
 	top: 0;
 	padding: 0.7em 10vw;
-	width: 100%;
 	z-index: 1;
 	background-color: var(--quartery-bg);
 
@@ -30,7 +29,7 @@ main {
 
 	output {
 		display: grid;
-		row-rule: solid 2px var(--quartery-bg);
+		row-rule: solid 2px var(--primary-bg);
 
 		menu {
 			display: grid;
@@ -38,7 +37,7 @@ main {
 			row-rule: solid 2px var(--primary-bg);
 
 			&:nth-of-type(1) {
-				background-color: var(--primary-bg);
+				background-color: var(--terciary-bg);
 
 				li {
 					display: flex;
@@ -53,7 +52,7 @@ main {
 				}
 
 				button {
-					width: 1.5em;
+					width: 1.25em;
 
 					svg {
 						path {
@@ -133,7 +132,6 @@ main {
 			grid-template-columns: 1fr auto;
 			gap: 1em;
 			align-items: center;
-			width: 100%;
 			padding: 1em 10vw;
 			background-color: var(--terciary-bg);
 
@@ -164,8 +162,6 @@ main {
 			}
 
 			output {
-				width: 100%;
-
 				&:empty {
 					position: absolute;
 				}

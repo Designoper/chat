@@ -9,7 +9,6 @@ header {
 	position: sticky;
 	top: 0;
 	padding: 0.7em 10vw;
-	width: 100%;
 	z-index: 1;
 	background-color: var(--quartery-bg);
 

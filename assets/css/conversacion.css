@@ -1,28 +1,19 @@
 header {
+	display: flex;
+	gap: 0.75em;
+	align-items: center;
 	position: sticky;
 	top: 0;
-	display: flex;
 	padding: 0.7em 10vw;
-	background-color: var(--terciary-bg);
-	align-items: center;
-	gap: 0.75em;
 	z-index: 1;
-
-	h1 {
-		font-size: 1.25em;
-	}
+	background-color: var(--terciary-bg);
 
 	svg {
 		width: 1.25em;
 	}
 
-	a {
-		align-self: center;
-		border-radius: 0.25rem;
-
-		svg {
-			height: 1.25em;
-		}
+	h1 {
+		font-size: 1.25em;
 	}
 
 	form {
