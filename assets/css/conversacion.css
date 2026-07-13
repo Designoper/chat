@@ -153,7 +153,7 @@ main {
 			max-width: 85%;
 			background-color: rgb(221, 221, 221);
 
-			&:has(img) {
+			&:has(>img) {
 				gap: 0.75em;
 				padding: 0;
 
@@ -269,7 +269,7 @@ main {
 		justify-self: right;
 		background-color: var(--secondary-bg);
 
-		&:has(video, img) {
+		&:has(video, >img) {
 			background-color: transparent;
 		}
 
