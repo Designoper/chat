@@ -192,100 +192,6 @@ main {
 
 			&:has(audio) {
 				padding: 0.5em;
-
-				&:has(h2+img) {
-					padding: 0.75em 0 0;
-					background-color: var(--secondary-bg);
-
-					date {
-						color: revert;
-						opacity: 70%;
-					}
-
-					img {
-						border-radius: 0 0 10px 10px;
-					}
-
-					h2 {
-						padding-top: 0;
-					}
-				}
-
-				&:has(h2+video) {
-					padding: 0.75em 0 0;
-					background-color: var(--secondary-bg);
-
-					date {
-						color: revert;
-						opacity: 70%;
-					}
-
-					video {
-						border-radius: 0 0 10px 10px;
-					}
-
-					h2 {
-						padding-top: 0;
-					}
-				}
-
-				form {
-					position: absolute;
-					transform: translate(125%, 0);
-				}
-
-				> a {
-					max-width: 120px;
-				}
-
-				h2 {
-					font-weight: bold;
-					width: 100%;
-					padding-top: 0.35em;
-				}
-
-				date {
-					font-size: 0.75rem;
-					text-align: right;
-					flex-grow: 1;
-					opacity: 70%;
-					justify-self: end;
-				}
-
-				img {
-					max-height: 300px;
-					border-radius: 10px;
-				}
-
-				video {
-					max-height: 300px;
-					border-radius: 10px;
-				}
-
-				audio {
-					max-height: 40px;
-				}
-
-				p {
-					display: flex;
-					align-items: center;
-					gap: 0.25em 1em;
-				}
-			}
-		}
-
-		#marcador {
-			text-align: center;
-			font-size: 0.8em;
-			margin: 1.5em 0;
-		}
-
-		.mensaje-propio {
-			justify-self: right;
-			background-color: var(--secondary-bg);
-
-			&:has(video, img) {
-				background-color: transparent;
 			}
 
 			&:has(h2+img) {
@@ -295,7 +201,6 @@ main {
 				date {
 					color: revert;
 					opacity: 70%;
-
 				}
 
 				img {
@@ -304,8 +209,6 @@ main {
 
 				h2 {
 					padding-top: 0;
-					padding-left: 13px;
-
 				}
 			}
 
@@ -316,7 +219,6 @@ main {
 				date {
 					color: revert;
 					opacity: 70%;
-
 				}
 
 				video {
@@ -325,15 +227,113 @@ main {
 
 				h2 {
 					padding-top: 0;
-					padding-left: 13px;
 				}
+			}
+
+			form {
+				position: absolute;
+				transform: translate(125%, 0);
+			}
+
+			> a {
+				max-width: 120px;
+			}
+
+			h2 {
+				font-weight: bold;
+				width: 100%;
+				padding-top: 0.35em;
+			}
+
+			date {
+				font-size: 0.75rem;
+				text-align: right;
+				flex-grow: 1;
+				opacity: 70%;
+				justify-self: end;
+			}
+
+			img {
+				max-height: 300px;
+				border-radius: 10px;
+			}
+
+			video {
+				max-height: 300px;
+				border-radius: 10px;
+			}
+
+			audio {
+				max-height: 40px;
+			}
+
+			p {
+				display: flex;
+				align-items: center;
+				gap: 0.25em 1em;
+			}
+		}
+	}
+
+	#marcador {
+		text-align: center;
+		font-size: 0.8em;
+		margin: 1.5em 0;
+	}
+
+	.mensaje-propio {
+		justify-self: right;
+		background-color: var(--secondary-bg);
+
+		&:has(video, img) {
+			background-color: transparent;
+		}
+
+		&:has(h2+img) {
+			padding: 0.75em 0 0;
+			background-color: var(--secondary-bg);
+
+			date {
+				color: revert;
+				opacity: 70%;
+
+			}
+
+			img {
+				border-radius: 0 0 10px 10px;
+			}
+
+			h2 {
+				padding-top: 0;
+				padding-left: 13px;
+
 			}
 		}
 
-		> date {
-			text-align: center;
-			font-size: 0.8em;
-			margin: 1.5em 0;
+		&:has(h2+video) {
+			padding: 0.75em 0 0;
+			background-color: var(--secondary-bg);
+
+			date {
+				color: revert;
+				opacity: 70%;
+
+			}
+
+			video {
+				border-radius: 0 0 10px 10px;
+			}
+
+			h2 {
+				padding-top: 0;
+				padding-left: 13px;
+			}
 		}
+	}
+
+	> date {
+		text-align: center;
+		font-size: 0.8em;
+		margin: 1.5em 0;
 	}
 }
