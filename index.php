@@ -74,9 +74,11 @@ new Usuario()->sessionRedirect();
 
 			<output></output>
 
-			<p>¿No tienes cuenta? <a href="./registro.php">Regístrate</a></p>
-
 		</form>
+
+		<p>¿Aún no eres miembro?</p>
+
+		<a href="./registro.php">Registrarme</a>
 
 	</main>
 

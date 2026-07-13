@@ -1,13 +1,37 @@
+body {
+	background-color: var(--secondary-bg);
+}
+
 main {
-	padding-top: 5em;
+	display: grid;
+	/* gap: 3em; */
+	/* padding-top: 5em; */
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	a {
+		margin-top: 1em;
+		justify-self: center;
+		padding: 0.75em;
+		border-radius: 0.25em;
+		background-color: var(--white);
+	}
+
+	p {
+		text-align: center;
+		margin-top: 3em;
+	}
 
 	form {
 		display: grid;
 		gap: 2em;
-		padding: 2em;
+		/* padding: 2em; */
+		min-width: 231px;
 		max-width: 375px;
 		justify-self: center;
-		border-radius: 1em;
+		/* border-radius: 1em; */
 		background-color: var(--secondary-bg);
 
 		&:has(:invalid) {
