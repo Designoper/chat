@@ -162,7 +162,7 @@ main {
 					opacity: 100%;
 					position: absolute;
 					top: 0;
-					padding: 1em;
+					padding: 14px;
 				}
 
 				h2 {
@@ -181,7 +181,7 @@ main {
 					opacity: 100%;
 					position: absolute;
 					top: 0;
-					padding: 1em;
+					padding: 14px;
 				}
 
 				h2 {
@@ -194,39 +194,23 @@ main {
 				padding: 0.5em;
 			}
 
-			&:has(h2+img) {
+			&:has(h2+img, h2+video) {
 				padding: 0.75em 0 0;
 				background-color: var(--secondary-bg);
 
-				date {
-					color: revert;
-					opacity: 70%;
-				}
-
-				img {
-					border-radius: 0 0 10px 10px;
-				}
-
-				h2 {
-					padding-top: 0;
-				}
-			}
-
-			&:has(h2+video) {
-				padding: 0.75em 0 0;
-				background-color: var(--secondary-bg);
-
-				date {
-					color: revert;
-					opacity: 70%;
-				}
-
+				img,
 				video {
 					border-radius: 0 0 10px 10px;
 				}
 
+				date {
+					color: revert;
+					opacity: 70%;
+				}
+
 				h2 {
 					padding-top: 0;
+					padding-left: 13px;
 				}
 			}
 
@@ -289,7 +273,7 @@ main {
 			background-color: transparent;
 		}
 
-		&:has(h2+img) {
+		&:has(h2+img, h2+video) {
 			padding: 0.75em 0 0;
 			background-color: var(--secondary-bg);
 
@@ -300,22 +284,6 @@ main {
 
 			img {
 				border-radius: 0 0 10px 10px;
-			}
-
-			h2 {
-				padding-top: 0;
-				padding-left: 13px;
-
-			}
-		}
-
-		&:has(h2+video) {
-			padding: 0.75em 0 0;
-			background-color: var(--secondary-bg);
-
-			date {
-				color: revert;
-				opacity: 70%;
 			}
 
 			video {
