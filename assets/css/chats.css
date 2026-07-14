@@ -6,6 +6,7 @@ header {
 	top: 0;
 	padding: 0.7em 10vw;
 	z-index: 1;
+	width: 100%;
 	background-color: var(--quartery-bg);
 
 	svg {
@@ -111,7 +112,7 @@ main {
 		a {
 			display: flex;
 			width: 100%;
-			gap: 0.5em 0.5em;
+			gap: 0.5em;
 			padding: 1em 10vw 0.8em;
 			align-items: center;
 		}
