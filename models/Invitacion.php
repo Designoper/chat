@@ -494,7 +494,7 @@ readonly class Invitacion extends Grupo
 	// ============================================================================
 	// MARK: STREAM INVITACIONES LOGIC
 	// ============================================================================
-	protected function streamInvitacionesLogic(): void
+	private function streamInvitacionesLogic(): void
 	{
 		static $invitaciones = [];
 
@@ -511,7 +511,7 @@ readonly class Invitacion extends Grupo
 	// ============================================================================
 	public function streamInvitaciones(): void
 	{
-		$this->setSSE([$this, "streamInvitacionesLogic"]);
+		$this->setSSE(fn() => $this->streamInvitacionesLogic());
 	}
 
 	// ============================================================================
@@ -557,7 +557,7 @@ readonly class Invitacion extends Grupo
 	// ============================================================================
 	// MARK: STREAM CONTACTOS INVITABLES LOGIC
 	// ============================================================================
-	protected function streamContactosInvitablesLogic(): void
+	private function streamContactosInvitablesLogic(): void
 	{
 		static $contactosInvitables = [];
 
@@ -578,6 +578,6 @@ readonly class Invitacion extends Grupo
 
 		$this->isMiembroGrupo();
 
-		$this->setSSE([$this, "streamContactosInvitablesLogic"]);
+		$this->setSSE(fn() => $this->streamContactosInvitablesLogic());
 	}
 }

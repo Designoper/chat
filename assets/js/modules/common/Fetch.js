@@ -43,7 +43,6 @@ export default class Fetch {
 	async fetchWithoutForm(endpoint, method, data = {}) {
 		const upper = method.toUpperCase();
 
-		// /** @type {RequestInit} */
 		const init = this.buildRequest(upper, data);
 
 		const url = this.buildURL(endpoint, upper, data);
@@ -66,10 +65,6 @@ export default class Fetch {
 		}
 	}
 
-	// /**
-	//  * @param {HTMLFormElement} form
-	//  * @param {URL} action
-	//  */
 	async fetchData(form, action) {
 		const method = form.method.toUpperCase();
 		const data = new FormData(form);
@@ -79,9 +74,6 @@ export default class Fetch {
 
 		const output = form.querySelector("output");
 		const dialog = form.closest("dialog");
-		const sendButton = form.querySelector('button');
-
-		sendButton.type = "button";
 
 		try {
 			const response = await fetch(url, init);
@@ -100,10 +92,6 @@ export default class Fetch {
 		catch (error) {
 			console.error("fetchData error:", error);
 		}
-
-		finally {
-			sendButton.removeAttribute("type");
-		}
 	}
 
 	async responseToJson(response) {
@@ -117,8 +105,8 @@ export default class Fetch {
 		if (output) {
 			output.innerHTML =
 				`<ul>
-				${response.map(error => `<li>${error}</li>`).join("")}
-			</ul>`;
+					${response.map(error => `<li>${error}</li>`).join("")}
+				</ul>`;
 		}
 	}
 
