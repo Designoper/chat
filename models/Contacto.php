@@ -121,21 +121,13 @@ readonly class Contacto extends Invitacion
 				fecha_creacion DESC,
 				nombre ASC";
 
-		// Mapeo limpio en PDO: no importa cuántas veces aparezca ":session_ulid" o ":date_format"
-		// en el texto superior, aquí solo necesitas declararlos una vez.
 		$params = [
 			"session_ulid" => $this->session_ulid,
 			"date_format"  => self::ISO8601_SQL_FORMAT
 		];
 
-		// 1. Obtenemos la instancia de conexión PDO desde tu clase base (ajusta el nombre si es necesario)
-		// 2. Activamos la emulación temporalmente para que PHP gestione la repetición de placeholders
 		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-
-		// 3. Ejecutamos la consulta normalmente
 		$contactos = $this->executeQuery($query, $params, SqlReturn::FetchAll);
-
-		// 4. MUY IMPORTANTE: Desactivamos la emulación de nuevo para mantener el resto de la API segura
 		$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 		return $contactos;
@@ -144,7 +136,7 @@ readonly class Contacto extends Invitacion
 	// ============================================================================
 	// MARK: STREAM CONTACTOS LOGIC
 	// ============================================================================
-	protected function streamContactosLogic(): void
+	private function streamContactosLogic(): void
 	{
 		static $contactos = [];
 
@@ -161,7 +153,7 @@ readonly class Contacto extends Invitacion
 	// ============================================================================
 	public function streamContactos(): void
 	{
-		$this->setSSE([$this, "streamContactosLogic"]);
+		$this->setSSE(fn() => $this->streamContactosLogic());
 	}
 
 	// ============================================================================
