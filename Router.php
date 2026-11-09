@@ -7,81 +7,64 @@ require_once __DIR__ . "/models/Mensaje.php";
 
 final readonly class Router
 {
-    private const COMMON_PATH = "/api/";
-    private array $routes;
+    private const ROUTES = [
+        "GET" => [
+            "/api/usuarios/current" => [Usuario::class, "currentUsuario"],
+
+            "/api/invitaciones/contactos-invitables" => [Invitacion::class, "streamContactosInvitables"],
+            "/api/invitaciones/stream" => [Invitacion::class, "streamInvitaciones"],
+
+            "/api/contactos/stream" => [Contacto::class, "streamContactos"],
+
+            "/api/mensajes/stream/directos" => [Mensaje::class, "streamMensajesDirectos"],
+            "/api/mensajes/stream/grupales" => [Mensaje::class, "streamMensajesGrupales"],
+            "/api/mensajes/directos" => [Mensaje::class, "readMensajesDirectos"],
+            "/api/mensajes/grupales" => [Mensaje::class, "readMensajesGrupales"],
+            "/api/mensajes/ultimo-ulid-directo" => [Mensaje::class, "getUltimoUlidDirecto"],
+            "/api/mensajes/ultimo-ulid-grupal" => [Mensaje::class, "getUltimoUlidGrupal"],
+
+            "/api/mensajes/archivos/directo" => [Mensaje::class, "readArchivoMensajeDirecto"],
+            "/api/mensajes/archivos/grupal" => [Mensaje::class, "readArchivoMensajeGrupal"],
+        ],
+
+        "POST" => [
+            "/api/usuarios/crear" => [Usuario::class, "createUsuario"],
+            "/api/usuarios/login" => [Usuario::class, "login"],
+            "/api/usuarios/logout" => [Usuario::class, "logout"],
+            "/api/usuarios/delete" => [Usuario::class, "deleteUsuario"],
+            "/api/usuarios/nombre" => [Usuario::class, "cambiarNombre"],
+            "/api/usuarios/password" => [Usuario::class, "cambiarPassword"],
+
+            "/api/grupos/crear" => [Grupo::class, "createGrupo"],
+            "/api/grupos/delete" => [Grupo::class, "deleteGrupo"],
+            "/api/grupos/abandonar" => [Grupo::class, "abandonarGrupo"],
+
+            "/api/invitaciones/usuarios/invitar" => [Invitacion::class, "invitarContacto"],
+            "/api/invitaciones/usuarios/aceptar" => [Invitacion::class, "aceptarContacto"],
+            "/api/invitaciones/usuarios/rechazar" => [Invitacion::class, "rechazarContacto"],
+            "/api/invitaciones/grupos/invitar" => [Invitacion::class, "invitarGrupo"],
+            "/api/invitaciones/grupos/aceptar" => [Invitacion::class, "aceptarGrupo"],
+            "/api/invitaciones/grupos/rechazar" => [Invitacion::class, "rechazarGrupo"],
+
+            "/api/mensajes/crear/directo" => [Mensaje::class, "createMensajeDirecto"],
+            "/api/mensajes/crear/imagen-directo" => [Mensaje::class, "createMensajeDirectoImagen"],
+            "/api/mensajes/crear/audio-directo" => [Mensaje::class, "createMensajeDirectoAudio"],
+            "/api/mensajes/crear/video-directo" => [Mensaje::class, "createMensajeDirectoVideo"],
+            "/api/mensajes/crear/ubicacion-directo" => [Mensaje::class, "createMensajeDirectoUbicacion"],
+            "/api/mensajes/crear/grupal" => [Mensaje::class, "createMensajeGrupal"],
+            "/api/mensajes/crear/imagen-grupal" => [Mensaje::class, "createMensajeGrupalImagen"],
+            "/api/mensajes/crear/audio-grupal" => [Mensaje::class, "createMensajeGrupalAudio"],
+            "/api/mensajes/crear/video-grupal" => [Mensaje::class, "createMensajeGrupalVideo"],
+            "/api/mensajes/crear/ubicacion-grupal" => [Mensaje::class, "createMensajeGrupalUbicacion"],
+            "/api/mensajes/delete" => [Mensaje::class, "deleteMensaje"],
+            "/api/mensajes/ultimo-ulid-directo" => [Mensaje::class, "setUltimoUlidDirecto"],
+            "/api/mensajes/ultimo-ulid-grupal" => [Mensaje::class, "setUltimoUlidGrupal"],
+        ],
+    ];
 
     public function __construct()
     {
-        $this->routes = [
-            $this->setRoute("GET", "usuarios/current", [Usuario::class, "currentUsuario"]),
-
-            $this->setRoute("GET", "invitaciones/contactos-invitables", [Invitacion::class, "streamContactosInvitables"]),
-            $this->setRoute("GET", "invitaciones/stream", [Invitacion::class, "streamInvitaciones"]),
-
-            $this->setRoute("GET", "contactos/stream", [Contacto::class, "streamContactos"]),
-
-            // $this->setRoute("GET", "conexion/stream", [Conexion::class, "streamConexion"]),
-
-            $this->setRoute("GET", "mensajes/stream/directos", [Mensaje::class, "streamMensajesDirectos"]),
-            $this->setRoute("GET", "mensajes/stream/grupales", [Mensaje::class, "streamMensajesGrupales"]),
-            $this->setRoute("GET", "mensajes/directos", [Mensaje::class, "readMensajesDirectos"]),
-            $this->setRoute("GET", "mensajes/grupales", [Mensaje::class, "readMensajesGrupales"]),
-            $this->setRoute("GET", "mensajes/ultimo-ulid-directo", [Mensaje::class, "getUltimoUlidDirecto"]),
-            $this->setRoute("GET", "mensajes/ultimo-ulid-grupal", [Mensaje::class, "getUltimoUlidGrupal"]),
-
-            $this->setRoute("GET", "mensajes/archivos/directo", [Mensaje::class, "readArchivoMensajeDirecto"]),
-            $this->setRoute("GET", "mensajes/archivos/grupal", [Mensaje::class, "readArchivoMensajeGrupal"]),
-
-            $this->setRoute("POST", "usuarios/crear", [Usuario::class, "createUsuario"]),
-            $this->setRoute("POST", "usuarios/login", [Usuario::class, "login"]),
-            $this->setRoute("POST", "usuarios/logout", [Usuario::class, "logout"]),
-            $this->setRoute("POST", "usuarios/delete", [Usuario::class, "deleteUsuario"]),
-            $this->setRoute("POST", "usuarios/nombre", [Usuario::class, "cambiarNombre"]),
-            $this->setRoute("POST", "usuarios/password", [Usuario::class, "cambiarPassword"]),
-
-            $this->setRoute("POST", "grupos/crear", [Grupo::class, "createGrupo"]),
-            $this->setRoute("POST", "grupos/delete", [Grupo::class, "deleteGrupo"]),
-            $this->setRoute("POST", "grupos/abandonar", [Grupo::class, "abandonarGrupo"]),
-
-            $this->setRoute("POST", "invitaciones/usuarios/invitar", [Invitacion::class, "invitarContacto"]),
-            $this->setRoute("POST", "invitaciones/usuarios/aceptar", [Invitacion::class, "aceptarContacto"]),
-            $this->setRoute("POST", "invitaciones/usuarios/rechazar", [Invitacion::class, "rechazarContacto"]),
-            $this->setRoute("POST", "invitaciones/grupos/invitar", [Invitacion::class, "invitarGrupo"]),
-            $this->setRoute("POST", "invitaciones/grupos/aceptar", [Invitacion::class, "aceptarGrupo"]),
-            $this->setRoute("POST", "invitaciones/grupos/rechazar", [Invitacion::class, "rechazarGrupo"]),
-
-            // $this->setRoute("POST", "conexion/estado", [Conexion::class, "setConexion"]),
-
-            $this->setRoute("POST", "mensajes/crear/directo", [Mensaje::class, "createMensajeDirecto"]),
-            $this->setRoute("POST", "mensajes/crear/imagen-directo", [Mensaje::class, "createMensajeDirectoImagen"]),
-            $this->setRoute("POST", "mensajes/crear/audio-directo", [Mensaje::class, "createMensajeDirectoAudio"]),
-            $this->setRoute("POST", "mensajes/crear/video-directo", [Mensaje::class, "createMensajeDirectoVideo"]),
-            $this->setRoute("POST", "mensajes/crear/ubicacion-directo", [Mensaje::class, "createMensajeDirectoUbicacion"]),
-            $this->setRoute("POST", "mensajes/crear/grupal", [Mensaje::class, "createMensajeGrupal"]),
-            $this->setRoute("POST", "mensajes/crear/imagen-grupal", [Mensaje::class, "createMensajeGrupalImagen"]),
-            $this->setRoute("POST", "mensajes/crear/audio-grupal", [Mensaje::class, "createMensajeGrupalAudio"]),
-            $this->setRoute("POST", "mensajes/crear/video-grupal", [Mensaje::class, "createMensajeGrupalVideo"]),
-            $this->setRoute("POST", "mensajes/crear/ubicacion-grupal", [Mensaje::class, "createMensajeGrupalUbicacion"]),
-            $this->setRoute("POST", "mensajes/delete", [Mensaje::class, "deleteMensaje"]),
-            $this->setRoute("POST", "mensajes/ultimo-ulid-directo", [Mensaje::class, "setUltimoUlidDirecto"]),
-            $this->setRoute("POST", "mensajes/ultimo-ulid-grupal", [Mensaje::class, "setUltimoUlidGrupal"]),
-        ];
-
         $this->executeRoute();
-    }
-
-    // ============================================================================
-    // MARK: SET ROUTE
-    // ============================================================================
-    private function setRoute(string $method, string $path, array $action): array
-    {
-        [$class, $methodName] = $action;
-
-        return [
-            "method"  => $method,
-            "path"    => self::COMMON_PATH . $path,
-            "handler" => fn() => (new $class())->$methodName()
-        ];
     }
 
     // ============================================================================
@@ -102,11 +85,11 @@ final readonly class Router
         switch ($method) {
             case "GET":
             case "POST":
-                foreach ($this->routes as $route) {
-                    if ($route["method"] === $method && $route["path"] === $requestUri) {
-                        $route["handler"]();
-                        return;
-                    }
+                $handler = self::ROUTES[$method][$requestUri] ?? null;
+                if ($handler !== null) {
+                    [$class, $methodName] = $handler;
+                    (new $class())->$methodName();
+                    return;
                 }
 
                 http_response_code(404);
