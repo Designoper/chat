@@ -9,12 +9,13 @@ abstract readonly class Auth extends Database
 	protected ?string $session_ulid;
 
 	protected const array SESSION_BASE_OPTIONS = [
-		"cookie_lifetime" => 0,          // La cookie expira al cerrar el navegador
-		"cookie_secure" => true,       // Solo se envía a través de HTTPS (Obligatorio)
-		"cookie_httponly" => true,       // Bloquea el acceso a la cookie desde JavaScript (Evita XSS)
+		"use_strict_mode" => 1,        // Rechaza IDs de sesión inicializados por el usuario
+		"cookie_httponly" => 1,       // Bloquea el acceso a la cookie desde JavaScript (Evita XSS)
 		"cookie_samesite" => "Lax",      // Mitiga ataques CSRF (Cross-Site Request Forgery)
-		"use_only_cookies" => true,      // Evita que el ID de sesión se pase por la URL
-		"use_strict_mode" => true,        // Rechaza IDs de sesión inicializados por el usuario
+
+		"cookie_lifetime" => 0,          // La cookie expira al cerrar el navegador
+		"cookie_secure" => 1,       // Solo se envía a través de HTTPS (Obligatorio)
+		"use_only_cookies" => 1,      // Evita que el ID de sesión se pase por la URL
 	];
 
 	// protected const array READ_ONLY_OPTIONS = [
@@ -116,7 +117,7 @@ abstract readonly class Auth extends Database
 		}
 	}
 
-	// protected function authEndpoi(): void
+	// protected function authEndpoint(): void
 
 	// 	// Obtener el ID de sesión actual de PHP
 	// 	$sesion_actual = session_id();
