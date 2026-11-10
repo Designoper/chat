@@ -9,10 +9,6 @@ abstract readonly class Auth extends Database
 	protected ?string $session_ulid;
 
 	protected const array SESSION_BASE_OPTIONS = [
-		"use_strict_mode" => 1,        // Rechaza IDs de sesión inicializados por el usuario
-		"cookie_httponly" => 1,       // Bloquea el acceso a la cookie desde JavaScript (Evita XSS)
-		"cookie_samesite" => "Lax",      // Mitiga ataques CSRF (Cross-Site Request Forgery)
-
 		"cookie_lifetime" => 0,          // La cookie expira al cerrar el navegador
 		"cookie_secure" => 1,       // Solo se envía a través de HTTPS (Obligatorio)
 		"use_only_cookies" => 1,      // Evita que el ID de sesión se pase por la URL
