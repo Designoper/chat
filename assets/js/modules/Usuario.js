@@ -54,6 +54,6 @@ export default class Usuario extends TemporalAPI {
 
 	imprimirCodigo() {
 		const response = document.querySelector('header p');
-		response.innerHTML = this.usuario.codigo_contacto;
+		response.textContent = this.usuario.codigo_contacto;
 	}
 }

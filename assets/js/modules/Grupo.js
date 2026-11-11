@@ -10,7 +10,7 @@ export default class Grupo extends Usuario {
 	async createGrupo(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.GRUPOS.CREAR);
 		if (response.status === 201) {
-			form.querySelector("output").innerHTML = 'Grupo creado con éxito.';
+			form.querySelector("output").textContent = 'Grupo creado con éxito.';
 		}
 	}
 
