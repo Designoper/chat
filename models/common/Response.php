@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . "/ErrorHandler.php";
-
 abstract readonly class Response
 {
     protected int $status;
     protected string|array $content;
-    protected ErrorHandler $errors;
+    protected ArrayObject $validationErrors;
+    protected ArrayObject $integrityErrors;
     private string|array $response;
 
     protected function __construct()
     {
-        $this->errors = new ErrorHandler();
+        $this->validationErrors = new ArrayObject();
+        $this->integrityErrors = new ArrayObject();
     }
 
     // ============================================================================
@@ -21,13 +21,13 @@ abstract readonly class Response
     // ============================================================================
     private function buildResponse(): void
     {
-        if (!empty($this->errors->getValidationErrors())) {
-            $this->response = $this->errors->getValidationErrors();
+        if ($this->validationErrors->count() > 0) {
+            $this->response = $this->validationErrors->getArrayCopy();
             return;
         }
 
-        if (!empty($this->errors->getIntegrityErrors())) {
-            $this->response = $this->errors->getIntegrityErrors();
+        if ($this->integrityErrors->count() > 0) {
+            $this->response = $this->integrityErrors->getArrayCopy();
             return;
         }
 
@@ -86,7 +86,7 @@ abstract readonly class Response
     // ============================================================================
     protected function checkValidationErrors(): void
     {
-        if (!empty($this->errors->getValidationErrors())) {
+        if ($this->validationErrors->count() > 0) {
             $this->status = 400;
             $this->sendNotOkResponse();
         }
@@ -97,7 +97,7 @@ abstract readonly class Response
     // ============================================================================
     protected function checkIntegrityErrors(): void
     {
-        if (!empty($this->errors->getIntegrityErrors())) {
+        if ($this->integrityErrors->count() > 0) {
             $this->sendNotOkResponse();
         }
     }
@@ -108,7 +108,7 @@ abstract readonly class Response
     protected function integrityErrorSetup(int $http_code, string $error_message): void
     {
         $this->status = $http_code;
-        $this->errors->setIntegrityError($error_message);
+        $this->integrityErrors->append($error_message);
         $this->checkIntegrityErrors();
     }
 }

@@ -90,8 +90,18 @@ abstract readonly class Validator extends File
 	// ============================================================================
 	protected function setProperties(array $properties): void
 	{
+		$arrayErrors = [];
+
 		foreach ($properties as $property) {
-			$property();
+			$error = $property();
+
+			if ($error) {
+				$arrayErrors[] = $error;
+			}
+		}
+
+		foreach ($arrayErrors as $error) {
+			$this->validationErrors->append($error);
 		}
 
 		$this->checkValidationErrors();
@@ -100,15 +110,18 @@ abstract readonly class Validator extends File
 	// ============================================================================
 	// MARK: SET ULID
 	// ============================================================================
-	protected function setUlid(string $name): void
+	protected function setUlid(string $name): string|null
 	{
 		$value = $_REQUEST[$name] ?? null;
 		$ulid_length = 26;
 		$error_message = "El campo $name no puede estar vacío y debe contener $ulid_length carácteres.";
 
-		empty($value) || strlen($value) !== $ulid_length
-			? $this->errors->setValidationError($error_message)
-			: $this->$name = $value;
+		if (empty($value) || strlen($value) !== $ulid_length) {
+			return $error_message;
+		}
+
+		$this->$name = $value;
+		return null;
 	}
 
 	// ============================================================================
@@ -121,7 +134,7 @@ abstract readonly class Validator extends File
 		$error_message = "El campo $name no puede estar vacío ni superar los $nombre_max_length carácteres.";
 
 		empty($value) || strlen($value) > $nombre_max_length
-			? $this->errors->setValidationError($error_message)
+			? $this->validationErrors->append($error_message)
 			: $this->$name = $value;
 	}
 
@@ -135,7 +148,7 @@ abstract readonly class Validator extends File
 		$error_message = "El campo $name no puede estar vacío ni superar los $password_max_length carácteres.";
 
 		empty($value) || strlen($value) > $password_max_length
-			? $this->errors->setValidationError($error_message)
+			? $this->validationErrors->append($error_message)
 			: $this->$name = $value;
 	}
 
@@ -149,7 +162,7 @@ abstract readonly class Validator extends File
 		$error_message = "El campo $name no puede estar vacío y debe contener exactamente $codigo_length carácteres.";
 
 		empty($value) || strlen($value) !== $codigo_length
-			? $this->errors->setValidationError($error_message)
+			? $this->validationErrors->append($error_message)
 			: $this->$name = $value;
 	}
 
@@ -162,7 +175,7 @@ abstract readonly class Validator extends File
 		$error_message = "El campo $name no puede estar vacío.";
 
 		empty($value)
-			? $this->errors->setValidationError($error_message)
+			? $this->validationErrors->append($error_message)
 			: $this->$name = $value;
 	}
 
@@ -174,12 +187,12 @@ abstract readonly class Validator extends File
 		$filesUploaded = $this->flattenFilesArray($name);
 
 		if (count($filesUploaded) === 0) {
-			$this->errors->setValidationError("No has subido ningún archivo.");
+			$this->validationErrors->append("No has subido ningún archivo.");
 			$this->checkValidationErrors();
 		}
 
 		if (count($filesUploaded) > 1) {
-			$this->errors->setValidationError("Solo se puede subir un archivo.");
+			$this->validationErrors->append("Solo se puede subir un archivo.");
 			$this->checkValidationErrors();
 		}
 
@@ -239,7 +252,7 @@ abstract readonly class Validator extends File
 
 		// Bloqueo inmediato de SVG
 		if ($extension === "svg") {
-			$this->errors->setValidationError("Los archivos SVG no están permitidos.");
+			$this->validationErrors->append("Los archivos SVG no están permitidos.");
 			$this->checkValidationErrors();
 		}
 
@@ -279,12 +292,12 @@ abstract readonly class Validator extends File
 	private function validarArchivoSeguro(string $filename, ?FileTypes $tipoDetectado, FileTypes $tipoEsperado): void
 	{
 		if ($tipoDetectado === null) {
-			$this->errors->setValidationError("No se pudo determinar el tipo de archivo.");
+			$this->validationErrors->append("No se pudo determinar el tipo de archivo.");
 			$this->checkValidationErrors();
 		}
 
 		if ($tipoDetectado !== $tipoEsperado) {
-			$this->errors->setValidationError("Se esperaba un archivo de tipo '$tipoEsperado', pero se recibió '$tipoDetectado'.");
+			$this->validationErrors->append("Se esperaba un archivo de tipo '$tipoEsperado', pero se recibió '$tipoDetectado'.");
 			$this->checkValidationErrors();
 		}
 
@@ -293,7 +306,7 @@ abstract readonly class Validator extends File
 			case FileTypes::Image:
 				$info = @getimagesize($filename);
 				if ($info === false) {
-					$this->errors->setValidationError("La imagen no es válida o está corrupta.");
+					$this->validationErrors->append("La imagen no es válida o está corrupta.");
 					$this->checkValidationErrors();
 				}
 				break;
@@ -301,13 +314,13 @@ abstract readonly class Validator extends File
 			case FileTypes::Audio:
 			case FileTypes::Video:
 				if (filesize($filename) < 1024) {
-					$this->errors->setValidationError("El archivo multimedia es demasiado pequeño para ser válido.");
+					$this->validationErrors->append("El archivo multimedia es demasiado pequeño para ser válido.");
 					$this->checkValidationErrors();
 				}
 				break;
 
 			default:
-				$this->errors->setValidationError("Tipo de archivo no permitido.");
+				$this->validationErrors->append("Tipo de archivo no permitido.");
 				$this->checkValidationErrors();
 		}
 	}
