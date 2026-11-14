@@ -123,7 +123,7 @@ readonly class Invitacion extends Grupo
 
 			$params = [
 				"session_ulid" => $this->session_ulid,
-				"contacto" => $this->$contacto
+				"contacto" => $contacto
 			];
 
 			$this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);

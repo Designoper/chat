@@ -37,8 +37,8 @@ abstract readonly class Database extends SSE
 	{
 		try {
 			$this->connection = new PDO($this->dsn, $this->username, $this->password, self::OPTIONS);
-		} catch (PDOException $error) {
-			$this->integrityErrorSetup(500, "Error {$error->errorInfo[1]}: {$error->errorInfo[2]}");
+		} catch (PDOException) {
+			$this->integrityErrorSetup(500, "Error al conectarse a la base de datos.");
 		}
 	}
 }
