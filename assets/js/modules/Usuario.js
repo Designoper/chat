@@ -42,10 +42,10 @@ export default class Usuario extends TemporalAPI {
 	}
 
 	// ============================================================================
-	// MARK: DELETE USUARIO
+	// MARK: ELIMINAR USUARIO
 	// ============================================================================
-	async deleteUsuario(form) {
-		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.DELETE);
+	async eliminarUsuario(form) {
+		const response = await this.fetchData(form, this.ENDPOINTS.POST.USUARIOS.ELIMINAR);
 		if (response.status === 204) {
 			globalThis.location.href = 'registro.php';
 		}

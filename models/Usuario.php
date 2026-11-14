@@ -136,9 +136,9 @@ readonly class Usuario extends Validator
 	}
 
 	// ============================================================================
-	// MARK: DELETE USUARIO
+	// MARK: ELIMINAR USUARIO
 	// ============================================================================
-	public function deleteUsuario(): void
+	public function eliminarUsuario(): void
 	{
 		$this->authEndpoint();
 

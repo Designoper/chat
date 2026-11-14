@@ -31,7 +31,7 @@ final readonly class Router
             "/api/usuarios/crear" => [Usuario::class, "createUsuario"],
             "/api/usuarios/login" => [Usuario::class, "login"],
             "/api/usuarios/logout" => [Usuario::class, "logout"],
-            "/api/usuarios/delete" => [Usuario::class, "deleteUsuario"],
+            "/api/usuarios/delete" => [Usuario::class, "eliminarUsuario"],
             "/api/usuarios/nombre" => [Usuario::class, "cambiarNombre"],
             "/api/usuarios/password" => [Usuario::class, "cambiarPassword"],
 
