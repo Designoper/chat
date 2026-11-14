@@ -154,6 +154,26 @@ readonly class Invitacion extends Grupo
 	{
 		$this->setProperties([fn() => $this->setUlid('ulid_contacto')]);
 
+		// 2. Validar que existe la invitación
+		$query =
+			"SELECT EXISTS(
+				SELECT 1
+				FROM invitaciones_directas
+				WHERE ulid_usuario = :session_ulid
+				AND ulid_contacto = :ulid_contacto
+			)";
+
+		$params = [
+			"session_ulid" => $this->session_ulid,
+			"ulid_contacto" => $this->ulid_contacto
+		];
+
+		$invitacion = $this->executeQuery($query, $params, SqlReturn::Exists);
+
+		if (!$invitacion) {
+			$this->integrityErrorSetup(404, "No tienes ninguna invitación de este usuario.");
+		}
+
 		$ulid_min = min($this->ulid_contacto, $this->session_ulid);
 		$ulid_max = max($this->ulid_contacto, $this->session_ulid);
 
@@ -340,6 +360,62 @@ readonly class Invitacion extends Grupo
 	public function aceptarGrupo(): void
 	{
 		$this->setProperties([fn() => $this->setUlid('ulid_grupo')]);
+
+		// 1. Validar que el grupo existe
+		$query =
+			"SELECT EXISTS(
+				SELECT 1
+				FROM grupos
+				WHERE ulid_grupo = :ulid_grupo
+			)";
+
+		$params = ["ulid_grupo" => $this->ulid_grupo];
+
+		$grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
+
+		if (!$grupo) {
+			$this->integrityErrorSetup(404, "El grupo no existe.");
+		}
+
+		// 3. Validar que NO eres miembro del grupo
+		$query =
+			"SELECT EXISTS(
+				SELECT 1
+				FROM contactos_grupales
+				WHERE ulid_usuario = :session_ulid
+				AND ulid_grupo = :ulid_grupo
+			)";
+
+		$params = [
+			"session_ulid" => $this->session_ulid,
+			"ulid_grupo" => $this->ulid_grupo
+		];
+
+		$miembro_grupo = $this->executeQuery($query, $params, SqlReturn::Exists);
+
+		if ($miembro_grupo) {
+			$this->integrityErrorSetup(409, "Ya eres miembro del grupo.");
+		}
+
+		// 2. Validar que existe la invitación
+		$query =
+			"SELECT EXISTS(
+				SELECT 1
+				FROM invitaciones_grupales
+				WHERE ulid_usuario = :session_ulid
+				AND ulid_grupo = :ulid_grupo
+			)";
+
+		$params = [
+			"session_ulid" => $this->session_ulid,
+			"ulid_grupo" => $this->ulid_grupo
+		];
+
+		$invitacion = $this->executeQuery($query, $params, SqlReturn::Exists);
+
+		if (!$invitacion) {
+			$this->integrityErrorSetup(404, "No tienes ninguna invitación para este grupo.");
+		}
 
 		$query =
 			"INSERT INTO contactos_grupales (ulid_usuario, ulid_grupo)
