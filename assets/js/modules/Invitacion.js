@@ -8,32 +8,51 @@ export default class Invitacion extends Grupo {
 		super();
 	}
 
+	// ============================================================================
+	// MARK: INVITAR CONTACTO
+	// ============================================================================
 	async invitarContacto(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.INVITAR_CONTACTO);
 	}
 
+	// ============================================================================
+	// MARK: ACEPTAR CONTACTO
+	// ============================================================================
 	async aceptarContacto(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.ACEPTAR_CONTACTO);
 	}
 
+	// ============================================================================
+	// MARK: RECHAZAR CONTACTO
+	// ============================================================================
 	async rechazarContacto(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.RECHAZAR_CONTACTO);
 	}
 
+	// ============================================================================
+	// MARK: INVITAR GRUPO
+	// ============================================================================
 	async invitarGrupo(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.INVITAR_GRUPO);
 	}
 
+	// ============================================================================
+	// MARK: ACEPTAR GRUPO
+	// ============================================================================
 	async aceptarGrupo(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.ACEPTAR_GRUPO);
 	}
 
+	// ============================================================================
+	// MARK: RECHAZAR GRUPO
+	// ============================================================================
 	async rechazarGrupo(form) {
 		const response = await this.fetchData(form, this.ENDPOINTS.POST.INVITACIONES.RECHAZAR_GRUPO);
 	}
 
+	// ============================================================================
 	// MARK: INVITACIONES TEMPLATE
-
+	// ============================================================================
 	invitacionesTemplate(fetchedInvitaciones) {
 
 		const invitaciones = fetchedInvitaciones.map(usuario => {
