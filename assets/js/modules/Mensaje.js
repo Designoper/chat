@@ -149,6 +149,11 @@ export default class Mensaje extends Contacto {
 		const mensajes = this.mensajesTemplate(response.json);
 		this.dom.output.innerHTML = this.sanitize(mensajes);
 		this.flags.marcador = false;
+
+		if (this.flags.scroll) {
+			this.scrollToCurrent();
+			this.flags.scroll = false;
+		}
 	}
 
 	// MARK: STREAM MENSAJES
@@ -157,15 +162,6 @@ export default class Mensaje extends Contacto {
 
 		const evtSource = new EventSource(`${this.endpointStreamMensajes}?${this.ulid_type}=${this.ulid_value}`);
 		this.mostrado = true;
-
-		evtSource.onopen = async () => {
-
-			await this.getMensajes();
-			if (this.flags.scroll) {
-				this.scrollToCurrent();
-				this.flags.scroll = false;
-			}
-		};
 
 		evtSource.addEventListener("mensaje", async (event) => {
 			const mensaje = JSON.parse(event.data);

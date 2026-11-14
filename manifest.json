@@ -5,6 +5,10 @@
 	"scope": "/",
 	"display": "standalone",
 	"version": "1.0",
+	"handle_links": "preferred",
+	"launch_handler": {
+		"client_mode": "focus-existing"
+	},
 	"background_color": "#ffffff",
 	"theme_color": "#0a3d62",
 	"icons": [

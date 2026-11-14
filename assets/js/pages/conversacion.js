@@ -10,6 +10,7 @@ mensaje.setForm();
 mensaje.setObj();
 mensaje.sendFileOnInput();
 await mensaje.getUltimoUlid();
+await mensaje.getMensajes();
 mensaje.streamMensajes();
 mensaje.formhelper();
 mensaje.geolocate();
