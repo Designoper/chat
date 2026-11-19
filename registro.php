@@ -79,6 +79,8 @@ new Usuario()->sessionRedirect();
 
 		<a href="./index.php">Iniciar sesión</a>
 
+		<install></install>
+
 	</main>
 
 </body>

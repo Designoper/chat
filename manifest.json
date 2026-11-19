@@ -2,6 +2,7 @@
 	"name": "Whatschat",
 	"short_name": "Whatschat",
 	"start_url": "/",
+	"id": "/app",
 	"scope": "/",
 	"display": "standalone",
 	"version": "1.0",

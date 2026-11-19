@@ -64,4 +64,11 @@ main {
 		text-align: center;
 		margin-top: 3em;
 	}
+
+	install {
+		padding: 0.5em;
+		margin-top: 2em;
+		background-color: white;
+		justify-self: center;
+	}
 }

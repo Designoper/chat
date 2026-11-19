@@ -80,6 +80,8 @@ new Usuario()->sessionRedirect();
 
 		<a href="./registro.php">Registrarme</a>
 
+		<install></install>
+
 	</main>
 
 </body>
