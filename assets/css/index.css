@@ -71,4 +71,10 @@ main {
 		background-color: white;
 		justify-self: center;
 	}
+
+	@media (display-mode: standalone) {
+		install {
+			display: none;
+		}
+	}
 }
